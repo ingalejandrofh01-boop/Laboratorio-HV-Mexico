@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio HV México — Certificación CIPSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#10201B; --panel:#16261F; --panel-2:#1C2E26; --paper:#EFE8D8;
+    --ink:#1B2420; --brass:#C7A046; --brass-dim:#8C7538; --rust:#9A4B33;
+    --sage:#8FA48C; --sage-dim:#5C6C59; --line:rgba(239,232,216,0.14);
+    --ok:#6FA383; --warn:#C7A046; --bad:#B5573F;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--paper);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+    background-image:repeating-linear-gradient(115deg, rgba(239,232,216,0.025) 0 2px, transparent 2px 5px);
+    background-color:var(--bg);}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0 0 .4em;color:var(--paper);}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:var(--brass);}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .ruler{height:10px;background-image:repeating-linear-gradient(90deg, var(--paper) 0 10px, var(--ink) 10px 20px);opacity:.9;}
+  header{position:sticky;top:0;background:var(--bg);z-index:50;border-bottom:1px solid var(--line);}
+  .navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1080px;margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;cursor:pointer;}
+  .brand span{font-family:'Fraunces',serif;font-size:19px;letter-spacing:.02em;}
+  nav{display:flex;gap:4px;flex-wrap:wrap;}
+  nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:8px 14px;border-radius:6px;cursor:pointer;}
+  nav button:hover{background:var(--panel-2);color:var(--paper);}
+  nav button.active{color:var(--brass);}
+  .admin-link{font-size:12px;color:var(--sage-dim)!important;opacity:.7;}
+  section{padding:56px 0;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .hero{padding-top:40px;}
+  .hero h1{font-size:40px;max-width:640px;}
+  .hero p.lead{color:var(--sage);max-width:520px;font-size:16px;}
+  .seal{width:88px;height:88px;flex:none;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:24px;}
+  .grid{display:grid;gap:18px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:760px){.grid-3,.grid-2{grid-template-columns:1fr;}.hero h1{font-size:30px;}}
+  label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sage);margin:14px 0 6px;}
+  input,select,textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--paper);padding:10px 12px;border-radius:4px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--brass);}
+  button.btn{background:var(--brass);color:#241C08;border:none;padding:11px 20px;border-radius:4px;font-weight:600;cursor:pointer;font-size:14px;letter-spacing:.01em;}
+  button.btn:hover{background:#D9B45C;}
+  button.btn.ghost{background:transparent;border:1px solid var(--brass);color:var(--brass);}
+  button.btn.small{padding:7px 12px;font-size:12px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  table th{text-align:left;color:var(--sage);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line);padding:8px 6px;}
+  table td{padding:9px 6px;border-bottom:1px solid var(--line);}
+  .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-family:'IBM Plex Mono',monospace;}
+  .pill.original{background:rgba(111,163,131,0.15);color:var(--ok);border:1px solid var(--ok);}
+  .pill.restaurado{background:rgba(199,162,70,0.15);color:var(--warn);border:1px solid var(--warn);}
+  .pill.replica{background:rgba(181,87,63,0.15);color:var(--bad);border:1px solid var(--bad);}
+  .pill.pendiente{background:rgba(199,162,70,0.15);color:var(--warn);border:1px solid var(--warn);}
+  .pill.completado{background:rgba(111,163,131,0.15);color:var(--ok);border:1px solid var(--ok);}
+  .foot-note{font-size:12px;color:var(--sage-dim);border-top:1px solid var(--line);padding-top:16px;margin-top:24px;}
+  .cert{background:var(--paper);color:var(--ink);border-radius:6px;padding:32px;position:relative;}
+  .cert h2{color:var(--ink);}
+  .cert .divider{border-top:1px dashed var(--brass-dim);margin:18px 0;}
+  .cert table td{border-bottom:1px solid rgba(27,36,32,0.12);color:var(--ink);}
+  .cert table th{color:var(--brass-dim);border-bottom:1px solid rgba(27,36,32,0.2);}
+  .photobox{aspect-ratio:4/3;background:rgba(27,36,32,0.06);border:1px dashed var(--brass-dim);border-radius:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:11px;color:var(--brass-dim);text-align:center;padding:6px;}
+  .photobox img{width:100%;height:100%;object-fit:cover;}
+  .empty{padding:40px 20px;text-align:center;color:var(--sage);border:1px dashed var(--line);border-radius:6px;}
+  .steps{counter-reset:step;}
+  .step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);}
+  .step:last-child{border-bottom:none;}
+  .step .num{font-family:'IBM Plex Mono',monospace;color:var(--brass);font-size:13px;width:22px;flex:none;}
+  .scale-row{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);align-items:baseline;}
+  .scale-row .g{font-family:'IBM Plex Mono',monospace;color:var(--brass);font-size:15px;}
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--sage-dim);font-size:13px;}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
+
+  .lbl{width:8cm;height:2.5cm;border-radius:2px;display:flex;align-items:center;padding:0 .35cm;gap:.3cm;position:relative;overflow:hidden;}
+  .lbl.gold{background:#0E1F1A;color:#EFE8D8;}
+  .lbl.gold .accent{color:#D9B45C;}
+  .lbl.silver{background:#20242A;color:#E7E9EC;}
+  .lbl.silver .accent{color:#B9C0C6;}
+  .lbl.red{background:#3A1712;color:#F1E3DC;}
+  .lbl.red .accent{color:#E38264;}
+  .lbl .crest{width:1.5cm;height:1.5cm;flex:none;}
+  .lbl .txt{flex:1;min-width:0;}
+  .lbl .brandline{font-family:'Fraunces',serif;font-size:8pt;letter-spacing:.03em;margin:0;}
+  .lbl .gradeline{font-size:15pt;font-weight:600;margin:1pt 0;line-height:1;}
+  .lbl .metaline{font-family:'IBM Plex Mono',monospace;font-size:6.5pt;opacity:.85;margin:0;}
+  .holo{width:2cm;height:2cm;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg,#cfd6da,#f3e9d2,#d8c9e8,#cde7dc,#f1cdd8,#cfd6da);}
+  .holo .ring{position:absolute;inset:2pt;border-radius:50%;border:1px dashed rgba(20,20,20,.35);}
+  .holo .core{background:#10201B;color:#EFE8D8;width:70%;height:70%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .holo .mono-mark{font-family:'Fraunces',serif;font-size:7pt;line-height:1;}
+  .holo .num{font-family:'IBM Plex Mono',monospace;font-size:4.2pt;margin-top:1pt;}
+  .etiqueta-preview{background:#0c1512;border:1px dashed var(--line);border-radius:8px;padding:30px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;align-items:center;}
+
+  .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(135deg, #14261F 0%, #0E1B16 100%);}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(16,32,27,.55) 0%, rgba(16,32,27,.92) 100%);z-index:1;}
+  .hero-inner{position:relative;z-index:2;padding:40px 4px;}
+  .hero.has-image .hero-inner{padding:64px 28px;}
+  .hero-stripes{position:absolute;top:0;right:9%;width:46px;height:140%;z-index:1;transform:rotate(14deg);
+    background:repeating-linear-gradient(90deg, var(--brass) 0 10px, transparent 10px 22px, var(--rust) 22px 30px, transparent 30px 42px);
+    opacity:.16;pointer-events:none;}
+  .hero-checker{position:absolute;top:-10px;right:-10px;width:96px;height:96px;z-index:1;pointer-events:none;
+    clip-path:polygon(100% 0, 100% 100%, 0 0);
+    background-image:
+      linear-gradient(45deg, var(--paper) 25%, transparent 25%), linear-gradient(-45deg, var(--paper) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--paper) 75%), linear-gradient(-45deg, transparent 75%, var(--paper) 75%);
+    background-size:18px 18px; background-position:0 0, 0 9px, 9px -9px, -9px 0;
+    background-color:var(--ink); opacity:.9;}
+  .hero-speedo{position:absolute;left:-40px;bottom:-50px;width:220px;height:220px;z-index:1;opacity:.14;pointer-events:none;}
+  .finish-divider{height:9px;background-image:repeating-linear-gradient(90deg, var(--paper) 0 9px, var(--ink) 9px 18px);opacity:.4;border-radius:2px;margin:6px 0 0;}
+  .tag-notch{position:relative;}
+  .tag-notch::before{content:"";position:absolute;top:-1px;left:16px;right:16px;height:1px;
+    background-image:radial-gradient(circle, var(--bg) 2.5px, transparent 2.6px);
+    background-size:14px 6px;background-position:0 -3px;background-repeat:repeat-x;}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:760px){.gallery{grid-template-columns:1fr 1fr;}}
+  .gallery-item{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3;background:var(--panel-2);border:1px solid var(--line);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
+  .gallery-cap{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(0deg, rgba(0,0,0,.65), transparent);font-size:12px;color:var(--paper);}
+  .gallery-empty{padding:34px 20px;text-align:center;color:var(--sage);border:1px dashed var(--line);border-radius:6px;font-size:14px;}
+  .gallery-admin-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);}
+  .gallery-admin-item img{width:52px;height:40px;object-fit:cover;border-radius:3px;flex:none;}
+  .gallery-admin-item .cap{flex:1;font-size:13px;color:var(--sage);}
+
+  @media print{
+    header,nav,footer,.no-print{display:none!important;}
+    body{background:#fff;color:#000;}
+    .view{display:none!important;}
+    .view.active{display:block!important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ruler"></div>
+<header>
+  <div class="navbar">
+    <div class="brand" onclick="go('inicio')">
+      <svg class="seal" viewBox="0 0 100 100" width="34" height="34" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#C7A046" stroke-width="2"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="#C7A046" stroke-width="1"/>
+        <text x="50" y="58" text-anchor="middle" font-family="Fraunces, serif" font-size="30" fill="#C7A046">HV</text>
+        <path d="M50 12 L52 20 L50 18 L48 20 Z" fill="#C7A046"/>
+      </svg>
+      <span>Laboratorio HV México</span>
+    </div>
+    <nav>
+      <button data-v="inicio" onclick="go('inicio')" class="active">Inicio</button>
+      <button data-v="verificar" onclick="go('verificar')">Verificar folio</button>
+      <button data-v="solicitar" onclick="go('solicitar')">Solicitar validación</button>
+      <button data-v="cliente" onclick="go('cliente')">Mi historial</button>
+      <button data-v="etiqueta" onclick="go('etiqueta')">Etiqueta y holograma</button>
+      <button data-v="admin" onclick="go('admin')" class="admin-link">Acceso interno</button>
+    </nav>
+  </div>
+</header>
+
+<div id="toast" class="toast"></div>
+
+<div class="wrap">
+
+<div class="view active" id="view-inicio">
+  <section class="hero" id="hero-section">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
+    <div class="hero-checker"></div>
+    <div class="hero-stripes"></div>
+    <svg class="hero-speedo" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="92" fill="none" stroke="#C7A046" stroke-width="2"/>
+      <circle cx="100" cy="100" r="76" fill="none" stroke="#C7A046" stroke-width="1"/>
+      <g stroke="#C7A046" stroke-width="2">
+        <line x1="100" y1="14" x2="100" y2="28"/>
+        <line x1="100" y1="172" x2="100" y2="186"/>
+        <line x1="14" y1="100" x2="28" y2="100"/>
+        <line x1="172" y1="100" x2="186" y2="100"/>
+        <line x1="35" y1="35" x2="45" y2="45"/>
+        <line x1="165" y1="35" x2="155" y2="45"/>
+        <line x1="35" y1="165" x2="45" y2="155"/>
+        <line x1="165" y1="165" x2="155" y2="155"/>
+      </g>
+      <line x1="100" y1="100" x2="140" y2="60" stroke="#C7A046" stroke-width="3"/>
+      <circle cx="100" cy="100" r="6" fill="#C7A046"/>
+    </svg>
+    <div class="hero-inner">
+      <h1>Certificación y grading independiente para Hot Wheels vintage CIPSA.</h1>
+      <p class="lead">Evaluamos, medimos y documentamos piezas fabricadas en México. Cada dictamen queda registrado con folio público, verificable por cualquier persona con el código o el folio.</p>
+      <div class="card tag-notch" style="max-width:460px;margin-top:24px;">
+        <label for="quick-folio">Verificar un folio ahora</label>
+        <div class="row">
+          <input id="quick-folio" placeholder="HV-MX-2026-001" style="flex:1;">
+          <button class="btn" onclick="quickVerify()">Buscar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="finish-divider"></div>
+
+  <section>
+    <h2>Galería de piezas certificadas</h2>
+    <p style="color:var(--sage);max-width:640px;">Piezas ya evaluadas por el laboratorio. Se van a agregar más conforme entren nuevas certificaciones.</p>
+    <div id="gallery-grid"></div>
+  </section>
+
+  <section>
+    <h2>Protocolo de evaluación — 6 fotografías obligatorias</h2>
+    <p style="color:var(--sage);max-width:640px;">Cada pieza que evaluamos sigue el mismo protocolo fotográfico y de laboratorio, para que el folio sea comparable entre piezas y verificable en el tiempo.</p>
+    <div class="steps">
+      <div class="step"><div class="num">01</div><div>Base completa, con leyenda legible</div></div>
+      <div class="step"><div class="num">02</div><div>Llantas, lado derecho e izquierdo</div></div>
+      <div class="step"><div class="num">03</div><div>Frente y trasera</div></div>
+      <div class="step"><div class="num">04</div><div>Techo y cofre a 45°</div></div>
+      <div class="step"><div class="num">05</div><div>Interior por ventanas</div></div>
+      <div class="step"><div class="num">06</div><div>Borde de pintura bajo luz UV y microscopio digital</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Escala de grado</h2>
+    <div class="card">
+      <div class="scale-row"><div class="g">10</div><div>Mint / blister — pintura 100%, redline intacta, sin pátina</div></div>
+      <div class="scale-row"><div class="g">9</div><div>Near mint — micro detalles atribuibles a la edad</div></div>
+      <div class="scale-row"><div class="g">8</div><div>Excelente — desgaste leve en filos</div></div>
+      <div class="scale-row"><div class="g">6–7</div><div>Buena — jugada, pero completa</div></div>
+      <div class="scale-row"><div class="g">&lt;6</div><div>Restaurada, repintada o de origen dudoso</div></div>
+      <p class="foot-note" style="border:none;margin-top:16px;padding-top:0;">Además del grado numérico, cada pieza recibe un sello de estado: <strong style="color:var(--paper)">original</strong>, <strong style="color:var(--paper)">restaurado</strong> o <strong style="color:var(--paper)">réplica</strong>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Niveles de servicio</h2>
+    <div class="grid grid-3">
+      <div class="card tag-notch">
+        <h3 style="font-size:18px;">Validación digital</h3>
+        <p class="mono" style="color:var(--brass);font-size:22px;margin:6px 0;">$150 MXN</p>
+        <p style="color:var(--sage);font-size:14px;">Folio con QR público, sin acrílico ni holograma físico. Ideal para piezas de colección de menor valor.</p>
+      </div>
+      <div class="card tag-notch">
+        <h3 style="font-size:18px;">Encapsulado</h3>
+        <p class="mono" style="color:var(--brass);font-size:22px;margin:6px 0;">$350 MXN</p>
+        <p style="color:var(--sage);font-size:14px;">Folio, certificado impreso, etiqueta y acrílico sellado con holograma de seguridad.</p>
+      </div>
+      <div class="card tag-notch">
+        <h3 style="font-size:18px;">Peritaje premium</h3>
+        <p class="mono" style="color:var(--brass);font-size:22px;margin:6px 0;">$800 MXN</p>
+        <p style="color:var(--sage);font-size:14px;">Para piezas de alto valor. Incluye video del peritaje y reporte extendido.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card" style="border-left:3px solid var(--brass);border-radius:0 4px 4px 0;">
+      <h3 style="font-size:16px;">Qué es y qué no es este dictamen</h3>
+      <p style="color:var(--sage);font-size:14px;margin:0;">Laboratorio HV México es un laboratorio independiente de coleccionismo. No estamos afiliados, autorizados ni avalados por Mattel, Inc. ni por Hot Wheels®. El grado y estado que emitimos son una opinión experta basada en inspección física, no un avalúo comercial ni garantía de valor de reventa.</p>
+    </div>
+  </section>
+</div>
+
+<div class="view" id="view-verificar">
+  <section>
+    <h2>Verificación pública de folio</h2>
+    <p style="color:var(--sage);">Cualquier persona puede verificar la autenticidad de un dictamen ingresando el folio impreso en el certificado o leyendo el código QR.</p>
+    <div class="row" style="max-width:460px;">
+      <input id="v-folio" placeholder="HV-MX-2026-001" style="flex:1;">
+      <button class="btn" onclick="verifyFolio()">Verificar</button>
+    </div>
+    <div id="v-result" style="margin-top:28px;"></div>
+  </section>
+</div>
+
+<div class="view" id="view-solicitar">
+  <section>
+    <h2>Solicitar validación de tu pieza</h2>
+    <p style="color:var(--sage);max-width:600px;">Cuéntanos sobre tu pieza. Te contactaremos para coordinar la entrega física y confirmar el nivel de servicio.</p>
+    <div class="card" style="max-width:560px;">
+      <label>Nombre completo</label>
+      <input id="s-nombre" placeholder="Nombre y apellido">
+      <label>Teléfono (lo usarás para consultar tu historial)</label>
+      <input id="s-telefono" placeholder="55 0000 0000">
+      <label>Modelo</label>
+      <input id="s-modelo" placeholder="VW Sedán - Policía Federal">
+      <label>Año aproximado</label>
+      <input id="s-anio" placeholder="1979">
+      <label>Origen que crees que tiene</label>
+      <select id="s-origen"><option>CIPSA</option><option>USA</option><option>HK</option><option>No estoy seguro</option></select>
+      <label>Descripción / estado a simple vista</label>
+      <textarea id="s-desc" rows="3" placeholder="Color, si tiene caja, desgaste visible, etc."></textarea>
+      <label>Nivel de servicio que te interesa</label>
+      <select id="s-nivel"><option>Validación digital — $150</option><option>Encapsulado — $350</option><option>Peritaje premium — $800</option><option>Aún no sé, quiero que me orienten</option></select>
+      <div style="margin-top:18px;"><button class="btn" onclick="submitSolicitud()">Enviar solicitud</button></div>
+    </div>
+    <div id="s-confirm" style="margin-top:20px;"></div>
+  </section>
+</div>
+
+<div class="view" id="view-cliente">
+  <section>
+    <h2>Mi historial</h2>
+    <p style="color:var(--sage);">Ingresa el teléfono que registraste al hacer tu solicitud para ver el estatus de tus piezas.</p>
+    <div class="row" style="max-width:460px;">
+      <input id="c-telefono" placeholder="55 0000 0000" style="flex:1;">
+      <button class="btn" onclick="lookupCliente()">Consultar</button>
+    </div>
+    <div id="c-result" style="margin-top:24px;"></div>
+    <p class="foot-note">Este acceso es solo por número de teléfono, sin contraseña — no compartas tu número con quien no quieras que vea tu historial.</p>
+  </section>
+</div>
+
+<div class="view" id="view-etiqueta">
+  <section>
+    <h2>Etiqueta y holograma por folio</h2>
+    <p style="color:var(--sage);max-width:600px;">Escribe un folio ya emitido para generar su etiqueta de acrílico y el punto de holograma VOID — usan el mismo folio y grado que ya quedaron guardados, así que no hay que capturar nada dos veces.</p>
+    <div class="row" style="max-width:460px;">
+      <input id="e-folio" placeholder="HV-MX-2026-001" style="flex:1;">
+      <button class="btn" onclick="loadEtiquetaByFolio()">Cargar folio</button>
+    </div>
+    <div id="e-result" style="margin-top:26px;"></div>
+  </section>
+</div>
+
+<div class="view" id="view-admin">
+  <section>
+    <div id="admin-gate" class="card" style="max-width:400px;">
+      <h3 style="font-size:16px;">Acceso interno</h3>
+      <label>Clave de acceso</label>
+      <input id="admin-pass" type="password">
+      <div style="margin-top:14px;"><button class="btn" onclick="tryAdminLogin()">Entrar</button></div>
+      <p class="foot-note">Esto es un candado simple de demostración, no autenticación real. Antes de operar en público, sustituir por un sistema de usuarios con contraseña propia por inspector.</p>
+    </div>
+    <div id="admin-panel" style="display:none;">
+      <h2>Panel de laboratorio</h2>
+
+      <div class="card" style="margin-bottom:18px;">
+        <h3 style="font-size:16px;">Imágenes del sitio</h3>
+        <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Pega la URL de una foto épica para el fondo del inicio, y agrega imágenes a la galería de piezas. Se guardan y quedan puestas — no hace falta repetir esto cada vez que abras el sitio.</p>
+        <label>Imagen de fondo del inicio (URL)</label>
+        <div class="row">
+          <input id="a-hero-url" placeholder="https://..." style="flex:1;">
+          <button class="btn small" onclick="saveHeroImage()">Guardar fondo</button>
+          <button class="btn ghost small" onclick="clearHeroImage()">Quitar fondo</button>
+        </div>
+        <label style="margin-top:20px;">Agregar imagen a la galería</label>
+        <div class="row">
+          <input id="a-gallery-url" placeholder="URL de la imagen" style="flex:2;">
+          <input id="a-gallery-cap" placeholder="Pie de foto (opcional)" style="flex:1;">
+          <button class="btn small" onclick="addGalleryImage()">Agregar</button>
+        </div>
+        <div id="a-gallery-list" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="grid grid-2" style="align-items:start;">
+        <div class="card">
+          <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
+          <label>Folio</label>
+          <input id="a-folio" class="mono" placeholder="HV-MX-2026-002">
+          <label>Modelo</label>
+          <input id="a-modelo">
+          <label>Año</label>
+          <input id="a-anio">
+          <div class="row">
+            <div style="flex:1;"><label>Origen</label><select id="a-origen"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
+            <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64"></div>
+          </div>
+          <label>Peso (g)</label>
+          <input id="a-peso">
+          <div class="row">
+            <div style="flex:1;"><label>Grado (0–10)</label><input id="a-grado" placeholder="8.5"></div>
+            <div style="flex:1;"><label>Estado</label><select id="a-estado"><option>Original</option><option>Restaurado</option><option>Réplica</option></select></div>
+          </div>
+          <label>Prueba UV</label>
+          <input id="a-uv" placeholder="Negativo (no repintado)">
+          <label>Prueba de microscopio</label>
+          <input id="a-micro" placeholder="Desgaste en filos, sin masilla">
+          <label>Remaches</label>
+          <input id="a-remaches" placeholder="Originales de fábrica">
+          <label>Observaciones</label>
+          <textarea id="a-obs" rows="2"></textarea>
+          <label>Nivel de servicio</label>
+          <select id="a-nivel"><option>Validación digital</option><option>Encapsulado</option><option>Peritaje premium</option></select>
+          <label>Teléfono del dueño (uso interno, no se publica)</label>
+          <input id="a-telefono">
+          <label>Fotos (opcional — pega la URL de cada imagen)</label>
+          <input id="a-foto1" placeholder="Foto 1 — base" style="margin-bottom:8px;">
+          <input id="a-foto2" placeholder="Foto 2 — llantas" style="margin-bottom:8px;">
+          <input id="a-foto3" placeholder="Foto 3 — frente/trasera" style="margin-bottom:8px;">
+          <input id="a-foto4" placeholder="Foto 4 — techo/cofre 45°" style="margin-bottom:8px;">
+          <input id="a-foto5" placeholder="Foto 5 — interior" style="margin-bottom:8px;">
+          <input id="a-foto6" placeholder="Foto 6 — UV/microscopio" style="margin-bottom:8px;">
+          <div style="margin-top:14px;"><button class="btn" onclick="createFolio()">Guardar folio</button></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:18px;">
+            <h3 style="font-size:16px;">Solicitudes pendientes</h3>
+            <div id="a-solicitudes"></div>
+          </div>
+          <div class="card">
+            <h3 style="font-size:16px;">Folios emitidos</h3>
+            <div id="a-folios"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Laboratorio HV México — laboratorio independiente de coleccionismo. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
+  </div>
+</footer>
+
+<script>
+const ADMIN_PASS = "hvmexico2026";
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display='block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{t.style.display='none';}, 3200);
+}
+
+function go(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.v===view));
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(view==='admin') refreshAdminLists();
+}
+
+function escapeHtml(s){
+  return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function pillClass(estado){
+  const e = (estado||'').toLowerCase();
+  if(e.includes('restaur')) return 'restaurado';
+  if(e.includes('repl')) return 'replica';
+  return 'original';
+}
+
+function renderCert(f){
+  const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6];
+  const labels = ['Base','Llantas','Frente/trasera','Techo/cofre 45°','Interior','UV/microscopio'];
+  let fotoHtml = fotos.map((u,i)=> `<div class="photobox">${u ? `<img src="${escapeHtml(u)}" alt="${labels[i]}">` : labels[i]}</div>`).join('');
+  return `
+  <div class="cert">
+    <div class="row" style="justify-content:space-between;align-items:flex-start;">
+      <div>
+        <h2 style="font-size:22px;">Certificado de autenticidad y evaluación</h2>
+        <p class="mono" style="color:var(--brass-dim);margin:0;">Folio ${escapeHtml(f.folio)}</p>
+      </div>
+      <span class="pill ${pillClass(f.estado)}">${escapeHtml(f.estado||'—')}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="grid grid-2">
+      <table>
+        <tr><td><strong>Modelo</strong></td><td>${escapeHtml(f.modelo)}</td></tr>
+        <tr><td><strong>Año</strong></td><td>${escapeHtml(f.anio)}</td></tr>
+        <tr><td><strong>Origen</strong></td><td>${escapeHtml(f.origen)}</td></tr>
+        <tr><td><strong>Escala</strong></td><td>${escapeHtml(f.escala)}</td></tr>
+        <tr><td><strong>Peso</strong></td><td>${escapeHtml(f.peso)} g</td></tr>
+        <tr><td><strong>Grado</strong></td><td>${escapeHtml(f.grado)} / 10</td></tr>
+      </table>
+      <table>
+        <tr><td><strong>UV</strong></td><td>${escapeHtml(f.uv)}</td></tr>
+        <tr><td><strong>Microscopio</strong></td><td>${escapeHtml(f.micro)}</td></tr>
+        <tr><td><strong>Remaches</strong></td><td>${escapeHtml(f.remaches)}</td></tr>
+        <tr><td><strong>Nivel de servicio</strong></td><td>${escapeHtml(f.nivel)}</td></tr>
+        <tr><td><strong>Fecha</strong></td><td>${escapeHtml(f.fecha)}</td></tr>
+      </table>
+    </div>
+    ${f.obs ? `<p style="margin-top:14px;"><strong>Observaciones:</strong> ${escapeHtml(f.obs)}</p>` : ''}
+    <div class="divider"></div>
+    <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
+    <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
+    <div class="no-print row" style="margin-top:18px;">
+      <button class="btn ghost small" onclick="window.print()">Imprimir certificado</button>
+      <button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y holograma</button>
+    </div>
+  </div>`;
+}
+
+function tierForGrade(grado, estado){
+  const e = (estado||'').toLowerCase();
+  if(e.includes('restaur') || e.includes('repl')) return 'red';
+  const g = parseFloat(grado);
+  if(!isNaN(g) && g < 9) return 'silver';
+  return 'gold';
+}
+
+function renderEtiqueta(f){
+  const tier = tierForGrade(f.grado, f.estado);
+  return `
+  <div class="etiqueta-preview">
+    <div class="lbl ${tier}">
+      <svg class="crest" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="3" class="accent"/>
+        <text x="50" y="60" text-anchor="middle" font-family="Fraunces, serif" font-size="34" fill="currentColor" class="accent">HV</text>
+      </svg>
+      <div class="txt">
+        <p class="brandline">LABORATORIO HV MÉXICO</p>
+        <p class="gradeline accent">GRADO ${escapeHtml(f.grado||'—')}</p>
+        <p class="metaline">FOLIO ${escapeHtml(f.folio)} · ${escapeHtml((f.estado||'').toUpperCase())}</p>
+      </div>
+    </div>
+    <div class="holo">
+      <div class="ring"></div>
+      <div class="core">
+        <div class="mono-mark">HV</div>
+        <div class="num">VOID · ${escapeHtml(f.folio)}</div>
+      </div>
+    </div>
+  </div>
+  <p class="foot-note">Color asignado por grado: dorado/verde = 9–10 original · plata/negro = 7–8.5 · rojo = restaurado o réplica. El holograma usa el mismo folio del certificado, así queda todo trazable a una sola pieza.</p>
+  <div class="no-print" style="margin-top:14px;"><button class="btn ghost small" onclick="window.print()">Imprimir etiqueta y holograma</button></div>`;
+}
+
+function openEtiquetaFor(fJson){
+  const f = JSON.parse(fJson);
+  go('etiqueta');
+  document.getElementById('e-folio').value = f.folio;
+  document.getElementById('e-result').innerHTML = renderEtiqueta(f);
+}
+
+async function loadEtiquetaByFolio(){
+  const folio = document.getElementById('e-folio').value.trim();
+  const box = document.getElementById('e-result');
+  if(!folio) return;
+  box.innerHTML = '<p style="color:var(--sage);">Buscando…</p>';
+  try{
+    const res = await window.storage.get('folio:'+folio, true);
+    if(res && res.value){
+      box.innerHTML = renderEtiqueta(JSON.parse(res.value));
+    } else {
+      box.innerHTML = '<div class="empty">No encontramos ese folio. Debe existir ya en el panel interno antes de generar su etiqueta.</div>';
+    }
+  }catch(e){
+    box.innerHTML = '<div class="empty">No encontramos ese folio. Debe existir ya en el panel interno antes de generar su etiqueta.</div>';
+  }
+}
+
+async function quickVerify(){
+  const folio = document.getElementById('quick-folio').value.trim();
+  if(!folio) return;
+  document.getElementById('v-folio').value = folio;
+  go('verificar');
+  await verifyFolio();
+}
+
+async function verifyFolio(){
+  const folio = document.getElementById('v-folio').value.trim();
+  const box = document.getElementById('v-result');
+  if(!folio){ box.innerHTML=''; return; }
+  box.innerHTML = '<p style="color:var(--sage);">Buscando…</p>';
+  try{
+    const res = await window.storage.get('folio:'+folio, true);
+    if(res && res.value){
+      const f = JSON.parse(res.value);
+      box.innerHTML = renderCert(f);
+    } else {
+      box.innerHTML = '<div class="empty">No encontramos ese folio. Revisa que esté escrito tal como aparece en tu certificado.</div>';
+    }
+  }catch(e){
+    box.innerHTML = '<div class="empty">No encontramos ese folio. Revisa que esté escrito tal como aparece en tu certificado.</div>';
+  }
+}
+
+async function submitSolicitud(){
+  const nombre = document.getElementById('s-nombre').value.trim();
+  const telefono = document.getElementById('s-telefono').value.trim();
+  const modelo = document.getElementById('s-modelo').value.trim();
+  if(!nombre || !telefono || !modelo){ toast('Completa al menos nombre, teléfono y modelo.'); return; }
+  const id = 'SOL-' + Date.now();
+  const data = {
+    id, nombre, telefono, modelo,
+    anio: document.getElementById('s-anio').value.trim(),
+    origen: document.getElementById('s-origen').value,
+    desc: document.getElementById('s-desc').value.trim(),
+    nivel: document.getElementById('s-nivel').value,
+    estado: 'pendiente',
+    fecha: new Date().toLocaleDateString('es-MX')
+  };
+  try{
+    await window.storage.set('solicitud:'+id, JSON.stringify(data), true);
+    document.getElementById('s-confirm').innerHTML = `<div class="card" style="border-left:3px solid var(--ok);"><p style="margin:0;">Solicitud recibida. Tu número de folio de seguimiento es <span class="mono" style="color:var(--brass);">${id}</span>. Te contactaremos al teléfono registrado.</p></div>`;
+    ['s-nombre','s-telefono','s-modelo','s-anio','s-desc'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){
+    toast('No se pudo enviar la solicitud, intenta de nuevo.');
+  }
+}
+
+async function lookupCliente(){
+  const tel = document.getElementById('c-telefono').value.trim();
+  const box = document.getElementById('c-result');
+  if(!tel) return;
+  box.innerHTML = '<p style="color:var(--sage);">Buscando…</p>';
+  try{
+    const [sol, fol] = await Promise.all([
+      window.storage.list('solicitud:', true).catch(()=>({keys:[]})),
+      window.storage.list('folio:', true).catch(()=>({keys:[]}))
+    ]);
+    let rows = [];
+    for(const k of (sol.keys||[])){
+      try{
+        const r = await window.storage.get(k, true);
+        const d = JSON.parse(r.value);
+        if(d.telefono === tel) rows.push({tipo:'Solicitud', ref:d.id, modelo:d.modelo, estado:d.estado, fecha:d.fecha});
+      }catch(e){}
+    }
+    for(const k of (fol.keys||[])){
+      try{
+        const r = await window.storage.get(k, true);
+        const d = JSON.parse(r.value);
+        if(d.telefono === tel) rows.push({tipo:'Folio', ref:d.folio, modelo:d.modelo, estado:'completado', fecha:d.fecha});
+      }catch(e){}
+    }
+    if(rows.length===0){
+      box.innerHTML = '<div class="empty">No encontramos registros con ese teléfono todavía.</div>';
+      return;
+    }
+    box.innerHTML = `<table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
+      rows.map(r=>`<tr><td>${r.tipo}</td><td class="mono">${escapeHtml(r.ref)}</td><td>${escapeHtml(r.modelo)}</td><td><span class="pill ${r.estado==='completado'?'completado':'pendiente'}">${escapeHtml(r.estado)}</span></td><td>${escapeHtml(r.fecha)}</td></tr>`).join('')
+    }</table>`;
+  }catch(e){
+    box.innerHTML = '<div class="empty">No pudimos consultar tu historial en este momento.</div>';
+  }
+}
+
+function tryAdminLogin(){
+  const val = document.getElementById('admin-pass').value;
+  if(val === ADMIN_PASS){
+    document.getElementById('admin-gate').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    refreshAdminLists();
+    renderGalleryAdmin();
+  } else {
+    toast('Clave incorrecta.');
+  }
+}
+
+async function loadHeroImage(){
+  try{
+    const res = await window.storage.get('site:hero', true);
+    const url = res && res.value ? JSON.parse(res.value).url : '';
+    const section = document.getElementById('hero-section');
+    const bg = document.getElementById('hero-bg');
+    const overlay = document.getElementById('hero-overlay');
+    if(url){
+      bg.style.backgroundImage = `url("${url}")`;
+      overlay.style.display = 'block';
+      section.classList.add('has-image');
+    } else {
+      bg.style.backgroundImage = '';
+      overlay.style.display = 'none';
+      section.classList.remove('has-image');
+    }
+  }catch(e){
+    document.getElementById('hero-section').classList.remove('has-image');
+  }
+}
+
+async function saveHeroImage(){
+  const url = document.getElementById('a-hero-url').value.trim();
+  if(!url){ toast('Pega una URL primero.'); return; }
+  try{
+    await window.storage.set('site:hero', JSON.stringify({url}), true);
+    toast('Fondo del inicio actualizado.');
+    loadHeroImage();
+  }catch(e){ toast('No se pudo guardar la imagen.'); }
+}
+
+async function clearHeroImage(){
+  try{
+    await window.storage.delete('site:hero', true);
+  }catch(e){}
+  document.getElementById('a-hero-url').value = '';
+  toast('Fondo quitado.');
+  loadHeroImage();
+}
+
+async function getGallery(){
+  try{
+    const res = await window.storage.get('site:gallery', true);
+    return res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){ return []; }
+}
+
+async function setGallery(items){
+  await window.storage.set('site:gallery', JSON.stringify(items), true);
+}
+
+async function loadGallery(){
+  const items = await getGallery();
+  const grid = document.getElementById('gallery-grid');
+  if(!items.length){
+    grid.innerHTML = '<div class="gallery-empty">Aún no hay fotos en la galería. Se agregan desde el panel interno.</div>';
+    return;
+  }
+  grid.innerHTML = `<div class="gallery">${items.map(it => `
+    <div class="gallery-item">
+      <img src="${escapeHtml(it.url)}" alt="${escapeHtml(it.caption||'Pieza certificada')}">
+      ${it.caption ? `<div class="gallery-cap">${escapeHtml(it.caption)}</div>` : ''}
+    </div>`).join('')}</div>`;
+}
+
+async function addGalleryImage(){
+  const url = document.getElementById('a-gallery-url').value.trim();
+  const caption = document.getElementById('a-gallery-cap').value.trim();
+  if(!url){ toast('Pega la URL de la imagen primero.'); return; }
+  try{
+    const items = await getGallery();
+    items.push({id:'IMG-'+Date.now(), url, caption});
+    await setGallery(items);
+    document.getElementById('a-gallery-url').value='';
+    document.getElementById('a-gallery-cap').value='';
+    toast('Imagen agregada a la galería.');
+    loadGallery();
+    renderGalleryAdmin();
+  }catch(e){ toast('No se pudo agregar la imagen.'); }
+}
+
+async function deleteGalleryImage(id){
+  try{
+    const items = (await getGallery()).filter(it => it.id !== id);
+    await setGallery(items);
+    loadGallery();
+    renderGalleryAdmin();
+  }catch(e){ toast('No se pudo quitar la imagen.'); }
+}
+
+async function renderGalleryAdmin(){
+  const box = document.getElementById('a-gallery-list');
+  if(!box) return;
+  const items = await getGallery();
+  box.innerHTML = items.length ? items.map(it => `
+    <div class="gallery-admin-item">
+      <img src="${escapeHtml(it.url)}" alt="">
+      <div class="cap">${escapeHtml(it.caption || '(sin pie de foto)')}</div>
+      <button class="btn ghost small" onclick="deleteGalleryImage('${it.id}')">Quitar</button>
+    </div>`).join('') : '<p style="color:var(--sage);font-size:13px;">Galería vacía por ahora.</p>';
+}
+
+loadHeroImage();
+loadGallery();
+
+async function createFolio(){
+  const folio = document.getElementById('a-folio').value.trim();
+  const modelo = document.getElementById('a-modelo').value.trim();
+  if(!folio || !modelo){ toast('Folio y modelo son obligatorios.'); return; }
+  const data = {
+    folio, modelo,
+    anio: document.getElementById('a-anio').value.trim(),
+    origen: document.getElementById('a-origen').value,
+    escala: document.getElementById('a-escala').value.trim(),
+    peso: document.getElementById('a-peso').value.trim(),
+    grado: document.getElementById('a-grado').value.trim(),
+    estado: document.getElementById('a-estado').value,
+    uv: document.getElementById('a-uv').value.trim(),
+    micro: document.getElementById('a-micro').value.trim(),
+    remaches: document.getElementById('a-remaches').value.trim(),
+    obs: document.getElementById('a-obs').value.trim(),
+    nivel: document.getElementById('a-nivel').value,
+    telefono: document.getElementById('a-telefono').value.trim(),
+    foto1: document.getElementById('a-foto1').value.trim(),
+    foto2: document.getElementById('a-foto2').value.trim(),
+    foto3: document.getElementById('a-foto3').value.trim(),
+    foto4: document.getElementById('a-foto4').value.trim(),
+    foto5: document.getElementById('a-foto5').value.trim(),
+    foto6: document.getElementById('a-foto6').value.trim(),
+    fecha: new Date().toLocaleDateString('es-MX')
+  };
+  try{
+    const existing = await window.storage.get('folio:'+folio, true).catch(()=>null);
+    if(existing){ toast('Ese folio ya existe, usa otro.'); return; }
+    await window.storage.set('folio:'+folio, JSON.stringify(data), true);
+    toast('Folio guardado: '+folio);
+    document.querySelectorAll('#admin-panel input, #admin-panel textarea').forEach(i=>{ if(i.id!=='admin-pass') i.value=''; });
+    refreshAdminLists();
+  }catch(e){
+    toast('No se pudo guardar el folio.');
+  }
+}
+
+async function refreshAdminLists(){
+  const solBox = document.getElementById('a-solicitudes');
+  const folBox = document.getElementById('a-folios');
+  if(!solBox) return;
+  solBox.innerHTML = 'Cargando…';
+  folBox.innerHTML = 'Cargando…';
+  try{
+    const sol = await window.storage.list('solicitud:', true).catch(()=>({keys:[]}));
+    const items = [];
+    for(const k of (sol.keys||[])){
+      try{ const r = await window.storage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
+    }
+    items.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
+    solBox.innerHTML = items.length ? items.map(d=>`
+      <div style="padding:10px 0;border-bottom:1px solid var(--line);">
+        <div class="row" style="justify-content:space-between;">
+          <strong style="font-size:14px;">${escapeHtml(d.modelo)}</strong>
+          <span class="pill ${d.estado==='completado'?'completado':'pendiente'}">${escapeHtml(d.estado)}</span>
+        </div>
+        <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
+        <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0;">${escapeHtml(d.id)}</p>
+      </div>`).join('') : '<p style="color:var(--sage);font-size:14px;">Sin solicitudes por ahora.</p>';
+  }catch(e){ solBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar las solicitudes.</p>'; }
+
+  try{
+    const fol = await window.storage.list('folio:', true).catch(()=>({keys:[]}));
+    const items = [];
+    for(const k of (fol.keys||[])){
+      try{ const r = await window.storage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
+    }
+    items.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
+    folBox.innerHTML = items.length ? items.map(d=>`
+      <div style="padding:10px 0;border-bottom:1px solid var(--line);">
+        <div class="row" style="justify-content:space-between;">
+          <span class="mono" style="font-size:13px;color:var(--brass);">${escapeHtml(d.folio)}</span>
+          <span class="pill ${pillClass(d.estado)}">${escapeHtml(d.estado)}</span>
+        </div>
+        <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
+        <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
+      </div>`).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
+  }catch(e){ folBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar los folios.</p>'; }
+}
+</script>
+</body>
+</html>
