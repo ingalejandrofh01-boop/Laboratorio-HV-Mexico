@@ -12,6 +12,7 @@
     --ink:#1B2420; --brass:#C7A046; --brass-dim:#8C7538; --rust:#9A4B33;
     --sage:#8FA48C; --sage-dim:#5C6C59; --line:rgba(239,232,216,0.14);
     --ok:#6FA383; --warn:#C7A046; --bad:#B5573F;
+    --mustard:#D1962E; --olive:#5C6B3E; --sunset:#C1552F;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--paper);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;}
@@ -101,26 +102,30 @@
   .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(135deg, #14261F 0%, #0E1B16 100%);}
   .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
   .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(16,32,27,.55) 0%, rgba(16,32,27,.92) 100%);z-index:1;}
-  .hero-inner{position:relative;z-index:2;padding:40px 4px;}
+  .hero-tire{position:absolute;top:50%;right:-70px;transform:translateY(-50%) rotate(-8deg);width:340px;height:340px;z-index:1;opacity:.9;pointer-events:none;}
+  .hero.has-image .hero-tire{opacity:.35;}
+  .hero-inner{position:relative;z-index:2;padding:40px 4px;max-width:62%;}
   .hero.has-image .hero-inner{padding:64px 28px;}
-  .hero-stripes{position:absolute;top:0;right:9%;width:46px;height:140%;z-index:1;transform:rotate(14deg);
-    background:repeating-linear-gradient(90deg, var(--brass) 0 10px, transparent 10px 22px, var(--rust) 22px 30px, transparent 30px 42px);
-    opacity:.16;pointer-events:none;}
-  .hero-checker{position:absolute;top:-10px;right:-10px;width:96px;height:96px;z-index:1;pointer-events:none;
-    clip-path:polygon(100% 0, 100% 100%, 0 0);
-    background-image:
-      linear-gradient(45deg, var(--paper) 25%, transparent 25%), linear-gradient(-45deg, var(--paper) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, var(--paper) 75%), linear-gradient(-45deg, transparent 75%, var(--paper) 75%);
-    background-size:18px 18px; background-position:0 0, 0 9px, 9px -9px, -9px 0;
-    background-color:var(--ink); opacity:.9;}
-  .hero-speedo{position:absolute;left:-40px;bottom:-50px;width:220px;height:220px;z-index:1;opacity:.14;pointer-events:none;}
   .finish-divider{height:9px;background-image:repeating-linear-gradient(90deg, var(--paper) 0 9px, var(--ink) 9px 18px);opacity:.4;border-radius:2px;margin:6px 0 0;}
   .tag-notch{position:relative;}
   .tag-notch::before{content:"";position:absolute;top:-1px;left:16px;right:16px;height:1px;
     background-image:radial-gradient(circle, var(--bg) 2.5px, transparent 2.6px);
     background-size:14px 6px;background-position:0 -3px;background-repeat:repeat-x;}
+  .badge-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mustard);border:1px solid var(--mustard);padding:3px 10px;border-radius:20px;opacity:.85;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  @media(max-width:760px){.gallery{grid-template-columns:1fr 1fr;}}
+  @media(max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:760px){.gallery{grid-template-columns:1fr 1fr;}
+    .hero-inner{max-width:100%;padding:32px 18px;}
+    .hero-tire{width:190px;height:190px;right:-60px;top:14%;transform:rotate(-8deg);opacity:.4;}
+    .navbar{flex-direction:column;align-items:flex-start;gap:10px;}
+    nav{width:100%;justify-content:flex-start;}
+  }
+  @media(max-width:560px){.grid-3,.grid-2{grid-template-columns:1fr;}
+    .gallery{grid-template-columns:1fr;}
+    .wrap{padding:0 16px;}
+    .hero h1{font-size:26px;}
+  }
   .gallery-item{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3;background:var(--panel-2);border:1px solid var(--line);}
   .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
   .gallery-cap{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(0deg, rgba(0,0,0,.65), transparent);font-size:12px;color:var(--paper);}
@@ -170,26 +175,33 @@
   <section class="hero" id="hero-section">
     <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
-    <div class="hero-checker"></div>
-    <div class="hero-stripes"></div>
-    <svg class="hero-speedo" viewBox="0 0 200 200" aria-hidden="true">
-      <circle cx="100" cy="100" r="92" fill="none" stroke="#C7A046" stroke-width="2"/>
-      <circle cx="100" cy="100" r="76" fill="none" stroke="#C7A046" stroke-width="1"/>
-      <g stroke="#C7A046" stroke-width="2">
-        <line x1="100" y1="14" x2="100" y2="28"/>
-        <line x1="100" y1="172" x2="100" y2="186"/>
-        <line x1="14" y1="100" x2="28" y2="100"/>
-        <line x1="172" y1="100" x2="186" y2="100"/>
-        <line x1="35" y1="35" x2="45" y2="45"/>
-        <line x1="165" y1="35" x2="155" y2="45"/>
-        <line x1="35" y1="165" x2="45" y2="155"/>
-        <line x1="165" y1="165" x2="155" y2="155"/>
+    <svg class="hero-tire" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="96" fill="#1B1512"/>
+      <g stroke="#0E0B09" stroke-width="2" opacity=".5">
+        <line x1="100" y1="4" x2="100" y2="20"/><line x1="100" y1="180" x2="100" y2="196"/>
+        <line x1="4" y1="100" x2="20" y2="100"/><line x1="180" y1="100" x2="196" y2="100"/>
+        <line x1="32" y1="32" x2="44" y2="44"/><line x1="156" y1="156" x2="168" y2="168"/>
+        <line x1="32" y1="168" x2="44" y2="156"/><line x1="156" y1="44" x2="168" y2="32"/>
       </g>
-      <line x1="100" y1="100" x2="140" y2="60" stroke="#C7A046" stroke-width="3"/>
-      <circle cx="100" cy="100" r="6" fill="#C7A046"/>
+      <circle cx="100" cy="100" r="80" fill="none" stroke="#B5573F" stroke-width="4"/>
+      <circle cx="100" cy="100" r="68" fill="#241C08"/>
+      <circle cx="100" cy="100" r="62" fill="#8C7538"/>
+      <circle cx="100" cy="100" r="56" fill="#1B2420"/>
+      <g fill="#C7A046">
+        <path d="M100,100 L100,50 A50,50 0 0,1 143,75 Z" opacity=".85"/>
+        <path d="M100,100 L143,75 A50,50 0 0,1 143,125 Z" opacity=".65"/>
+        <path d="M100,100 L143,125 A50,50 0 0,1 100,150 Z" opacity=".85"/>
+        <path d="M100,100 L100,150 A50,50 0 0,1 57,125 Z" opacity=".65"/>
+        <path d="M100,100 L57,125 A50,50 0 0,1 57,75 Z" opacity=".85"/>
+        <path d="M100,100 L57,75 A50,50 0 0,1 100,50 Z" opacity=".65"/>
+      </g>
+      <circle cx="100" cy="100" r="20" fill="#0E1B16"/>
+      <circle cx="100" cy="100" r="20" fill="none" stroke="#C7A046" stroke-width="1.5"/>
+      <text x="100" y="106" text-anchor="middle" font-family="Fraunces, serif" font-size="15" fill="#C7A046">HV</text>
     </svg>
     <div class="hero-inner">
-      <h1>Certificación y grading independiente para Hot Wheels vintage CIPSA.</h1>
+      <span class="badge-tag">Desde México · coleccionismo CIPSA</span>
+      <h1 style="margin-top:10px;">Certificación y grading independiente para Hot Wheels vintage CIPSA.</h1>
       <p class="lead">Evaluamos, medimos y documentamos piezas fabricadas en México. Cada dictamen queda registrado con folio público, verificable por cualquier persona con el código o el folio.</p>
       <div class="card tag-notch" style="max-width:460px;margin-top:24px;">
         <label for="quick-folio">Verificar un folio ahora</label>
@@ -481,10 +493,11 @@ function renderCert(f){
     <div class="divider"></div>
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
     <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
-    <div class="no-print row" style="margin-top:18px;">
-      <button class="btn ghost small" onclick="window.print()">Imprimir certificado</button>
+    <div class="no-print row" style="margin-top:18px;align-items:center;">
+      <button class="btn ghost small" onclick="window.print()">Descargar / imprimir certificado</button>
       <button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y holograma</button>
     </div>
+    <p class="no-print foot-note" style="border:none;padding-top:0;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.</p>
   </div>`;
 }
 
@@ -520,7 +533,10 @@ function renderEtiqueta(f){
     </div>
   </div>
   <p class="foot-note">Color asignado por grado: dorado/verde = 9–10 original · plata/negro = 7–8.5 · rojo = restaurado o réplica. El holograma usa el mismo folio del certificado, así queda todo trazable a una sola pieza.</p>
-  <div class="no-print" style="margin-top:14px;"><button class="btn ghost small" onclick="window.print()">Imprimir etiqueta y holograma</button></div>`;
+  <div class="no-print" style="margin-top:14px;">
+    <button class="btn ghost small" onclick="window.print()">Descargar / imprimir etiqueta y holograma</button>
+    <p class="foot-note" style="border:none;padding-top:4px;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo.</p>
+  </div>`;
 }
 
 function openEtiquetaFor(fJson){
@@ -626,9 +642,9 @@ async function lookupCliente(){
       box.innerHTML = '<div class="empty">No encontramos registros con ese teléfono todavía.</div>';
       return;
     }
-    box.innerHTML = `<table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
+    box.innerHTML = `<div class="table-scroll"><table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
       rows.map(r=>`<tr><td>${r.tipo}</td><td class="mono">${escapeHtml(r.ref)}</td><td>${escapeHtml(r.modelo)}</td><td><span class="pill ${r.estado==='completado'?'completado':'pendiente'}">${escapeHtml(r.estado)}</span></td><td>${escapeHtml(r.fecha)}</td></tr>`).join('')
-    }</table>`;
+    }</table></div>`;
   }catch(e){
     box.innerHTML = '<div class="empty">No pudimos consultar tu historial en este momento.</div>';
   }
