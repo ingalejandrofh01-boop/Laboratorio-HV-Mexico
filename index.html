@@ -99,6 +99,44 @@
   footer{border-top:1px solid var(--line);padding:30px 0;color:var(--sage-dim);font-size:13px;}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
 
+  /* ===== Panel de administración rediseñado ===== */
+  .admin-shell{display:flex;align-items:stretch;min-height:60vh;}
+  .admin-sidebar{width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:16px 10px;}
+  .admin-sidebar button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;padding:11px 12px;border-radius:7px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:3px;transition:background .15s ease,color .15s ease;}
+  .admin-sidebar button .ic{font-size:15px;width:18px;text-align:center;flex:none;}
+  .admin-sidebar button .lbl{flex:1;}
+  .admin-sidebar button:hover{background:rgba(210,4,45,0.07);color:var(--ink);}
+  .admin-sidebar button.active{background:var(--red);color:#fff;}
+  .admin-sidebar hr{border:none;border-top:1px solid var(--line);margin:10px 6px;}
+  .admin-badge{background:var(--brass);color:#fff;font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:1px 7px;border-radius:20px;line-height:1.5;}
+  .admin-sidebar button.active .admin-badge{background:rgba(255,255,255,0.28);}
+  .admin-main{flex:1;min-width:0;padding:22px 26px;}
+  .admin-tab{display:none;}
+  .admin-tab.active{display:block;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;text-align:center;}
+  .kpi .num{font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--red);margin:0;line-height:1;}
+  .kpi .lbl{font-size:11.5px;color:var(--sage);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em;}
+  .filter-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+  .proc-card{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease;background:var(--panel);}
+  .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);}
+  .step-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .step-row:last-child{border-bottom:none;}
+  .step-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;cursor:pointer;margin-top:2px;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
+  .step-check.done{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .step-body{flex:1;min-width:0;}
+  .step-body h4{margin:0 0 4px;font-size:14px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);}
+  .step-progress{height:6px;background:var(--panel-2);border-radius:20px;overflow:hidden;margin:10px 0 4px;}
+  .step-progress-bar{height:100%;background:var(--ok);border-radius:20px;transition:width .25s ease;}
+  .activity-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline;}
+  .activity-row:last-child{border-bottom:none;}
+  .activity-row .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex:none;margin-top:5px;}
+  @media(max-width:820px){
+    .admin-shell{flex-direction:column;}
+    .admin-sidebar{width:100%;display:flex;overflow-x:auto;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:8px;}
+    .admin-sidebar button{white-space:nowrap;width:auto;margin-bottom:0;}
+    .admin-main{padding:18px;}
+  }
+
   .lbl{width:8cm;height:2.5cm;border-radius:2px;display:flex;align-items:center;padding:0 .35cm;gap:.3cm;position:relative;overflow:hidden;}
   .lbl.gold{background:#0E1F1A;color:#EFE8D8;}
   .lbl.gold .accent{color:#D9B45C;}
@@ -813,115 +851,178 @@
     </div>
   </section>
   <section id="admin-panel" style="display:none;padding-top:0;">
-      <div class="row" style="justify-content:space-between;align-items:center;">
-        <h2 style="margin:0;">Panel de super administrador</h2>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div>
+          <h2 style="margin:0;">Panel de super administrador</h2>
+          <p class="foot-note" style="border:none;padding-top:2px;margin:0;">Laboratorio HV México — control central de solicitudes, validaciones y certificados.</p>
+        </div>
         <button class="btn ghost small" onclick="adminLogout()">Cerrar sesión</button>
       </div>
-      <p class="foot-note" style="border:none;padding-top:0;">Aquí llega todo lo que necesitas: solicitudes de clientes, folios emitidos, imágenes del sitio y tus etiquetas de impresión.</p>
 
-      <div class="grid grid-3" style="margin-bottom:18px;">
-        <div class="card" style="text-align:center;"><p class="mono" id="stat-solicitudes" style="font-size:26px;color:var(--red);margin:0;">—</p><p class="foot-note" style="border:none;padding:0;margin:2px 0 0;">Solicitudes pendientes</p></div>
-        <div class="card" style="text-align:center;"><p class="mono" id="stat-folios" style="font-size:26px;color:var(--red);margin:0;">—</p><p class="foot-note" style="border:none;padding:0;margin:2px 0 0;">Folios emitidos</p></div>
-        <div class="card" style="text-align:center;"><p class="mono" id="stat-ingresos" style="font-size:26px;color:var(--red);margin:0;">—</p><p class="foot-note" style="border:none;padding:0;margin:2px 0 0;">Ingresos estimados (folios)</p></div>
-      </div>
+      <div class="admin-shell card" style="padding:0;overflow:hidden;">
+        <nav class="admin-sidebar">
+          <button data-tab="dashboard" class="active" onclick="adminGo('dashboard')"><span class="ic">▣</span><span class="lbl">Panel general</span></button>
+          <button data-tab="solicitudes" onclick="adminGo('solicitudes')"><span class="ic">✉</span><span class="lbl">Solicitudes</span><span class="admin-badge" id="badge-solicitudes" style="display:none;">0</span></button>
+          <button data-tab="validacion" onclick="adminGo('validacion')"><span class="ic">◎</span><span class="lbl">Validación en curso</span><span class="admin-badge" id="badge-validacion" style="display:none;">0</span></button>
+          <button data-tab="certificados" onclick="adminGo('certificados')"><span class="ic">✔</span><span class="lbl">Certificados y folios</span></button>
+          <hr>
+          <button data-tab="galeria" onclick="adminGo('galeria')"><span class="ic">▤</span><span class="lbl">Imágenes del sitio</span></button>
+          <button data-tab="etiquetas" onclick="adminGo('etiquetas')"><span class="ic">▥</span><span class="lbl">Etiquetas de impresión</span></button>
+          <button data-tab="respaldo" onclick="adminGo('respaldo')"><span class="ic">⇓</span><span class="lbl">Respaldo de datos</span></button>
+        </nav>
 
-      <div class="card" style="margin-bottom:18px;">
-        <h3 style="font-size:16px;">Respaldo de datos</h3>
-        <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Toda tu información vive en este navegador — descarga un respaldo en CSV cada tanto, sobre todo antes de borrar el caché o cambiar de equipo.</p>
-        <div class="row">
-          <button class="btn ghost small" onclick="exportCSV('solicitudes')">Exportar solicitudes (CSV)</button>
-          <button class="btn ghost small" onclick="exportCSV('folios')">Exportar folios (CSV)</button>
-        </div>
-      </div>
+        <div class="admin-main">
 
-      <div class="card" style="margin-bottom:18px;">
-        <h3 style="font-size:16px;">Imágenes del sitio</h3>
-        <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Pega la URL de una foto para el fondo del inicio y la galería. Sube tu foto a <a href="https://postimages.org" target="_blank" rel="noopener">postimages.org</a> o <a href="https://imgbb.com" target="_blank" rel="noopener">imgbb.com</a> (gratis, sin cuenta) y pega aquí el link directo — así seguimos 100% en el plan gratis de Firebase, sin necesidad de tarjeta.</p>
-        <label>Imagen de fondo del inicio (URL)</label>
-        <div class="row">
-          <input id="a-hero-url" placeholder="https://..." style="flex:1;">
-          <button class="btn small" onclick="saveHeroImage()">Guardar fondo</button>
-          <button class="btn ghost small" onclick="clearHeroImage()">Quitar fondo</button>
-        </div>
-        <p id="a-hero-status" class="foot-note" style="border:none;padding-top:4px;"></p>
-        <label style="margin-top:20px;">Agregar imagen a la galería</label>
-        <div class="row">
-          <input id="a-gallery-url" placeholder="URL de la imagen" style="flex:2;">
-          <input id="a-gallery-cap" placeholder="Pie de foto (opcional)" style="flex:1;">
-          <button class="btn small" onclick="addGalleryImage()">Agregar</button>
-        </div>
-        <p id="a-gallery-status" class="foot-note" style="border:none;padding-top:4px;"></p>
-        <div id="a-gallery-list" style="margin-top:14px;"></div>
-      </div>
-
-      <div class="grid grid-2" style="align-items:start;">
-        <div class="card">
-          <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
-          <label>Folio</label>
-          <input id="a-folio" class="mono" placeholder="HV-MX-2026-002">
-          <label>Modelo</label>
-          <input id="a-modelo">
-          <label>Año</label>
-          <input id="a-anio">
-          <div class="row">
-            <div style="flex:1;"><label>Origen</label><select id="a-origen"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
-            <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64"></div>
+          <!-- ===== DASHBOARD ===== -->
+          <div class="admin-tab active" id="admin-tab-dashboard">
+            <div class="grid grid-3" style="margin-bottom:18px;">
+              <div class="kpi"><p class="num" id="stat-solicitudes">—</p><p class="lbl">Solicitudes pendientes</p></div>
+              <div class="kpi"><p class="num" id="stat-validacion">—</p><p class="lbl">Validaciones en curso</p></div>
+              <div class="kpi"><p class="num" id="stat-folios">—</p><p class="lbl">Folios emitidos</p></div>
+            </div>
+            <div class="kpi" style="text-align:left;margin-bottom:18px;">
+              <p class="lbl" style="margin:0;">Ingresos estimados (folios)</p>
+              <p class="num" id="stat-ingresos" style="text-align:left;">—</p>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">Actividad reciente</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Últimas solicitudes y folios registrados en el sistema.</p>
+              <div id="dash-actividad"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
+            </div>
           </div>
-          <label>Peso (g)</label>
-          <input id="a-peso">
-          <div class="row">
-            <div style="flex:1;"><label>Grado (0–10)</label><input id="a-grado" placeholder="8.5"></div>
-            <div style="flex:1;"><label>Estado</label><select id="a-estado"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
-          </div>
-          <label>Prueba UV</label>
-          <input id="a-uv" placeholder="Negativo (no repintado)">
-          <label>Prueba de microscopio</label>
-          <input id="a-micro" placeholder="Desgaste en filos, sin masilla">
-          <label>Remaches</label>
-          <input id="a-remaches" placeholder="Originales de fábrica">
-          <label>Color</label>
-          <input id="a-color" placeholder="Ej. verde bandera">
-          <label>Observaciones</label>
-          <textarea id="a-obs" rows="2"></textarea>
-          <label>Nivel de servicio</label>
-          <select id="a-nivel"><option>Validación digital</option><option>Peritaje físico + certificado</option><option>Peritaje premium + encapsulado</option></select>
-          <label>Teléfono del dueño (uso interno, no se publica)</label>
-          <input id="a-telefono">
-          <label>Fotos (opcional — pega la URL de cada imagen)</label>
-          <input id="a-foto1" placeholder="Foto 1 — base" style="margin-bottom:8px;">
-          <input id="a-foto2" placeholder="Foto 2 — llantas" style="margin-bottom:8px;">
-          <input id="a-foto3" placeholder="Foto 3 — frente/trasera" style="margin-bottom:8px;">
-          <input id="a-foto4" placeholder="Foto 4 — techo/cofre 45°" style="margin-bottom:8px;">
-          <input id="a-foto5" placeholder="Foto 5 — interior" style="margin-bottom:8px;">
-          <input id="a-foto6" placeholder="Foto 6 — UV/microscopio" style="margin-bottom:8px;">
-          <div style="margin-top:14px;"><button class="btn" onclick="createFolio()">Guardar folio</button></div>
-        </div>
-        <div>
-          <div class="card" style="margin-bottom:18px;">
-            <h3 style="font-size:16px;">Solicitudes pendientes</h3>
-            <div id="a-solicitudes"></div>
-          </div>
-          <div class="card">
-            <h3 style="font-size:16px;">Folios emitidos</h3>
-            <div id="a-folios"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="card" style="margin-top:18px;">
-        <h3 style="font-size:16px;">Etiquetas de impresión — B21 y D110</h3>
-        <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Escribe un folio ya emitido para generar su certificado adherible de 5×8cm (para tu Niimbot B21) y su sello de acrílico de 1.5×5cm (para tu Niimbot D110) — usan el mismo folio, datos y QR que ya quedaron guardados.</p>
-        <div class="row" style="max-width:460px;">
-          <input id="e-folio" placeholder="HV-MX-2026-001" style="flex:1;">
-          <button class="btn small" onclick="loadEtiquetaByFolio()">Cargar folio</button>
+          <!-- ===== SOLICITUDES ===== -->
+          <div class="admin-tab" id="admin-tab-solicitudes">
+            <h3 style="font-size:16px;margin-top:0;">Solicitudes de clientes</h3>
+            <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Aquí llegan tanto las validaciones en línea (digitales) como las que requieren traer la pieza al laboratorio.</p>
+            <div class="row" style="margin-bottom:14px;">
+              <button class="btn ghost small filter-btn active" data-filter="todas" onclick="filterSolicitudes('todas')">Todas</button>
+              <button class="btn ghost small filter-btn" data-filter="digital" onclick="filterSolicitudes('digital')">En línea</button>
+              <button class="btn ghost small filter-btn" data-filter="presencial" onclick="filterSolicitudes('presencial')">Presenciales</button>
+              <button class="btn ghost small filter-btn" data-filter="pendiente" onclick="filterSolicitudes('pendiente')">Pendientes</button>
+            </div>
+            <div id="a-solicitudes"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
+          </div>
+
+          <!-- ===== VALIDACIÓN EN CURSO ===== -->
+          <div class="admin-tab" id="admin-tab-validacion">
+            <div id="validacion-list-wrap">
+              <h3 style="font-size:16px;margin-top:0;">Piezas en proceso de validación</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Desde aquí vas registrando paso a paso el peritaje: recepción, inspección visual, pruebas UV, microscopio, remaches y dictamen final — con evidencia fotográfica y notificación al cliente en cada etapa.</p>
+              <div id="validacion-list"><p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p></div>
+            </div>
+            <div id="validacion-detail" style="display:none;"></div>
+          </div>
+
+          <!-- ===== CERTIFICADOS Y FOLIOS ===== -->
+          <div class="admin-tab" id="admin-tab-certificados">
+            <div class="grid grid-2" style="align-items:start;">
+              <div class="card">
+                <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
+                <input type="hidden" id="a-linked-solicitud" value="">
+                <label>Folio</label>
+                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002">
+                <label>Modelo</label>
+                <input id="a-modelo">
+                <label>Año</label>
+                <input id="a-anio">
+                <div class="row">
+                  <div style="flex:1;"><label>Origen</label><select id="a-origen"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
+                  <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64"></div>
+                </div>
+                <label>Peso (g)</label>
+                <input id="a-peso">
+                <div class="row">
+                  <div style="flex:1;"><label>Grado (0–10)</label><input id="a-grado" placeholder="8.5"></div>
+                  <div style="flex:1;"><label>Estado</label><select id="a-estado"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
+                </div>
+                <label>Prueba UV</label>
+                <input id="a-uv" placeholder="Negativo (no repintado)">
+                <label>Prueba de microscopio</label>
+                <input id="a-micro" placeholder="Desgaste en filos, sin masilla">
+                <label>Remaches</label>
+                <input id="a-remaches" placeholder="Originales de fábrica">
+                <label>Color</label>
+                <input id="a-color" placeholder="Ej. verde bandera">
+                <label>Observaciones</label>
+                <textarea id="a-obs" rows="2"></textarea>
+                <label>Nivel de servicio</label>
+                <select id="a-nivel"><option>Validación digital</option><option>Peritaje físico + certificado</option><option>Peritaje premium + encapsulado</option></select>
+                <label>Teléfono del dueño (uso interno, no se publica)</label>
+                <input id="a-telefono">
+                <label>Fotos (opcional — pega la URL de cada imagen)</label>
+                <input id="a-foto1" placeholder="Foto 1 — base" style="margin-bottom:8px;">
+                <input id="a-foto2" placeholder="Foto 2 — llantas" style="margin-bottom:8px;">
+                <input id="a-foto3" placeholder="Foto 3 — frente/trasera" style="margin-bottom:8px;">
+                <input id="a-foto4" placeholder="Foto 4 — techo/cofre 45°" style="margin-bottom:8px;">
+                <input id="a-foto5" placeholder="Foto 5 — interior" style="margin-bottom:8px;">
+                <input id="a-foto6" placeholder="Foto 6 — UV/microscopio" style="margin-bottom:8px;">
+                <div style="margin-top:14px;"><button class="btn" onclick="createFolio()">Guardar folio</button></div>
+              </div>
+              <div>
+                <div class="card" style="margin-bottom:18px;">
+                  <h3 style="font-size:16px;">Solicitudes pendientes</h3>
+                  <div id="a-solicitudes-mini"></div>
+                </div>
+                <div class="card">
+                  <h3 style="font-size:16px;">Folios emitidos</h3>
+                  <div id="a-folios"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== GALERÍA / IMÁGENES ===== -->
+          <div class="admin-tab" id="admin-tab-galeria">
+            <div class="card">
+              <h3 style="font-size:16px;">Imágenes del sitio</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Pega la URL de una foto para el fondo del inicio y la galería. Sube tu foto a <a href="https://postimages.org" target="_blank" rel="noopener">postimages.org</a> o <a href="https://imgbb.com" target="_blank" rel="noopener">imgbb.com</a> (gratis, sin cuenta) y pega aquí el link directo — así seguimos 100% en el plan gratis de Firebase, sin necesidad de tarjeta.</p>
+              <label>Imagen de fondo del inicio (URL)</label>
+              <div class="row">
+                <input id="a-hero-url" placeholder="https://..." style="flex:1;">
+                <button class="btn small" onclick="saveHeroImage()">Guardar fondo</button>
+                <button class="btn ghost small" onclick="clearHeroImage()">Quitar fondo</button>
+              </div>
+              <p id="a-hero-status" class="foot-note" style="border:none;padding-top:4px;"></p>
+              <label style="margin-top:20px;">Agregar imagen a la galería</label>
+              <div class="row">
+                <input id="a-gallery-url" placeholder="URL de la imagen" style="flex:2;">
+                <input id="a-gallery-cap" placeholder="Pie de foto (opcional)" style="flex:1;">
+                <button class="btn small" onclick="addGalleryImage()">Agregar</button>
+              </div>
+              <p id="a-gallery-status" class="foot-note" style="border:none;padding-top:4px;"></p>
+              <div id="a-gallery-list" style="margin-top:14px;"></div>
+            </div>
+          </div>
+
+          <!-- ===== ETIQUETAS ===== -->
+          <div class="admin-tab" id="admin-tab-etiquetas">
+            <div class="card">
+              <h3 style="font-size:16px;">Etiquetas de impresión — B21 y D110</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Escribe un folio ya emitido para generar su certificado adherible de 5×8cm (para tu Niimbot B21) y su sello de acrílico de 1.5×5cm (para tu Niimbot D110) — usan el mismo folio, datos y QR que ya quedaron guardados.</p>
+              <div class="row" style="max-width:460px;">
+                <input id="e-folio" placeholder="HV-MX-2026-001" style="flex:1;">
+                <button class="btn small" onclick="loadEtiquetaByFolio()">Cargar folio</button>
+              </div>
+              <div id="e-result" style="margin-top:24px;"></div>
+            </div>
+          </div>
+
+          <!-- ===== RESPALDO ===== -->
+          <div class="admin-tab" id="admin-tab-respaldo">
+            <div class="card">
+              <h3 style="font-size:16px;">Respaldo de datos</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Toda tu información vive en Firebase — descarga un respaldo en CSV cada tanto para tener copia local.</p>
+              <div class="row">
+                <button class="btn ghost small" onclick="exportCSV('solicitudes')">Exportar solicitudes (CSV)</button>
+                <button class="btn ghost small" onclick="exportCSV('folios')">Exportar folios (CSV)</button>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <div id="e-result" style="margin-top:24px;"></div>
       </div>
   </section>
-</div>
-
-</div>
-
 <footer>
   <div class="wrap" style="text-align:center;">
     <img class="hv-logo lg" alt="Laboratorio HV México" style="margin:0 auto 16px;">
@@ -966,7 +1067,7 @@ if(FIREBASE_READY){
 // avísame y activamos Storage (sigue siendo $0 dentro de su cuota gratis
 // de Blaze, solo se necesita vincular una tarjeta).
 
-const HV_COLLECTION_MAP = { solicitud: "solicitudes", folio: "folios", site: "site" };
+const HV_COLLECTION_MAP = { solicitud: "solicitudes", folio: "folios", site: "site", proceso: "procesos" };
 function hvDocRef(key){
   const i = key.indexOf(":");
   const prefix = i > -1 ? key.slice(0, i) : key;
@@ -1503,6 +1604,8 @@ function prefillFolioFromSolicitud(dJson){
   document.getElementById('a-telefono').value = d.telefono || '';
   if(d.nivel) document.getElementById('a-nivel').value = d.nivel;
   document.getElementById('a-obs').value = d.desc || '';
+  document.getElementById('a-linked-solicitud').value = d.id || '';
+  adminGo('certificados');
   toast('Datos de la solicitud cargados en el formulario de folio. Solo falta el peritaje y el folio.');
   document.getElementById('a-folio').scrollIntoView({behavior:'smooth', block:'center'});
 }
@@ -1511,6 +1614,7 @@ async function createFolio(){
   const folio = document.getElementById('a-folio').value.trim();
   const modelo = document.getElementById('a-modelo').value.trim();
   if(!folio || !modelo){ toast('Folio y modelo son obligatorios.'); return; }
+  const linkedSolicitud = document.getElementById('a-linked-solicitud').value.trim();
   const data = {
     folio, modelo,
     anio: document.getElementById('a-anio').value.trim(),
@@ -1538,8 +1642,18 @@ async function createFolio(){
     const existing = await HVStorage.get('folio:'+folio, true).catch(()=>null);
     if(existing){ toast('Ese folio ya existe, usa otro.'); return; }
     await HVStorage.set('folio:'+folio, JSON.stringify(data), true);
+    if(linkedSolicitud){
+      try{
+        const r = await HVStorage.get('solicitud:'+linkedSolicitud, true);
+        const sd = JSON.parse(r.value);
+        sd.estado = 'completado';
+        await HVStorage.set('solicitud:'+linkedSolicitud, JSON.stringify(sd), true);
+        await HVStorage.delete('proceso:'+linkedSolicitud, true).catch(()=>{});
+      }catch(e){}
+    }
     toast('Folio guardado: '+folio);
-    document.querySelectorAll('#admin-panel input, #admin-panel textarea').forEach(i=>{ if(i.id!=='admin-pass') i.value=''; });
+    document.querySelectorAll('#admin-tab-certificados input, #admin-tab-certificados textarea').forEach(i=>{ i.value=''; });
+    document.getElementById('a-linked-solicitud').value = '';
     refreshAdminLists();
   }catch(e){
     toast('No se pudo guardar el folio.');
@@ -1548,21 +1662,252 @@ async function createFolio(){
 
 const PKG_PRICE = {'Validación digital':150, 'Peritaje físico + certificado':400, 'Premium + encapsulado':800, 'Peritaje premium + encapsulado':800};
 
+// ============================================================
+// NAVEGACIÓN DEL PANEL (sidebar con pestañas)
+// ============================================================
+function adminGo(tab){
+  document.querySelectorAll('.admin-sidebar button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.toggle('active', t.id==='admin-tab-'+tab));
+  if(tab==='solicitudes') refreshAdminLists();
+  if(tab==='validacion') refreshValidacionList();
+  if(tab==='dashboard') refreshAdminLists();
+}
+
+// ============================================================
+// SOLICITUDES — lista filtrable (en línea / presencial / pendientes)
+// ============================================================
+let CURRENT_SOLICITUDES = [];
+let SOLICITUDES_FILTER = 'todas';
+
+function esDigital(paquete){ return paquete === 'digital'; }
+
+function solicitudCardHtml(d){
+  const tipo = esDigital(d.paquete) ? '<span class="pill original" style="font-size:11px;">En línea</span>' : '<span class="pill pendiente" style="font-size:11px;">Presencial</span>';
+  const enValidacion = d.estado === 'en_validacion';
+  return `
+      <div class="card" style="margin-bottom:10px;">
+        <div class="row" style="justify-content:space-between;">
+          <strong style="font-size:14px;">${escapeHtml(d.modelo)}</strong>
+          <span class="row" style="gap:6px;">${tipo}<span class="pill ${d.estado==='completado'?'completado':'pendiente'}">${escapeHtml(enValidacion?'en validación':d.estado)}</span></span>
+        </div>
+        <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
+        <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)} · ${escapeHtml(d.fecha||'')}</p>
+        ${d.desc ? `<p style="font-size:12.5px;color:var(--sage);margin:0 0 8px;">${escapeHtml(d.desc)}</p>` : ''}
+        <div class="row">
+          ${d.estado==='completado' ? '' : (enValidacion
+            ? `<button class="btn small" onclick="adminGo('validacion');openProceso('${escapeHtml(d.id)}')">Continuar validación</button>`
+            : `<button class="btn small" onclick='startValidacion(${JSON.stringify(JSON.stringify(d))})'>Iniciar validación</button>`)}
+          <button class="btn ghost small" onclick='prefillFolioFromSolicitud(${JSON.stringify(JSON.stringify(d))})'>Ir directo a folio</button>
+        </div>
+      </div>`;
+}
+
+function renderSolicitudesList(targetId, items, showFilterEmpty){
+  const box = document.getElementById(targetId);
+  if(!box) return;
+  box.innerHTML = items.length ? items.map(solicitudCardHtml).join('') : `<p style="color:var(--sage);font-size:14px;">${showFilterEmpty||'Sin solicitudes por ahora.'}</p>`;
+}
+
+function filterSolicitudes(filter){
+  SOLICITUDES_FILTER = filter;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
+  let items = CURRENT_SOLICITUDES;
+  if(filter==='digital') items = items.filter(d=>esDigital(d.paquete));
+  else if(filter==='presencial') items = items.filter(d=>!esDigital(d.paquete));
+  else if(filter==='pendiente') items = items.filter(d=>d.estado!=='completado');
+  renderSolicitudesList('a-solicitudes', items, 'No hay solicitudes con este filtro.');
+}
+
+// ============================================================
+// VALIDACIÓN PASO A PASO
+// ============================================================
+const STEP_DEFS = [
+  {key:'recepcion', label:'Recepción de la pieza'},
+  {key:'visual', label:'Inspección visual'},
+  {key:'uv', label:'Prueba UV (repintado)'},
+  {key:'micro', label:'Microscopio (desgaste / masilla)'},
+  {key:'remaches', label:'Remaches y ensamble'},
+  {key:'fotos', label:'Fotografías de evidencia'},
+  {key:'dictamen', label:'Dictamen final'}
+];
+
+async function startValidacion(dJson){
+  const d = JSON.parse(dJson);
+  const proceso = {
+    id: d.id, solicitudId: d.id,
+    nombre: d.nombre, telefono: d.telefono, modelo: d.modelo, anio: d.anio,
+    origen: d.origen, color: d.color, paquete: d.paquete, nivel: d.nivel,
+    estado: 'en_proceso',
+    creado: new Date().toLocaleDateString('es-MX'),
+    pasos: STEP_DEFS.map(s=>({key:s.key, label:s.label, done:false, nota:''}))
+  };
+  try{
+    await HVStorage.set('proceso:'+d.id, JSON.stringify(proceso), true);
+    d.estado = 'en_validacion';
+    await HVStorage.set('solicitud:'+d.id, JSON.stringify(d), true);
+    toast('Validación iniciada para '+d.modelo);
+    adminGo('validacion');
+    openProceso(d.id);
+    refreshAdminLists();
+  }catch(e){ toast('No se pudo iniciar la validación.'); }
+}
+
+async function refreshValidacionList(){
+  const listBox = document.getElementById('validacion-list');
+  document.getElementById('validacion-detail').style.display = 'none';
+  document.getElementById('validacion-list-wrap').style.display = 'block';
+  if(!listBox) return;
+  listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
+  try{
+    const list = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
+    const items = [];
+    for(const k of (list.keys||[])){
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado==='en_proceso') items.push(p); }catch(e){}
+    }
+    items.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
+    listBox.innerHTML = items.length ? items.map(p=>{
+      const done = p.pasos.filter(s=>s.done).length;
+      const pct = Math.round(done / p.pasos.length * 100);
+      return `
+        <div class="proc-card" onclick="openProceso('${escapeHtml(p.id)}')">
+          <div class="row" style="justify-content:space-between;">
+            <strong style="font-size:14px;">${escapeHtml(p.modelo)}</strong>
+            <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+          </div>
+          <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(p.nombre)} · ${escapeHtml(p.nivel)}</p>
+          <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
+          <p class="foot-note" style="border:none;padding:0;margin:2px 0 0;">${done} de ${p.pasos.length} pasos completados</p>
+        </div>` }).join('') : '<p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p>';
+  }catch(e){ listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudo cargar la lista.</p>'; }
+}
+
+async function getProceso(id){
+  const r = await HVStorage.get('proceso:'+id, true);
+  return JSON.parse(r.value);
+}
+async function setProceso(p){
+  await HVStorage.set('proceso:'+p.id, JSON.stringify(p), true);
+}
+
+async function openProceso(id){
+  document.getElementById('validacion-list-wrap').style.display = 'none';
+  const detail = document.getElementById('validacion-detail');
+  detail.style.display = 'block';
+  detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
+  let p;
+  try{ p = await getProceso(id); }catch(e){ detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se encontró esta validación.</p>'; return; }
+  renderProcesoDetail(p);
+}
+
+function renderProcesoDetail(p){
+  const detail = document.getElementById('validacion-detail');
+  const done = p.pasos.filter(s=>s.done).length;
+  const pct = Math.round(done / p.pasos.length * 100);
+  const stepsHtml = p.pasos.map((s,i)=>`
+    <div class="step-row">
+      <div class="step-check ${s.done?'done':''}" onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
+      <div class="step-body">
+        <h4>${i+1}. ${escapeHtml(s.label)}</h4>
+        <textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>
+        <div class="row" style="margin-top:6px;">
+          <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
+        </div>
+      </div>
+    </div>`).join('');
+  detail.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
+      <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+    </div>
+    <div class="card">
+      <h3 style="font-size:17px;margin-top:0;">${escapeHtml(p.modelo)}</h3>
+      <p style="font-size:13px;color:var(--sage);margin:0 0 12px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
+      <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
+      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${done} de ${p.pasos.length} pasos completados</p>
+      ${stepsHtml}
+      <div class="row" style="margin-top:18px;">
+        <button class="btn" ${done<p.pasos.length?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
+      </div>
+      ${done<p.pasos.length ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa todos los pasos para poder generar el certificado.</p>' : ''}
+    </div>`;
+}
+
+async function toggleProcesoStep(id, key){
+  const p = await getProceso(id);
+  const step = p.pasos.find(s=>s.key===key);
+  if(step) step.done = !step.done;
+  await setProceso(p);
+  renderProcesoDetail(p);
+}
+
+async function saveProcesoNota(id, key, value){
+  const p = await getProceso(id);
+  const step = p.pasos.find(s=>s.key===key);
+  if(step) step.nota = value;
+  await setProceso(p);
+}
+
+async function notifyProcesoStep(id, key){
+  const p = await getProceso(id);
+  const step = p.pasos.find(s=>s.key===key);
+  if(!step) return;
+  const msg = `Hola ${p.nombre}, te compartimos un avance de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}):\n\n✔ ${step.label}${step.nota ? ': ' + step.nota : ''}\n\nSeguimos trabajando en tu peritaje. — Laboratorio HV México`;
+  window.open(waLink(msg), '_blank', 'noopener');
+}
+
+async function finalizeProceso(id){
+  const p = await getProceso(id);
+  if(p.pasos.some(s=>!s.done)){ toast('Completa todos los pasos antes de finalizar.'); return; }
+  document.getElementById('a-modelo').value = p.modelo || '';
+  document.getElementById('a-anio').value = p.anio || '';
+  if(p.origen) document.getElementById('a-origen').value = p.origen;
+  document.getElementById('a-color').value = p.color || '';
+  document.getElementById('a-telefono').value = p.telefono || '';
+  if(p.nivel) document.getElementById('a-nivel').value = p.nivel;
+  const uvStep = p.pasos.find(s=>s.key==='uv');
+  const microStep = p.pasos.find(s=>s.key==='micro');
+  const remachesStep = p.pasos.find(s=>s.key==='remaches');
+  const dictamenStep = p.pasos.find(s=>s.key==='dictamen');
+  if(uvStep) document.getElementById('a-uv').value = uvStep.nota || '';
+  if(microStep) document.getElementById('a-micro').value = microStep.nota || '';
+  if(remachesStep) document.getElementById('a-remaches').value = remachesStep.nota || '';
+  document.getElementById('a-obs').value = p.pasos.filter(s=>s.nota).map(s=>`${s.label}: ${s.nota}`).join(' · ');
+  document.getElementById('a-linked-solicitud').value = p.solicitudId || '';
+  adminGo('certificados');
+  toast('Validación completa. Revisa los datos y asigna el folio para emitir el certificado.');
+  document.getElementById('a-folio').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ============================================================
+// DASHBOARD — estadísticas y actividad reciente
+// ============================================================
+
 async function updateAdminStats(){
   try{
     const sol = await HVStorage.list('solicitud:', true).catch(()=>({keys:[]}));
     let pendientes = 0;
     for(const k of (sol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); if(d.estado!=='completado') pendientes++; }catch(e){}
+      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); if(d.estado!=='completado' && d.estado!=='en_validacion') pendientes++; }catch(e){}
+    }
+    const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
+    let enProceso = 0;
+    for(const k of (proc.keys||[])){
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado==='en_proceso') enProceso++; }catch(e){}
     }
     const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
     let ingresos = 0;
     for(const k of (fol.keys||[])){
       try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); ingresos += PKG_PRICE[d.nivel] || 0; }catch(e){}
     }
-    document.getElementById('stat-solicitudes').textContent = pendientes;
-    document.getElementById('stat-folios').textContent = (fol.keys||[]).length;
-    document.getElementById('stat-ingresos').textContent = '$' + ingresos.toLocaleString('es-MX');
+    const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+    setText('stat-solicitudes', pendientes);
+    setText('stat-validacion', enProceso);
+    setText('stat-folios', (fol.keys||[]).length);
+    setText('stat-ingresos', '$' + ingresos.toLocaleString('es-MX'));
+    const badgeSol = document.getElementById('badge-solicitudes');
+    if(badgeSol){ badgeSol.style.display = pendientes>0 ? 'inline-block' : 'none'; badgeSol.textContent = pendientes; }
+    const badgeVal = document.getElementById('badge-validacion');
+    if(badgeVal){ badgeVal.style.display = enProceso>0 ? 'inline-block' : 'none'; badgeVal.textContent = enProceso; }
   }catch(e){}
 }
 
@@ -1599,40 +1944,8 @@ async function exportCSV(kind){
   }
 }
 
-async function refreshAdminLists(){
-  updateAdminStats();
-  const solBox = document.getElementById('a-solicitudes');
-  const folBox = document.getElementById('a-folios');
-  if(!solBox) return;
-  solBox.innerHTML = 'Cargando…';
-  folBox.innerHTML = 'Cargando…';
-  try{
-    const sol = await HVStorage.list('solicitud:', true).catch(()=>({keys:[]}));
-    const items = [];
-    for(const k of (sol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
-    }
-    items.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
-    solBox.innerHTML = items.length ? items.map(d=>`
-      <div style="padding:10px 0;border-bottom:1px solid var(--line);">
-        <div class="row" style="justify-content:space-between;">
-          <strong style="font-size:14px;">${escapeHtml(d.modelo)}</strong>
-          <span class="pill ${d.estado==='completado'?'completado':'pendiente'}">${escapeHtml(d.estado)}</span>
-        </div>
-        <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
-        <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)}</p>
-        <button class="btn ghost small" onclick='prefillFolioFromSolicitud(${JSON.stringify(JSON.stringify(d))})'>Convertir en folio</button>
-      </div>`).join('') : '<p style="color:var(--sage);font-size:14px;">Sin solicitudes por ahora.</p>';
-  }catch(e){ solBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar las solicitudes.</p>'; }
-
-  try{
-    const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
-    const items = [];
-    for(const k of (fol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
-    }
-    items.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
-    folBox.innerHTML = items.length ? items.map(d=>`
+function folioCardHtml(d){
+  return `
       <div style="padding:10px 0;border-bottom:1px solid var(--line);">
         <div class="row" style="justify-content:space-between;">
           <span class="mono" style="font-size:13px;color:var(--brass);">${escapeHtml(d.folio)}</span>
@@ -1640,8 +1953,66 @@ async function refreshAdminLists(){
         </div>
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
         <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
-      </div>`).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
+      </div>`;
+}
+
+function solicitudMiniHtml(d){
+  return `
+      <div style="padding:10px 0;border-bottom:1px solid var(--line);">
+        <div class="row" style="justify-content:space-between;">
+          <strong style="font-size:14px;">${escapeHtml(d.modelo)}</strong>
+          <span class="pill ${d.estado==='completado'?'completado':'pendiente'}">${escapeHtml(d.estado==='en_validacion'?'en validación':d.estado)}</span>
+        </div>
+        <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
+        <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)}</p>
+        <button class="btn ghost small" onclick='prefillFolioFromSolicitud(${JSON.stringify(JSON.stringify(d))})'>Convertir en folio</button>
+      </div>`;
+}
+
+async function refreshAdminLists(){
+  updateAdminStats();
+  const solBox = document.getElementById('a-solicitudes');
+  const solMiniBox = document.getElementById('a-solicitudes-mini');
+  const folBox = document.getElementById('a-folios');
+  const dashBox = document.getElementById('dash-actividad');
+  if(!solBox) return;
+  solBox.innerHTML = 'Cargando…';
+  if(solMiniBox) solMiniBox.innerHTML = 'Cargando…';
+  folBox.innerHTML = 'Cargando…';
+
+  let solItems = [];
+  try{
+    const sol = await HVStorage.list('solicitud:', true).catch(()=>({keys:[]}));
+    for(const k of (sol.keys||[])){
+      try{ const r = await HVStorage.get(k, true); solItems.push(JSON.parse(r.value)); }catch(e){}
+    }
+    solItems.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
+    CURRENT_SOLICITUDES = solItems;
+    filterSolicitudes(SOLICITUDES_FILTER);
+    if(solMiniBox) solMiniBox.innerHTML = solItems.filter(d=>d.estado!=='completado').length
+      ? solItems.filter(d=>d.estado!=='completado').map(solicitudMiniHtml).join('')
+      : '<p style="color:var(--sage);font-size:14px;">Sin solicitudes pendientes.</p>';
+  }catch(e){ solBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar las solicitudes.</p>'; }
+
+  let folItems = [];
+  try{
+    const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
+    for(const k of (fol.keys||[])){
+      try{ const r = await HVStorage.get(k, true); folItems.push(JSON.parse(r.value)); }catch(e){}
+    }
+    folItems.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
+    folBox.innerHTML = folItems.length ? folItems.map(folioCardHtml).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
   }catch(e){ folBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar los folios.</p>'; }
+
+  if(dashBox){
+    const actividad = [
+      ...solItems.slice(0,5).map(d=>({fecha:d.fecha||'', texto:`Nueva solicitud — ${d.modelo} (${d.nombre})`})),
+      ...folItems.slice(0,5).map(d=>({fecha:d.fecha||'', texto:`Folio emitido — ${d.folio}: ${d.modelo}`}))
+    ];
+    dashBox.innerHTML = actividad.length ? actividad.map(a=>`
+      <div class="activity-row"><span class="dot"></span><span style="flex:1;">${escapeHtml(a.texto)}</span><span class="mono" style="color:var(--brass-dim);">${escapeHtml(a.fecha)}</span></div>
+    `).join('') : '<p style="color:var(--sage);font-size:14px;">Sin actividad todavía.</p>';
+  }
 }
 </script>
 </body>
