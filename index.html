@@ -1331,7 +1331,20 @@ async function tryAdminLoginGoogle(){
     await fbAuth.signInWithPopup(provider);
     // onAuthStateChanged revisa la lista blanca y decide si se queda o se saca
   }catch(e){
-    errBox.textContent = 'No se pudo iniciar sesión con Google.';
+    console.error('Error de login con Google:', e);
+    let msg = 'No se pudo iniciar sesión con Google.';
+    if(e && e.code === 'auth/unauthorized-domain'){
+      msg = 'Este dominio no está autorizado en Firebase. Agrega "' + location.hostname + '" en Firebase Console → Authentication → Settings → Authorized domains.';
+    } else if(e && e.code === 'auth/popup-blocked'){
+      msg = 'El navegador bloqueó la ventana emergente de Google. Permite popups para este sitio e intenta de nuevo.';
+    } else if(e && e.code === 'auth/popup-closed-by-user'){
+      msg = 'Cerraste la ventana de Google antes de terminar el inicio de sesión.';
+    } else if(e && e.code === 'auth/operation-not-allowed'){
+      msg = 'El proveedor de Google no está habilitado en este proyecto de Firebase.';
+    } else if(e && e.code){
+      msg = 'No se pudo iniciar sesión con Google (' + e.code + ').';
+    }
+    errBox.textContent = msg;
     errBox.style.display = 'block';
   }
 }
