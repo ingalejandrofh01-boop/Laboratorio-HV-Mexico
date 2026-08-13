@@ -101,6 +101,29 @@
   .pill.completado{background:rgba(47,122,79,0.1);color:var(--ok);border:1px solid var(--ok);}
   .foot-note{font-size:12px;color:var(--sage-dim);border-top:1px solid var(--line);padding-top:16px;margin-top:24px;}
   .cert{background:var(--paper);color:var(--ink);border-radius:6px;padding:32px;position:relative;border:2px solid var(--red);box-shadow:0 0 0 5px rgba(163,38,56,0.06);}
+  .cert-topband{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:20px;}
+  .cert-topband-text{flex:1;display:flex;flex-direction:column;line-height:1.3;}
+  .cert-topband-text strong{font-family:'Fraunces',serif;font-size:15px;color:var(--ink);}
+  .cert-topband-text span{font-size:10.5px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:.04em;}
+  .cert-grade-hero{display:flex;align-items:center;gap:20px;margin-bottom:14px;}
+  .cert-grade-badge{flex:none;width:96px;height:96px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,0.12);}
+  .cert-grade-badge .cert-grade-num{font-family:'Fraunces',serif;font-size:34px;font-weight:600;line-height:1;}
+  .cert-grade-badge .cert-grade-max{font-size:11px;opacity:.85;}
+  .cert-grade-badge.tier-gold{background:linear-gradient(150deg,#C99A3F,#8C6524);}
+  .cert-grade-badge.tier-silver{background:linear-gradient(150deg,#9AA5B1,#5F6A75);}
+  .cert-grade-badge.tier-red{background:linear-gradient(150deg,var(--red),var(--red-dim));}
+  .cert-grade-info h2{margin:2px 0;font-size:22px;}
+  .cert-grade-tier{margin:0;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+  .cert-grade-tier.tier-gold{color:#8C6524;}
+  .cert-grade-tier.tier-silver{color:#5F6A75;}
+  .cert-grade-tier.tier-red{color:var(--red);}
+  .cert-grade-folio{margin:2px 0 0;font-size:12px;color:var(--brass-dim);}
+  .subgrade-boxes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0;}
+  .subgrade-box{border:1px solid rgba(27,36,32,0.15);border-radius:6px;padding:10px 8px;text-align:center;background:rgba(184,134,47,0.05);}
+  .subgrade-box .sb-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--red);font-weight:600;}
+  .subgrade-box .sb-lbl{display:block;font-size:10px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
+  .cert-barcode{text-align:center;}
+  .cert-barcode p{margin:2px 0 0;font-size:9px;color:var(--brass-dim);letter-spacing:.05em;}
   .cert h2{color:var(--ink);}
   .cert .divider{border-top:1px dashed var(--brass-dim);margin:18px 0;}
   .cert table td{border-bottom:1px solid rgba(27,36,32,0.12);color:var(--ink);}
@@ -204,6 +227,18 @@
   .income-table td{padding:10px;border-bottom:1px solid var(--line);}
   .income-table tr:last-child td{border-bottom:none;}
   .income-table td.num{font-family:'IBM Plex Mono',monospace;text-align:right;}
+
+  /* ===== Editor con vista previa en vivo ===== */
+  .cert-editor-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .cert-tab-btn{background:var(--panel-2);border:1px solid var(--line);color:var(--sage);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s ease,color .15s ease,border-color .15s ease;}
+  .cert-tab-btn:hover{border-color:var(--red);color:var(--ink);}
+  .cert-tab-btn.active{background:var(--red);border-color:var(--red);color:#fff;}
+  .cert-tab-hint{font-size:12px;color:var(--brass-dim);margin-left:auto;}
+  .cert-editor-preview{position:sticky;top:16px;background:var(--panel-2);border-radius:10px;padding:22px;display:flex;flex-direction:column;align-items:center;min-height:300px;}
+  .subgrade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+  .subgrade-grid input{padding:8px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;}
+  .sg-label{font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--brass-dim);margin-bottom:3px;display:block;}
+  @media(max-width:900px){.cert-editor-preview{position:static;}}
 
   .lbl{width:8cm;height:2.5cm;border-radius:2px;display:flex;align-items:center;padding:0 .35cm;gap:.3cm;position:relative;overflow:hidden;}
   .lbl.gold{background:#0E1F1A;color:#EFE8D8;}
@@ -403,6 +438,26 @@
   .sl-qr{width:1.15cm;height:1.15cm;}
   .sl-folio{font-family:'IBM Plex Mono',monospace;font-size:4pt;color:#453b32;text-align:center;line-height:1.2;word-break:break-all;padding:0 1pt;}
   .sl-grado{font-family:'Fraunces',serif;font-size:9pt;color:#8C6524;font-weight:600;}
+  .sl-tier-bar{width:70%;height:1.5pt;border-radius:2pt;}
+  .seal-label.tier-gold .sl-tier-bar{background:#B8862F;}
+  .seal-label.tier-silver .sl-tier-bar{background:#8A94A6;}
+  .seal-label.tier-red .sl-tier-bar{background:#D2042D;}
+  .cl-certified{margin-left:auto;background:rgba(255,255,255,.18);color:#fff;font-size:5.5pt;font-weight:700;letter-spacing:.08em;padding:2pt 5pt;border-radius:3pt;border:.5pt solid rgba(255,255,255,.5);}
+  .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:9.5pt;line-height:1.2;color:#1B1512;}
+  .cl-item-sub{margin:1pt 0 3pt;font-size:6pt;color:#8a7a6b;text-transform:uppercase;letter-spacing:.03em;}
+  .cl-grade-row{display:flex;align-items:baseline;gap:5pt;background:rgba(184,134,47,0.08);border-radius:3pt;padding:3pt 6pt;margin-bottom:3pt;}
+  .cl-grade-tag{font-size:5pt;font-weight:700;color:#8a7a6b;letter-spacing:.05em;}
+  .cl-grade-word{margin-left:auto;font-size:5pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+  .cert-label.tier-gold .cl-grade-word{color:#8C6524;}
+  .cert-label.tier-silver .cl-grade-word{color:#5F6A75;}
+  .cert-label.tier-red .cl-grade-word{color:#D2042D;}
+  .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:3pt;}
+  .cl-subgrades div{text-align:center;background:#f7f2ea;border-radius:2pt;padding:2pt 1pt;}
+  .cl-sg-lbl{display:block;font-size:4pt;color:#9a8d7f;text-transform:uppercase;}
+  .cl-sg-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:6.5pt;color:#D2042D;font-weight:600;}
+  .cl-sign-name{margin:0;font-size:6pt;font-weight:600;color:#1B1512;}
+  .cl-sign-role{margin:0;font-size:4.6pt;color:#9a8d7f;}
+  .cl-barcode{margin:2pt 0;opacity:.85;}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -1012,38 +1067,51 @@
 
           <!-- ===== CERTIFICADOS Y FOLIOS ===== -->
           <div class="admin-tab" id="admin-tab-certificados">
+            <div class="cert-editor-tabs">
+              <button class="cert-tab-btn active" data-mode="cert" onclick="switchCertPreview('cert')">Certificado completo</button>
+              <button class="cert-tab-btn" data-mode="label" onclick="switchCertPreview('label')">Etiqueta 5×8 (B21)</button>
+              <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 1.5×5 (D110)</button>
+              <span class="cert-tab-hint">Vista previa en tiempo real — va cambiando mientras editas →</span>
+            </div>
             <div class="grid grid-2" style="align-items:start;">
               <div class="card">
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
                 <label>Folio</label>
-                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002">
+                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
                 <label>Modelo</label>
-                <input id="a-modelo">
+                <input id="a-modelo" oninput="updateLivePreview()">
                 <label>Año</label>
-                <input id="a-anio">
+                <input id="a-anio" oninput="updateLivePreview()">
                 <div class="row">
-                  <div style="flex:1;"><label>Origen</label><select id="a-origen"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
-                  <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64"></div>
+                  <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview()"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
+                  <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64" oninput="updateLivePreview()"></div>
                 </div>
                 <label>Peso (g)</label>
-                <input id="a-peso">
+                <input id="a-peso" oninput="updateLivePreview()">
                 <div class="row">
-                  <div style="flex:1;"><label>Grado (0–10)</label><input id="a-grado" placeholder="8.5"></div>
-                  <div style="flex:1;"><label>Estado</label><select id="a-estado"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
+                  <div style="flex:1;"><label>Grado general (0–10)</label><input id="a-grado" placeholder="8.5" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Estado</label><select id="a-estado" onchange="updateLivePreview()"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
+                </div>
+                <label style="margin-top:8px;">Desglose de calificación (opcional, 0–10 cada uno)</label>
+                <div class="subgrade-grid">
+                  <div><label class="sg-label">Pintura</label><input id="a-sg-pintura" placeholder="9.0" oninput="updateLivePreview()"></div>
+                  <div><label class="sg-label">Desgaste</label><input id="a-sg-desgaste" placeholder="9.0" oninput="updateLivePreview()"></div>
+                  <div><label class="sg-label">Ensamble</label><input id="a-sg-ensamble" placeholder="9.0" oninput="updateLivePreview()"></div>
+                  <div><label class="sg-label">Autenticidad</label><input id="a-sg-autenticidad" placeholder="9.0" oninput="updateLivePreview()"></div>
                 </div>
                 <label>Prueba UV</label>
-                <input id="a-uv" placeholder="Negativo (no repintado)">
+                <input id="a-uv" placeholder="Negativo (no repintado)" oninput="updateLivePreview()">
                 <label>Prueba de microscopio</label>
-                <input id="a-micro" placeholder="Desgaste en filos, sin masilla">
+                <input id="a-micro" placeholder="Desgaste en filos, sin masilla" oninput="updateLivePreview()">
                 <label>Remaches</label>
-                <input id="a-remaches" placeholder="Originales de fábrica">
+                <input id="a-remaches" placeholder="Originales de fábrica" oninput="updateLivePreview()">
                 <label>Color</label>
-                <input id="a-color" placeholder="Ej. verde bandera">
+                <input id="a-color" placeholder="Ej. verde bandera" oninput="updateLivePreview()">
                 <label>Observaciones</label>
-                <textarea id="a-obs" rows="2"></textarea>
+                <textarea id="a-obs" rows="2" oninput="updateLivePreview()"></textarea>
                 <label>Nivel de servicio</label>
-                <select id="a-nivel"><option>Validación digital</option><option>Peritaje físico + certificado</option><option>Peritaje premium + encapsulado</option></select>
+                <select id="a-nivel" onchange="updateLivePreview()"><option>Validación digital</option><option>Peritaje físico + certificado</option><option>Peritaje premium + encapsulado</option></select>
                 <label>Teléfono del dueño (uso interno, no se publica)</label>
                 <input id="a-telefono">
                 <label>Fotos (opcional — adjunta cada imagen)</label>
@@ -1094,15 +1162,19 @@
                 <p id="a-foto-status" class="foot-note" style="border:none;padding-top:6px;"></p>
                 <div style="margin-top:14px;"><button class="btn" onclick="createFolio()">Guardar folio</button></div>
               </div>
-              <div>
-                <div class="card" style="margin-bottom:18px;">
-                  <h3 style="font-size:16px;">Solicitudes pendientes</h3>
-                  <div id="a-solicitudes-mini"></div>
-                </div>
-                <div class="card">
-                  <h3 style="font-size:16px;">Folios emitidos</h3>
-                  <div id="a-folios"></div>
-                </div>
+              <div class="cert-editor-preview">
+                <div id="live-preview-mount"></div>
+              </div>
+            </div>
+            <div class="finish-divider" style="margin:26px 0;"></div>
+            <div class="grid grid-2">
+              <div class="card">
+                <h3 style="font-size:16px;">Solicitudes pendientes</h3>
+                <div id="a-solicitudes-mini"></div>
+              </div>
+              <div class="card">
+                <h3 style="font-size:16px;">Folios emitidos</h3>
+                <div id="a-folios"></div>
               </div>
             </div>
           </div>
@@ -1289,19 +1361,59 @@ function pillClass(estado){
   return 'original';
 }
 
+function tierLabel(tier){
+  return tier === 'gold' ? 'EJEMPLAR SOBRESALIENTE' : tier === 'silver' ? 'BUEN ESTADO' : 'REQUIERE REVISIÓN';
+}
+
+function barcodeSvg(seed, w, h){
+  // Barra decorativa determinística a partir del folio — no es un código de barras funcional real.
+  let hash = 0;
+  for(let i=0;i<seed.length;i++){ hash = (hash*31 + seed.charCodeAt(i)) >>> 0; }
+  let bars = '', x = 0;
+  while(x < w){
+    hash = (hash*1103515245 + 12345) >>> 0;
+    const bw = 1 + (hash % 3);
+    if((hash >> 3) % 2 === 0) bars += `<rect x="${x}" y="0" width="${bw}" height="${h}" fill="currentColor"/>`;
+    x += bw + 1;
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="color:#1B1512;">${bars}</svg>`;
+}
+
 function renderCert(f){
   const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6];
   const labels = ['Base','Llantas','Frente/trasera','Techo/cofre 45°','Interior','UV/microscopio'];
   let fotoHtml = fotos.map((u,i)=> `<div class="photobox">${u ? `<img src="${escapeHtml(u)}" alt="${labels[i]}">` : labels[i]}</div>`).join('');
+  const tier = tierForGrade(f.grado, f.estado);
+  const subgrades = [
+    {label:'Pintura', val:f.sgPintura}, {label:'Desgaste', val:f.sgDesgaste},
+    {label:'Ensamble', val:f.sgEnsamble}, {label:'Autenticidad', val:f.sgAutenticidad}
+  ];
+  const hasSubgrades = subgrades.some(s => s.val);
   return `
   <div class="cert">
-    <div class="row" style="justify-content:space-between;align-items:flex-start;">
-      <div>
-        <h2 style="font-size:22px;">Certificado de autenticidad y evaluación</h2>
-        <p class="mono" style="color:var(--brass-dim);margin:0;">Folio ${escapeHtml(f.folio)}</p>
+    <div class="cert-topband">
+      <img class="hv-logo" alt="HV" style="height:30px;">
+      <div class="cert-topband-text">
+        <strong>LABORATORIO HV MÉXICO</strong>
+        <span>Certificadora independiente de coleccionismo · CDMX</span>
       </div>
       <span class="pill ${pillClass(f.estado)}">${escapeHtml(f.estado||'—')}</span>
     </div>
+    <div class="cert-grade-hero">
+      <div class="cert-grade-badge tier-${tier}">
+        <span class="cert-grade-num">${escapeHtml(f.grado||'—')}</span>
+        <span class="cert-grade-max">/10</span>
+      </div>
+      <div class="cert-grade-info">
+        <p class="cert-grade-tier tier-${tier}">${tierLabel(tier)}</p>
+        <h2>${escapeHtml(f.modelo)}${f.anio ? ' — '+escapeHtml(f.anio) : ''}</h2>
+        <p class="mono cert-grade-folio">Folio ${escapeHtml(f.folio)} · ${escapeHtml(f.origen||'—')} · Escala ${escapeHtml(f.escala||'—')}</p>
+      </div>
+    </div>
+    ${hasSubgrades ? `
+    <div class="subgrade-boxes">
+      ${subgrades.map(s => `<div class="subgrade-box"><span class="sb-val">${escapeHtml(s.val||'—')}</span><span class="sb-lbl">${s.label}</span></div>`).join('')}
+    </div>` : ''}
     <div class="divider"></div>
     <div class="grid grid-2">
       <table>
@@ -1311,7 +1423,6 @@ function renderCert(f){
         <tr><td><strong>Color</strong></td><td>${escapeHtml(f.color||'—')}</td></tr>
         <tr><td><strong>Escala</strong></td><td>${escapeHtml(f.escala)}</td></tr>
         <tr><td><strong>Peso</strong></td><td>${escapeHtml(f.peso)} g</td></tr>
-        <tr><td><strong>Grado</strong></td><td>${escapeHtml(f.grado)} / 10</td></tr>
       </table>
       <table>
         <tr><td><strong>UV</strong></td><td>${escapeHtml(f.uv)}</td></tr>
@@ -1326,12 +1437,15 @@ function renderCert(f){
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
     <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
     <div class="divider"></div>
-    <div class="row" style="align-items:center;gap:18px;">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(SITE_DOMAIN + '/?folio=' + f.folio)}" alt="QR de verificación" style="border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
-      <div>
-        <p style="margin:0;font-size:13px;color:var(--sage);">Escanea para verificar en línea.</p>
-        <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
+    <div class="row" style="align-items:center;justify-content:space-between;gap:18px;">
+      <div class="row" style="align-items:center;gap:18px;">
+        <img src="${qrDataUrl(f,140)}" alt="QR de verificación" style="border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
+        <div>
+          <p style="margin:0;font-size:13px;color:var(--sage);">Escanea para verificar en línea.</p>
+          <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
+        </div>
       </div>
+      <div class="cert-barcode">${barcodeSvg(f.folio||'HV', 130, 44)}<p class="mono">${escapeHtml(f.folio)}</p></div>
     </div>
     <div class="no-print row" style="margin-top:18px;align-items:center;">
       <button class="btn ghost small" onclick="window.print()">Descargar / imprimir certificado</button>
@@ -1365,53 +1479,67 @@ function qrDataUrl(f, size){
 }
 
 function renderCertLabel(f){
+  const tier = tierForGrade(f.grado, f.estado);
+  const subgrades = [
+    {label:'Pintura', val:f.sgPintura}, {label:'Desgaste', val:f.sgDesgaste},
+    {label:'Ensamble', val:f.sgEnsamble}, {label:'Autenticidad', val:f.sgAutenticidad}
+  ];
+  const hasSubgrades = subgrades.some(s => s.val);
   return `
   <div class="print-target" id="print-target-cert">
-    <div class="cert-label">
+    <div class="cert-label tier-${tier}">
       <div class="cert-label-head">
-        <img class="hv-logo" alt="HV" style="height:34px;filter:brightness(0) invert(1);">
+        <img class="hv-logo" alt="HV" style="height:26px;filter:brightness(0) invert(1);">
         <div>
-          <p class="cl-brand">LABORATORIO HV MÉXICO</p>
+          <p class="cl-brand">LABORATORIO HV</p>
           <p class="cl-sub">Certificadora México</p>
         </div>
+        <span class="cl-certified">CERTIFIED</span>
       </div>
       <div class="cert-label-body">
-        <p class="cl-folio">${escapeHtml(f.folio)}</p>
-        <table class="cl-table">
-          <tr><td>Modelo</td><td>${escapeHtml(f.modelo)}</td></tr>
-          <tr><td>Año / Origen</td><td>${escapeHtml(f.anio)} · ${escapeHtml(f.origen)}</td></tr>
-          <tr><td>Color</td><td>${escapeHtml(f.color||'—')}</td></tr>
-          <tr><td>Escala</td><td>${escapeHtml(f.escala)}</td></tr>
-        </table>
-        <div class="cl-row">
-          <span class="pill ${pillClass(f.estado)}" style="font-size:11px;">${escapeHtml(f.estado)}</span>
-          <span class="cl-grade">${escapeHtml(f.grado||'—')}<span style="font-size:11px;">/10</span></span>
+        <p class="cl-item-title">${escapeHtml(f.modelo)}</p>
+        <p class="cl-item-sub">${escapeHtml(f.origen||'—')} · Diecast · ${escapeHtml(f.color||'—')}</p>
+        <div class="cl-grade-row">
+          <span class="cl-grade-tag">GRADE</span>
+          <span class="cl-grade">${escapeHtml(f.grado||'—')}</span>
+          <span class="cl-grade-word">${tierLabel(tier)}</span>
         </div>
-        <p class="cl-tests">UV: ${escapeHtml(f.uv||'—')} · Microscopio: ${escapeHtml(f.micro||'—')} · Remaches: ${escapeHtml(f.remaches||'—')}</p>
+        ${hasSubgrades ? `
+        <div class="cl-subgrades">
+          ${subgrades.map(s => `<div><span class="cl-sg-lbl">${s.label}</span><span class="cl-sg-val">${escapeHtml(s.val||'—')}</span></div>`).join('')}
+        </div>` : ''}
+        <table class="cl-table">
+          <tr><td>CERT #</td><td class="mono">${escapeHtml(f.folio)}</td></tr>
+          <tr><td>FECHA</td><td>${escapeHtml(f.fecha||'—')}</td></tr>
+          <tr><td>ESCALA</td><td>${escapeHtml(f.escala||'—')}</td></tr>
+        </table>
         <div class="cl-qr-row">
-          <img src="${qrDataUrl(f,160)}" alt="QR">
+          <img src="${qrDataUrl(f,150)}" alt="QR">
           <div class="cl-sign">
-            <p>Certificó: <strong>Ricardo Flores</strong><br>Técnico Certificador</p>
-            <p>Valida: <strong>Lic. A. Fernández H.</strong><br>Dirección General</p>
+            <p class="cl-sign-name">Ricardo Flores</p>
+            <p class="cl-sign-role">Técnico Certificador</p>
           </div>
         </div>
+        <div class="cl-barcode">${barcodeSvg(f.folio||'HV', 160, 20)}</div>
         <p class="cl-disclaimer">Laboratorio independiente. No afiliado a Mattel, Inc. ni a Hot Wheels®. Opinión experta, no avalúo comercial.</p>
       </div>
     </div>
   </div>
   <p class="foot-note no-print">Tamaño real: 5 × 8 cm — pensado para el rollo 50×80mm de tu Niimbot B21. En el diálogo de impresión usa escala 100% (sin ajustar a página). Si tu B21 no aparece como impresora en el navegador, instala el software/driver de PC de Niimbot, o descarga esto como PDF y ábrelo desde la app NIIMBOT para importarlo como imagen.</p>
-  <div class="no-print" style="margin-top:10px;"><button class="btn ghost small" onclick="printOnly('cert')">Descargar / imprimir certificado (5×8 B21)</button></div>`;
+  <div class="no-print" style="margin-top:10px;"><button class="btn ghost small" onclick="printOnly('cert')">Descargar / imprimir etiqueta (5×8 B21)</button></div>`;
 }
 
 function renderSealLabel(f){
+  const tier = tierForGrade(f.grado, f.estado);
   return `
   <div class="print-target" id="print-target-seal">
-    <div class="seal-label">
+    <div class="seal-label tier-${tier}">
       <div class="sl-top">HV</div>
-      <img class="sl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="MX">
+      <div class="sl-tier-bar"></div>
       <img class="sl-qr" src="${qrDataUrl(f,120)}" alt="QR">
       <div class="sl-folio">${escapeHtml(f.folio)}</div>
       <div class="sl-grado">${escapeHtml(f.grado||'—')}</div>
+      <img class="sl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="MX">
     </div>
   </div>
   <p class="foot-note no-print">Tamaño real: 1.5 × 5 cm — al máximo que soporta tu Niimbot D110 (ancho máx. 15mm). Va pegada en el sello del acrílico.</p>
@@ -2061,34 +2189,44 @@ function resetAllPhotoUploads(){
   for(let n=1; n<=6; n++){ clearPhotoUpload(n, null); }
 }
 
+function collectLiveFormData(){
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  return {
+    folio: g('a-folio'), modelo: g('a-modelo'), anio: g('a-anio'),
+    origen: g('a-origen'), escala: g('a-escala'), peso: g('a-peso'),
+    grado: g('a-grado'), estado: g('a-estado'),
+    sgPintura: g('a-sg-pintura'), sgDesgaste: g('a-sg-desgaste'), sgEnsamble: g('a-sg-ensamble'), sgAutenticidad: g('a-sg-autenticidad'),
+    uv: g('a-uv'), micro: g('a-micro'), remaches: g('a-remaches'), color: g('a-color'), obs: g('a-obs'),
+    nivel: g('a-nivel'), telefono: g('a-telefono'),
+    foto1: g('a-foto1'), foto2: g('a-foto2'), foto3: g('a-foto3'), foto4: g('a-foto4'), foto5: g('a-foto5'), foto6: g('a-foto6'),
+    fecha: new Date().toLocaleDateString('es-MX')
+  };
+}
+
+let CERT_PREVIEW_MODE = 'cert';
+function switchCertPreview(mode){
+  CERT_PREVIEW_MODE = mode;
+  document.querySelectorAll('.cert-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  updateLivePreview();
+}
+function updateLivePreview(){
+  const mount = document.getElementById('live-preview-mount');
+  if(!mount) return;
+  const f = collectLiveFormData();
+  if(!f.folio) f.folio = 'HV-MX-2026-000';
+  if(!f.modelo) f.modelo = 'Nombre del modelo';
+  if(!f.fecha) f.fecha = new Date().toLocaleDateString('es-MX');
+  if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = renderCert(f);
+  else if(CERT_PREVIEW_MODE === 'label') mount.innerHTML = renderCertLabel(f);
+  else mount.innerHTML = renderSealLabel(f);
+}
+
 async function createFolio(){
   const folio = document.getElementById('a-folio').value.trim();
   const modelo = document.getElementById('a-modelo').value.trim();
   if(!folio || !modelo){ toast('Folio y modelo son obligatorios.'); return; }
   const linkedSolicitud = document.getElementById('a-linked-solicitud').value.trim();
-  const data = {
-    folio, modelo,
-    anio: document.getElementById('a-anio').value.trim(),
-    origen: document.getElementById('a-origen').value,
-    escala: document.getElementById('a-escala').value.trim(),
-    peso: document.getElementById('a-peso').value.trim(),
-    grado: document.getElementById('a-grado').value.trim(),
-    estado: document.getElementById('a-estado').value,
-    uv: document.getElementById('a-uv').value.trim(),
-    micro: document.getElementById('a-micro').value.trim(),
-    remaches: document.getElementById('a-remaches').value.trim(),
-    color: document.getElementById('a-color').value.trim(),
-    obs: document.getElementById('a-obs').value.trim(),
-    nivel: document.getElementById('a-nivel').value,
-    telefono: document.getElementById('a-telefono').value.trim(),
-    foto1: document.getElementById('a-foto1').value.trim(),
-    foto2: document.getElementById('a-foto2').value.trim(),
-    foto3: document.getElementById('a-foto3').value.trim(),
-    foto4: document.getElementById('a-foto4').value.trim(),
-    foto5: document.getElementById('a-foto5').value.trim(),
-    foto6: document.getElementById('a-foto6').value.trim(),
-    fecha: new Date().toLocaleDateString('es-MX')
-  };
+  const data = collectLiveFormData();
   try{
     const existing = await HVStorage.get('folio:'+folio, true).catch(()=>null);
     if(existing){ toast('Ese folio ya existe, usa otro.'); return; }
@@ -2105,6 +2243,7 @@ async function createFolio(){
     toast('Folio guardado: '+folio);
     document.querySelectorAll('#admin-tab-certificados input, #admin-tab-certificados textarea').forEach(i=>{ i.value=''; });
     resetAllPhotoUploads();
+    updateLivePreview();
     document.getElementById('a-linked-solicitud').value = '';
     refreshAdminLists();
   }catch(e){
@@ -2167,6 +2306,7 @@ function adminGo(tab){
   if(tab==='solicitudes') refreshAdminLists();
   if(tab==='validacion') refreshValidacionList();
   if(tab==='dashboard') refreshAdminLists();
+  if(tab==='certificados') updateLivePreview();
   if(tab==='ingresos') refreshIncomeTable();
   if(tab==='galeria') showCurrentHeroPreview();
 }
