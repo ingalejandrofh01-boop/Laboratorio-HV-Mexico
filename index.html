@@ -839,7 +839,7 @@
 </div>
 
 <div class="view" id="view-admin">
-  <section style="min-height:72vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;">
+  <section id="admin-gate-wrap" style="min-height:72vh;display:flex;align-items:center;justify-content:center;padding:40px 24px;">
     <div id="admin-gate" class="card" style="max-width:420px;width:100%;padding:40px 36px;text-align:center;border-radius:12px;box-shadow:0 12px 36px rgba(36,21,18,0.10);">
       <div style="width:56px;height:56px;border-radius:50%;background:rgba(210,4,45,0.08);border:1px solid rgba(210,4,45,0.18);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" style="width:24px;height:24px;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
@@ -1460,17 +1460,19 @@ async function tryAdminLoginGoogle(){
 function adminLogout(){
   if(fbAuth) fbAuth.signOut();
   document.getElementById('admin-gate').style.display = 'block';
+  document.getElementById('admin-gate-wrap').style.display = 'flex';
   document.getElementById('admin-panel').style.display = 'none';
 }
 
 if(FIREBASE_READY){
   fbAuth.onAuthStateChanged(user => {
     const gate = document.getElementById('admin-gate');
+    const gateWrap = document.getElementById('admin-gate-wrap');
     const panel = document.getElementById('admin-panel');
     const errBox = document.getElementById('admin-login-error');
     if(!gate || !panel) return;
     if(user && ADMIN_ALLOWED_EMAILS.includes(user.email)){
-      gate.style.display = 'none';
+      gateWrap.style.display = 'none';
       panel.style.display = 'block';
       refreshAdminLists();
       renderGalleryAdmin();
@@ -1480,7 +1482,7 @@ if(FIREBASE_READY){
         errBox.textContent = `La cuenta ${user.email} no está autorizada para entrar aquí.`;
         errBox.style.display = 'block';
       }
-      gate.style.display = 'block';
+      gateWrap.style.display = 'flex';
       panel.style.display = 'none';
     }
   });
