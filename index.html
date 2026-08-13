@@ -61,8 +61,8 @@
   .brand{display:flex;align-items:center;gap:14px;cursor:pointer;}
   .brand .brand-name{font-family:'Fraunces',serif;font-size:22px;letter-spacing:.01em;color:var(--ink);line-height:1.15;}
   .brand .tagline{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.07em;color:var(--sage);text-transform:uppercase;margin-top:3px;}
-  nav{display:flex;align-items:center;gap:2px;background:var(--panel-2);border-radius:999px;padding:4px;flex-wrap:wrap;}
-  nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 16px;border-radius:999px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;}
+  nav{display:flex;align-items:center;justify-content:center;gap:4px;background:var(--panel-2);border-radius:14px;padding:6px;flex-wrap:wrap;}
+  nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 16px;border-radius:9px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;}
   nav button:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
   nav button.active{background:var(--red);color:#fff;}
   .admin-link{font-size:12px!important;color:var(--sage-dim)!important;opacity:.75;margin-left:6px;padding-left:14px!important;border-left:1px solid var(--line);border-radius:0!important;}
@@ -79,7 +79,11 @@
   .grid{display:grid;gap:18px;}
   .grid-3{grid-template-columns:repeat(3,1fr);}
   .grid-2{grid-template-columns:repeat(2,1fr);}
-  @media(max-width:760px){.grid-3,.grid-2{grid-template-columns:1fr;}.hero h1{font-size:30px;}}
+  @media(max-width:760px){.grid-3,.grid-2{grid-template-columns:1fr;}.hero h1{font-size:30px;}
+    nav{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;width:100%;padding:8px;border-radius:12px;}
+    nav button{width:100%;border-radius:9px;padding:12px 8px;font-size:13px;}
+    .admin-link{grid-column:1/-1;border-left:none;border-top:1px solid var(--line);padding:10px 0 0!important;margin:2px 0 0;}
+  }
   label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sage);margin:14px 0 6px;}
   input,select,textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:4px;font-family:'IBM Plex Sans',sans-serif;font-size:16px;}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--red);}
@@ -124,6 +128,9 @@
   .subgrade-box .sb-lbl{display:block;font-size:10px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
   .cert-barcode{text-align:center;}
   .cert-barcode p{margin:2px 0 0;font-size:9px;color:var(--brass-dim);letter-spacing:.05em;}
+  .cert-authenticity-box{border:1px solid rgba(184,134,47,0.35);border-left:3px solid var(--brass);border-radius:4px;padding:14px 16px;margin:14px 0;background:rgba(184,134,47,0.05);}
+  .cert-authenticity-label{margin:0 0 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
+  .cert-authenticity-text{margin:0;font-size:13px;line-height:1.5;color:var(--ink);}
   .cert h2{color:var(--ink);}
   .cert .divider{border-top:1px dashed var(--brass-dim);margin:18px 0;}
   .cert table td{border-bottom:1px solid rgba(27,36,32,0.12);color:var(--ink);}
@@ -143,12 +150,12 @@
   /* ===== Panel de administración rediseñado ===== */
   .admin-shell{display:flex;align-items:stretch;min-height:60vh;min-width:0;box-shadow:0 2px 14px rgba(36,21,18,0.05);}
   .admin-sidebar{width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:18px 12px;box-sizing:border-box;}
-  .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;padding:11px 12px;border-radius:8px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:4px;transition:background .15s ease,color .15s ease;}
+  .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);padding:11px 12px;border-radius:8px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .15s ease,color .15s ease,border-color .15s ease;}
   .admin-sidebar button .ic{width:18px;height:18px;flex:none;display:flex;align-items:center;justify-content:center;}
   .admin-sidebar button .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
   .admin-sidebar button .lbl{flex:1;}
   .admin-sidebar button:hover{background:rgba(210,4,45,0.07);color:var(--ink);}
-  .admin-sidebar button.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(210,4,45,0.28);}
+  .admin-sidebar button.active{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 2px 8px rgba(210,4,45,0.28);}
   .admin-sidebar hr{border:none;border-top:1px solid var(--line);margin:10px 6px;}
   .admin-badge{background:var(--brass);color:#fff;font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:1px 7px;border-radius:20px;line-height:1.5;flex:none;}
   .admin-sidebar button.active .admin-badge{background:rgba(255,255,255,0.28);}
@@ -187,8 +194,9 @@
   .photo-clear:hover{background:var(--red);}
   @media(max-width:900px){
     .admin-shell{flex-direction:column;box-shadow:none;}
-    .admin-sidebar{width:100%;display:flex;overflow-x:auto;gap:4px;border-right:none;border-bottom:1px solid var(--line);padding:10px;box-sizing:border-box;}
-    .admin-sidebar button{white-space:nowrap;width:auto;margin-bottom:0;flex:none;}
+    .admin-sidebar{width:100%;display:flex;overflow-x:auto;gap:8px;border-right:none;border-bottom:1px solid var(--line);padding:12px;box-sizing:border-box;background:var(--panel-2);-webkit-overflow-scrolling:touch;position:relative;}
+    .admin-sidebar::after{content:"";position:absolute;top:0;right:0;bottom:0;width:24px;pointer-events:none;background:linear-gradient(to right, transparent, var(--panel-2));}
+    .admin-sidebar button{white-space:nowrap;width:auto;margin-bottom:0;flex:none;padding:10px 14px;}
     .admin-sidebar hr{display:none;}
     .admin-main{padding:18px;}
   }
@@ -204,6 +212,26 @@
 
   /* ===== Carrusel de galería ===== */
   .carousel{position:relative;overflow:hidden;border-radius:8px;background:var(--panel-2);}
+
+  /* ===== Librero 3D de piezas certificadas ===== */
+  .hv-book-wrap{display:flex;justify-content:center;padding:36px 0 44px;perspective:1600px;}
+  .hv-book{position:relative;width:260px;height:340px;}
+  .hv-book-spine{position:absolute;left:-9px;top:4px;bottom:4px;width:18px;background:linear-gradient(90deg,#5a0219,#7A0320 40%,#5a0219);border-radius:5px 0 0 5px;box-shadow:inset -4px 0 8px rgba(0,0,0,.35);}
+  .hv-book-pages{position:absolute;right:-5px;top:8px;bottom:8px;width:9px;background:repeating-linear-gradient(#f4ece0,#f4ece0 1px,#e2d5c0 1px,#e2d5c0 2px);border-radius:0 3px 3px 0;box-shadow:1px 0 3px rgba(0,0,0,.15);}
+  .hv-book-cover{position:absolute;inset:0;background:linear-gradient(150deg,#D2042D,#7A0320 75%);border-radius:3px 9px 9px 3px;box-shadow:0 22px 44px rgba(36,4,4,0.28),inset 0 0 0 1px rgba(255,255,255,0.1),inset 0 0 40px rgba(0,0,0,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;text-align:center;padding:30px;cursor:pointer;transform-origin:left center;transition:transform .85s cubic-bezier(.45,0,.2,1),box-shadow .85s ease;transform-style:preserve-3d;}
+  .hv-book-cover::before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,0.25);border-radius:2px 6px 6px 2px;pointer-events:none;}
+  .hv-book-cover h3{font-family:'Fraunces',serif;font-size:19px;font-weight:500;margin:0;line-height:1.3;}
+  .hv-book-cover p{font-size:11px;opacity:.82;margin:0;text-transform:uppercase;letter-spacing:.08em;}
+  .hv-book-cover:hover{transform:rotateY(-10deg);}
+  .hv-book.open .hv-book-cover{transform:rotateY(-155deg);box-shadow:-14px 14px 32px rgba(0,0,0,0.22);}
+  .hv-book-content{margin-top:8px;animation:hvBookFadeIn .5s ease both;}
+  @keyframes hvBookFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .hv-book-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;}
+  .hv-book-index-card{border:1px solid var(--line);border-radius:8px;padding:26px 18px;text-align:center;cursor:pointer;background:var(--panel);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease;}
+  .hv-book-index-card:hover{box-shadow:0 8px 20px rgba(36,21,18,0.09);border-color:var(--red);transform:translateY(-3px);}
+  .hv-book-index-card .cat-icon{font-size:28px;margin-bottom:8px;}
+  .hv-book-index-card h4{margin:0 0 4px;font-family:'Fraunces',serif;font-size:16px;font-weight:500;}
+  .hv-book-index-card p{margin:0;font-size:12px;color:var(--sage);}
   .carousel-track{display:flex;transition:transform .5s ease;}
   .carousel-slide{flex:0 0 100%;position:relative;min-width:0;}
   .carousel-slide img{width:100%;height:380px;object-fit:cover;display:block;}
@@ -339,7 +367,13 @@
   .whatsapp-float svg{width:30px;height:30px;}
   @keyframes wa-pulse{0%,100%{box-shadow:0 4px 14px rgba(0,0,0,.3), 0 0 0 0 rgba(37,211,102,.5);}50%{box-shadow:0 4px 14px rgba(0,0,0,.3), 0 0 0 8px rgba(37,211,102,0);}}
   @media(max-width:760px){.whatsapp-float{bottom:16px;right:16px;width:50px;height:50px;}}
-  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;}
+  .table-scroll-wrap{position:relative;}
+  .table-scroll-hint{display:none;font-size:11.5px;color:var(--brass-dim);text-align:right;margin:0 0 6px;align-items:center;justify-content:flex-end;gap:4px;}
+  @media(max-width:760px){
+    .table-scroll-hint{display:flex;}
+    .table-scroll-wrap::after{content:"";position:absolute;top:0;right:0;bottom:0;width:28px;pointer-events:none;background:linear-gradient(to right, transparent, var(--bg));}
+  }
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 
   .stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:0;align-items:stretch;}
@@ -442,7 +476,9 @@
   .seal-label.tier-gold .sl-tier-bar{background:#B8862F;}
   .seal-label.tier-silver .sl-tier-bar{background:#8A94A6;}
   .seal-label.tier-red .sl-tier-bar{background:#D2042D;}
-  .cl-certified{margin-left:auto;background:rgba(255,255,255,.18);color:#fff;font-size:5.5pt;font-weight:700;letter-spacing:.08em;padding:2pt 5pt;border-radius:3pt;border:.5pt solid rgba(255,255,255,.5);}
+  .cl-head-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3pt;}
+  .cl-flag{height:9pt;width:auto;display:block;border-radius:0;box-shadow:0 0 0 .5pt rgba(255,255,255,.4);}
+  .cl-certified{background:rgba(255,255,255,.18);color:#fff;font-size:5.5pt;font-weight:700;letter-spacing:.08em;padding:2pt 5pt;border-radius:3pt;border:.5pt solid rgba(255,255,255,.5);}
   .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:9.5pt;line-height:1.2;color:#1B1512;}
   .cl-item-sub{margin:1pt 0 3pt;font-size:6pt;color:#8a7a6b;text-transform:uppercase;letter-spacing:.03em;}
   .cl-grade-row{display:flex;align-items:baseline;gap:5pt;background:rgba(184,134,47,0.08);border-radius:3pt;padding:3pt 6pt;margin-bottom:3pt;}
@@ -578,13 +614,34 @@
   </section>
 
   <section>
-    <h2>Galería de piezas certificadas</h2>
-    <p style="color:var(--sage);max-width:640px;">Piezas ya evaluadas por el laboratorio. Se van a agregar más conforme entren nuevas certificaciones.</p>
-    <div class="carousel" id="gallery-carousel">
-      <div class="carousel-track" id="carousel-track"></div>
-      <button class="carousel-nav prev" onclick="carouselNav(-1)" aria-label="Anterior">‹</button>
-      <button class="carousel-nav next" onclick="carouselNav(1)" aria-label="Siguiente">›</button>
-      <div class="carousel-dots" id="carousel-dots"></div>
+    <h2>Biblioteca de piezas certificadas</h2>
+    <p style="color:var(--sage);max-width:640px;">Toca el libro para abrirlo y explora por categoría — CIPSA, Bólidos Lilí Ledy, Aurimat y más.</p>
+    <div class="hv-book-wrap">
+      <div class="hv-book" id="hv-book">
+        <div class="hv-book-spine"></div>
+        <div class="hv-book-pages"></div>
+        <div class="hv-book-cover" id="hv-book-cover" onclick="openBook()">
+          <img class="hv-logo" alt="HV" style="height:64px;filter:brightness(0) invert(1);">
+          <h3>Biblioteca de<br>piezas certificadas</h3>
+          <p>Toca para abrir</p>
+        </div>
+      </div>
+    </div>
+    <div class="hv-book-content" id="hv-book-content" style="display:none;">
+      <div id="hv-book-index" class="hv-book-index"></div>
+      <div id="hv-book-category" style="display:none;">
+        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <button class="btn ghost small" onclick="showBookIndex()">← Volver al índice</button>
+          <button class="btn ghost small" onclick="closeBook()">Cerrar libro</button>
+        </div>
+        <h3 id="hv-book-cat-title" style="font-size:18px;"></h3>
+        <div class="carousel" id="book-gallery-carousel">
+          <div class="carousel-track" id="book-carousel-track"></div>
+          <button class="carousel-nav prev" onclick="bookCarouselNav(-1)" aria-label="Anterior">‹</button>
+          <button class="carousel-nav next" onclick="bookCarouselNav(1)" aria-label="Siguiente">›</button>
+          <div class="carousel-dots" id="book-carousel-dots"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -702,13 +759,11 @@
     <div class="grid grid-2" style="margin-top:14px;">
       <div class="card">
         <p class="mono" style="color:var(--red);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;">Dirección General y de Normatividad</p>
-        <h4 style="font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;">Lic. Andrés Gabriel Fernández Hernández</h4>
-        <p style="color:var(--sage);font-size:13.5px;margin:0;">Director General. Responsable de establecer, supervisar y validar que cada método de autenticación cumpla con las normas y criterios técnicos del Laboratorio HV. Es la última instancia que avala y autoriza la certificación final.</p>
+        <p style="color:var(--sage);font-size:13.5px;margin:0;">Responsable de establecer, supervisar y validar que cada método de autenticación cumpla con las normas y criterios técnicos del Laboratorio HV. Es la última instancia que avala y autoriza la certificación final.</p>
       </div>
       <div class="card">
         <p class="mono" style="color:var(--red);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;">Jefatura Técnica de Autenticación y Peritaje</p>
-        <h4 style="font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;">Ricardo Flores</h4>
-        <p style="color:var(--sage);font-size:13.5px;margin:0;">Técnico Certificador Especializado. Perito con amplia trayectoria en el reconocimiento de variantes, pintura original, bases, remaches y características de fabricación. Responsable directo del monitoreo visual, la confronta física de la pieza y la elaboración del dictamen pericial de originalidad y condición.</p>
+        <p style="color:var(--sage);font-size:13.5px;margin:0;">Perito con amplia trayectoria en el reconocimiento de variantes, pintura original, bases, remaches y características de fabricación. Responsable directo del monitoreo visual, la confronta física de la pieza y la elaboración del dictamen pericial de originalidad y condición.</p>
       </div>
     </div>
   </section>
@@ -724,7 +779,7 @@
       <div class="step-card">
         <div class="step-num">1</div>
         <h3 style="font-size:16px;">Validación de autenticidad</h3>
-        <p style="color:var(--sage);font-size:13.5px;">Confirmamos que la pieza sea CIPSA original: material, remaches, base, tipografía y comparación contra nuestra base de referencia.</p>
+        <p style="color:var(--sage);font-size:13.5px;">Confirmamos que la pieza sea original de CIPSA, Bólidos Lilí Ledy, Aurimat y más — validando material, remaches, base, tipografía y comparación contra nuestra base de referencia.</p>
         <div class="branch-note">Si no pasa esta validación: se cobra únicamente el servicio de validación y la pieza se regresa al cliente. No continúa al resto del proceso.</div>
         <div class="step-arrow">→</div>
       </div>
@@ -779,7 +834,7 @@
       </div></div>
       <div class="method-step"><div class="step-num">7</div><div>
         <h3>Encapsulado de seguridad y etiquetado</h3>
-        <p>La pieza aprobada es encapsulada en acrílico de alta resistencia, sellado ultrasónicamente y etiquetado con datos de certificación, calificación y folio. El encapsulado es inviolable — si se abre, se invalida.</p>
+        <p>La pieza aprobada es encapsulada en acrílico sellado y etiquetado con datos de certificación, calificación y folio.</p>
       </div></div>
       <div class="method-step"><div class="step-num">8</div><div>
         <h3>Registro digital, certificación web y entrega</h3>
@@ -879,6 +934,8 @@
   <section>
     <h2>Tabla oficial de tiempos y costos</h2>
     <p style="color:var(--sage);max-width:640px;">Protocolo Zigzag C-Z — mientras más rápido necesites tu dictamen, mayor es el costo del servicio.</p>
+    <p class="table-scroll-hint">Desliza para ver más ➜</p>
+    <div class="table-scroll-wrap">
     <div class="table-scroll">
       <table class="pricing-table">
         <tr>
@@ -910,6 +967,7 @@
           <td class="mono">$1,600</td>
         </tr>
       </table>
+    </div>
     </div>
   </section>
 
@@ -955,7 +1013,7 @@
       <input id="s-anio" placeholder="1979">
       <div class="row">
         <div style="flex:1;"><label>Origen que crees que tiene</label>
-          <select id="s-origen"><option>CIPSA</option><option>USA</option><option>HK</option><option>No estoy seguro</option></select>
+          <select id="s-origen"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select>
         </div>
         <div style="flex:1;"><label>Color</label><input id="s-color" placeholder="Ej. verde bandera"></div>
       </div>
@@ -1078,13 +1136,16 @@
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
                 <label>Folio</label>
-                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
+                <div class="row" style="align-items:flex-end;">
+                  <div style="flex:1;"><input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()"></div>
+                  <button type="button" class="btn ghost small" onclick="suggestNextFolio()">Sugerir siguiente</button>
+                </div>
                 <label>Modelo</label>
                 <input id="a-modelo" oninput="updateLivePreview()">
                 <label>Año</label>
                 <input id="a-anio" oninput="updateLivePreview()">
                 <div class="row">
-                  <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview()"><option>CIPSA</option><option>USA</option><option>HK</option></select></div>
+                  <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview()"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select></div>
                   <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64" oninput="updateLivePreview()"></div>
                 </div>
                 <label>Peso (g)</label>
@@ -1211,6 +1272,12 @@
                 </div>
                 <div style="flex:1;">
                   <input id="a-gallery-cap" placeholder="Pie de foto (opcional)" style="margin-bottom:8px;">
+                  <select id="a-gallery-categoria" style="margin-bottom:8px;">
+                    <option value="cipsa">CIPSA</option>
+                    <option value="bolidos">Bólidos Lilí Ledy</option>
+                    <option value="aurimat">Aurimat</option>
+                    <option value="otro">Otras piezas</option>
+                  </select>
                   <input id="a-gallery-folio" placeholder="Folio relacionado (opcional, ej. HV-MX-2026-001)" style="margin-bottom:8px;">
                   <button class="btn small" onclick="addGalleryImage()">Agregar a la galería</button>
                 </div>
@@ -1242,6 +1309,13 @@
                 <button class="btn ghost small" onclick="exportCSV('solicitudes')">Exportar solicitudes (CSV)</button>
                 <button class="btn ghost small" onclick="exportCSV('folios')">Exportar folios (CSV)</button>
               </div>
+            </div>
+            <div class="card" style="margin-top:18px;border-color:rgba(210,4,45,0.3);">
+              <h3 style="font-size:16px;color:var(--red);">Zona de pruebas</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Úsalo mientras estás probando el sistema, antes de operar con clientes reales.</p>
+              <p style="font-size:13px;color:var(--sage);margin:0 0 8px;">El contador de folios sugiere automáticamente el siguiente número (001, 002…). Si hiciste pruebas y quieres que el próximo folio real vuelva a empezar en 001:</p>
+              <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="resetFolioCounter()">Reiniciar contador de folios a 1</button>
+              <p style="font-size:13px;color:var(--sage);margin:16px 0 0;">Para borrar un certificado o solicitud ya publicado, ve a "Certificados y folios" o "Solicitudes" y usa el botón "Eliminar" de cada tarjeta.</p>
             </div>
           </div>
 
@@ -1365,20 +1439,6 @@ function tierLabel(tier){
   return tier === 'gold' ? 'EJEMPLAR SOBRESALIENTE' : tier === 'silver' ? 'BUEN ESTADO' : 'REQUIERE REVISIÓN';
 }
 
-function barcodeSvg(seed, w, h){
-  // Barra decorativa determinística a partir del folio — no es un código de barras funcional real.
-  let hash = 0;
-  for(let i=0;i<seed.length;i++){ hash = (hash*31 + seed.charCodeAt(i)) >>> 0; }
-  let bars = '', x = 0;
-  while(x < w){
-    hash = (hash*1103515245 + 12345) >>> 0;
-    const bw = 1 + (hash % 3);
-    if((hash >> 3) % 2 === 0) bars += `<rect x="${x}" y="0" width="${bw}" height="${h}" fill="currentColor"/>`;
-    x += bw + 1;
-  }
-  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="color:#1B1512;">${bars}</svg>`;
-}
-
 function renderCert(f){
   const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6];
   const labels = ['Base','Llantas','Frente/trasera','Techo/cofre 45°','Interior','UV/microscopio'];
@@ -1434,18 +1494,19 @@ function renderCert(f){
     </div>
     ${f.obs ? `<p style="margin-top:14px;"><strong>Observaciones:</strong> ${escapeHtml(f.obs)}</p>` : ''}
     <div class="divider"></div>
+    <div class="cert-authenticity-box">
+      <p class="cert-authenticity-label">Dictamen de autenticidad</p>
+      <p class="cert-authenticity-text">Con base en la evaluación técnica descrita, se dictamina que esta pieza corresponde a la producción original de ${escapeHtml(f.origen||'la fabricante')}${f.anio ? ', correspondiente al año '+escapeHtml(f.anio) : ''}. Este certificado tiene fines exclusivamente de coleccionismo; no representa relación, afiliación ni endoso con los actuales titulares de la marca, en caso de existir.</p>
+    </div>
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
     <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
     <div class="divider"></div>
-    <div class="row" style="align-items:center;justify-content:space-between;gap:18px;">
-      <div class="row" style="align-items:center;gap:18px;">
-        <img src="${qrDataUrl(f,140)}" alt="QR de verificación" style="border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
-        <div>
-          <p style="margin:0;font-size:13px;color:var(--sage);">Escanea para verificar en línea.</p>
-          <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
-        </div>
+    <div class="row" style="align-items:center;gap:18px;">
+      <img src="${qrDataUrl(f,160)}" alt="QR de verificación" class="qr-embed" data-size="160" style="border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
+      <div>
+        <p style="margin:0;font-size:13px;color:var(--sage);">Escanea para verificar en línea. Este código es único de esta pieza.</p>
+        <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
       </div>
-      <div class="cert-barcode">${barcodeSvg(f.folio||'HV', 130, 44)}<p class="mono">${escapeHtml(f.folio)}</p></div>
     </div>
     <div class="no-print row" style="margin-top:18px;align-items:center;">
       <button class="btn ghost small" onclick="window.print()">Descargar / imprimir certificado</button>
@@ -1475,7 +1536,47 @@ function qrDataUrl(f, size){
     color: f.color||'', grado: f.grado||'', dictamen: f.estado||''
   });
   const url = `${SITE_DOMAIN}/?${params.toString()}`;
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&ecc=H&data=${encodeURIComponent(url)}`;
+}
+
+function roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+async function embedLogoInQr(imgEl){
+  try{
+    const size = parseInt(imgEl.dataset.size || imgEl.naturalWidth || 160, 10);
+    const qrImg = new Image();
+    qrImg.crossOrigin = 'anonymous';
+    const qrLoaded = new Promise((res, rej) => { qrImg.onload = res; qrImg.onerror = rej; });
+    qrImg.src = imgEl.src;
+    await qrLoaded;
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(qrImg, 0, 0, size, size);
+    const logo = new Image();
+    const logoLoaded = new Promise((res, rej) => { logo.onload = res; logo.onerror = rej; });
+    logo.src = LOGO_SRC;
+    await logoLoaded;
+    const logoSize = size * 0.22;
+    const pad = logoSize * 0.22;
+    const cx = (size - logoSize) / 2, cy = (size - logoSize) / 2;
+    ctx.fillStyle = '#fff';
+    roundRectPath(ctx, cx - pad, cy - pad, logoSize + pad*2, logoSize + pad*2, 8);
+    ctx.fill();
+    ctx.drawImage(logo, cx, cy, logoSize, logoSize);
+    imgEl.src = canvas.toDataURL('image/png');
+  }catch(e){ /* si falla, se queda el QR normal sin logo — sigue siendo escaneable */ }
+}
+function embedAllQrLogos(){
+  document.querySelectorAll('img.qr-embed').forEach(img => embedLogoInQr(img));
 }
 
 function renderCertLabel(f){
@@ -1494,7 +1595,10 @@ function renderCertLabel(f){
           <p class="cl-brand">LABORATORIO HV</p>
           <p class="cl-sub">Certificadora México</p>
         </div>
-        <span class="cl-certified">CERTIFIED</span>
+        <div class="cl-head-right">
+          <img class="cl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="Bandera de México">
+          <span class="cl-certified">CERTIFIED</span>
+        </div>
       </div>
       <div class="cert-label-body">
         <p class="cl-item-title">${escapeHtml(f.modelo)}</p>
@@ -1514,13 +1618,12 @@ function renderCertLabel(f){
           <tr><td>ESCALA</td><td>${escapeHtml(f.escala||'—')}</td></tr>
         </table>
         <div class="cl-qr-row">
-          <img src="${qrDataUrl(f,150)}" alt="QR">
+          <img src="${qrDataUrl(f,150)}" alt="QR" class="qr-embed" data-size="150">
           <div class="cl-sign">
-            <p class="cl-sign-name">Ricardo Flores</p>
-            <p class="cl-sign-role">Técnico Certificador</p>
+            <p class="cl-sign-role" style="font-weight:600;color:#1B1512;">Técnico Certificador</p>
+            <p class="cl-sign-role">Laboratorio HV México</p>
           </div>
         </div>
-        <div class="cl-barcode">${barcodeSvg(f.folio||'HV', 160, 20)}</div>
         <p class="cl-disclaimer">Laboratorio independiente. No afiliado a Mattel, Inc. ni a Hot Wheels®. Opinión experta, no avalúo comercial.</p>
       </div>
     </div>
@@ -1552,6 +1655,8 @@ function openEtiquetaFor(fJson){
   toast('Inicia sesión de admin para ver su etiqueta de impresión.');
   document.getElementById('e-folio').value = f.folio;
   document.getElementById('e-result').innerHTML = renderCertLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderSealLabel(f);
+  applyLogos();
+  embedAllQrLogos();
 }
 
 async function loadEtiquetaByFolio(){
@@ -1564,6 +1669,8 @@ async function loadEtiquetaByFolio(){
     if(res && res.value){
       const f = JSON.parse(res.value);
       box.innerHTML = renderCertLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderSealLabel(f);
+      applyLogos();
+      embedAllQrLogos();
     } else {
       box.innerHTML = '<div class="empty">No encontramos ese folio. Debe existir ya en el panel interno antes de generar su etiqueta.</div>';
     }
@@ -1590,6 +1697,8 @@ async function verifyFolio(){
     if(res && res.value){
       const f = JSON.parse(res.value);
       box.innerHTML = renderCert(f);
+      applyLogos();
+      embedAllQrLogos();
     } else {
       box.innerHTML = '<div class="empty">No encontramos ese folio. Revisa que esté escrito tal como aparece en tu certificado.</div>';
     }
@@ -1877,53 +1986,100 @@ async function setGallery(items){
   await HVStorage.set('site:gallery', JSON.stringify(items), true);
 }
 
-let CAROUSEL_ITEMS = [];
-let CAROUSEL_INDEX = 0;
-let CAROUSEL_TIMER = null;
+function goVerifyFolio(folio){
+  go('verificar');
+  const input = document.getElementById('v-folio');
+  if(input){ input.value = folio; verifyFolio(); }
+}
 
-async function loadGallery(){
-  const items = await getGallery();
-  CAROUSEL_ITEMS = items;
-  const track = document.getElementById('carousel-track');
-  const dots = document.getElementById('carousel-dots');
-  if(!track) return;
-  if(CAROUSEL_TIMER){ clearInterval(CAROUSEL_TIMER); CAROUSEL_TIMER = null; }
-  if(!items.length){
-    track.innerHTML = '<div class="carousel-slide"><div class="gallery-empty">Aún no hay fotos en la galería. Se agregan desde el panel interno.</div></div>';
-    if(dots) dots.innerHTML = '';
-    return;
-  }
-  track.innerHTML = items.map(it => `
+function carouselSlideHtml(it){
+  return `
     <div class="carousel-slide">
       <img src="${escapeHtml(it.url)}" alt="${escapeHtml(it.caption||'Pieza certificada')}">
       <div class="carousel-caption">
         ${it.caption ? `<div style="font-weight:600;font-size:15px;">${escapeHtml(it.caption)}</div>` : ''}
         ${it.folio ? `<div class="mono" style="font-size:12px;opacity:.9;cursor:pointer;margin-top:4px;" onclick="goVerifyFolio('${escapeHtml(it.folio)}')">Folio ${escapeHtml(it.folio)} — ver certificado →</div>` : ''}
       </div>
-    </div>`).join('');
-  if(dots) dots.innerHTML = items.map((_,i) => `<span class="dot ${i===0?'active':''}" onclick="carouselGoTo(${i})"></span>`).join('');
-  CAROUSEL_INDEX = 0;
-  updateCarousel();
-  if(items.length > 1) CAROUSEL_TIMER = setInterval(()=>carouselNav(1), 4500);
+    </div>`;
 }
 
-function updateCarousel(){
+// El carrusel superior original queda como reserva de datos; el librero es ahora la
+// presentación principal en la página de inicio (ver más abajo).
+async function loadGallery(){
   const track = document.getElementById('carousel-track');
+  if(!track) return; // sección reemplazada por el librero — nada que hacer aquí
+}
+
+// ============================================================
+// LIBRERO 3D — biblioteca de piezas certificadas por categoría
+// ============================================================
+function openBook(){
+  document.getElementById('hv-book').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('hv-book-content').style.display = 'block';
+    document.getElementById('hv-book-content').scrollIntoView({behavior:'smooth', block:'nearest'});
+    renderBookIndex();
+  }, 550);
+}
+function closeBook(){
+  document.getElementById('hv-book').classList.remove('open');
+  document.getElementById('hv-book-content').style.display = 'none';
+  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
+}
+
+async function renderBookIndex(){
+  const items = await getGallery();
+  const box = document.getElementById('hv-book-index');
+  box.innerHTML = BOOK_CATEGORIES.map(c => {
+    const count = items.filter(it => (it.categoria||'otro') === c.key).length;
+    return `<div class="hv-book-index-card" onclick="openBookCategory('${c.key}')"><div class="cat-icon">${c.icon}</div><h4>${c.label}</h4><p>${count} pieza${count===1?'':'s'}</p></div>`;
+  }).join('');
+  box.style.display = 'grid';
+  document.getElementById('hv-book-category').style.display = 'none';
+}
+function showBookIndex(){
+  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
+  renderBookIndex();
+}
+
+let BOOK_CAROUSEL_ITEMS = [];
+let BOOK_CAROUSEL_INDEX = 0;
+let BOOK_CAROUSEL_TIMER = null;
+
+async function openBookCategory(key){
+  const all = await getGallery();
+  const items = all.filter(it => (it.categoria||'otro') === key);
+  const cat = BOOK_CATEGORIES.find(c => c.key === key);
+  document.getElementById('hv-book-index').style.display = 'none';
+  document.getElementById('hv-book-category').style.display = 'block';
+  document.getElementById('hv-book-cat-title').textContent = `${cat.icon} ${cat.label}`;
+  BOOK_CAROUSEL_ITEMS = items;
+  BOOK_CAROUSEL_INDEX = 0;
+  const track = document.getElementById('book-carousel-track');
+  const dots = document.getElementById('book-carousel-dots');
+  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
+  if(!items.length){
+    track.innerHTML = '<div class="carousel-slide"><div class="gallery-empty">Todavía no hay piezas en esta categoría.</div></div>';
+    dots.innerHTML = '';
+    return;
+  }
+  track.innerHTML = items.map(carouselSlideHtml).join('');
+  dots.innerHTML = items.map((_,i) => `<span class="dot ${i===0?'active':''}" onclick="bookCarouselGoTo(${i})"></span>`).join('');
+  updateBookCarousel();
+  if(items.length > 1) BOOK_CAROUSEL_TIMER = setInterval(() => bookCarouselNav(1), 4500);
+}
+function updateBookCarousel(){
+  const track = document.getElementById('book-carousel-track');
   if(!track) return;
-  track.style.transform = `translateX(-${CAROUSEL_INDEX*100}%)`;
-  document.querySelectorAll('#carousel-dots .dot').forEach((d,i)=>d.classList.toggle('active', i===CAROUSEL_INDEX));
+  track.style.transform = `translateX(-${BOOK_CAROUSEL_INDEX*100}%)`;
+  document.querySelectorAll('#book-carousel-dots .dot').forEach((d,i)=>d.classList.toggle('active', i===BOOK_CAROUSEL_INDEX));
 }
-function carouselNav(dir){
-  if(!CAROUSEL_ITEMS.length) return;
-  CAROUSEL_INDEX = (CAROUSEL_INDEX + dir + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length;
-  updateCarousel();
+function bookCarouselNav(dir){
+  if(!BOOK_CAROUSEL_ITEMS.length) return;
+  BOOK_CAROUSEL_INDEX = (BOOK_CAROUSEL_INDEX + dir + BOOK_CAROUSEL_ITEMS.length) % BOOK_CAROUSEL_ITEMS.length;
+  updateBookCarousel();
 }
-function carouselGoTo(i){ CAROUSEL_INDEX = i; updateCarousel(); }
-function goVerifyFolio(folio){
-  go('verificar');
-  const input = document.getElementById('v-folio');
-  if(input){ input.value = folio; verifyFolio(); }
-}
+function bookCarouselGoTo(i){ BOOK_CAROUSEL_INDEX = i; updateBookCarousel(); }
 
 let GALLERY_DATA_URL = '';
 function handleGalleryFileSelect(input){
@@ -1971,14 +2127,26 @@ function clearGalleryFile(ev){
   document.getElementById('a-gallery-drop').classList.remove('has-image');
 }
 
+const BOOK_CATEGORIES = [
+  {key:'cipsa', label:'CIPSA', icon:'🏁'},
+  {key:'bolidos', label:'Bólidos Lilí Ledy', icon:'🎠'},
+  {key:'aurimat', label:'Aurimat', icon:'⚙️'},
+  {key:'otro', label:'Otras piezas', icon:'📦'}
+];
+function categoriaLabel(key){
+  const c = BOOK_CATEGORIES.find(c => c.key === key);
+  return c ? c.label : 'Otras piezas';
+}
+
 async function addGalleryImage(){
   const status = document.getElementById('a-gallery-status');
   const caption = document.getElementById('a-gallery-cap').value.trim();
   const folio = document.getElementById('a-gallery-folio').value.trim();
+  const categoria = document.getElementById('a-gallery-categoria').value;
   if(!GALLERY_DATA_URL){ toast('Adjunta una foto primero.'); return; }
   try{
     const items = await getGallery();
-    items.push({id:'IMG-'+Date.now(), url: GALLERY_DATA_URL, caption, folio});
+    items.push({id:'IMG-'+Date.now(), url: GALLERY_DATA_URL, caption, folio, categoria});
     await setGallery(items);
     document.getElementById('a-gallery-cap').value='';
     document.getElementById('a-gallery-folio').value='';
@@ -2006,7 +2174,7 @@ async function renderGalleryAdmin(){
   box.innerHTML = items.length ? items.map(it => `
     <div class="gallery-admin-item">
       <img src="${escapeHtml(it.url)}" alt="">
-      <div class="cap">${escapeHtml(it.caption || '(sin pie de foto)')}${it.folio ? ' · <span class="mono">'+escapeHtml(it.folio)+'</span>' : ''}</div>
+      <div class="cap">${escapeHtml(it.caption || '(sin pie de foto)')} · <span class="mono" style="font-size:11px;">${categoriaLabel(it.categoria)}</span>${it.folio ? ' · <span class="mono">'+escapeHtml(it.folio)+'</span>' : ''}</div>
       <button class="btn ghost small" onclick="deleteGalleryImage('${it.id}')">Quitar</button>
     </div>`).join('') : '<p style="color:var(--sage);font-size:13px;">Galería vacía por ahora.</p>';
 }
@@ -2219,6 +2387,48 @@ function updateLivePreview(){
   if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = renderCert(f);
   else if(CERT_PREVIEW_MODE === 'label') mount.innerHTML = renderCertLabel(f);
   else mount.innerHTML = renderSealLabel(f);
+  applyLogos();
+  embedAllQrLogos();
+}
+
+// ============================================================
+// NUMERACIÓN AUTOMÁTICA DE FOLIOS
+// ============================================================
+function folioPrefixAndYear(){
+  const year = new Date().getFullYear();
+  return `HV-MX-${year}-`;
+}
+
+async function suggestNextFolio(){
+  try{
+    const res = await HVStorage.get('site:folio-counter', true).catch(()=>null);
+    const next = res && res.value ? JSON.parse(res.value).next : 1;
+    const prefix = folioPrefixAndYear();
+    document.getElementById('a-folio').value = prefix + String(next).padStart(3,'0');
+    updateLivePreview();
+  }catch(e){ toast('No se pudo calcular el siguiente folio.'); }
+}
+
+async function advanceFolioCounterIfNeeded(folio){
+  // Si el folio guardado sigue el patrón HV-MX-{año}-{número}, adelanta el contador a número+1
+  const m = /-(\d+)$/.exec(folio);
+  if(!m) return;
+  const usedNumber = parseInt(m[1], 10);
+  try{
+    const res = await HVStorage.get('site:folio-counter', true).catch(()=>null);
+    const current = res && res.value ? JSON.parse(res.value).next : 1;
+    if(usedNumber >= current){
+      await HVStorage.set('site:folio-counter', JSON.stringify({next: usedNumber + 1}), true);
+    }
+  }catch(e){}
+}
+
+async function resetFolioCounter(){
+  if(!confirm('¿Reiniciar el contador de folios a 1? Los folios ya emitidos NO se borran, solo el próximo número sugerido volverá a empezar en 001. Úsalo solo para pruebas.')) return;
+  try{
+    await HVStorage.set('site:folio-counter', JSON.stringify({next: 1}), true);
+    toast('Contador de folios reiniciado a 1.');
+  }catch(e){ toast('No se pudo reiniciar el contador.'); }
 }
 
 async function createFolio(){
@@ -2231,6 +2441,7 @@ async function createFolio(){
     const existing = await HVStorage.get('folio:'+folio, true).catch(()=>null);
     if(existing){ toast('Ese folio ya existe, usa otro.'); return; }
     await HVStorage.set('folio:'+folio, JSON.stringify(data), true);
+    await advanceFolioCounterIfNeeded(folio);
     if(linkedSolicitud){
       try{
         const r = await HVStorage.get('solicitud:'+linkedSolicitud, true);
@@ -2336,8 +2547,19 @@ function solicitudCardHtml(d){
             ? `<button class="btn small" onclick="adminGo('validacion');openProceso('${escapeHtml(d.id)}')">Continuar validación</button>`
             : `<button class="btn small" onclick='startValidacion(${JSON.stringify(JSON.stringify(d))})'>Iniciar validación</button>`)}
           <button class="btn ghost small" onclick='prefillFolioFromSolicitud(${JSON.stringify(JSON.stringify(d))})'>Ir directo a folio</button>
+          <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteSolicitud('${escapeHtml(d.id)}')">Eliminar</button>
         </div>
       </div>`;
+}
+
+async function deleteSolicitud(id){
+  if(!confirm('¿Eliminar esta solicitud? Esta acción no se puede deshacer.')) return;
+  try{
+    await HVStorage.delete('solicitud:'+id, true);
+    await HVStorage.delete('proceso:'+id, true).catch(()=>{});
+    toast('Solicitud eliminada.');
+    refreshAdminLists();
+  }catch(e){ toast('No se pudo eliminar la solicitud.'); }
 }
 
 function renderSolicitudesList(targetId, items, showFilterEmpty){
@@ -2634,8 +2856,21 @@ function folioCardHtml(d){
           <span class="pill ${pillClass(d.estado)}">${escapeHtml(d.estado)}</span>
         </div>
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
-        <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
+        <div class="row">
+          <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
+          <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteFolio('${escapeHtml(d.folio)}')">Eliminar</button>
+        </div>
       </div>`;
+}
+
+async function deleteFolio(folio){
+  if(!confirm(`¿Seguro que quieres eliminar el folio ${folio}? Ya no se podrá verificar en línea. Esta acción no se puede deshacer.`)) return;
+  try{
+    await HVStorage.delete('folio:'+folio, true);
+    toast('Folio eliminado: '+folio);
+    refreshAdminLists();
+    refreshIncomeTable();
+  }catch(e){ toast('No se pudo eliminar el folio.'); }
 }
 
 function solicitudMiniHtml(d){
