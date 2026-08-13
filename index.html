@@ -100,25 +100,29 @@
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
 
   /* ===== Panel de administración rediseñado ===== */
-  .admin-shell{display:flex;align-items:stretch;min-height:60vh;}
-  .admin-sidebar{width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:16px 10px;}
-  .admin-sidebar button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;padding:11px 12px;border-radius:7px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:3px;transition:background .15s ease,color .15s ease;}
-  .admin-sidebar button .ic{font-size:15px;width:18px;text-align:center;flex:none;}
+  .admin-shell{display:flex;align-items:stretch;min-height:60vh;min-width:0;box-shadow:0 2px 14px rgba(36,21,18,0.05);}
+  .admin-sidebar{width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:18px 12px;box-sizing:border-box;}
+  .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:none;padding:11px 12px;border-radius:8px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:4px;transition:background .15s ease,color .15s ease;}
+  .admin-sidebar button .ic{width:18px;height:18px;flex:none;display:flex;align-items:center;justify-content:center;}
+  .admin-sidebar button .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
   .admin-sidebar button .lbl{flex:1;}
   .admin-sidebar button:hover{background:rgba(210,4,45,0.07);color:var(--ink);}
-  .admin-sidebar button.active{background:var(--red);color:#fff;}
+  .admin-sidebar button.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(210,4,45,0.28);}
   .admin-sidebar hr{border:none;border-top:1px solid var(--line);margin:10px 6px;}
-  .admin-badge{background:var(--brass);color:#fff;font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:1px 7px;border-radius:20px;line-height:1.5;}
+  .admin-badge{background:var(--brass);color:#fff;font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:1px 7px;border-radius:20px;line-height:1.5;flex:none;}
   .admin-sidebar button.active .admin-badge{background:rgba(255,255,255,0.28);}
-  .admin-main{flex:1;min-width:0;padding:22px 26px;}
+  .admin-main{flex:1;min-width:0;padding:26px 28px;background:var(--panel);}
   .admin-tab{display:none;}
   .admin-tab.active{display:block;}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;text-align:center;}
-  .kpi .num{font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--red);margin:0;line-height:1;}
-  .kpi .lbl{font-size:11.5px;color:var(--sage);margin:6px 0 0;text-transform:uppercase;letter-spacing:.04em;}
+  .admin-tab h3{font-family:'Fraunces',serif;font-weight:500;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:20px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 16px;text-align:center;min-width:0;transition:box-shadow .15s ease,border-color .15s ease;}
+  .kpi:hover{box-shadow:0 4px 14px rgba(36,21,18,0.06);border-color:rgba(210,4,45,0.25);}
+  .kpi .num{font-family:'IBM Plex Mono',monospace;font-size:26px;color:var(--red);margin:0;line-height:1;}
+  .kpi .lbl{font-size:11px;color:var(--sage);margin:8px 0 0;text-transform:uppercase;letter-spacing:.05em;}
   .filter-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
-  .proc-card{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease;background:var(--panel);}
-  .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);}
+  .proc-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease;background:var(--panel);}
+  .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);transform:translateY(-1px);}
   .step-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
   .step-row:last-child{border-bottom:none;}
   .step-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;cursor:pointer;margin-top:2px;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
@@ -127,13 +131,15 @@
   .step-body h4{margin:0 0 4px;font-size:14px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);}
   .step-progress{height:6px;background:var(--panel-2);border-radius:20px;overflow:hidden;margin:10px 0 4px;}
   .step-progress-bar{height:100%;background:var(--ok);border-radius:20px;transition:width .25s ease;}
-  .activity-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline;}
+  .activity-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline;min-width:0;}
+  .activity-row span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .activity-row:last-child{border-bottom:none;}
   .activity-row .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex:none;margin-top:5px;}
-  @media(max-width:820px){
-    .admin-shell{flex-direction:column;}
-    .admin-sidebar{width:100%;display:flex;overflow-x:auto;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:8px;}
-    .admin-sidebar button{white-space:nowrap;width:auto;margin-bottom:0;}
+  @media(max-width:900px){
+    .admin-shell{flex-direction:column;box-shadow:none;}
+    .admin-sidebar{width:100%;display:flex;overflow-x:auto;gap:4px;border-right:none;border-bottom:1px solid var(--line);padding:10px;box-sizing:border-box;}
+    .admin-sidebar button{white-space:nowrap;width:auto;margin-bottom:0;flex:none;}
+    .admin-sidebar hr{display:none;}
     .admin-main{padding:18px;}
   }
 
@@ -861,28 +867,25 @@
 
       <div class="admin-shell card" style="padding:0;overflow:hidden;">
         <nav class="admin-sidebar">
-          <button data-tab="dashboard" class="active" onclick="adminGo('dashboard')"><span class="ic">▣</span><span class="lbl">Panel general</span></button>
-          <button data-tab="solicitudes" onclick="adminGo('solicitudes')"><span class="ic">✉</span><span class="lbl">Solicitudes</span><span class="admin-badge" id="badge-solicitudes" style="display:none;">0</span></button>
-          <button data-tab="validacion" onclick="adminGo('validacion')"><span class="ic">◎</span><span class="lbl">Validación en curso</span><span class="admin-badge" id="badge-validacion" style="display:none;">0</span></button>
-          <button data-tab="certificados" onclick="adminGo('certificados')"><span class="ic">✔</span><span class="lbl">Certificados y folios</span></button>
+          <button data-tab="dashboard" class="active" onclick="adminGo('dashboard')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span><span class="lbl">Panel general</span></button>
+          <button data-tab="solicitudes" onclick="adminGo('solicitudes')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="lbl">Solicitudes</span><span class="admin-badge" id="badge-solicitudes" style="display:none;">0</span></button>
+          <button data-tab="validacion" onclick="adminGo('validacion')"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><span class="lbl">Validación en curso</span><span class="admin-badge" id="badge-validacion" style="display:none;">0</span></button>
+          <button data-tab="certificados" onclick="adminGo('certificados')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="lbl">Certificados y folios</span></button>
           <hr>
-          <button data-tab="galeria" onclick="adminGo('galeria')"><span class="ic">▤</span><span class="lbl">Imágenes del sitio</span></button>
-          <button data-tab="etiquetas" onclick="adminGo('etiquetas')"><span class="ic">▥</span><span class="lbl">Etiquetas de impresión</span></button>
-          <button data-tab="respaldo" onclick="adminGo('respaldo')"><span class="ic">⇓</span><span class="lbl">Respaldo de datos</span></button>
+          <button data-tab="galeria" onclick="adminGo('galeria')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5.5-5.5L4 21"/></svg></span><span class="lbl">Imágenes del sitio</span></button>
+          <button data-tab="etiquetas" onclick="adminGo('etiquetas')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 8-9 9-8-8z"/><circle cx="8.5" cy="8.5" r="1.4"/></svg></span><span class="lbl">Etiquetas de impresión</span></button>
+          <button data-tab="respaldo" onclick="adminGo('respaldo')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span class="lbl">Respaldo de datos</span></button>
         </nav>
 
         <div class="admin-main">
 
           <!-- ===== DASHBOARD ===== -->
           <div class="admin-tab active" id="admin-tab-dashboard">
-            <div class="grid grid-3" style="margin-bottom:18px;">
+            <div class="kpi-grid">
               <div class="kpi"><p class="num" id="stat-solicitudes">—</p><p class="lbl">Solicitudes pendientes</p></div>
               <div class="kpi"><p class="num" id="stat-validacion">—</p><p class="lbl">Validaciones en curso</p></div>
               <div class="kpi"><p class="num" id="stat-folios">—</p><p class="lbl">Folios emitidos</p></div>
-            </div>
-            <div class="kpi" style="text-align:left;margin-bottom:18px;">
-              <p class="lbl" style="margin:0;">Ingresos estimados (folios)</p>
-              <p class="num" id="stat-ingresos" style="text-align:left;">—</p>
+              <div class="kpi"><p class="num" id="stat-ingresos">—</p><p class="lbl">Ingresos estimados</p></div>
             </div>
             <div class="card">
               <h3 style="font-size:16px;">Actividad reciente</h3>
