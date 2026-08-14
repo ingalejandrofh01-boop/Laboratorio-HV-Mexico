@@ -585,10 +585,10 @@
     body[data-print-mode="full"] #print-target-full{display:block!important;}
   }
   .cert-label{width:5cm;height:8cm;background:#fff;color:#1B1512;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;}
-  .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.28cm .3cm .26cm;display:flex;flex-direction:column;gap:.14cm;}
+  .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.28cm .3cm .26cm;display:flex;flex-direction:column;gap:.13cm;}
   .cl-head-top{display:flex;align-items:center;gap:.15cm;}
-  .cl-head-bottom{display:flex;align-items:center;justify-content:flex-end;gap:5pt;padding-top:.1cm;border-top:.5pt solid rgba(255,255,255,.22);}
-  .cl-brand{margin:0;color:#fff;font-family:'Fraunces',serif;font-size:8.5pt;line-height:1.1;white-space:nowrap;}
+  .cl-head-bottom{display:flex;align-items:center;justify-content:flex-end;padding-top:.09cm;border-top:.5pt solid rgba(255,255,255,.22);}
+  .cl-brand{margin:0;color:#fff;font-family:'Fraunces',serif;font-size:8.5pt;line-height:1.1;}
   .cl-sub{margin:0;color:#F0C9CE;font-family:'IBM Plex Mono',monospace;font-size:5.5pt;letter-spacing:.05em;text-transform:uppercase;}
   .cert-label-body{padding:.24cm .3cm;flex:1;display:flex;flex-direction:column;gap:.09cm;min-height:0;}
   .cl-folio{margin:0;font-family:'IBM Plex Mono',monospace;font-size:9pt;font-weight:600;color:#8C6524;text-align:center;letter-spacing:.02em;}
@@ -604,18 +604,15 @@
   .cl-disclaimer{font-size:4.1pt;color:#9a8d7f;margin:auto 0 0;line-height:1.25;border-top:.5pt solid #e5ddd0;padding-top:1pt;}
   .seal-label{width:1.5cm;height:5cm;background:#fff;color:#1B1512;border-radius:2px;display:flex;flex-direction:column;align-items:center;gap:2pt;padding:2pt 0;box-shadow:0 4px 16px rgba(0,0,0,.25);}
   .sl-top{font-family:'Fraunces',serif;font-weight:600;font-size:8pt;color:#D2042D;}
-  .sl-flag{width:.9cm;height:auto;border-radius:1px;}
-  .sl-qr{width:1.15cm;height:1.15cm;}
+  .sl-qr{width:1.2cm;height:1.2cm;}
   .sl-folio{font-family:'IBM Plex Mono',monospace;font-size:4pt;color:#453b32;text-align:center;line-height:1.2;word-break:break-all;padding:0 1pt;}
   .sl-grado{font-family:'Fraunces',serif;font-size:9pt;color:#8C6524;font-weight:600;}
   .sl-tier-bar{width:70%;height:1.5pt;border-radius:2pt;}
   .seal-label.tier-gold .sl-tier-bar{background:#B8862F;}
   .seal-label.tier-silver .sl-tier-bar{background:#8A94A6;}
   .seal-label.tier-red .sl-tier-bar{background:#D2042D;}
-  .cl-flag-frame{width:14pt;height:10pt;flex:none;border-radius:1.5pt;overflow:hidden;border:.6pt solid rgba(255,255,255,.8);box-sizing:border-box;background:#fff;}
-  .cl-flag{width:100%;height:100%;object-fit:cover;display:block;}
-  .cl-certified{display:inline-flex;align-items:center;gap:2.5pt;background:rgba(255,255,255,.16);color:#fff;font-size:5.2pt;font-weight:700;letter-spacing:.06em;padding:2pt 5.5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;flex:none;}
-  .cl-certified::before{content:'\2713';font-size:5.6pt;font-weight:900;line-height:1;}
+  .cl-certified{margin-left:auto;display:inline-flex;align-items:center;gap:2.5pt;background:rgba(255,255,255,.16);color:#fff;font-size:5.4pt;font-weight:700;letter-spacing:.06em;padding:2.4pt 6pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;flex:none;}
+  .cl-certified::before{content:'\2713';font-size:5.8pt;font-weight:900;line-height:1;}
   .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:9.5pt;line-height:1.2;color:#1B1512;}
   .cl-item-sub{margin:1pt 0 3pt;font-size:6pt;color:#8a7a6b;text-transform:uppercase;letter-spacing:.03em;}
   .cl-grade-row{display:flex;align-items:baseline;gap:5pt;background:rgba(184,134,47,0.08);border-radius:3pt;padding:2.5pt 6pt;margin-bottom:2pt;}
@@ -635,6 +632,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 </head>
 <body>
 
@@ -1905,6 +1903,35 @@ function printOnly(which){
 }
 window.addEventListener('afterprint', ()=>document.body.removeAttribute('data-print-mode'));
 
+async function exportLabelImage(kind, folio, evt){
+  const btn = evt ? (evt.currentTarget || evt.target) : null;
+  if(typeof html2canvas === 'undefined'){
+    toast('La herramienta de exportación sigue cargando, intenta de nuevo en un segundo.');
+    return;
+  }
+  const selector = kind === 'cert' ? '#print-target-cert .cert-label' : '#print-target-seal .seal-label';
+  const el = document.querySelector(selector);
+  if(!el){ toast('No se encontró la etiqueta para exportar.'); return; }
+  const originalText = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = 'Generando…'; }
+  try{
+    const scale = 203/96; // ~203dpi: resolución térmica típica de Niimbot B21/D110
+    const canvas = await html2canvas(el, {scale, backgroundColor:'#ffffff', useCORS:true, logging:false});
+    const link = document.createElement('a');
+    const safeFolio = (folio||'etiqueta').toString().replace(/[^a-zA-Z0-9-_]/g,'') || 'etiqueta';
+    link.download = `${kind === 'cert' ? 'etiqueta' : 'sello'}-${safeFolio}.png`;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }catch(err){
+    console.error('Export de imagen falló:', err);
+    toast('No se pudo generar la imagen. Prueba imprimir desde el navegador como alternativa.');
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = originalText; }
+  }
+}
+
 function qrDataUrl(f, size){
   const params = new URLSearchParams({
     folio: f.folio||'', modelo: f.modelo||'', anio: f.anio||'', origen: f.origen||'',
@@ -1967,10 +1994,7 @@ function renderCertLabel(f){
             <p class="cl-sub">Certificadora México</p>
           </div>
         </div>
-        <div class="cl-head-bottom">
-          <span class="cl-flag-frame"><img class="cl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="Bandera de México"></span>
-          <span class="cl-certified">CERTIFIED</span>
-        </div>
+        <div class="cl-head-bottom"><span class="cl-certified">CERTIFIED</span></div>
       </div>
       <div class="cert-label-body">
         <p class="cl-item-title">${escapeHtml(f.modelo)}</p>
@@ -1986,7 +2010,7 @@ function renderCertLabel(f){
           <tr><td>ESCALA</td><td>${escapeHtml(f.escala||'—')}</td></tr>
         </table>
         <div class="cl-qr-row">
-          <img src="${qrDataUrl(f,150)}" alt="QR" class="qr-embed" data-size="150">
+          <img src="${qrDataUrl(f,150)}" alt="QR" class="qr-embed" data-size="150" crossorigin="anonymous">
           <div class="cl-sign">
             <p class="cl-sign-role" style="font-weight:600;color:#1B1512;">Técnico Certificador</p>
             <p class="cl-sign-role">Laboratorio HV México</p>
@@ -1996,8 +2020,11 @@ function renderCertLabel(f){
       </div>
     </div>
   </div>
-  <p class="foot-note no-print">Tamaño real: 5 × 8 cm — pensado para el rollo 50×80mm de tu Niimbot B21. En el diálogo de impresión usa escala 100% (sin ajustar a página). Si tu B21 no aparece como impresora en el navegador, instala el software/driver de PC de Niimbot, o descarga esto como PDF y ábrelo desde la app NIIMBOT para importarlo como imagen.</p>
-  <div class="no-print" style="margin-top:10px;"><button class="btn ghost small" onclick="printOnly('cert')">Descargar / imprimir etiqueta (5×8 B21)</button></div>`;
+  <p class="foot-note no-print">Tamaño real: 5 × 8 cm — pensado para el rollo 50×80mm de tu Niimbot B21. Usa "Descargar imagen" para importarla directo en la app NIIMBOT, o imprime desde el navegador con escala 100%.</p>
+  <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn ghost small" onclick="printOnly('cert')">Imprimir desde el navegador</button>
+    <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event)">Descargar imagen (PNG)</button>
+  </div>`;
 }
 
 function renderSealLabel(f){
@@ -2007,14 +2034,16 @@ function renderSealLabel(f){
     <div class="seal-label tier-${tier}">
       <div class="sl-top">HV</div>
       <div class="sl-tier-bar"></div>
-      <img class="sl-qr" src="${qrDataUrl(f,120)}" alt="QR">
+      <img class="sl-qr" src="${qrDataUrl(f,120)}" alt="QR" crossorigin="anonymous">
       <div class="sl-folio">${escapeHtml(f.folio)}</div>
       <div class="sl-grado">${escapeHtml(f.grado||'—')}</div>
-      <img class="sl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="MX">
     </div>
   </div>
-  <p class="foot-note no-print">Tamaño real: 1.5 × 5 cm — al máximo que soporta tu Niimbot D110 (ancho máx. 15mm). Va pegada en el sello del acrílico.</p>
-  <div class="no-print" style="margin-top:10px;"><button class="btn ghost small" onclick="printOnly('seal')">Descargar / imprimir sello (D110)</button></div>`;
+  <p class="foot-note no-print">Tamaño real: 1.5 × 5 cm — al máximo que soporta tu Niimbot D110 (ancho máx. 15mm). Va pegada en el sello del acrílico. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
+  <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn ghost small" onclick="printOnly('seal')">Imprimir desde el navegador</button>
+    <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event)">Descargar imagen (PNG)</button>
+  </div>`;
 }
 
 function openEtiquetaFor(fJson){
@@ -2190,7 +2219,8 @@ async function lookupCliente(){
 // Solo estas cuentas de Google pueden entrar al panel de admin.
 const ADMIN_ALLOWED_EMAILS = [
   "ing.alejandrofh01@gmail.com",
-  "correo2@gmail.com"
+  "laboratorio.hv01@gmail.com"
+  "master7777ff@gmail.com"
 ]; // TODO: reemplaza con los correos reales que sí deben tener acceso
 
 async function tryAdminLoginGoogle(){
