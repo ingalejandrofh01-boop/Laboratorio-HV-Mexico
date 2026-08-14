@@ -439,6 +439,15 @@
     .hv-book-spine-line{display:none;}
     .hv-book-page-right{border-top:1px dashed rgba(36,21,18,0.2);}
   }
+  html[data-theme="dark"] .hv-book-pages-spread{background:linear-gradient(180deg,var(--panel),var(--paper));border-color:rgba(221,174,92,0.28);}
+  html[data-theme="dark"] .hv-book-toc li{color:var(--ink);border-bottom-color:rgba(255,255,255,0.14);}
+  html[data-theme="dark"] .hv-book-toc .toc-leader{border-bottom-color:rgba(255,255,255,0.22);}
+  html[data-theme="dark"] .hv-book-page-heading{border-bottom-color:rgba(221,174,92,0.3);}
+  html[data-theme="dark"] .hv-book-spine-line{background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.16) 15%,rgba(255,255,255,.16) 85%,rgba(255,255,255,0));}
+  html[data-theme="dark"] .hv-book-spine-line::before,html[data-theme="dark"] .hv-book-spine-line::after{background:linear-gradient(90deg,rgba(255,255,255,0.06),transparent);}
+  html[data-theme="dark"] .hv-book-page-right{border-top-color:rgba(255,255,255,0.14);}
+  html[data-theme="dark"] .hv-book-photo-frame{background:var(--panel-2);}
+  html[data-theme="dark"] #book-gallery-carousel .carousel-nav{background:rgba(30,24,20,0.75);color:var(--ink);}
   .carousel-track{display:flex;transition:transform .5s ease;}
   .carousel-slide{flex:0 0 100%;position:relative;min-width:0;}
   .carousel-slide img{width:100%;height:380px;object-fit:cover;display:block;}
