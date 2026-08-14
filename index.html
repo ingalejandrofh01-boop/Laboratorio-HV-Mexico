@@ -112,9 +112,9 @@
     .nav-toggle{display:flex;}
     .nav-backdrop{opacity:0;pointer-events:none;}
     body.nav-open .nav-backdrop{display:block;opacity:1;pointer-events:auto;}
-    nav{position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;grid-template-columns:none;width:min(80vw,320px);height:100%;height:100dvh;margin:0;background:var(--paper);border-radius:0;padding:70px 18px 24px;gap:4px;box-shadow:-10px 0 30px rgba(27,17,14,.25);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:100;}
-    body.nav-open nav{transform:translateX(0);}
-    nav button{width:100%;text-align:left;border-radius:10px;padding:14px 16px;font-size:15px;}
+    #main-nav{position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;grid-template-columns:none;width:min(80vw,320px);height:100%;height:100dvh;margin:0;background:var(--paper);border-radius:0;padding:70px 18px 24px;gap:4px;box-shadow:-10px 0 30px rgba(27,17,14,.25);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:100;}
+    body.nav-open #main-nav{transform:translateX(0);}
+    #main-nav button{width:100%;text-align:left;border-radius:10px;padding:14px 16px;font-size:15px;}
     .nav-close{display:flex;align-items:center;justify-content:center;position:absolute;top:14px;right:14px;width:34px;height:34px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;color:var(--ink);font-size:15px;cursor:pointer;padding:0;}
     .admin-link{grid-column:auto;border-left:none;border-top:1px solid var(--line);padding:14px 16px 0!important;margin:6px 0 0!important;}
   }
@@ -1391,10 +1391,8 @@
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
                 <label>Folio</label>
-                <div class="row" style="align-items:flex-end;">
-                  <div style="flex:1;"><input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()"></div>
-                  <button type="button" class="btn ghost small" onclick="suggestNextFolio()">Sugerir siguiente</button>
-                </div>
+                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
+                <button type="button" class="btn ghost small" style="margin-top:8px;" onclick="suggestNextFolio()">Sugerir siguiente</button>
                 <label>Modelo</label>
                 <input id="a-modelo" oninput="updateLivePreview()">
                 <label>Año</label>
@@ -2209,7 +2207,8 @@ async function lookupCliente(){
 // Solo estas cuentas de Google pueden entrar al panel de admin.
 const ADMIN_ALLOWED_EMAILS = [
   "ing.alejandrofh01@gmail.com",
-  "correo2@gmail.com"
+  "master7777ff@gmail.com",
+  "laboratorio.hv01@gmail.com
 ]; // TODO: reemplaza con los correos reales que sí deben tener acceso
 
 async function tryAdminLoginGoogle(){
