@@ -1,0 +1,19 @@
+{
+  "name": "Laboratorio HV México",
+  "short_name": "Lab HV México",
+  "description": "Certificación de autenticidad y estado de Hot Wheels Vintage, CIPSA, Bólidos Lilí Ledy y Aurimat en CDMX.",
+  "start_url": "./",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF6EF",
+  "theme_color": "#D2042D",
+  "lang": "es-MX",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
