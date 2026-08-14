@@ -147,6 +147,7 @@
     .notif-stack{top:110px;right:12px;left:12px;width:auto;}
     body.nav-open .notif-stack{opacity:0;pointer-events:none;transition:opacity .2s ease;}
   }
+  body.book-open .notif-stack{opacity:0;pointer-events:none;transition:opacity .2s ease;}
 
   /* ---- Campanita de notificaciones (admin) ---- */
   .notif-bell-wrap{position:relative;}
@@ -429,11 +430,6 @@
   .hv-book-placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--sage);gap:10px;padding:20px;}
   .hv-book-placeholder-icon{font-size:30px;opacity:.5;}
   .hv-book-placeholder p{margin:0;font-size:13px;max-width:220px;}
-  .hv-book-photo-frame{background:#fff;padding:10px 10px 26px;box-shadow:0 12px 26px rgba(36,21,18,0.24);border-radius:2px;margin:4px auto 0;max-width:340px;width:100%;transform:rotate(-1.2deg);}
-  .hv-book-photo-frame .carousel{border-radius:0;background:none;}
-  #book-gallery-carousel .carousel-slide img{height:220px;border-radius:0;}
-  #book-gallery-carousel .carousel-caption{position:static;background:none;color:var(--ink);padding:10px 4px 0;text-align:center;}
-  #book-gallery-carousel .carousel-nav{background:rgba(255,255,255,0.92);}
   @media(max-width:700px){
     .hv-book-pages-spread{grid-template-columns:1fr;}
     .hv-book-spine-line{display:none;}
@@ -446,8 +442,70 @@
   html[data-theme="dark"] .hv-book-spine-line{background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.16) 15%,rgba(255,255,255,.16) 85%,rgba(255,255,255,0));}
   html[data-theme="dark"] .hv-book-spine-line::before,html[data-theme="dark"] .hv-book-spine-line::after{background:linear-gradient(90deg,rgba(255,255,255,0.06),transparent);}
   html[data-theme="dark"] .hv-book-page-right{border-top-color:rgba(255,255,255,0.14);}
-  html[data-theme="dark"] .hv-book-photo-frame{background:var(--panel-2);}
-  html[data-theme="dark"] #book-gallery-carousel .carousel-nav{background:rgba(30,24,20,0.75);color:var(--ink);}
+
+  /* ---- Escenario grande del libro (vitrina) ---- */
+  .hv-book-toc li.active{color:var(--red);}
+  .hv-book-toc li.active .toc-title{font-weight:600;}
+  .hv-book-pages-spread{perspective:1500px;}
+  .book-stage{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:30px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s ease, visibility 0s linear .3s;}
+  .book-stage.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .3s ease;}
+  .book-stage-backdrop{position:absolute;inset:0;background:rgba(14,9,7,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+  .book-stage-inner{position:relative;width:100%;max-width:1060px;}
+  .book-stage-close{position:absolute;top:-16px;right:-16px;width:38px;height:38px;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.32);z-index:3;display:flex;align-items:center;justify-content:center;padding:0;}
+  .book-stage .hv-book-pages-spread{width:100%;height:min(86vh,680px);min-height:440px;transform:scale(.94);opacity:0;transition:transform .4s cubic-bezier(.2,.8,.2,1), opacity .35s ease;}
+  .book-stage.open .hv-book-pages-spread{transform:scale(1);opacity:1;}
+  .book-stage .hv-book-page{overflow-y:auto;}
+  #book-spread.detail-mode .hv-book-page-left,#book-spread.detail-mode .hv-book-spine-line{display:none;}
+  #book-spread.detail-mode .hv-book-page-right{grid-column:1/-1;}
+  #book-page-right{flex:1;transform-origin:left center;backface-visibility:hidden;}
+  #book-page-right.flipping-out{animation:pageFlipOut .22s ease forwards;}
+  #book-page-right.flipping-in{animation:pageFlipIn .42s cubic-bezier(.2,.7,.3,1) both;}
+  @keyframes pageFlipOut{from{transform:rotateY(0deg);opacity:1;}to{transform:rotateY(-16deg);opacity:0;}}
+  @keyframes pageFlipIn{from{transform:rotateY(16deg);opacity:0;}to{transform:rotateY(0deg);opacity:1;}}
+  @media(max-width:760px){
+    .book-stage{padding:0;}
+    .book-stage-inner{max-width:100%;}
+    .book-stage .hv-book-pages-spread{height:100dvh;border-radius:0;}
+    .book-stage-close{top:14px;right:14px;}
+  }
+
+  /* ---- Vitrina de piezas (grid dentro del libro) ---- */
+  .piece-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;}
+  .piece-card{display:flex;flex-direction:column;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;padding:0;text-align:left;font-family:inherit;transition:transform .18s ease, box-shadow .18s ease;}
+  .piece-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(20,12,9,.18);}
+  .piece-card-photo{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:var(--panel);}
+  .piece-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease;}
+  .piece-card:hover .piece-card-photo img{transform:scale(1.06);}
+  .piece-card-count{position:absolute;bottom:6px;right:6px;background:rgba(20,12,9,.68);color:#fff;font-size:10.5px;padding:2px 7px;border-radius:20px;font-family:'IBM Plex Mono',monospace;}
+  .piece-card-info{padding:9px 10px 11px;}
+  .piece-card-model{display:block;font-family:'Fraunces',serif;font-size:13.5px;color:var(--ink);line-height:1.25;}
+  .piece-card-grade{display:block;margin-top:3px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--brass-dim);}
+
+  /* ---- Detalle grande de una pieza (spread completo) ---- */
+  .piece-detail{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:start;}
+  .piece-detail-main{border-radius:8px;overflow:hidden;background:var(--panel-2);box-shadow:0 10px 26px rgba(20,12,9,.18);}
+  .piece-detail-main img{width:100%;height:min(54vh,440px);object-fit:contain;display:block;background:var(--panel-2);}
+  .piece-detail-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .piece-detail-thumbs .pdt{width:52px;height:52px;border-radius:6px;overflow:hidden;padding:0;border:2px solid transparent;cursor:pointer;background:var(--panel-2);flex:none;}
+  .piece-detail-thumbs .pdt img{width:100%;height:100%;object-fit:cover;display:block;}
+  .piece-detail-thumbs .pdt.active{border-color:var(--red);}
+  .piece-detail-info h3{font-family:'Fraunces',serif;font-size:19px;margin:4px 0 12px;color:var(--ink);}
+  .piece-detail-tags{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill.neutral{background:var(--panel);color:var(--sage);border:1px solid var(--line);}
+  @media(max-width:760px){
+    .piece-detail{grid-template-columns:1fr;}
+  }
+
+  /* ---- Vista previa de fotos al agregar una pieza (admin) ---- */
+  .pieza-photos-preview{display:flex;flex-wrap:wrap;gap:8px;}
+  .pieza-photo-thumb{position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;background:var(--panel);border:1px solid var(--line);}
+  .pieza-photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .pieza-photo-thumb.main{border-color:var(--red);}
+  .pieza-photo-main-tag{position:absolute;bottom:0;left:0;right:0;background:rgba(210,4,45,0.88);color:#fff;font-size:8px;text-align:center;padding:1px 0;text-transform:uppercase;letter-spacing:.04em;}
+  .pieza-photo-thumb button{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(20,12,9,.65);color:#fff;border:none;font-size:9px;line-height:1;cursor:pointer;padding:0;}
+  .pieza-admin-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .pieza-admin-item img{width:44px;height:44px;border-radius:6px;object-fit:cover;flex:none;background:var(--panel-2);}
+  .pieza-admin-item .cap{flex:1;font-size:13px;}
   .carousel-track{display:flex;transition:transform .5s ease;}
   .carousel-slide{flex:0 0 100%;position:relative;min-width:0;}
   .carousel-slide img{width:100%;height:380px;object-fit:cover;display:block;}
@@ -932,35 +990,26 @@
         </div>
       </div>
     </div>
-    <div class="hv-book-content" id="hv-book-content" style="display:none;">
-      <div class="hv-book-pages-spread">
-        <div class="hv-book-page hv-book-page-left">
-          <p class="hv-book-page-heading">Índice de colección</p>
-          <ul id="hv-book-index" class="hv-book-toc"></ul>
-          <p class="hv-book-page-num">— I —</p>
-        </div>
-        <div class="hv-book-spine-line"></div>
-        <div class="hv-book-page hv-book-page-right">
-          <div id="hv-book-placeholder" class="hv-book-placeholder">
-            <div class="hv-book-placeholder-icon">🔍</div>
-            <p>Elige una categoría del índice para hojear sus piezas certificadas</p>
+    <div class="book-stage" id="book-stage">
+      <div class="book-stage-backdrop" onclick="closeBook()"></div>
+      <div class="book-stage-inner">
+        <button class="book-stage-close" type="button" onclick="closeBook()" aria-label="Cerrar libro">✕</button>
+        <div class="hv-book-pages-spread" id="book-spread">
+          <div class="hv-book-page hv-book-page-left">
+            <p class="hv-book-page-heading">Índice de colección</p>
+            <ul id="hv-book-index" class="hv-book-toc"></ul>
+            <p class="hv-book-page-num">— I —</p>
           </div>
-          <div id="hv-book-category" style="display:none;">
-            <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px;">
-              <button class="btn ghost small" onclick="showBookIndex()">← Índice</button>
-              <button class="btn ghost small" onclick="closeBook()">Cerrar libro</button>
-            </div>
-            <p class="hv-book-page-heading" id="hv-book-cat-title" style="border:none;padding:0;margin:0 0 4px;"></p>
-            <div class="hv-book-photo-frame">
-              <div class="carousel" id="book-gallery-carousel">
-                <div class="carousel-track" id="book-carousel-track"></div>
-                <button class="carousel-nav prev" onclick="bookCarouselNav(-1)" aria-label="Anterior">‹</button>
-                <button class="carousel-nav next" onclick="bookCarouselNav(1)" aria-label="Siguiente">›</button>
-                <div class="carousel-dots" id="book-carousel-dots"></div>
+          <div class="hv-book-spine-line"></div>
+          <div class="hv-book-page hv-book-page-right">
+            <div id="book-page-right">
+              <div class="hv-book-placeholder">
+                <div class="hv-book-placeholder-icon">🔍</div>
+                <p>Elige una categoría del índice para hojear sus piezas certificadas</p>
               </div>
             </div>
+            <p class="hv-book-page-num">— II —</p>
           </div>
-          <p class="hv-book-page-num">— II —</p>
         </div>
       </div>
     </div>
@@ -1641,28 +1690,29 @@
                 <button type="button" class="photo-clear" id="a-hero-clear" style="display:none;" onclick="clearHeroImage(event)">✕</button>
               </div>
               <p id="a-hero-status" class="foot-note" style="border:none;padding-top:8px;"></p>
-              <label style="margin-top:20px;">Agregar imagen a la galería</label>
-              <div class="row" style="align-items:flex-start;">
-                <div class="photo-drop" id="a-gallery-drop" style="max-width:140px;flex:none;" onclick="document.getElementById('a-gallery-file').click()">
-                  <input type="file" accept="image/*" id="a-gallery-file" style="display:none;" onchange="handleGalleryFileSelect(this)">
-                  <img class="photo-preview" id="a-gallery-preview" style="display:none;">
-                  <span class="photo-drop-label" id="a-gallery-label">Nueva foto<br><small>Toca para adjuntar</small></span>
-                  <button type="button" class="photo-clear" id="a-gallery-clear" style="display:none;" onclick="clearGalleryFile(event)">✕</button>
+              <label style="margin-top:20px;">Agregar pieza a la biblioteca (puede tener varias fotos)</label>
+              <div class="card" style="background:var(--panel-2);padding:16px;margin-top:6px;">
+                <input id="a-pieza-modelo" placeholder="Modelo (ej. VW Sedán — Policía Federal)" style="margin-bottom:8px;">
+                <div class="row">
+                  <div style="flex:1;">
+                    <select id="a-pieza-categoria" style="margin-bottom:8px;">
+                      <option value="cipsa">CIPSA</option>
+                      <option value="bolidos">Bólidos Lilí Ledy</option>
+                      <option value="aurimat">Aurimat</option>
+                      <option value="otro">Otras piezas</option>
+                    </select>
+                  </div>
+                  <div style="flex:1;"><input id="a-pieza-grado" placeholder="Grado (opcional, ej. 9.4/10)" style="margin-bottom:8px;"></div>
                 </div>
-                <div style="flex:1;">
-                  <input id="a-gallery-cap" placeholder="Pie de foto (opcional)" style="margin-bottom:8px;">
-                  <select id="a-gallery-categoria" style="margin-bottom:8px;">
-                    <option value="cipsa">CIPSA</option>
-                    <option value="bolidos">Bólidos Lilí Ledy</option>
-                    <option value="aurimat">Aurimat</option>
-                    <option value="otro">Otras piezas</option>
-                  </select>
-                  <input id="a-gallery-folio" placeholder="Folio relacionado (opcional, ej. HV-MX-2026-001)" style="margin-bottom:8px;">
-                  <button class="btn small" onclick="addGalleryImage()">Agregar a la galería</button>
-                </div>
+                <input id="a-pieza-folio" placeholder="Folio relacionado (opcional, ej. HV-MX-2026-001)" style="margin-bottom:8px;">
+                <label style="font-size:12.5px;">Fotos de la pieza (la primera será la foto principal en la vitrina)</label>
+                <input type="file" accept="image/*" multiple id="a-pieza-files" onchange="handlePiezaFilesSelect(this)" style="margin:6px 0 10px;">
+                <div id="a-pieza-photos-preview" class="pieza-photos-preview"></div>
+                <button class="btn small" style="margin-top:10px;" onclick="addPieza()">Agregar pieza a la biblioteca</button>
+                <p id="a-pieza-status" class="foot-note" style="border:none;padding-top:8px;margin:0;"></p>
               </div>
-              <p id="a-gallery-status" class="foot-note" style="border:none;padding-top:4px;"></p>
-              <div id="a-gallery-list" style="margin-top:14px;"></div>
+              <label style="margin-top:20px;">Piezas en la biblioteca</label>
+              <div id="a-piezas-list" style="margin-top:10px;"></div>
             </div>
           </div>
 
@@ -2539,7 +2589,7 @@ const ADMIN_ALLOWED_EMAILS = [
   "ing.alejandrofh01@gmail.com",
   "master7777ff@gmail.com",
   "laboratorio.hv01@gmail.com"
-]; // TODO: reemplaza con los correos reales que sí deben tener acceso
+];
 
 async function tryAdminLoginGoogle(){
   const errBox = document.getElementById('admin-login-error');
@@ -2587,7 +2637,7 @@ if(fbAuth){
       gateWrap.style.display = 'none';
       panel.style.display = 'block';
       refreshAdminLists();
-      renderGalleryAdmin();
+      renderPiezasAdmin();
       startSolicitudesListener();
     } else {
       if(user){
@@ -2704,6 +2754,8 @@ async function clearHeroImage(ev){
   loadHeroImage();
 }
 
+// Formato viejo (una foto = un registro suelto). Se conserva solo para migrar
+// datos ya guardados hacia el nuevo formato de "piezas" con varias fotos.
 async function getGallery(){
   try{
     const res = await HVStorage.get('site:gallery', true);
@@ -2711,150 +2763,10 @@ async function getGallery(){
   }catch(e){ return []; }
 }
 
-async function setGallery(items){
-  await HVStorage.set('site:gallery', JSON.stringify(items), true);
-}
-
 function goVerifyFolio(folio){
   go('verificar');
   const input = document.getElementById('v-folio');
   if(input){ input.value = folio; verifyFolio(); }
-}
-
-function carouselSlideHtml(it){
-  return `
-    <div class="carousel-slide">
-      <img src="${escapeHtml(it.url)}" alt="${escapeHtml(it.caption||'Pieza certificada')}">
-      <div class="carousel-caption">
-        ${it.caption ? `<div style="font-weight:600;font-size:15px;">${escapeHtml(it.caption)}</div>` : ''}
-        ${it.folio ? `<div class="mono" style="font-size:12px;opacity:.9;cursor:pointer;margin-top:4px;" onclick="goVerifyFolio('${escapeHtml(it.folio)}')">Folio ${escapeHtml(it.folio)} — ver certificado →</div>` : ''}
-      </div>
-    </div>`;
-}
-
-// El carrusel superior original queda como reserva de datos; el librero es ahora la
-// presentación principal en la página de inicio (ver más abajo).
-async function loadGallery(){
-  const track = document.getElementById('carousel-track');
-  if(!track) return; // sección reemplazada por el librero — nada que hacer aquí
-}
-
-// ============================================================
-// LIBRERO 3D — biblioteca de piezas certificadas por categoría
-// ============================================================
-function openBook(){
-  document.getElementById('hv-book').classList.add('open');
-  setTimeout(() => {
-    document.getElementById('hv-book-content').style.display = 'block';
-    document.getElementById('hv-book-content').scrollIntoView({behavior:'smooth', block:'nearest'});
-    renderBookIndex();
-  }, 550);
-}
-function closeBook(){
-  document.getElementById('hv-book').classList.remove('open');
-  document.getElementById('hv-book-content').style.display = 'none';
-  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
-}
-
-async function renderBookIndex(){
-  const items = await getGallery();
-  const box = document.getElementById('hv-book-index');
-  box.innerHTML = BOOK_CATEGORIES.map(c => {
-    const count = items.filter(it => (it.categoria||'otro') === c.key).length;
-    return `<li onclick="openBookCategory('${c.key}')"><span class="toc-icon">${c.icon}</span><span class="toc-title">${c.label}</span><span class="toc-leader"></span><span class="toc-count">${count} pieza${count===1?'':'s'}</span></li>`;
-  }).join('');
-  document.getElementById('hv-book-category').style.display = 'none';
-  document.getElementById('hv-book-placeholder').style.display = 'flex';
-}
-function showBookIndex(){
-  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
-  document.getElementById('hv-book-category').style.display = 'none';
-  document.getElementById('hv-book-placeholder').style.display = 'flex';
-}
-
-let BOOK_CAROUSEL_ITEMS = [];
-let BOOK_CAROUSEL_INDEX = 0;
-let BOOK_CAROUSEL_TIMER = null;
-
-async function openBookCategory(key){
-  const all = await getGallery();
-  const items = all.filter(it => (it.categoria||'otro') === key);
-  const cat = BOOK_CATEGORIES.find(c => c.key === key);
-  document.getElementById('hv-book-placeholder').style.display = 'none';
-  document.getElementById('hv-book-category').style.display = 'block';
-  document.getElementById('hv-book-cat-title').textContent = `${cat.icon} ${cat.label}`;
-  BOOK_CAROUSEL_ITEMS = items;
-  BOOK_CAROUSEL_INDEX = 0;
-  const track = document.getElementById('book-carousel-track');
-  const dots = document.getElementById('book-carousel-dots');
-  if(BOOK_CAROUSEL_TIMER){ clearInterval(BOOK_CAROUSEL_TIMER); BOOK_CAROUSEL_TIMER = null; }
-  if(!items.length){
-    track.innerHTML = '<div class="carousel-slide"><div class="gallery-empty">Todavía no hay piezas en esta categoría.</div></div>';
-    dots.innerHTML = '';
-    return;
-  }
-  track.innerHTML = items.map(carouselSlideHtml).join('');
-  dots.innerHTML = items.map((_,i) => `<span class="dot ${i===0?'active':''}" onclick="bookCarouselGoTo(${i})"></span>`).join('');
-  updateBookCarousel();
-  if(items.length > 1) BOOK_CAROUSEL_TIMER = setInterval(() => bookCarouselNav(1), 4500);
-}
-function updateBookCarousel(){
-  const track = document.getElementById('book-carousel-track');
-  if(!track) return;
-  track.style.transform = `translateX(-${BOOK_CAROUSEL_INDEX*100}%)`;
-  document.querySelectorAll('#book-carousel-dots .dot').forEach((d,i)=>d.classList.toggle('active', i===BOOK_CAROUSEL_INDEX));
-}
-function bookCarouselNav(dir){
-  if(!BOOK_CAROUSEL_ITEMS.length) return;
-  BOOK_CAROUSEL_INDEX = (BOOK_CAROUSEL_INDEX + dir + BOOK_CAROUSEL_ITEMS.length) % BOOK_CAROUSEL_ITEMS.length;
-  updateBookCarousel();
-}
-function bookCarouselGoTo(i){ BOOK_CAROUSEL_INDEX = i; updateBookCarousel(); }
-
-let GALLERY_DATA_URL = '';
-function handleGalleryFileSelect(input){
-  const file = input.files && input.files[0];
-  if(!file) return;
-  if(!file.type.startsWith('image/')){ toast('Ese archivo no es una imagen.'); return; }
-  const status = document.getElementById('a-gallery-status');
-  status.textContent = 'Procesando imagen…';
-  const reader = new FileReader();
-  reader.onload = function(e){
-    const img = new Image();
-    img.onload = function(){
-      const maxW = 900;
-      const scale = Math.min(1, maxW / img.width);
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      GALLERY_DATA_URL = canvas.toDataURL('image/jpeg', 0.68);
-      const preview = document.getElementById('a-gallery-preview');
-      preview.src = GALLERY_DATA_URL;
-      preview.style.display = 'block';
-      document.getElementById('a-gallery-label').style.display = 'none';
-      document.getElementById('a-gallery-clear').style.display = 'flex';
-      document.getElementById('a-gallery-drop').classList.add('has-image');
-      status.textContent = 'Listo. Agrega el pie de foto si quieres y toca "Agregar a la galería".';
-    };
-    img.onerror = function(){ status.textContent = 'No se pudo leer esa imagen.'; };
-    img.src = e.target.result;
-  };
-  reader.onerror = function(){ status.textContent = 'No se pudo leer ese archivo.'; };
-  reader.readAsDataURL(file);
-}
-
-function clearGalleryFile(ev){
-  if(ev) ev.stopPropagation();
-  GALLERY_DATA_URL = '';
-  document.getElementById('a-gallery-file').value = '';
-  const preview = document.getElementById('a-gallery-preview');
-  preview.src = '';
-  preview.style.display = 'none';
-  document.getElementById('a-gallery-label').style.display = 'block';
-  document.getElementById('a-gallery-clear').style.display = 'none';
-  document.getElementById('a-gallery-drop').classList.remove('has-image');
 }
 
 const BOOK_CATEGORIES = [
@@ -2868,45 +2780,301 @@ function categoriaLabel(key){
   return c ? c.label : 'Otras piezas';
 }
 
-async function addGalleryImage(){
-  const status = document.getElementById('a-gallery-status');
-  const caption = document.getElementById('a-gallery-cap').value.trim();
-  const folio = document.getElementById('a-gallery-folio').value.trim();
-  const categoria = document.getElementById('a-gallery-categoria').value;
-  if(!GALLERY_DATA_URL){ toast('Adjunta una foto primero.'); return; }
+// ============================================================
+// PIEZAS DE LA BIBLIOTECA — cada pieza puede tener varias fotos
+// ============================================================
+async function getPiezas(){
   try{
-    const items = await getGallery();
-    items.push({id:'IMG-'+Date.now(), url: GALLERY_DATA_URL, caption, folio, categoria});
-    await setGallery(items);
-    document.getElementById('a-gallery-cap').value='';
-    document.getElementById('a-gallery-folio').value='';
-    clearGalleryFile(null);
-    status.textContent = 'Listo, imagen agregada.';
-    toast('Imagen agregada a la galería.');
-    loadGallery();
-    renderGalleryAdmin();
-  }catch(e){ status.textContent = 'No se pudo agregar la imagen (puede ser muy pesada).'; }
+    const res = await HVStorage.get('site:piezas', true);
+    if(res && res.value) return JSON.parse(res.value);
+  }catch(e){}
+  // No hay piezas todavía en el formato nuevo: migramos lo que exista del
+  // formato viejo (fotos sueltas) para no perder nada que ya se haya subido.
+  try{
+    const legacy = await getGallery();
+    if(legacy.length){
+      const piezas = migrateLegacyGallery(legacy);
+      await setPiezas(piezas);
+      return piezas;
+    }
+  }catch(e){}
+  return [];
+}
+async function setPiezas(items){
+  await HVStorage.set('site:piezas', JSON.stringify(items), true);
+}
+function migrateLegacyGallery(legacyItems){
+  const byFolio = new Map();
+  const piezas = [];
+  legacyItems.forEach(it => {
+    const foto = {url: it.url, caption: it.caption || ''};
+    if(it.folio && byFolio.has(it.folio)){
+      byFolio.get(it.folio).fotos.push(foto);
+      return;
+    }
+    const p = {
+      id: 'PZA-' + Date.now() + '-' + Math.random().toString(36).slice(2,7),
+      modelo: it.caption || 'Pieza certificada',
+      categoria: it.categoria || 'otro',
+      grado: '',
+      folio: it.folio || '',
+      fotos: [foto]
+    };
+    if(it.folio) byFolio.set(it.folio, p);
+    piezas.push(p);
+  });
+  return piezas;
 }
 
-async function deleteGalleryImage(id){
-  try{
-    const items = (await getGallery()).filter(it => it.id !== id);
-    await setGallery(items);
-    loadGallery();
-    renderGalleryAdmin();
-  }catch(e){ toast('No se pudo quitar la imagen.'); }
+// ============================================================
+// ADMIN — alta de piezas con varias fotos
+// ============================================================
+let PIEZA_PHOTOS_DATA = [];
+function handlePiezaFilesSelect(input){
+  const files = Array.from((input && input.files) || []);
+  if(!files.length) return;
+  const status = document.getElementById('a-pieza-status');
+  if(status) status.textContent = 'Procesando imágenes…';
+  let pending = files.length;
+  files.forEach(file => {
+    if(!file.type || !file.type.startsWith('image/')){ pending--; return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        const maxW = 1100;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        PIEZA_PHOTOS_DATA.push(canvas.toDataURL('image/jpeg', 0.72));
+        pending--;
+        renderPiezaPhotosPreview();
+        if(pending<=0 && status) status.textContent = `${PIEZA_PHOTOS_DATA.length} foto(s) lista(s). La primera es la foto principal.`;
+      };
+      img.onerror = function(){ pending--; };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ pending--; };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
 }
-
-async function renderGalleryAdmin(){
-  const box = document.getElementById('a-gallery-list');
+function renderPiezaPhotosPreview(){
+  const box = document.getElementById('a-pieza-photos-preview');
   if(!box) return;
-  const items = await getGallery();
-  box.innerHTML = items.length ? items.map(it => `
-    <div class="gallery-admin-item">
-      <img src="${escapeHtml(it.url)}" alt="">
-      <div class="cap">${escapeHtml(it.caption || '(sin pie de foto)')} · <span class="mono" style="font-size:11px;">${categoriaLabel(it.categoria)}</span>${it.folio ? ' · <span class="mono">'+escapeHtml(it.folio)+'</span>' : ''}</div>
-      <button class="btn ghost small" onclick="deleteGalleryImage('${it.id}')">Quitar</button>
-    </div>`).join('') : '<p style="color:var(--sage);font-size:13px;">Galería vacía por ahora.</p>';
+  box.innerHTML = PIEZA_PHOTOS_DATA.map((src,i) => `
+    <div class="pieza-photo-thumb ${i===0?'main':''}">
+      <img src="${src}" alt="">
+      ${i===0 ? '<span class="pieza-photo-main-tag">Principal</span>' : ''}
+      <button type="button" onclick="removePiezaPhoto(${i})" aria-label="Quitar foto">✕</button>
+    </div>`).join('');
+}
+function removePiezaPhoto(i){
+  PIEZA_PHOTOS_DATA.splice(i,1);
+  renderPiezaPhotosPreview();
+}
+async function addPieza(){
+  const status = document.getElementById('a-pieza-status');
+  const modelo = document.getElementById('a-pieza-modelo').value.trim();
+  const categoria = document.getElementById('a-pieza-categoria').value;
+  const grado = document.getElementById('a-pieza-grado').value.trim();
+  const folio = document.getElementById('a-pieza-folio').value.trim();
+  if(!modelo){ toast('Escribe el modelo de la pieza.'); return; }
+  if(!PIEZA_PHOTOS_DATA.length){ toast('Agrega al menos una foto.'); return; }
+  try{
+    const piezas = await getPiezas();
+    piezas.unshift({
+      id: 'PZA-' + Date.now(),
+      modelo, categoria, grado, folio,
+      fotos: PIEZA_PHOTOS_DATA.map(url => ({url, caption:''}))
+    });
+    await setPiezas(piezas);
+    document.getElementById('a-pieza-modelo').value = '';
+    document.getElementById('a-pieza-grado').value = '';
+    document.getElementById('a-pieza-folio').value = '';
+    PIEZA_PHOTOS_DATA = [];
+    renderPiezaPhotosPreview();
+    if(status) status.textContent = 'Pieza agregada a la biblioteca.';
+    toast('Pieza agregada a la biblioteca.');
+    renderPiezasAdmin();
+  }catch(e){ if(status) status.textContent = 'No se pudo guardar (puede que las fotos pesen mucho).'; }
+}
+async function deletePieza(id){
+  if(!confirm('¿Quitar esta pieza de la biblioteca? Esta acción no se puede deshacer.')) return;
+  try{
+    const piezas = (await getPiezas()).filter(p => p.id !== id);
+    await setPiezas(piezas);
+    renderPiezasAdmin();
+    toast('Pieza eliminada.');
+  }catch(e){ toast('No se pudo eliminar la pieza.'); }
+}
+async function renderPiezasAdmin(){
+  const box = document.getElementById('a-piezas-list');
+  if(!box) return;
+  const piezas = await getPiezas();
+  box.innerHTML = piezas.length ? piezas.map(p => {
+    const foto = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
+    const n = (p.fotos||[]).length;
+    return `
+    <div class="pieza-admin-item">
+      <img src="${escapeHtml(foto)}" alt="">
+      <div class="cap">
+        <strong>${escapeHtml(p.modelo)}</strong><br>
+        <span class="mono" style="font-size:11px;color:var(--sage-dim);">${categoriaLabel(p.categoria)}${p.grado?' · grado '+escapeHtml(p.grado):''}${p.folio?' · '+escapeHtml(p.folio):''} · ${n} foto${n===1?'':'s'}</span>
+      </div>
+      <button class="btn ghost small" onclick="deletePieza('${p.id}')">Quitar</button>
+    </div>`;
+  }).join('') : '<p style="color:var(--sage);font-size:13px;">Todavía no hay piezas en la biblioteca.</p>';
+}
+
+// ============================================================
+// LIBRERO — vitrina grande con vuelta de página
+// ============================================================
+let BOOK_STATE = { mode:'index', categoria:null, allPiezas:[], piezas:[], detailPieza:null, detailPhotoIndex:0 };
+
+async function openBook(){
+  document.getElementById('hv-book').classList.add('open');
+  setTimeout(async () => {
+    document.getElementById('book-stage').classList.add('open');
+    document.body.classList.add('book-open');
+    BOOK_STATE.allPiezas = await getPiezas();
+    BOOK_STATE.mode = 'index';
+    renderBookIndex();
+  }, 480);
+}
+function closeBook(){
+  document.getElementById('book-stage').classList.remove('open');
+  document.body.classList.remove('book-open');
+  document.getElementById('hv-book').classList.remove('open');
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    const stage = document.getElementById('book-stage');
+    if(stage && stage.classList.contains('open')) closeBook();
+  }
+});
+
+function placeholderHtml(){
+  return `<div class="hv-book-placeholder"><div class="hv-book-placeholder-icon">🔍</div><p>Elige una categoría del índice para hojear sus piezas certificadas</p></div>`;
+}
+
+function renderBookIndex(){
+  const items = BOOK_STATE.allPiezas || [];
+  const box = document.getElementById('hv-book-index');
+  box.innerHTML = BOOK_CATEGORIES.map(c => {
+    const count = items.filter(p => (p.categoria||'otro') === c.key).length;
+    return `<li data-key="${c.key}" onclick="openBookCategory('${c.key}')"><span class="toc-icon">${c.icon}</span><span class="toc-title">${c.label}</span><span class="toc-leader"></span><span class="toc-count">${count} pieza${count===1?'':'s'}</span></li>`;
+  }).join('');
+  const right = document.getElementById('book-page-right');
+  if(right) right.innerHTML = placeholderHtml();
+  const spread = document.getElementById('book-spread');
+  if(spread) spread.classList.remove('detail-mode');
+}
+
+function showBookIndex(){
+  BOOK_STATE.mode = 'index';
+  document.querySelectorAll('#hv-book-index li').forEach(li => li.classList.remove('active'));
+  document.getElementById('book-spread').classList.remove('detail-mode');
+  flipRightPage(() => placeholderHtml());
+}
+
+function categoryPageHtml(cat, piezas){
+  return `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <button class="btn ghost small" type="button" onclick="showBookIndex()">← Índice</button>
+      <button class="btn ghost small" type="button" onclick="closeBook()">Cerrar libro</button>
+    </div>
+    <p class="hv-book-page-heading" style="border:none;padding:0;margin:0 0 14px;">${cat.icon} ${escapeHtml(cat.label)}</p>
+    ${piezas.length
+      ? `<div class="piece-grid">${piezas.map(renderPieceCard).join('')}</div>`
+      : `<div class="hv-book-placeholder"><div class="hv-book-placeholder-icon">🗄️</div><p>Todavía no hay piezas certificadas en esta categoría.</p></div>`}
+  `;
+}
+function renderPieceCard(p){
+  const main = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
+  const n = (p.fotos||[]).length;
+  return `
+    <button type="button" class="piece-card" onclick="openPieceDetail('${p.id}')">
+      <span class="piece-card-photo"><img src="${escapeHtml(main)}" alt="${escapeHtml(p.modelo)}" loading="lazy">${n>1?`<span class="piece-card-count">📷 ${n}</span>`:''}</span>
+      <span class="piece-card-info">
+        <span class="piece-card-model">${escapeHtml(p.modelo)}</span>
+        ${p.grado?`<span class="piece-card-grade">Grado ${escapeHtml(p.grado)}</span>`:''}
+      </span>
+    </button>`;
+}
+
+function openBookCategory(key){
+  BOOK_STATE.mode = 'category';
+  BOOK_STATE.categoria = key;
+  BOOK_STATE.piezas = (BOOK_STATE.allPiezas||[]).filter(p => (p.categoria||'otro') === key);
+  const cat = BOOK_CATEGORIES.find(c => c.key === key);
+  document.querySelectorAll('#hv-book-index li').forEach(li => li.classList.toggle('active', li.dataset.key === key));
+  document.getElementById('book-spread').classList.remove('detail-mode');
+  flipRightPage(() => categoryPageHtml(cat, BOOK_STATE.piezas));
+}
+
+function renderPieceDetail(p, photoIndex){
+  const fotos = (p.fotos && p.fotos.length) ? p.fotos : [{url:'',caption:''}];
+  const idx = Math.max(0, Math.min(photoIndex, fotos.length-1));
+  return `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <button class="btn ghost small" type="button" onclick="backToPieceGrid()">← Vitrina</button>
+      <button class="btn ghost small" type="button" onclick="closeBook()">Cerrar libro</button>
+    </div>
+    <div class="piece-detail">
+      <div>
+        <div class="piece-detail-main"><img src="${escapeHtml(fotos[idx].url)}" alt="${escapeHtml(p.modelo)}" id="piece-detail-img"></div>
+        ${fotos.length>1 ? `<div class="piece-detail-thumbs">${fotos.map((f,i)=>`<button type="button" class="pdt ${i===idx?'active':''}" onclick="setPieceDetailPhoto(${i})"><img src="${escapeHtml(f.url)}" alt=""></button>`).join('')}</div>` : ''}
+      </div>
+      <div class="piece-detail-info">
+        <h3>${escapeHtml(p.modelo)}</h3>
+        <div class="piece-detail-tags">
+          <span class="pill neutral">${categoriaLabel(p.categoria)}</span>
+          ${p.grado?`<span class="pill original">Grado ${escapeHtml(p.grado)}</span>`:''}
+        </div>
+        ${p.folio ? `<button class="btn ghost small" style="margin-top:14px;" onclick="goVerifyFolio('${escapeHtml(p.folio)}')">Ver certificado — ${escapeHtml(p.folio)} →</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+function openPieceDetail(id){
+  const p = (BOOK_STATE.piezas||[]).find(x => x.id === id) || (BOOK_STATE.allPiezas||[]).find(x => x.id === id);
+  if(!p) return;
+  BOOK_STATE.mode = 'detail';
+  BOOK_STATE.detailPieza = p;
+  BOOK_STATE.detailPhotoIndex = 0;
+  document.getElementById('book-spread').classList.add('detail-mode');
+  flipRightPage(() => renderPieceDetail(p, 0));
+}
+function backToPieceGrid(){
+  document.getElementById('book-spread').classList.remove('detail-mode');
+  BOOK_STATE.mode = 'category';
+  const cat = BOOK_CATEGORIES.find(c => c.key === BOOK_STATE.categoria);
+  flipRightPage(() => categoryPageHtml(cat, BOOK_STATE.piezas));
+}
+function setPieceDetailPhoto(i){
+  BOOK_STATE.detailPhotoIndex = i;
+  const p = BOOK_STATE.detailPieza;
+  if(!p || !p.fotos || !p.fotos[i]) return;
+  const img = document.getElementById('piece-detail-img');
+  if(img) img.src = p.fotos[i].url;
+  document.querySelectorAll('.piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
+}
+function flipRightPage(buildHtmlFn){
+  const right = document.getElementById('book-page-right');
+  if(!right) return;
+  right.classList.remove('flipping-in');
+  right.classList.add('flipping-out');
+  setTimeout(() => {
+    right.innerHTML = buildHtmlFn();
+    right.scrollTop = 0;
+    right.classList.remove('flipping-out');
+    right.classList.add('flipping-in');
+    setTimeout(() => right.classList.remove('flipping-in'), 430);
+  }, 220);
 }
 
 // ============================================================
@@ -3145,7 +3313,6 @@ function initDynamicUI(){
 }
 
 loadHeroImage();
-loadGallery();
 listenReviews();
 applyLogos();
 onPackageChange();
