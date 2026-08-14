@@ -585,10 +585,12 @@
     body[data-print-mode="full"] #print-target-full{display:block!important;}
   }
   .cert-label{width:5cm;height:8cm;background:#fff;color:#1B1512;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;}
-  .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.35cm .3cm;display:flex;align-items:center;gap:.15cm;}
-  .cl-brand{margin:0;color:#fff;font-family:'Fraunces',serif;font-size:8.5pt;line-height:1.1;}
+  .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.28cm .3cm .26cm;display:flex;flex-direction:column;gap:.14cm;}
+  .cl-head-top{display:flex;align-items:center;gap:.15cm;}
+  .cl-head-bottom{display:flex;align-items:center;justify-content:flex-end;gap:5pt;padding-top:.1cm;border-top:.5pt solid rgba(255,255,255,.22);}
+  .cl-brand{margin:0;color:#fff;font-family:'Fraunces',serif;font-size:8.5pt;line-height:1.1;white-space:nowrap;}
   .cl-sub{margin:0;color:#F0C9CE;font-family:'IBM Plex Mono',monospace;font-size:5.5pt;letter-spacing:.05em;text-transform:uppercase;}
-  .cert-label-body{padding:.3cm;flex:1;display:flex;flex-direction:column;gap:.16cm;}
+  .cert-label-body{padding:.24cm .3cm;flex:1;display:flex;flex-direction:column;gap:.09cm;min-height:0;}
   .cl-folio{margin:0;font-family:'IBM Plex Mono',monospace;font-size:9pt;font-weight:600;color:#8C6524;text-align:center;letter-spacing:.02em;}
   .cl-table{width:100%;border-collapse:collapse;font-size:6.3pt;}
   .cl-table td{padding:1.5pt 0;border-bottom:.5pt solid #e5ddd0;}
@@ -596,10 +598,10 @@
   .cl-row{display:flex;justify-content:space-between;align-items:center;margin-top:2pt;}
   .cl-grade{font-family:'Fraunces',serif;font-size:15pt;color:#D2042D;font-weight:600;}
   .cl-tests{font-size:5.6pt;color:#6b5d50;margin:0;line-height:1.4;}
-  .cl-qr-row{display:flex;align-items:center;gap:.18cm;margin-top:2pt;}
-  .cl-qr-row img{width:1.7cm;height:1.7cm;flex:none;}
+  .cl-qr-row{display:flex;align-items:center;gap:.18cm;margin-top:0;}
+  .cl-qr-row img{width:1.45cm;height:1.45cm;flex:none;}
   .cl-sign{font-size:5pt;color:#453b32;line-height:1.5;}
-  .cl-disclaimer{font-size:4.3pt;color:#9a8d7f;margin:auto 0 0;line-height:1.4;border-top:.5pt solid #e5ddd0;padding-top:2pt;}
+  .cl-disclaimer{font-size:4.1pt;color:#9a8d7f;margin:auto 0 0;line-height:1.25;border-top:.5pt solid #e5ddd0;padding-top:1pt;}
   .seal-label{width:1.5cm;height:5cm;background:#fff;color:#1B1512;border-radius:2px;display:flex;flex-direction:column;align-items:center;gap:2pt;padding:2pt 0;box-shadow:0 4px 16px rgba(0,0,0,.25);}
   .sl-top{font-family:'Fraunces',serif;font-weight:600;font-size:8pt;color:#D2042D;}
   .sl-flag{width:.9cm;height:auto;border-radius:1px;}
@@ -610,19 +612,20 @@
   .seal-label.tier-gold .sl-tier-bar{background:#B8862F;}
   .seal-label.tier-silver .sl-tier-bar{background:#8A94A6;}
   .seal-label.tier-red .sl-tier-bar{background:#D2042D;}
-  .cl-head-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3pt;}
-  .cl-flag{height:9pt;width:auto;display:block;border-radius:0;box-shadow:0 0 0 .5pt rgba(255,255,255,.4);}
-  .cl-certified{background:rgba(255,255,255,.18);color:#fff;font-size:5.5pt;font-weight:700;letter-spacing:.08em;padding:2pt 5pt;border-radius:3pt;border:.5pt solid rgba(255,255,255,.5);}
+  .cl-flag-frame{width:14pt;height:10pt;flex:none;border-radius:1.5pt;overflow:hidden;border:.6pt solid rgba(255,255,255,.8);box-sizing:border-box;background:#fff;}
+  .cl-flag{width:100%;height:100%;object-fit:cover;display:block;}
+  .cl-certified{display:inline-flex;align-items:center;gap:2.5pt;background:rgba(255,255,255,.16);color:#fff;font-size:5.2pt;font-weight:700;letter-spacing:.06em;padding:2pt 5.5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;flex:none;}
+  .cl-certified::before{content:'\2713';font-size:5.6pt;font-weight:900;line-height:1;}
   .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:9.5pt;line-height:1.2;color:#1B1512;}
   .cl-item-sub{margin:1pt 0 3pt;font-size:6pt;color:#8a7a6b;text-transform:uppercase;letter-spacing:.03em;}
-  .cl-grade-row{display:flex;align-items:baseline;gap:5pt;background:rgba(184,134,47,0.08);border-radius:3pt;padding:3pt 6pt;margin-bottom:3pt;}
+  .cl-grade-row{display:flex;align-items:baseline;gap:5pt;background:rgba(184,134,47,0.08);border-radius:3pt;padding:2.5pt 6pt;margin-bottom:2pt;}
   .cl-grade-tag{font-size:5pt;font-weight:700;color:#8a7a6b;letter-spacing:.05em;}
   .cl-grade-word{margin-left:auto;font-size:5pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
   .cert-label.tier-gold .cl-grade-word{color:#8C6524;}
   .cert-label.tier-silver .cl-grade-word{color:#5F6A75;}
   .cert-label.tier-red .cl-grade-word{color:#D2042D;}
-  .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:3pt;}
-  .cl-subgrades div{text-align:center;background:#f7f2ea;border-radius:2pt;padding:2pt 1pt;}
+  .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:1.5pt;}
+  .cl-subgrades div{text-align:center;background:#f7f2ea;border-radius:2pt;padding:1.3pt 1pt;}
   .cl-sg-lbl{display:block;font-size:4pt;color:#9a8d7f;text-transform:uppercase;}
   .cl-sg-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:6.5pt;color:#D2042D;font-weight:600;}
   .cl-sign-name{margin:0;font-size:6pt;font-weight:600;color:#1B1512;}
@@ -1953,22 +1956,19 @@ function embedAllQrLogos(){
 
 function renderCertLabel(f){
   const tier = tierForGrade(f.grado, f.estado);
-  const subgrades = [
-    {label:'Pintura', val:f.sgPintura}, {label:'Desgaste', val:f.sgDesgaste},
-    {label:'Ensamble', val:f.sgEnsamble}, {label:'Autenticidad', val:f.sgAutenticidad}
-  ];
-  const hasSubgrades = subgrades.some(s => s.val);
   return `
   <div class="print-target" id="print-target-cert">
     <div class="cert-label tier-${tier}">
       <div class="cert-label-head">
-        <img class="hv-logo" alt="HV" style="height:26px;filter:brightness(0) invert(1);">
-        <div>
-          <p class="cl-brand">LABORATORIO HV</p>
-          <p class="cl-sub">Certificadora México</p>
+        <div class="cl-head-top">
+          <img class="hv-logo" alt="HV" style="height:26px;filter:brightness(0) invert(1);">
+          <div>
+            <p class="cl-brand">LABORATORIO HV</p>
+            <p class="cl-sub">Certificadora México</p>
+          </div>
         </div>
-        <div class="cl-head-right">
-          <img class="cl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="Bandera de México">
+        <div class="cl-head-bottom">
+          <span class="cl-flag-frame"><img class="cl-flag" src="data:image/jpeg;base64,${MXFLAG_B64_JS}" alt="Bandera de México"></span>
           <span class="cl-certified">CERTIFIED</span>
         </div>
       </div>
@@ -1980,10 +1980,6 @@ function renderCertLabel(f){
           <span class="cl-grade">${escapeHtml(f.grado||'—')}</span>
           <span class="cl-grade-word">${tierLabel(tier)}</span>
         </div>
-        ${hasSubgrades ? `
-        <div class="cl-subgrades">
-          ${subgrades.map(s => `<div><span class="cl-sg-lbl">${s.label}</span><span class="cl-sg-val">${escapeHtml(s.val||'—')}</span></div>`).join('')}
-        </div>` : ''}
         <table class="cl-table">
           <tr><td>CERT #</td><td class="mono">${escapeHtml(f.folio)}</td></tr>
           <tr><td>FECHA</td><td>${escapeHtml(f.fecha||'—')}</td></tr>
