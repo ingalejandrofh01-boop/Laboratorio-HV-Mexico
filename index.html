@@ -205,6 +205,12 @@
   .cert-authenticity-box{border:1px solid rgba(184,134,47,0.35);border-left:3px solid var(--brass);border-radius:4px;padding:14px 16px;margin:14px 0;background:rgba(184,134,47,0.05);}
   .cert-authenticity-label{margin:0 0 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
   .cert-authenticity-text{margin:0;font-size:13px;line-height:1.5;color:var(--ink);}
+  .cert-signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px;}
+  .cert-sign-block{text-align:center;}
+  .cert-sign-line{border-top:1px solid var(--ink);margin:34px 14px 8px;}
+  .cert-sign-role{margin:0;font-size:11.5px;font-weight:600;color:var(--ink);}
+  .cert-sign-lab{margin:1px 0 0;font-size:9.5px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:.04em;}
+  @media(max-width:480px){.cert-signatures{grid-template-columns:1fr;gap:14px;}}
   .cert h2{color:var(--ink);}
   .cert .divider{border-top:1px dashed var(--brass-dim);margin:18px 0;}
   .cert table td{border-bottom:1px solid rgba(27,36,32,0.12);color:var(--ink);}
@@ -223,7 +229,7 @@
 
   /* ===== Panel de administración rediseñado ===== */
   .admin-shell{display:flex;align-items:stretch;min-height:60vh;min-width:0;box-shadow:0 2px 14px rgba(36,21,18,0.05);}
-  .admin-sidebar{width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:18px 12px;box-sizing:border-box;}
+  .admin-sidebar{display:block;width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:18px 12px;box-sizing:border-box;}
   .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);padding:11px 12px;border-radius:8px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .15s ease,color .15s ease,border-color .15s ease;}
   .admin-sidebar button .ic{width:18px;height:18px;flex:none;display:flex;align-items:center;justify-content:center;}
   .admin-sidebar button .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
@@ -364,18 +370,6 @@
   .sg-label{font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--brass-dim);margin-bottom:3px;display:block;}
   @media(max-width:900px){.cert-editor-preview{position:static;}}
 
-  .lbl{width:8cm;height:2.5cm;border-radius:2px;display:flex;align-items:center;padding:0 .35cm;gap:.3cm;position:relative;overflow:hidden;}
-  .lbl.gold{background:#0E1F1A;color:#EFE8D8;}
-  .lbl.gold .accent{color:#D9B45C;}
-  .lbl.silver{background:#20242A;color:#E7E9EC;}
-  .lbl.silver .accent{color:#B9C0C6;}
-  .lbl.red{background:#3A1712;color:#F1E3DC;}
-  .lbl.red .accent{color:#E38264;}
-  .lbl .crest{width:1.5cm;height:1.5cm;flex:none;}
-  .lbl .txt{flex:1;min-width:0;}
-  .lbl .brandline{font-family:'Fraunces',serif;font-size:8pt;letter-spacing:.03em;margin:0;}
-  .lbl .gradeline{font-size:15pt;font-weight:600;margin:1pt 0;line-height:1;}
-  .lbl .metaline{font-family:'IBM Plex Mono',monospace;font-size:6.5pt;opacity:.85;margin:0;}
   .holo{width:2cm;height:2cm;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg,#cfd6da,#f3e9d2,#d8c9e8,#cde7dc,#f1cdd8,#cfd6da);}
   .holo .ring{position:absolute;inset:2pt;border-radius:50%;border:1px dashed rgba(20,20,20,.35);}
   .holo .core{background:#10201B;color:#EFE8D8;width:70%;height:70%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
@@ -570,13 +564,25 @@
   }
 
   @media print{
-    header,nav,footer,.no-print{display:none!important;}
+    header,nav,footer,.no-print,#scroll-progress,.sticky-cta,.pwa-install-float,.whatsapp-float{display:none!important;}
     body{background:#fff;color:#000;}
     .view{display:none!important;}
     .view.active{display:block!important;}
-    #print-target-cert,#print-target-seal{display:none;}
-    body[data-print-mode="cert"] #print-target-cert{display:block;}
-    body[data-print-mode="seal"] #print-target-seal{display:block;}
+    #print-target-cert,#print-target-seal,#print-target-full{display:none;}
+    /* Aislamos lo que se imprime: el print-target puede estar anidado varios
+       niveles adentro (p.ej. dentro del panel de administrador), así que
+       escondemos todo lo demás en la vista activa — excepto los ancestros
+       del target (para no romper el árbol), el target mismo, y su
+       contenido — y solo mostramos el target correspondiente al modo activo. */
+    body[data-print-mode="cert"] .view.active *:not(:has(#print-target-cert)):not(#print-target-cert):not(#print-target-cert *){display:none!important;}
+    body[data-print-mode="cert"] .view.active :has(#print-target-cert),
+    body[data-print-mode="cert"] #print-target-cert{display:block!important;}
+    body[data-print-mode="seal"] .view.active *:not(:has(#print-target-seal)):not(#print-target-seal):not(#print-target-seal *){display:none!important;}
+    body[data-print-mode="seal"] .view.active :has(#print-target-seal),
+    body[data-print-mode="seal"] #print-target-seal{display:block!important;}
+    body[data-print-mode="full"] .view.active *:not(:has(#print-target-full)):not(#print-target-full):not(#print-target-full *){display:none!important;}
+    body[data-print-mode="full"] .view.active :has(#print-target-full),
+    body[data-print-mode="full"] #print-target-full{display:block!important;}
   }
   .cert-label{width:5cm;height:8cm;background:#fff;color:#1B1512;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;}
   .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.35cm .3cm;display:flex;align-items:center;gap:.15cm;}
@@ -1335,7 +1341,7 @@
   <section id="admin-panel" style="display:none;padding-top:0;">
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:16px;">
         <div>
-          <h2 style="margin:0;">Panel de super administrador</h2>
+          <h2 style="margin:0;">Panel administrador</h2>
           <p class="foot-note" style="border:none;padding-top:2px;margin:0;">Laboratorio HV México — control central de solicitudes, validaciones y certificados.</p>
         </div>
         <button class="btn ghost small" onclick="adminLogout()">Cerrar sesión</button>
@@ -1800,6 +1806,7 @@ function renderCert(f){
   ];
   const hasSubgrades = subgrades.some(s => s.val);
   return `
+  <div class="print-target" id="print-target-full">
   <div class="cert">
     <div class="cert-topband">
       <img class="hv-logo" alt="HV" style="height:30px;">
@@ -1849,6 +1856,19 @@ function renderCert(f){
       <p class="cert-authenticity-text">${dictamenText(f)}</p>
     </div>
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <p class="cert-sign-role">Técnico Certificador Especializado</p>
+        <p class="cert-sign-lab">Laboratorio HV México</p>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <p class="cert-sign-role">Director General</p>
+        <p class="cert-sign-lab">Laboratorio HV México</p>
+      </div>
+    </div>
+    <div class="divider"></div>
     <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
     <div class="divider"></div>
     <div class="row" style="align-items:center;gap:18px;">
@@ -1858,13 +1878,14 @@ function renderCert(f){
         <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
       </div>
     </div>
-    <div class="no-print row" style="margin-top:18px;align-items:center;">
-      <button class="btn ghost small" onclick="window.print()">Descargar / imprimir certificado</button>
-      <button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y holograma</button>
-      <button class="btn ghost small" onclick="shareCert('${escapeHtml(f.folio)}','${escapeHtml(f.modelo||'')}')">Compartir certificado</button>
-    </div>
-    <p class="no-print foot-note" style="border:none;padding-top:0;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.</p>
-  </div>`;
+  </div>
+  </div>
+  <div class="no-print row" style="margin-top:18px;align-items:center;">
+    <button class="btn ghost small" onclick="printOnly('full')">Descargar / imprimir certificado</button>
+    <button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y holograma</button>
+    <button class="btn ghost small" onclick="shareCert('${escapeHtml(f.folio)}','${escapeHtml(f.modelo||'')}')">Compartir certificado</button>
+  </div>
+  <p class="no-print foot-note" style="border:none;padding-top:0;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.</p>`;
 }
 
 function tierForGrade(grado, estado){
