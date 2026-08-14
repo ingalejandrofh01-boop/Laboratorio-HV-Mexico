@@ -2,7 +2,7 @@
 // Habilita la instalación como app y un caché básico para que el sitio
 // cargue más rápido y funcione si la conexión falla momentáneamente.
 
-const CACHE_NAME = 'labhv-cache-v4';
+const CACHE_NAME = 'labhv-cache-v5';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,13 @@ const CORE_ASSETS = [
   './favicon.ico',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './logo.png',
+  './mx-flag.jpg',
+  './wm-1.jpg',
+  './wm-2.jpg',
+  './wm-3.jpg',
+  './showcase-piece.jpg'
 ];
 
 self.addEventListener('install', (event) => {
