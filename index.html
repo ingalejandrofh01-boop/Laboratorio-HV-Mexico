@@ -64,7 +64,7 @@
   html[data-theme="dark"] .site-watermark .wm-img{opacity:.09;filter:saturate(1) contrast(0.85) brightness(.85);}
   html[data-theme="dark"] body::before{background-image:repeating-linear-gradient(115deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 5px);}
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;overflow-x:hidden;transition:background-color .25s ease, color .25s ease;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;transition:background-color .25s ease, color .25s ease;}
   html{overflow-x:hidden;}
   body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
     background-image:repeating-linear-gradient(115deg, rgba(36,21,18,0.02) 0 2px, transparent 2px 5px);}
@@ -111,6 +111,86 @@
   .grid > *{min-width:0;}
   .grid-3{grid-template-columns:repeat(3,1fr);}
   .grid-2{grid-template-columns:repeat(2,1fr);}
+
+  /* ---- Wizard "Solicitar validación": experiencia guiada paso a paso ---- */
+  .wiz-card{max-width:760px;margin:18px auto 0;padding:30px 32px 26px;}
+  .wiz-progress{margin-bottom:26px;}
+  .wiz-dots{display:flex;gap:6px;margin-bottom:10px;}
+  .wiz-dot{flex:1;height:5px;border-radius:4px;background:var(--panel-2);transition:background-color .25s ease;}
+  .wiz-dot.done{background:var(--brass);}
+  .wiz-dot.current{background:var(--red);}
+  .wiz-progress-label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--sage-dim);}
+  .wiz-steps{position:relative;min-height:1px;}
+  .wiz-step{display:none;}
+  .wiz-step.active{display:block;}
+  .wiz-step.enter-fwd{animation:wizEnterFwd .38s cubic-bezier(.2,.6,.2,1) both;}
+  .wiz-step.enter-back{animation:wizEnterBack .38s cubic-bezier(.2,.6,.2,1) both;}
+  @keyframes wizEnterFwd{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:translateX(0);}}
+  @keyframes wizEnterBack{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:translateX(0);}}
+  @media(prefers-reduced-motion:reduce){
+    .wiz-step.enter-fwd,.wiz-step.enter-back{animation:none;}
+  }
+  .wiz-step-kicker{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 8px;}
+  .wiz-step h3{font-size:20px;margin:0 0 8px;}
+  .wiz-step-help{font-size:13.5px;color:var(--sage);line-height:1.55;margin:0 0 20px;max-width:560px;}
+  .wiz-field-note{font-size:12px;color:var(--sage-dim);margin:6px 0 0;line-height:1.5;}
+  .wiz-sr-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  .wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);}
+  #wiz-back-btn{visibility:hidden;}
+  .wiz-nav .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none;}
+  #wiz-next-btn{display:inline-flex;align-items:center;}
+  #wiz-next-btn.ready{box-shadow:0 6px 20px rgba(210,4,45,.38);}
+
+  /* Paquetes del wizard: tarjetas grandes en vez de <select>.
+     Prefijo "wiz-" para no chocar con la clase .pkg-card ya usada por las
+     tarjetas de precios de #view-paquetes. */
+  .wiz-pkg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px;}
+  .wiz-pkg-card{position:relative;text-align:left;background:var(--panel-2);border:2px solid var(--line);border-radius:10px;padding:22px 16px 18px;cursor:pointer;font-family:inherit;color:var(--ink);display:flex;flex-direction:column;transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease,background-color .25s ease;}
+  .wiz-pkg-card:hover{border-color:var(--brass);transform:translateY(-2px);box-shadow:0 8px 20px rgba(36,21,18,.1);}
+  .wiz-pkg-card:focus-visible{outline:2px solid var(--red);outline-offset:2px;}
+  .wiz-pkg-card.selected{border-color:var(--red);background:rgba(210,4,45,0.05);box-shadow:0 8px 22px rgba(210,4,45,.16);}
+  .wiz-pkg-card.featured{border-color:rgba(184,134,47,.5);}
+  .wiz-pkg-card-badge{position:absolute;top:-10px;left:14px;background:var(--brass);color:#fff;font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+  .wiz-pkg-card.selected .wiz-pkg-card-badge{background:var(--red);}
+  .wiz-pkg-card-icon{font-size:26px;margin-bottom:10px;}
+  .wiz-pkg-card-name{font-family:'Fraunces',serif;font-size:15.5px;color:var(--ink);margin-bottom:6px;line-height:1.25;}
+  .wiz-pkg-card-price{font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--red);margin-bottom:10px;}
+  .wiz-pkg-card-price small{font-size:11px;color:var(--sage-dim);font-weight:400;}
+  .wiz-pkg-card-bullets{list-style:none;padding:0;margin:0 0 12px;font-size:12px;color:var(--sage);line-height:1.6;flex:1;}
+  .wiz-pkg-card-bullets li{padding-left:15px;position:relative;}
+  .wiz-pkg-card-bullets li::before{content:'✓';position:absolute;left:0;color:var(--ok);font-weight:700;}
+  .wiz-pkg-card-time{font-size:11px;color:var(--brass-dim);font-family:'IBM Plex Mono',monospace;}
+  @media(max-width:760px){.wiz-pkg-cards{grid-template-columns:1fr;}}
+
+  /* Evidencia visual: zona de arrastrar/soltar fotos */
+  .wiz-dropzone{position:relative;border:2px dashed var(--line);border-radius:10px;padding:34px 20px;text-align:center;cursor:pointer;background:var(--panel-2);transition:border-color .15s ease,background .15s ease;}
+  .wiz-dropzone:hover,.wiz-dropzone.drag-over{border-color:var(--red);background:rgba(210,4,45,0.04);}
+  .wiz-dropzone:focus-visible{outline:2px solid var(--red);outline-offset:2px;}
+  .wiz-dropzone svg{width:26px;height:26px;stroke:var(--brass-dim);fill:none;stroke-width:1.6;margin-bottom:8px;}
+  .wiz-dropzone-label{display:block;font-size:13px;color:var(--sage);line-height:1.5;}
+  .wiz-dropzone-label small{display:block;margin-top:3px;color:var(--sage-dim);font-size:11px;}
+  .wiz-video-note{display:flex;gap:10px;align-items:flex-start;margin-top:18px;padding:12px 14px;background:rgba(37,211,102,0.06);border:1px dashed rgba(37,211,102,.4);border-radius:8px;}
+  .wiz-video-note span{font-size:17px;flex:none;}
+  .wiz-video-note p{margin:0;font-size:12.5px;color:var(--sage);line-height:1.5;}
+
+  /* Revisión final: resumen tipo "expediente" */
+  .wiz-review{display:flex;flex-direction:column;gap:14px;}
+  .wiz-review-block{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--panel-2);}
+  .wiz-review-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .wiz-review-head strong{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--brass-dim);}
+  .wiz-review-edit{background:none;border:none;color:var(--red);font-size:12px;font-weight:600;cursor:pointer;padding:0;font-family:inherit;}
+  .wiz-review-edit:hover{text-decoration:underline;}
+  .wiz-review-list{list-style:none;padding:0;margin:0;}
+  .wiz-review-list li{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0;}
+  .wiz-review-list li span{color:var(--sage-dim);flex:none;}
+  .wiz-review-list li strong{color:var(--ink);text-align:right;font-weight:600;}
+  .wiz-review-photos{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .wiz-done-card{max-width:760px;margin:0 auto;}
+
+  @media(max-width:760px){
+    .wiz-card{padding:22px 18px 20px;}
+    .wiz-nav{flex-wrap:wrap;gap:10px;}
+  }
 
   /* ---- Modo oscuro: botón de cambio de tema ---- */
   .theme-toggle{position:absolute;top:18px;right:24px;width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;cursor:pointer;padding:0;color:var(--ink);z-index:5;transition:background-color .25s ease, border-color .25s ease, transform .15s ease;}
@@ -178,7 +258,6 @@
   @media(max-width:760px){
     .grid-3,.grid-2{grid-template-columns:1fr;}
     .hero h1{font-size:30px;}
-    html,body{overflow-x:hidden;}
     body.nav-open{overflow:hidden;}
     .navbar{flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;text-align:left;padding:14px 18px;gap:10px;}
     .brand{gap:10px;}
@@ -319,8 +398,7 @@
   .step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);}
   .step:last-child{border-bottom:none;}
   .step .num{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:13px;width:22px;flex:none;}
-  .scale-row{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);align-items:baseline;}
-  .scale-row .g{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:15px;}
+  .scale-row{display:grid;grid-template-columns:58px 1fr;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center;}
   footer{border-top:1px solid var(--line);padding:30px 0;color:var(--sage-dim);font-size:13px;}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
 
@@ -591,6 +669,43 @@
   @media(prefers-reduced-motion:reduce){.method-step{opacity:1;}}
   .method-step h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;color:var(--ink);}
   .method-step p{color:var(--sage);font-size:13.5px;margin:0;line-height:1.6;}
+
+  /* ===== Metodología: rediseño (subnav, fases, diagrama de fotos, medallas) ===== */
+  .section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 6px;}
+  .metodo-subnav{position:sticky;top:var(--header-h,84px);z-index:45;background:var(--paper);border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease, top .1s ease;}
+  .metodo-subnav-inner{display:flex;gap:4px;overflow-x:auto;padding:10px 24px;max-width:1080px;margin:0 auto;scrollbar-width:none;}
+  .metodo-subnav-inner::-webkit-scrollbar{display:none;}
+  .metodo-subnav-link{flex:none;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--sage);text-decoration:none;padding:7px 14px;border-radius:20px;white-space:nowrap;transition:background .15s ease,color .15s ease;}
+  .metodo-subnav-link:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
+  .metodo-subnav-link.active{background:var(--red);color:#fff;}
+
+  .method-phase{position:relative;}
+  .method-phase-head{display:flex;align-items:center;gap:14px;padding:22px 0 16px 30px;position:relative;}
+  .method-phase:first-child .method-phase-head{padding-top:2px;}
+  .method-phase-icon{position:absolute;left:-21px;top:14px;width:42px;height:42px;border-radius:50%;background:var(--panel);border:2px solid var(--brass);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 0 4px var(--bg);flex:none;}
+  .method-phase-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 2px;}
+  .method-phase-title{font-family:'Fraunces',serif;font-size:18px;margin:0;color:var(--ink);}
+
+  /* Diagrama del protocolo fotográfico */
+  .photo-diagram{position:relative;margin-top:20px;border:1px solid var(--line);border-radius:10px;padding:26px 20px;background-image:linear-gradient(var(--panel-2) 1px, transparent 1px),linear-gradient(90deg, var(--panel-2) 1px, transparent 1px);background-size:26px 26px;background-color:var(--panel);overflow:hidden;}
+  .photo-diagram-stage{position:relative;width:100%;max-width:640px;margin:0 auto;aspect-ratio:640/340;}
+  .photo-diagram-svg{position:absolute;inset:0;width:100%;height:100%;}
+  .photo-diagram-svg .pd-car{fill:none;stroke:var(--brass-dim);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;}
+  .photo-diagram-svg .pd-detail{fill:none;stroke:var(--brass-dim);stroke-width:1.6;opacity:.75;}
+  .photo-diagram-svg .pd-hub{fill:var(--panel);stroke:var(--brass-dim);stroke-width:2;}
+  .photo-diagram-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;box-shadow:0 0 0 4px var(--panel), 0 2px 8px rgba(0,0,0,.25);}
+  .photo-diagram-tag{position:absolute;transform:translate(-50%,0);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:11.5px;color:var(--ink);white-space:nowrap;box-shadow:0 3px 10px rgba(36,21,18,.1);}
+  .photo-diagram-tag strong{color:var(--red);font-family:'IBM Plex Mono',monospace;margin-right:5px;}
+  @media(max-width:620px){
+    .photo-diagram{padding:16px 10px;}
+    .photo-diagram-tag{font-size:10px;padding:4px 8px;white-space:normal;text-align:center;max-width:90px;}
+    .photo-diagram-pin{width:20px;height:20px;font-size:9.5px;}
+  }
+
+  /* Medallas de la escala de calificación (mismo estilo que el certificado real) */
+  .grade-medal{width:58px;height:58px;padding:2px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:12.5px;line-height:1.15;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.18);flex:none;}
+  .grade-medal.tier-gold{background:linear-gradient(150deg,#C99A3F,#8C6524);}
+  .grade-medal.tier-silver{background:linear-gradient(150deg,#9AA5B1,#5F6A75);}
   .pkg-card{position:relative;display:flex;flex-direction:column;transition:transform .18s ease, box-shadow .18s ease;}
   .pkg-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(36,21,18,0.1);}
   .pkg-num{position:absolute;top:14px;right:16px;width:26px;height:26px;border-radius:50%;background:var(--panel-2);color:var(--sage);font-family:'IBM Plex Mono',monospace;font-size:13px;display:flex;align-items:center;justify-content:center;}
@@ -1142,24 +1257,34 @@
 </div>
 
 <div class="view" id="view-metodologia">
-  <section>
+  <nav class="metodo-subnav" id="metodo-subnav">
+    <div class="metodo-subnav-inner">
+      <a href="#metodo-resumen" class="metodo-subnav-link">Resumen</a>
+      <a href="#metodo-8-pasos" class="metodo-subnav-link">8 pasos</a>
+      <a href="#metodo-fotos" class="metodo-subnav-link">Protocolo fotográfico</a>
+      <a href="#metodo-escala" class="metodo-subnav-link">Escala de grados</a>
+    </div>
+  </nav>
+
+  <section id="metodo-resumen">
+    <p class="section-eyebrow">Expediente HV · Vista general</p>
     <h2>Cómo certificamos tu pieza</h2>
     <p style="color:var(--sage);max-width:640px;">El proceso es por etapas: cada pieza tiene que pasar una etapa para avanzar a la siguiente. Si no pasa la primera, el proceso se detiene ahí.</p>
     <div class="stepper">
-      <div class="step-card">
+      <div class="step-card tag-notch">
         <div class="step-num">1</div>
         <h3 style="font-size:16px;">Validación de autenticidad</h3>
         <p style="color:var(--sage);font-size:13.5px;">Confirmamos que la pieza sea original de CIPSA, Bólidos Lilí Ledy, Aurimat y más — validando material, remaches, base, tipografía y comparación contra nuestra base de referencia.</p>
         <div class="branch-note">Si no pasa esta validación: se cobra únicamente el servicio de validación y la pieza se regresa al cliente. No continúa al resto del proceso.</div>
         <div class="step-arrow">→</div>
       </div>
-      <div class="step-card">
+      <div class="step-card tag-notch">
         <div class="step-num">2</div>
         <h3 style="font-size:16px;">Valoración del estado</h3>
         <p style="color:var(--sage);font-size:13.5px;">Ya confirmada como original, evaluamos pintura, llantas, filos, interior y desgaste bajo luz UV y microscopio, para asignar el grado de la escala 0–10.</p>
         <div class="step-arrow">→</div>
       </div>
-      <div class="step-card">
+      <div class="step-card tag-notch">
         <div class="step-num">3</div>
         <h3 style="font-size:16px;">Encapsulado y sello</h3>
         <p style="color:var(--sage);font-size:13.5px;">La pieza se sella en acrílico con el holograma del laboratorio y su etiqueta de grado. El folio con QR de verificación queda publicado en esta página.</p>
@@ -1167,56 +1292,128 @@
     </div>
   </section>
 
-  
 
-  <section>
+
+  <section id="metodo-8-pasos">
+    <p class="section-eyebrow">Protocolo pericial</p>
     <h2>Metodología de certificación — 8 pasos</h2>
-    <p style="color:var(--sage);max-width:680px;">Ninguna pieza se certifica si no pasa los 8 pasos. Si no es original, no se encapsula.</p>
+    <p style="color:var(--sage);max-width:680px;">Ninguna pieza se certifica si no pasa los 8 pasos. Si no es original, no se encapsula. Están agrupados en 4 fases del proceso de laboratorio.</p>
     <div class="method-steps">
-      <div class="method-step"><div class="step-num">1</div><div>
-        <h3>Recepción, registro y cadena de custodia</h3>
-        <p>Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">2</div><div>
-        <h3>Identificación y clasificación preliminar</h3>
-        <p>Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica contra los que será evaluada.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">3</div><div>
-        <h3>Inspección visual y análisis morfológico</h3>
-        <p>Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">4</div><div>
-        <h3>Análisis técnico instrumental, comparativa y cotejo</h3>
-        <p>Es la fase pericial más importante:</p>
-        <ul style="color:var(--sage);font-size:13.5px;padding-left:18px;margin:6px 0 0;line-height:1.7;">
-          <li>Análisis con lupa estereoscópica de aumento para pintura y tampografía.</li>
-          <li>Luz ultravioleta (UV) para detección de repintados, retoques y reparaciones.</li>
-          <li>Comparativa y cotejo directo: confronta de la pieza contra nuestra base de datos, catálogos oficiales de fábrica y piezas testigo originales. Se cotejan tono de pintura Spectraflame, tipo de base, remaches, ejes, llantas y país de fabricación para descartar cualquier alteración.</li>
-        </ul>
-      </div></div>
-      <div class="method-step"><div class="step-num">5</div><div>
-        <h3>Confronta y dictamen pericial de autenticidad</h3>
-        <p>Aquí interviene el doble filtro. El Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica: <strong style="color:var(--ink);">Original, Restaurado, Reparado, Repintado</strong> o <strong style="color:var(--ink);">Falso / Réplica</strong>.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">6</div><div>
-        <h3>Evaluación y calificación de condición</h3>
-        <p>Una vez autenticada como original, se califica su condición bajo nuestra escala normalizada de 1.0 a 10.0, evaluando pintura, cromo, llantas, base y conservación general. La calificación es técnica, no sentimental.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">7</div><div>
-        <h3>Encapsulado de seguridad y etiquetado</h3>
-        <p>La pieza aprobada es encapsulada en acrílico sellado y etiquetado con datos de certificación, calificación y folio.</p>
-      </div></div>
-      <div class="method-step"><div class="step-num">8</div><div>
-        <h3>Registro digital, certificación web y entrega</h3>
-        <p>Se da de alta en nuestra base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite certificado digital y se prepara para entrega o envío certificado al cliente.</p>
-      </div></div>
+      <div class="method-phase">
+        <div class="method-phase-head">
+          <span class="method-phase-icon">🗂️</span>
+          <div><p class="method-phase-eyebrow">Fase 1</p><h3 class="method-phase-title">Ingreso y custodia</h3></div>
+        </div>
+        <div class="method-step"><div class="step-num">1</div><div>
+          <h3>Recepción, registro y cadena de custodia</h3>
+          <p>Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.</p>
+        </div></div>
+        <div class="method-step"><div class="step-num">2</div><div>
+          <h3>Identificación y clasificación preliminar</h3>
+          <p>Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica contra los que será evaluada.</p>
+        </div></div>
+      </div>
+      <div class="method-phase">
+        <div class="method-phase-head">
+          <span class="method-phase-icon">🔬</span>
+          <div><p class="method-phase-eyebrow">Fase 2</p><h3 class="method-phase-title">Análisis pericial</h3></div>
+        </div>
+        <div class="method-step"><div class="step-num">3</div><div>
+          <h3>Inspección visual y análisis morfológico</h3>
+          <p>Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.</p>
+        </div></div>
+        <div class="method-step"><div class="step-num">4</div><div>
+          <h3>Análisis técnico instrumental, comparativa y cotejo</h3>
+          <p>Es la fase pericial más importante:</p>
+          <ul style="color:var(--sage);font-size:13.5px;padding-left:18px;margin:6px 0 0;line-height:1.7;">
+            <li>Análisis con lupa estereoscópica de aumento para pintura y tampografía.</li>
+            <li>Luz ultravioleta (UV) para detección de repintados, retoques y reparaciones.</li>
+            <li>Comparativa y cotejo directo: confronta de la pieza contra nuestra base de datos, catálogos oficiales de fábrica y piezas testigo originales. Se cotejan tono de pintura Spectraflame, tipo de base, remaches, ejes, llantas y país de fabricación para descartar cualquier alteración.</li>
+          </ul>
+        </div></div>
+      </div>
+      <div class="method-phase">
+        <div class="method-phase-head">
+          <span class="method-phase-icon">⚖️</span>
+          <div><p class="method-phase-eyebrow">Fase 3</p><h3 class="method-phase-title">Dictamen y calificación</h3></div>
+        </div>
+        <div class="method-step"><div class="step-num">5</div><div>
+          <h3>Confronta y dictamen pericial de autenticidad</h3>
+          <p>Aquí interviene el doble filtro. El Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica: <strong style="color:var(--ink);">Original, Restaurado, Reparado, Repintado</strong> o <strong style="color:var(--ink);">Falso / Réplica</strong>.</p>
+        </div></div>
+        <div class="method-step"><div class="step-num">6</div><div>
+          <h3>Evaluación y calificación de condición</h3>
+          <p>Una vez autenticada como original, se califica su condición bajo nuestra escala normalizada de 1.0 a 10.0, evaluando pintura, cromo, llantas, base y conservación general. La calificación es técnica, no sentimental.</p>
+        </div></div>
+      </div>
+      <div class="method-phase">
+        <div class="method-phase-head">
+          <span class="method-phase-icon">🔏</span>
+          <div><p class="method-phase-eyebrow">Fase 4</p><h3 class="method-phase-title">Sello y entrega</h3></div>
+        </div>
+        <div class="method-step"><div class="step-num">7</div><div>
+          <h3>Encapsulado de seguridad y etiquetado</h3>
+          <p>La pieza aprobada es encapsulada en acrílico sellado y etiquetado con datos de certificación, calificación y folio.</p>
+        </div></div>
+        <div class="method-step"><div class="step-num">8</div><div>
+          <h3>Registro digital, certificación web y entrega</h3>
+          <p>Se da de alta en nuestra base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite certificado digital y se prepara para entrega o envío certificado al cliente.</p>
+        </div></div>
+      </div>
     </div>
   </section>
 
-  <section>
+  <section id="metodo-fotos">
+    <p class="section-eyebrow">Protocolo de laboratorio</p>
     <h2>Protocolo de evaluación — 6 fotografías obligatorias</h2>
     <p style="color:var(--sage);max-width:640px;">Cada pieza que evaluamos sigue el mismo protocolo fotográfico y de laboratorio, para que el folio sea comparable entre piezas y verificable en el tiempo.</p>
-    <div class="steps">
+    <div class="photo-diagram">
+      <div class="photo-diagram-stage">
+        <svg class="photo-diagram-svg" viewBox="0 0 640 340" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g class="pd-car">
+            <path d="M95,240
+              C95,225 102,214 118,212
+              L128,210
+              C135,188 158,170 190,162
+              L215,148
+              C238,132 268,122 305,120
+              L390,120
+              C420,121 444,130 462,148
+              L484,170
+              C505,173 528,180 542,192
+              C552,200 555,212 550,224
+              L540,226
+              L540,240
+              L470,240
+              L470,226
+              C470,208 456,194 438,194
+              C420,194 406,208 406,226
+              L406,240
+              L235,240
+              L235,226
+              C235,208 221,194 203,194
+              C185,194 171,208 171,226
+              L171,240
+              L118,240
+              C104,240 95,235 95,240 Z" />
+            <path class="pd-detail" d="M195,160 C215,146 240,136 270,132 L270,160 C245,160 220,160 195,160 Z" />
+            <path class="pd-detail" d="M285,131 L380,131 C400,132 416,138 428,148 L428,161 L285,161 Z" />
+            <line class="pd-detail" x1="285" y1="131" x2="285" y2="161" />
+          </g>
+          <circle class="pd-hub" cx="203" cy="226" r="34" />
+          <circle cx="203" cy="226" r="13" style="fill:none;stroke:var(--brass-dim);stroke-width:2;" />
+          <circle class="pd-hub" cx="438" cy="226" r="34" />
+          <circle cx="438" cy="226" r="13" style="fill:none;stroke:var(--brass-dim);stroke-width:2;" />
+        </svg>
+        <div class="photo-diagram-pin" style="left:46.9%;top:70.9%;" title="Base completa">01</div>
+        <div class="photo-diagram-pin" style="left:68.4%;top:66.5%;" title="Llantas">02</div>
+        <div class="photo-diagram-pin" style="left:87.5%;top:60.3%;" title="Frente y trasera">03</div>
+        <div class="photo-diagram-pin" style="left:51.6%;top:35.3%;" title="Techo y cofre a 45°">04</div>
+        <div class="photo-diagram-pin" style="left:54.7%;top:43.5%;" title="Interior por ventanas">05</div>
+        <div class="photo-diagram-pin" style="left:78.1%;top:54.4%;" title="Borde de pintura UV / microscopio">06</div>
+      </div>
+    </div>
+    <div class="steps" style="margin-top:20px;">
       <div class="step"><div class="num">01</div><div>Base completa, con leyenda legible</div></div>
       <div class="step"><div class="num">02</div><div>Llantas, lado derecho e izquierdo</div></div>
       <div class="step"><div class="num">03</div><div>Frente y trasera</div></div>
@@ -1228,15 +1425,16 @@
 
   
 
-  <section>
+  <section id="metodo-escala">
+    <p class="section-eyebrow">Dictamen técnico</p>
     <h2>Escala de calificación técnica</h2>
-    <p style="color:var(--sage);max-width:680px;">Solo las piezas dictaminadas como <strong style="color:var(--ink);">Original</strong> pasan a calificación y encapsulado.</p>
+    <p style="color:var(--sage);max-width:680px;">Solo las piezas dictaminadas como <strong style="color:var(--ink);">Original</strong> pasan a calificación y encapsulado. Las medallas son las mismas que verás en tu certificado.</p>
     <div class="card">
-      <div class="scale-row"><div class="g">10.0</div><div><strong style="color:var(--ink);">Gem Mint</strong> — Pieza perfecta. Pintura 100% intacta, sin micro-desgastes, cromo espejo, llantas sin rodar. Pieza de vitrina directa de fábrica.</div></div>
-      <div class="scale-row"><div class="g">9.0–9.9</div><div><strong style="color:var(--ink);">Mint</strong> — Casi perfecta. Micro detalles imperceptibles a simple vista, solo visibles con aumento. Conservación excepcional.</div></div>
-      <div class="scale-row"><div class="g">8.0–8.9</div><div><strong style="color:var(--ink);">Near Mint-Mint</strong> — Excelente. Desgaste mínimo congruente con manipulación. Bordes y filos bien conservados.</div></div>
-      <div class="scale-row"><div class="g">7.0–7.9</div><div><strong style="color:var(--ink);">Excellent</strong> — Muy buena. Desgaste ligero visible en filos, llantas con uso ligero. Pieza muy coleccionable.</div></div>
-      <div class="scale-row"><div class="g">≤6.0</div><div><strong style="color:var(--ink);">Buena a Regular</strong> — Desgaste evidente, pérdida de pintura, cromo opaco o llantas gastadas. Auténtica pero con historia de juego.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-gold">10.0</div><div><strong style="color:var(--ink);">Gem Mint</strong> — Pieza perfecta. Pintura 100% intacta, sin micro-desgastes, cromo espejo, llantas sin rodar. Pieza de vitrina directa de fábrica.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-gold">9.0–9.9</div><div><strong style="color:var(--ink);">Mint</strong> — Casi perfecta. Micro detalles imperceptibles a simple vista, solo visibles con aumento. Conservación excepcional.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-silver">8.0–8.9</div><div><strong style="color:var(--ink);">Near Mint-Mint</strong> — Excelente. Desgaste mínimo congruente con manipulación. Bordes y filos bien conservados.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-silver">7.0–7.9</div><div><strong style="color:var(--ink);">Excellent</strong> — Muy buena. Desgaste ligero visible en filos, llantas con uso ligero. Pieza muy coleccionable.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-silver">≤6.0</div><div><strong style="color:var(--ink);">Buena a Regular</strong> — Desgaste evidente, pérdida de pintura, cromo opaco o llantas gastadas. Auténtica pero con historia de juego.</div></div>
     </div>
 
     <h3 style="font-size:16px;margin-top:26px;">Dictamen de autenticidad <span style="color:var(--sage);font-weight:400;font-size:13px;">(independiente a la calificación)</span></h3>
@@ -1396,37 +1594,142 @@
 <div class="view" id="view-solicitar">
   <section>
     <h2>Solicitar validación de tu pieza</h2>
-    <p style="color:var(--sage);max-width:600px;">Cuéntanos sobre tu pieza. Según el paquete que elijas, te contactamos por WhatsApp o coordinamos tu entrega física.</p>
-    <div class="card" style="max-width:560px;">
-      <label>Paquete</label>
-      <select id="s-nivel" onchange="onPackageChange()">
-        <option value="digital">1. Validación digital — $150 MXN</option>
-        <option value="fisico">2. Peritaje físico + certificado — $400 MXN</option>
-        <option value="premium">3. Peritaje premium + encapsulado — $800 MXN</option>
-      </select>
-      <label>Nombre completo</label>
-      <input id="s-nombre" placeholder="Nombre y apellido">
-      <label>Teléfono (lo usarás para consultar tu historial)</label>
-      <input id="s-telefono" placeholder="55 0000 0000">
-      <label>Modelo</label>
-      <input id="s-modelo" placeholder="VW Sedán - Policía Federal">
-      <label>Año aproximado</label>
-      <input id="s-anio" placeholder="1979">
-      <div class="row">
-        <div style="flex:1;"><label>Origen que crees que tiene</label>
-          <select id="s-origen"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select>
+    <p style="color:var(--sage);max-width:600px;">Te vamos a guiar paso a paso, como en un peritaje real: primero el paquete, luego tus datos, los de tu pieza y la evidencia fotográfica.</p>
+
+    <div class="card wiz-card" id="s-wizard">
+      <div class="wiz-progress">
+        <div class="wiz-dots" id="wiz-dots"></div>
+        <span class="wiz-progress-label" id="wiz-progress-label">Paso 1 de 6 · Elige tu paquete</span>
+      </div>
+
+      <div class="wiz-steps" id="wiz-steps-wrap">
+
+        <div class="wiz-step active" data-step="paquete">
+          <p class="wiz-step-kicker">Paso 1 · Expediente nuevo</p>
+          <h3>¿Qué nivel de peritaje necesitas?</h3>
+          <p class="wiz-step-help">Elige según qué tan a fondo quieres la validación de tu pieza. Puedes cambiarlo más adelante si lo necesitas.</p>
+          <div class="wiz-pkg-cards">
+            <button type="button" class="wiz-pkg-card" data-pkg="digital" onclick="wizSelectPackage('digital')">
+              <span class="wiz-pkg-card-badge mono">Más rápido</span>
+              <span class="wiz-pkg-card-icon">🔍</span>
+              <span class="wiz-pkg-card-name">Validación digital</span>
+              <span class="wiz-pkg-card-price">$150 <small>MXN</small></span>
+              <ul class="wiz-pkg-card-bullets">
+                <li>Evaluación por fotos y video</li>
+                <li>Dictamen preliminar por WhatsApp</li>
+                <li>No requiere traer la pieza</li>
+              </ul>
+              <span class="wiz-pkg-card-time">⏱ Entrega en 24–48 h</span>
+            </button>
+            <button type="button" class="wiz-pkg-card featured" data-pkg="fisico" onclick="wizSelectPackage('fisico')">
+              <span class="wiz-pkg-card-badge mono">Más completo</span>
+              <span class="wiz-pkg-card-icon">🧪</span>
+              <span class="wiz-pkg-card-name">Peritaje físico + certificado</span>
+              <span class="wiz-pkg-card-price">$400 <small>MXN</small></span>
+              <ul class="wiz-pkg-card-bullets">
+                <li>Peritaje presencial en laboratorio</li>
+                <li>Folio y certificado físico</li>
+                <li>Grado de conservación oficial</li>
+              </ul>
+              <span class="wiz-pkg-card-time">⏱ Entrega en 3–5 días</span>
+            </button>
+            <button type="button" class="wiz-pkg-card" data-pkg="premium" onclick="wizSelectPackage('premium')">
+              <span class="wiz-pkg-card-badge mono">Máxima protección</span>
+              <span class="wiz-pkg-card-icon">🛡️</span>
+              <span class="wiz-pkg-card-name">Premium + encapsulado</span>
+              <span class="wiz-pkg-card-price">$800 <small>MXN</small></span>
+              <ul class="wiz-pkg-card-bullets">
+                <li>Todo lo del peritaje físico</li>
+                <li>Encapsulado protector sellado</li>
+                <li>Prioridad en cola de laboratorio</li>
+              </ul>
+              <span class="wiz-pkg-card-time">⏱ Entrega en 5–7 días</span>
+            </button>
+          </div>
+          <select id="s-nivel" class="wiz-sr-label" onchange="onPackageChange()" tabindex="-1" aria-hidden="true">
+            <option value="digital">1. Validación digital — $150 MXN</option>
+            <option value="fisico">2. Peritaje físico + certificado — $400 MXN</option>
+            <option value="premium">3. Peritaje premium + encapsulado — $800 MXN</option>
+          </select>
         </div>
-        <div style="flex:1;"><label>Color</label><input id="s-color" placeholder="Ej. verde bandera"></div>
+
+        <div class="wiz-step" data-step="contacto">
+          <p class="wiz-step-kicker">Paso 2 · Identificación del solicitante</p>
+          <h3>Tus datos de contacto</h3>
+          <p class="wiz-step-help">Con esto abrimos tu expediente en el laboratorio y podemos avisarte del avance.</p>
+          <label for="s-nombre">Nombre completo</label>
+          <input id="s-nombre" placeholder="Nombre y apellido" oninput="updateSolicitudProgress()">
+          <p class="wiz-field-note">Así identificamos tu solicitud. Este nombre aparecerá en tu certificado si tu pieza resulta original.</p>
+          <label for="s-telefono">Teléfono (lo usarás para consultar tu historial)</label>
+          <input id="s-telefono" placeholder="55 0000 0000" oninput="updateSolicitudProgress()">
+          <p class="wiz-field-note">Te contactamos por aquí y por WhatsApp. También lo vas a usar en "Mi historial" para consultar el estatus de tus folios — anótalo bien.</p>
+        </div>
+
+        <div class="wiz-step" data-step="pieza">
+          <p class="wiz-step-kicker">Paso 3 · Ficha técnica preliminar</p>
+          <h3>Cuéntanos de tu pieza</h3>
+          <p class="wiz-step-help">Estos datos orientan al perito antes de revisar tu pieza a detalle.</p>
+          <label for="s-modelo">Modelo</label>
+          <input id="s-modelo" placeholder="VW Sedán - Policía Federal" oninput="updateSolicitudProgress()">
+          <label for="s-anio">Año aproximado</label>
+          <input id="s-anio" placeholder="1979">
+          <p class="wiz-field-note">No necesitas certeza total — un año aproximado nos ayuda a ubicar la época y el molde correcto.</p>
+          <div class="row">
+            <div style="flex:1;"><label for="s-origen">Origen que crees que tiene</label>
+              <select id="s-origen"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select>
+            </div>
+            <div style="flex:1;"><label for="s-color">Color</label><input id="s-color" placeholder="Ej. verde bandera"></div>
+          </div>
+          <label for="s-desc">Descripción / estado a simple vista</label>
+          <textarea id="s-desc" rows="3" placeholder="Color, si tiene caja, desgaste visible, etc."></textarea>
+          <p class="wiz-field-note">Menciona lo que se note a simple vista: caja, desgaste, óxido, piezas faltantes, repintes. Entre más detalle, mejor anticipamos el peritaje.</p>
+        </div>
+
+        <div class="wiz-step" data-step="logistica">
+          <p class="wiz-step-kicker">Paso 4 · Logística de entrega</p>
+          <h3>¿Cuándo puedes traer tu pieza?</h3>
+          <p class="wiz-step-help">Este paquete requiere peritaje presencial en CDMX. Danos una fecha tentativa — la confirmamos por WhatsApp.</p>
+          <div id="s-fecha-wrap">
+            <label for="s-fecha">Fecha tentativa para traer tu pieza al laboratorio</label>
+            <input id="s-fecha" type="date">
+          </div>
+          <div id="s-pkg-note" class="branch-note" style="margin-top:14px;"></div>
+        </div>
+
+        <div class="wiz-step" data-step="evidencia">
+          <p class="wiz-step-kicker">Paso 5 · Evidencia visual</p>
+          <h3>Sube fotos de tu pieza</h3>
+          <p class="wiz-step-help">Estas imágenes se envían directo a nuestro laboratorio — ya no dependes de mandarlas después por WhatsApp. Te recomendamos al menos 1 foto clara, de frente y con buena luz.</p>
+          <label for="s-fotos-file" class="wiz-sr-label">Seleccionar fotos de tu pieza</label>
+          <div class="wiz-dropzone" id="s-dropzone" role="button" tabindex="0" onclick="document.getElementById('s-fotos-file').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('s-fotos-file').click();}" ondragover="event.preventDefault();this.classList.add('drag-over');" ondragleave="this.classList.remove('drag-over');" ondrop="handleSolicitudFotoDrop(event)">
+            <svg viewBox="0 0 24 24"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>
+            <span class="wiz-dropzone-label">Arrastra tus fotos aquí o toca para seleccionar<br><small>JPG o PNG · hasta 4 fotos</small></span>
+          </div>
+          <input type="file" accept="image/*" multiple id="s-fotos-file" onchange="handleSolicitudFilesSelect(this)" style="display:none;">
+          <div id="s-fotos-preview" class="pieza-photos-preview" style="margin-top:12px;"></div>
+          <p class="wiz-field-note" id="s-fotos-status">Aún no subes fotos.</p>
+          <div class="wiz-video-note">
+            <span>🎥</span>
+            <p>¿Quieres agregar un video? Mándalo por WhatsApp en el paso final — así el perito ve la pieza en movimiento y sus reflejos.</p>
+          </div>
+        </div>
+
+        <div class="wiz-step" data-step="revision">
+          <p class="wiz-step-kicker">Paso 6 · Expediente final</p>
+          <h3>Revisa tu solicitud antes de enviarla</h3>
+          <p class="wiz-step-help">Verifica que todo esté correcto. Puedes volver a cualquier paso para editarlo.</p>
+          <div id="s-review-body" class="wiz-review"></div>
+        </div>
+
       </div>
-      <label>Descripción / estado a simple vista</label>
-      <textarea id="s-desc" rows="3" placeholder="Color, si tiene caja, desgaste visible, etc."></textarea>
-      <div id="s-fecha-wrap">
-        <label>Fecha tentativa para traer tu pieza al laboratorio</label>
-        <input id="s-fecha" type="date">
+
+      <div class="wiz-nav">
+        <button type="button" class="btn ghost small" id="wiz-back-btn" onclick="wizPrevStep()">← Atrás</button>
+        <button type="button" class="btn" id="wiz-next-btn" onclick="wizNextStep()">Continuar →</button>
       </div>
-      <div id="s-pkg-note" class="branch-note" style="margin-top:14px;"></div>
-      <div style="margin-top:18px;"><button class="btn" onclick="submitSolicitud()">Enviar solicitud</button></div>
+      <p class="solicitar-trust-note" style="text-align:center;margin-top:18px;">🔒 Tus datos se guardan de forma segura y solo los usamos para dar seguimiento a tu pieza.</p>
     </div>
+
     <div id="s-confirm" style="margin-top:20px;"></div>
   </section>
 </div>
@@ -2492,8 +2795,8 @@ async function shareCert(folio, modelo){
 
 function selectPackage(pkg){
   go('solicitar');
-  document.getElementById('s-nivel').value = pkg;
-  onPackageChange();
+  wizSelectPackage(pkg, {skipAdvance:true});
+  wizGoToStep('contacto', 'forward');
 }
 
 function onPackageChange(){
@@ -2507,6 +2810,241 @@ function onPackageChange(){
     fechaWrap.style.display = 'block';
     note.innerHTML = 'Este paquete requiere traer la pieza físicamente al laboratorio. Después de enviar tus datos te decimos cómo agendar tu entrega, y también puedes escribirnos directo por WhatsApp.';
   }
+  updateSolicitudProgress();
+}
+
+// ============================================================
+// WIZARD "Solicitar validación": experiencia guiada paso a paso
+// ============================================================
+const WIZARD_STEP_ORDER = ['paquete','contacto','pieza','logistica','evidencia','revision'];
+const WIZARD_STEP_LABELS = {
+  paquete: 'Elige tu paquete', contacto: 'Tus datos de contacto', pieza: 'Datos de tu pieza',
+  logistica: 'Logística de entrega', evidencia: 'Evidencia visual', revision: 'Revisión final'
+};
+let wizCurrentStep = 'paquete';
+let wizPkgChosen = false;
+let SOLICITUD_FOTOS_DATA = [];
+const SOLICITUD_FOTOS_MAX = 4;
+
+function activeWizardSteps(){
+  const pkgEl = document.getElementById('s-nivel');
+  const pkg = pkgEl ? pkgEl.value : 'digital';
+  return WIZARD_STEP_ORDER.filter(id => id !== 'logistica' || pkg !== 'digital');
+}
+
+function isWizardStepValid(stepId){
+  switch(stepId){
+    case 'paquete': return wizPkgChosen;
+    case 'contacto': return !!(document.getElementById('s-nombre').value.trim() && document.getElementById('s-telefono').value.trim());
+    case 'pieza': return !!document.getElementById('s-modelo').value.trim();
+    default: return true;
+  }
+}
+
+function wizSelectPackage(pkg, opts){
+  document.getElementById('s-nivel').value = pkg;
+  wizPkgChosen = true;
+  onPackageChange();
+  document.querySelectorAll('.wiz-pkg-card').forEach(c => c.classList.toggle('selected', c.dataset.pkg === pkg));
+  updateWizardNavButtons();
+  if(opts && opts.skipAdvance) return;
+  setTimeout(() => { if(wizCurrentStep === 'paquete') wizNextStep(); }, 200);
+}
+
+function wizGoToStep(stepId, direction){
+  const steps = activeWizardSteps();
+  if(!steps.includes(stepId)) stepId = steps[0];
+  document.querySelectorAll('.wiz-step').forEach(el => el.classList.remove('active','enter-fwd','enter-back'));
+  wizCurrentStep = stepId;
+  const nextEl = document.querySelector(`.wiz-step[data-step="${stepId}"]`);
+  if(nextEl){
+    nextEl.classList.add('active');
+    if(direction){
+      void nextEl.offsetWidth;
+      nextEl.classList.add(direction === 'back' ? 'enter-back' : 'enter-fwd');
+    }
+  }
+  if(stepId === 'revision') renderWizardReview();
+  updateWizardProgress();
+  updateWizardNavButtons();
+  const card = document.getElementById('s-wizard');
+  if(card && direction) card.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function wizNextStep(){
+  if(!isWizardStepValid(wizCurrentStep)){ toast('Completa este paso antes de continuar.'); return; }
+  if(wizCurrentStep === 'revision'){ submitSolicitud(); return; }
+  const steps = activeWizardSteps();
+  const idx = steps.indexOf(wizCurrentStep);
+  if(idx < steps.length - 1) wizGoToStep(steps[idx+1], 'forward');
+}
+function wizPrevStep(){
+  const steps = activeWizardSteps();
+  const idx = steps.indexOf(wizCurrentStep);
+  if(idx > 0) wizGoToStep(steps[idx-1], 'back');
+}
+
+function updateWizardProgress(){
+  const steps = activeWizardSteps();
+  const idx = steps.indexOf(wizCurrentStep);
+  const dots = document.getElementById('wiz-dots');
+  if(dots) dots.innerHTML = steps.map((id,i) => `<span class="wiz-dot ${i<idx?'done':''} ${i===idx?'current':''}"></span>`).join('');
+  const label = document.getElementById('wiz-progress-label');
+  if(label) label.textContent = `Paso ${idx+1} de ${steps.length} · ${WIZARD_STEP_LABELS[wizCurrentStep] || ''}`;
+}
+
+function updateWizardNavButtons(){
+  const steps = activeWizardSteps();
+  const idx = steps.indexOf(wizCurrentStep);
+  const back = document.getElementById('wiz-back-btn');
+  const next = document.getElementById('wiz-next-btn');
+  if(back) back.style.visibility = idx > 0 ? 'visible' : 'hidden';
+  if(next){
+    const valid = isWizardStepValid(wizCurrentStep);
+    next.disabled = !valid;
+    next.classList.toggle('ready', valid);
+    next.innerHTML = wizCurrentStep === 'revision'
+      ? '<svg viewBox="0 0 24 24" width="15" height="15" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:7px;"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2Z"/></svg>Enviar solicitud'
+      : 'Continuar →';
+  }
+}
+
+// Sincroniza el progreso/estado del wizard (se llama desde onPackageChange()
+// y desde los oninput de nombre/teléfono/modelo — no romper esos hooks).
+function updateSolicitudProgress(){
+  updateWizardNavButtons();
+  updateWizardProgress();
+}
+
+function renderWizardReview(){
+  const box = document.getElementById('s-review-body');
+  if(!box) return;
+  const pkgSel = document.getElementById('s-nivel');
+  const pkg = pkgSel.value;
+  const pkgLabel = pkgSel.options[pkgSel.selectedIndex].text;
+  const nombre = document.getElementById('s-nombre').value.trim();
+  const telefono = document.getElementById('s-telefono').value.trim();
+  const modelo = document.getElementById('s-modelo').value.trim();
+  const anio = document.getElementById('s-anio').value.trim();
+  const origen = document.getElementById('s-origen').value;
+  const color = document.getElementById('s-color').value.trim();
+  const desc = document.getElementById('s-desc').value.trim();
+  const fecha = document.getElementById('s-fecha').value;
+  let html = `
+    <div class="wiz-review-block">
+      <div class="wiz-review-head"><strong>Paquete</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('paquete','back')">Editar</button></div>
+      <ul class="wiz-review-list"><li><span>Nivel elegido</span><strong>${escapeHtml(pkgLabel)}</strong></li></ul>
+    </div>
+    <div class="wiz-review-block">
+      <div class="wiz-review-head"><strong>Contacto</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('contacto','back')">Editar</button></div>
+      <ul class="wiz-review-list">
+        <li><span>Nombre</span><strong>${escapeHtml(nombre)||'—'}</strong></li>
+        <li><span>Teléfono</span><strong>${escapeHtml(telefono)||'—'}</strong></li>
+      </ul>
+    </div>
+    <div class="wiz-review-block">
+      <div class="wiz-review-head"><strong>Tu pieza</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('pieza','back')">Editar</button></div>
+      <ul class="wiz-review-list">
+        <li><span>Modelo</span><strong>${escapeHtml(modelo)||'—'}</strong></li>
+        <li><span>Año aprox.</span><strong>${escapeHtml(anio)||'—'}</strong></li>
+        <li><span>Origen</span><strong>${escapeHtml(origen)||'—'}</strong></li>
+        <li><span>Color</span><strong>${escapeHtml(color)||'—'}</strong></li>
+      </ul>
+      ${desc ? `<p style="font-size:12.5px;color:var(--sage);margin:10px 0 0;">${escapeHtml(desc)}</p>` : ''}
+    </div>
+    ${pkg !== 'digital' ? `
+    <div class="wiz-review-block">
+      <div class="wiz-review-head"><strong>Logística</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('logistica','back')">Editar</button></div>
+      <ul class="wiz-review-list"><li><span>Fecha tentativa</span><strong>${fecha ? escapeHtml(fecha) : 'Por confirmar'}</strong></li></ul>
+    </div>` : ''}
+    <div class="wiz-review-block">
+      <div class="wiz-review-head"><strong>Evidencia visual</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('evidencia','back')">Editar</button></div>
+      ${SOLICITUD_FOTOS_DATA.length
+        ? `<div class="wiz-review-photos">${SOLICITUD_FOTOS_DATA.map(src => `<div class="pieza-photo-thumb"><img src="${src}" alt=""></div>`).join('')}</div>`
+        : `<p style="font-size:12.5px;color:var(--sage-dim);margin:0;">Sin fotos adjuntas — podrás enviarlas por WhatsApp al terminar.</p>`}
+    </div>`;
+  box.innerHTML = html;
+}
+
+// ---- Evidencia visual: carga de fotos (drag & drop + selector) ----
+function handleSolicitudFilesSelect(input){
+  const files = Array.from((input && input.files) || []);
+  if(!files.length) return;
+  const status = document.getElementById('s-fotos-status');
+  const room = SOLICITUD_FOTOS_MAX - SOLICITUD_FOTOS_DATA.length;
+  if(room <= 0){ if(status) status.textContent = `Máximo ${SOLICITUD_FOTOS_MAX} fotos por solicitud.`; if(input.value !== undefined) input.value=''; return; }
+  const toProcess = files.slice(0, room);
+  if(status) status.textContent = 'Procesando imágenes…';
+  let pending = toProcess.length;
+  function finishFotosProcessing(){
+    if(status) status.textContent = SOLICITUD_FOTOS_DATA.length
+      ? `${SOLICITUD_FOTOS_DATA.length} de ${SOLICITUD_FOTOS_MAX} foto(s) lista(s).`
+      : 'Aún no subes fotos.';
+    updateWizardNavButtons();
+  }
+  toProcess.forEach(file => {
+    if(!file.type || !file.type.startsWith('image/')){ pending--; if(pending<=0) finishFotosProcessing(); return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        const maxW = 900;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        SOLICITUD_FOTOS_DATA.push(canvas.toDataURL('image/jpeg', 0.65));
+        pending--;
+        renderSolicitudFotosPreview();
+        if(pending<=0) finishFotosProcessing();
+      };
+      img.onerror = function(){ pending--; if(pending<=0) finishFotosProcessing(); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ pending--; if(pending<=0) finishFotosProcessing(); };
+    reader.readAsDataURL(file);
+  });
+  if(input.value !== undefined) input.value = '';
+}
+function handleSolicitudFotoDrop(e){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const files = e.dataTransfer && e.dataTransfer.files;
+  if(files && files.length) handleSolicitudFilesSelect({files});
+}
+function renderSolicitudFotosPreview(){
+  const box = document.getElementById('s-fotos-preview');
+  if(!box) return;
+  box.innerHTML = SOLICITUD_FOTOS_DATA.map((src,i) => `
+    <div class="pieza-photo-thumb">
+      <img src="${src}" alt="">
+      <button type="button" onclick="removeSolicitudFoto(${i})" aria-label="Quitar foto">✕</button>
+    </div>`).join('');
+}
+function removeSolicitudFoto(i){
+  SOLICITUD_FOTOS_DATA.splice(i,1);
+  renderSolicitudFotosPreview();
+  const status = document.getElementById('s-fotos-status');
+  if(status) status.textContent = SOLICITUD_FOTOS_DATA.length ? `${SOLICITUD_FOTOS_DATA.length} de ${SOLICITUD_FOTOS_MAX} foto(s) lista(s).` : 'Aún no subes fotos.';
+}
+
+function resetWizard(){
+  document.getElementById('s-confirm').innerHTML = '';
+  const wizCard = document.getElementById('s-wizard');
+  if(wizCard) wizCard.style.display = '';
+  document.querySelectorAll('.wiz-pkg-card').forEach(c => c.classList.remove('selected'));
+  wizPkgChosen = false;
+  SOLICITUD_FOTOS_DATA = [];
+  renderSolicitudFotosPreview();
+  const status = document.getElementById('s-fotos-status');
+  if(status) status.textContent = 'Aún no subes fotos.';
+  document.getElementById('s-nivel').value = 'digital';
+  onPackageChange();
+  wizGoToStep('paquete');
+  const view = document.getElementById('view-solicitar');
+  if(view) window.scrollTo({top: view.offsetTop - 90, behavior:'smooth'});
 }
 
 async function submitSolicitud(){
@@ -2514,7 +3052,11 @@ async function submitSolicitud(){
   const telefono = document.getElementById('s-telefono').value.trim();
   const modelo = document.getElementById('s-modelo').value.trim();
   const pkg = document.getElementById('s-nivel').value;
-  if(!nombre || !telefono || !modelo){ toast('Completa al menos nombre, teléfono y modelo.'); return; }
+  if(!nombre || !telefono || !modelo){
+    toast('Completa al menos nombre, teléfono y modelo.');
+    wizGoToStep(!nombre || !telefono ? 'contacto' : 'pieza', 'back');
+    return;
+  }
   const id = 'SOL-' + Date.now();
   const pkgLabels = {digital:'Validación digital — $150', fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'};
   const data = {
@@ -2526,22 +3068,51 @@ async function submitSolicitud(){
     fechaEntrega: document.getElementById('s-fecha').value,
     nivel: pkgLabels[pkg] || pkg,
     estado: 'pendiente',
-    fecha: new Date().toLocaleDateString('es-MX')
+    fecha: new Date().toLocaleDateString('es-MX'),
+    fotos: SOLICITUD_FOTOS_DATA.slice()
   };
+  // Firestore limita cada documento a ~1 MiB: si las fotos pesan mucho, las
+  // quitamos del documento y avisamos al cliente que las mande por WhatsApp.
+  if(new Blob([JSON.stringify(data)]).size > 900000){
+    data.fotos = [];
+    data.fotosOmitidas = true;
+  }
   try{
     await HVStorage.set('solicitud:'+id, JSON.stringify(data), true);
-    let confirmHtml = `<div class="card" style="border-left:3px solid var(--ok);"><p style="margin:0;">Solicitud recibida. Tu número de folio de seguimiento es <span class="mono" style="color:var(--red);">${id}</span>.</p>`;
-    if(pkg === 'digital'){
-      const msg = `Hola, soy ${nombre}. Acabo de registrar mi solicitud ${id} para Validación digital de mi pieza "${modelo}". Les mando las fotos y el video.`;
-      confirmHtml += `<p style="margin-top:10px;">Ahora mándanos las fotos y el video de tu pieza por WhatsApp para que empecemos la validación.</p>
-        <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(msg)}" target="_blank" rel="noopener">Enviar fotos por WhatsApp</a></div>`;
-    } else {
-      const msg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}". Quiero agendar la entrega física.`;
-      confirmHtml += `<p style="margin-top:10px;">Este paquete requiere traer tu pieza al laboratorio (revisa la sección de Ubicación). Si prefieres, agenda tu entrega directo por WhatsApp.</p>
-        <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(msg)}" target="_blank" rel="noopener">Agendar por WhatsApp</a></div>`;
+    const wizCard = document.getElementById('s-wizard');
+    if(wizCard) wizCard.style.display = 'none';
+
+    let confirmHtml = `<div class="card wiz-done-card" style="border-left:3px solid var(--ok);">
+      <p class="wiz-step-kicker" style="margin-bottom:10px;">Paso 7 · Confirmación</p>
+      <h3 style="margin:0 0 8px;">Solicitud recibida</h3>
+      <p style="margin:0;">Tu número de folio de seguimiento es <span class="mono" style="color:var(--red);font-weight:600;">${id}</span>. Guárdalo — lo vas a necesitar en "Mi historial".</p>`;
+    if(data.fotosOmitidas){
+      confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--warn);">Tus fotos pesaban demasiado para enviarse junto con la solicitud — mándalas por WhatsApp con tu folio, por favor.</p>`;
+    } else if(SOLICITUD_FOTOS_DATA.length){
+      confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--sage);">Recibimos ${SOLICITUD_FOTOS_DATA.length} foto(s) de tu pieza junto con tu solicitud.</p>`;
     }
+    let waMsg, waLabel, nextStepsText;
+    if(pkg === 'digital'){
+      const hayFotos = SOLICITUD_FOTOS_DATA.length && !data.fotosOmitidas;
+      nextStepsText = hayFotos
+        ? 'Si quieres, también puedes mandarnos un video de tu pieza por WhatsApp — nos ayuda a ver reflejos y detalles en movimiento.'
+        : 'Ahora mándanos las fotos y el video de tu pieza por WhatsApp para que empecemos la validación.';
+      waMsg = `Hola, soy ${nombre}. Acabo de registrar mi solicitud ${id} para Validación digital de mi pieza "${modelo}".${hayFotos ? '' : ' Les mando las fotos y el video.'}`;
+      waLabel = hayFotos ? 'Enviar video por WhatsApp' : 'Enviar fotos por WhatsApp';
+    } else {
+      nextStepsText = 'Este paquete requiere traer tu pieza al laboratorio (revisa la sección de Ubicación). Si prefieres, agenda tu entrega directo por WhatsApp.';
+      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}". Quiero agendar la entrega física.`;
+      waLabel = 'Agendar por WhatsApp';
+    }
+    confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
+      <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(waMsg)}" target="_blank" rel="noopener">${waLabel}</a>
+      <button type="button" class="btn ghost small" style="margin-left:8px;" onclick="resetWizard()">Enviar otra solicitud</button>
+    </div>`;
+
     document.getElementById('s-confirm').innerHTML = confirmHtml;
-    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
+    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha'].forEach(fid=>document.getElementById(fid).value='');
+    SOLICITUD_FOTOS_DATA = [];
   }catch(e){
     toast('No se pudo enviar la solicitud, intenta de nuevo.');
   }
@@ -3271,6 +3842,42 @@ function initMethodTimeline(){
   update();
 }
 
+function syncHeaderHeightVar(){
+  const header = document.querySelector('header');
+  if(header) document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+}
+
+function initMetodoSubnav(){
+  const nav = document.getElementById('metodo-subnav');
+  if(!nav) return;
+  const links = Array.from(nav.querySelectorAll('.metodo-subnav-link'));
+  const targets = links.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  links.forEach(link => {
+    link.addEventListener('click', function(e){
+      const target = document.querySelector(this.getAttribute('href'));
+      if(!target) return;
+      e.preventDefault();
+      const offset = (document.querySelector('header')?.offsetHeight || 0) + (nav.offsetHeight || 0) + 14;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({top, behavior: reduceMotion ? 'auto' : 'smooth'});
+    });
+  });
+
+  if('IntersectionObserver' in window && targets.length){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          const id = '#' + entry.target.id;
+          links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === id));
+        }
+      });
+    }, {rootMargin: '-35% 0px -55% 0px', threshold:0});
+    targets.forEach(t => io.observe(t));
+  }
+}
+
 function fitCertMini(){
   document.querySelectorAll('[data-cert-mini]').forEach(vp => {
     const canvas = vp.querySelector('.cert-mini-canvas');
@@ -3310,12 +3917,17 @@ function initDynamicUI(){
   initRevealOnScroll();
   initMethodTimeline();
   initCertFlipCard();
+  initMetodoSubnav();
+  syncHeaderHeightVar();
+  window.addEventListener('resize', syncHeaderHeightVar);
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(syncHeaderHeightVar); }
 }
 
 loadHeroImage();
 listenReviews();
 applyLogos();
 onPackageChange();
+wizGoToStep('paquete');
 initDynamicUI();
 if(!FIREBASE_READY) document.getElementById('firebase-warning').style.display = 'block';
 document.getElementById('wa-float').href = waLink('Hola, quiero más información sobre la certificación de mi pieza.');
