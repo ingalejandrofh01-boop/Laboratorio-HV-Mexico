@@ -2281,6 +2281,7 @@
             <option value="solicitudes">Solicitudes</option>
             <option value="validacion">Validación en curso</option>
             <option value="certificados">Certificados y folios</option>
+            <option value="historial">Historial de piezas</option>
             <option value="ingresos">Ingresos</option>
             <option value="galeria">Imágenes del sitio</option>
             <option value="etiquetas">Etiquetas de impresión</option>
@@ -2292,6 +2293,7 @@
           <button data-tab="solicitudes" onclick="adminGo('solicitudes')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="lbl">Solicitudes</span><span class="admin-badge" id="badge-solicitudes" style="display:none;">0</span></button>
           <button data-tab="validacion" onclick="adminGo('validacion')"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><span class="lbl">Validación en curso</span><span class="admin-badge" id="badge-validacion" style="display:none;">0</span></button>
           <button data-tab="certificados" onclick="adminGo('certificados')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="lbl">Certificados y folios</span></button>
+          <button data-tab="historial" onclick="adminGo('historial')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg></span><span class="lbl">Historial de piezas</span></button>
           <button data-tab="ingresos" onclick="adminGo('ingresos')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><rect x="5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="16" y="4" width="3" height="16"/></svg></span><span class="lbl">Ingresos</span></button>
           <hr>
           <button data-tab="galeria" onclick="adminGo('galeria')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5.5-5.5L4 21"/></svg></span><span class="lbl">Imágenes del sitio</span></button>
@@ -2357,6 +2359,7 @@
               <div class="card">
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
+                <input type="hidden" id="a-precio-final" value="">
                 <label>Folio</label>
                 <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
                 <button type="button" class="btn ghost small" style="margin-top:8px;" onclick="suggestNextFolio()">Sugerir siguiente</button>
@@ -2465,6 +2468,21 @@
                 <div id="a-folios"></div>
               </div>
             </div>
+          </div>
+
+          <!-- ===== HISTORIAL DE PIEZAS ===== -->
+          <div class="admin-tab" id="admin-tab-historial">
+            <h3 style="font-size:16px;margin-top:0;">Historial completo de piezas</h3>
+            <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Cada pieza que ha pasado por el laboratorio, con su paquete, resultado, calificación y lo que se cobró — para ver el proceso completo de cualquiera, en cualquier momento.</p>
+            <div class="row" style="margin-bottom:14px;flex-wrap:wrap;">
+              <button class="btn ghost small filter-btn active" data-hfilter="todas" onclick="filterHistorial('todas')">Todas</button>
+              <button class="btn ghost small filter-btn" data-hfilter="en_proceso" onclick="filterHistorial('en_proceso')">En proceso</button>
+              <button class="btn ghost small filter-btn" data-hfilter="certificada" onclick="filterHistorial('certificada')">Certificadas</button>
+              <button class="btn ghost small filter-btn" data-hfilter="rechazada" onclick="filterHistorial('rechazada')">No aprobadas</button>
+              <button class="btn ghost small filter-btn" data-hfilter="en_linea" onclick="filterHistorial('en_linea')">En línea</button>
+            </div>
+            <div id="historial-stats" style="margin-bottom:14px;"></div>
+            <div id="historial-list"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
           </div>
 
           <!-- ===== INGRESOS ===== -->
@@ -3996,6 +4014,62 @@ function renderClienteTracking(sol, live){
   const completado = sol.estado === 'completado';
   const started = !!prog || sol.estado==='en_validacion' || completado;
   const citaTxt = (sol.fechaEntrega && sol.citaHora) ? formatCitaLarga(sol.fechaEntrega, sol.citaHora) : '';
+
+  const liveBadgeHtml = live ? `<span class="track-live-badge">🟢 En vivo</span>` : `<button class="btn ghost small" onclick="trackByCodigo()">Actualizar</button>`;
+  const headerHtml = `
+    <div class="track-header">
+      <div>
+        <p class="track-header-model">${escapeHtml(sol.modelo)}${sol.anio?' — '+escapeHtml(sol.anio):''}</p>
+        <p class="track-header-sub">${escapeHtml(sol.nivel||'')} · código <span class="mono">${escapeHtml(sol.id)}</span></p>
+      </div>
+      ${liveBadgeHtml}
+    </div>`;
+
+  // La pieza no pasó la validación (no era original, o calificó menos de
+  // 6.0) — proceso detenido, sin certificado. Se le muestra al cliente tal
+  // cual, sin la línea de tiempo de fases (ya no aplica).
+  if(prog && prog.fase === 'rechazada'){
+    box.innerHTML = `${headerHtml}
+      <div class="track-stage done" style="padding-bottom:0;">
+        <div class="track-stage-dot" style="background:var(--red);border-color:var(--red);">✕</div>
+        <div class="track-stage-body">
+          <p class="track-stage-label" style="color:var(--ink);">No aprobada — proceso detenido</p>
+          <p class="track-stage-sub">${escapeHtml(prog.rechazoMotivo || 'No pasó la validación.')}</p>
+        </div>
+      </div>
+      <p class="foot-note" style="border:none;padding-top:10px;">No continúa a certificación, encapsulado ni entrega. Costo final: <strong style="color:var(--ink);">$${(prog.precioFinal!=null?prog.precioFinal:150).toLocaleString('es-MX')} MXN</strong> (solo la validación base). ${live?'Esta página se actualiza sola.':''}</p>`;
+    return;
+  }
+  // Validación digital ya cerrada — nunca lleva certificado ni folio, solo
+  // el dictamen preliminar que ya se le mandó por WhatsApp.
+  if(isDigital && prog && prog.estado === 'completado'){
+    const veredicto = prog.resultadoDigital === 'original' ? 'Aparenta ser original' : 'No aparenta ser original';
+    box.innerHTML = `${headerHtml}
+      <div class="track-stage done" style="padding-bottom:0;">
+        <div class="track-stage-dot">✓</div>
+        <div class="track-stage-body">
+          <p class="track-stage-label">Validación en línea completada</p>
+          <p class="track-stage-sub">Dictamen preliminar: ${escapeHtml(veredicto)} — según las fotos y video compartidos.</p>
+        </div>
+      </div>
+      <p class="foot-note" style="border:none;padding-top:10px;">Es solo una primera impresión visual, no un peritaje físico certificado. No incluye certificado ni folio. Costo: <strong style="color:var(--ink);">$150 MXN</strong>. ${live?'Esta página se actualiza sola.':''}</p>`;
+    return;
+  }
+  // Validación digital todavía en revisión — flujo de 2 pasos, sin fases,
+  // así que no usa la línea de tiempo de la metodología física.
+  if(isDigital){
+    box.innerHTML = `${headerHtml}
+      <div class="track-stage current" style="padding-bottom:0;">
+        <div class="track-stage-dot"></div>
+        <div class="track-stage-body">
+          <p class="track-stage-label">Revisando tus fotos y video</p>
+          <p class="track-stage-sub">Te avisamos por WhatsApp en cuanto tengamos el dictamen preliminar.</p>
+        </div>
+      </div>
+      <p class="foot-note" style="border:none;padding-top:10px;">Validación digital · sin certificado ni folio · $150 MXN. ${live?'Esta página se actualiza sola.':''}</p>`;
+    return;
+  }
+
   const pasosProg = (prog && Array.isArray(prog.pasos)) ? prog.pasos : [];
   const doneKeys = new Set(pasosProg.filter(s=>s.done).map(s=>s.key));
   const activeFase = completado ? null : (prog ? prog.fase : (started ? 'ingreso' : null));
@@ -4046,14 +4120,7 @@ function renderClienteTracking(sol, live){
     ? `<button class="btn small" style="margin-top:14px;" onclick="go('verificar');document.getElementById('v-folio').value='${escapeHtml(sol.folio)}';verifyFolio();">Ver mi certificado — folio ${escapeHtml(sol.folio)}</button>`
     : '';
 
-  box.innerHTML = `
-    <div class="track-header">
-      <div>
-        <p class="track-header-model">${escapeHtml(sol.modelo)}${sol.anio?' — '+escapeHtml(sol.anio):''}</p>
-        <p class="track-header-sub">${escapeHtml(sol.nivel||'')} · código <span class="mono">${escapeHtml(sol.id)}</span></p>
-      </div>
-      ${live ? `<span class="track-live-badge">🟢 En vivo</span>` : `<button class="btn ghost small" onclick="trackByCodigo()">Actualizar</button>`}
-    </div>
+  box.innerHTML = `${headerHtml}
     <div class="track-timeline">${timelineHtml}</div>
     ${folioBtn}
     <p class="foot-note" style="border:none;padding-top:10px;">Te vamos a avisar por WhatsApp en cada etapa importante. ${live?'Esta página se actualiza sola — no necesitas recargar.':''}</p>`;
@@ -4966,6 +5033,11 @@ function collectLiveFormData(){
     uv: g('a-uv'), micro: g('a-micro'), remaches: g('a-remaches'), color: g('a-color'), obs: g('a-obs'),
     nivel: g('a-nivel'), telefono: g('a-telefono'),
     foto1: g('a-foto1'), foto2: g('a-foto2'), foto3: g('a-foto3'), foto4: g('a-foto4'), foto5: g('a-foto5'), foto6: g('a-foto6'), foto7: g('a-foto7'),
+    // Lo que de verdad se le cobra al cliente por esta pieza — viene del
+    // proceso de validación cuando existe (ver finalizeProceso); si el folio
+    // se creó a mano (sin pasar por el flujo de validación), queda vacío y
+    // los reportes de ingresos recurren al precio base del paquete (PKG_PRICE).
+    precioFinal: g('a-precio-final'),
     fecha: new Date().toLocaleDateString('es-MX')
   };
 }
@@ -5092,7 +5164,7 @@ async function refreshIncomeTable(){
       const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
       if(!byMonth[key]) byMonth[key] = { yyyy: parsed.yyyy, mm: parsed.mm, count: 0, total: 0 };
       byMonth[key].count++;
-      byMonth[key].total += PKG_PRICE[f.nivel] || 0;
+      byMonth[key].total += (f.precioFinal ? Number(f.precioFinal) : 0) || PKG_PRICE[f.nivel] || 0;
     }
     const rows = Object.values(byMonth).sort((a,b)=> (b.yyyy-a.yyyy) || (b.mm-a.mm));
     if(!rows.length){
@@ -5121,6 +5193,7 @@ function adminGo(tab){
   if(tab==='validacion') refreshValidacionList();
   if(tab==='dashboard') refreshAdminLists();
   if(tab==='certificados') updateLivePreview();
+  if(tab==='historial') refreshHistorial();
   if(tab==='ingresos') refreshIncomeTable();
   if(tab==='galeria') showCurrentHeroPreview();
 }
@@ -5230,6 +5303,19 @@ function ensureDictamen(step){
   return step.dictamen;
 }
 
+// La Validación digital ($150) NO sigue la metodología física de 4 fases /
+// 8 pasos — es solo una primera impresión por fotos/video, tratada por
+// WhatsApp, sin certificado ni folio. Su proceso en el admin es un flujo
+// mínimo de 2 pasos, aparte del de piezas presenciales.
+const DIGITAL_PASOS = [
+  {key:'revision', type:'simple',
+    label:'Revisión de fotos y video',
+    desc:'Se revisan las fotos (y el video, si lo mandó por WhatsApp) que el cliente adjuntó al solicitar. No sustituye un peritaje físico — es solo una primera impresión visual.'},
+  {key:'dictamen_digital', type:'dictamen_digital',
+    label:'Dictamen preliminar por WhatsApp',
+    desc:'Con base en las imágenes, se determina si la pieza aparenta ser original o no, y se le notifica el resultado al cliente. Aquí termina el servicio — no incluye certificado ni folio.'}
+];
+
 // Migra procesos creados con cualquiera de las dos formas anteriores (el
 // modelo plano original de 3 pasos, o el checklist anidado de 8 puntos
 // dentro de "autenticidad" + "zigzag" con dictamen mezclado) al modelo
@@ -5238,6 +5324,20 @@ function ensureDictamen(step){
 // validaciones en curso.
 function migrateProcesoShape(p){
   if(!p || !Array.isArray(p.pasos)) return p;
+
+  // Las piezas digitales llevan su propio flujo mínimo (2 pasos, sin fases)
+  // — nunca deben pasar por la migración de la metodología física de 8
+  // pasos, así hayan sido creadas antes de que existiera esta separación.
+  if(p.paquete === 'digital'){
+    const hasDigitalShape = DIGITAL_PASOS.every(def => p.pasos.some(s=>s.key===def.key));
+    if(hasDigitalShape) return p;
+    // Mejor esfuerzo: conserva cualquier nota ya escrita, reinicia el resto.
+    const notaPrevia = p.pasos.map(s=>s.nota).filter(Boolean).join(' · ');
+    p.pasos = DIGITAL_PASOS.map((def,i)=>({key:def.key, label:def.label, done:false, nota: i===0?notaPrevia:''}));
+    p._migrated = true;
+    return p;
+  }
+
   const hasNewShape = METODO_PASOS.every(def => p.pasos.some(s=>s.key===def.key && s.fase));
   if(hasNewShape) return p;
 
@@ -5408,6 +5508,33 @@ function deadlineInfo(p){
   return { label, cls, elapsedDays, elapsedHours, days };
 }
 
+// ===== Compuertas de negocio: solo se certifica (y solo se cobra el
+// paquete completo) si la pieza es auténtica Y califica 6.0 o más. Si no,
+// el proceso se detiene ahí y solo se cobra la validación base ($150). =====
+// "Falso / Réplica" es lo único que NO cuenta como pieza original para
+// efectos de continuar el peritaje — Restaurado/Reparado/Repintado sí son
+// piezas originales con intervención (así las clasifica el sitio) y, si
+// pasan la condición, se certifican igual.
+function procesoEsAutentico(p){
+  const dictStep = p.pasos && p.pasos.find(s=>s.key==='dictamen');
+  const resultado = dictStep && dictStep.dictamen ? dictStep.dictamen.resultado : null;
+  return !!resultado && resultado !== 'falso';
+}
+function procesoCalificacion(p){
+  const condStep = p.pasos && p.pasos.find(s=>s.key==='condicion');
+  if(!condStep || !condStep.zigzag) return null;
+  const zz = condStep.zigzag;
+  const raw = (zz.escalaFinal !== '' && zz.escalaFinal != null) ? zz.escalaFinal : zzOverallAvg(zz);
+  const val = raw != null ? Number(raw) : null;
+  return (val != null && !isNaN(val)) ? val : null;
+}
+const CALIFICACION_MINIMA = 6;
+function procesoAprueba(p){
+  if(p.paquete === 'digital') return null; // no aplica esta compuerta ahí
+  const cal = procesoCalificacion(p);
+  return procesoEsAutentico(p) && cal != null && cal >= CALIFICACION_MINIMA;
+}
+
 async function startValidacion(dJson){
   const d = JSON.parse(dJson);
   const isDigital = d.paquete === 'digital';
@@ -5419,7 +5546,16 @@ async function startValidacion(dJson){
     // sale el plazo real del reloj de entrega (ver getDeadlineDays).
     velocidad: d.velocidad || 'estandar', velocidadLabel: d.velocidadLabel || 'Estándar',
     velocidadDias: d.velocidadDias || null, velocidadTiempoTxt: d.velocidadTiempoTxt || '',
-    precioFinal: d.precioFinal != null ? d.precioFinal : null,
+    // La validación digital cuesta $150 fijo, siempre — es la validación
+    // base sin certificado. Para paquetes presenciales, el precio de la
+    // solicitud es el del paquete completo, pero solo se cobra así si la
+    // pieza pasa las compuertas de autenticidad y condición (ver
+    // procesoAprueba); si no pasa, se cobra solo la base de $150.
+    precioFinal: isDigital ? 150 : (d.precioFinal != null ? d.precioFinal : null),
+    // Precio del paquete completo tal cual se cotizó — se conserva aparte
+    // de precioFinal para poder restaurarlo si el proceso se reabre luego
+    // de haber sido rechazado (rejectProceso baja precioFinal a $150).
+    precioFinalOriginal: isDigital ? 150 : (d.precioFinal != null ? d.precioFinal : null),
     citaFecha: d.fechaEntrega || '', citaHora: d.citaHora || '',
     estado: 'en_proceso',
     creado: new Date().toLocaleDateString('es-MX'),
@@ -5430,11 +5566,13 @@ async function startValidacion(dJson){
     // dependen de una entrega física, así que arrancan con este paso ya
     // resuelto.
     piezaRecibidaTs: isDigital ? Date.now() : null,
-    pasos: METODO_PASOS.map(def=>{
-      const base = {key:def.key, label:def.label, fase:def.fase, done:false, nota:''};
-      if(def.key==='recepcion') base.done = isDigital;
-      return base;
-    })
+    pasos: isDigital
+      ? DIGITAL_PASOS.map(def=>({key:def.key, label:def.label, done:false, nota:''}))
+      : METODO_PASOS.map(def=>{
+          const base = {key:def.key, label:def.label, fase:def.fase, done:false, nota:''};
+          if(def.key==='recepcion') base.done = false;
+          return base;
+        })
   };
   try{
     await HVStorage.set('proceso:'+d.id, JSON.stringify(proceso), true);
@@ -5451,6 +5589,7 @@ async function startValidacion(dJson){
 }
 
 const VALIDACION_BOARD_COLS = [
+  {key:'en_linea', label:'Validación en línea',              icon:'💻'},
   {key:'ingreso',  label:'Fase 1 · Ingreso y custodia',     icon:'🗂️'},
   {key:'pericial', label:'Fase 2 · Análisis pericial',       icon:'🔬'},
   {key:'dictamen', label:'Fase 3 · Dictamen y calificación', icon:'⚖️'},
@@ -5556,9 +5695,14 @@ async function setProceso(p){
 // El paso 8 ("Registro digital, certificación web y entrega") se marca solo
 // al finalizar la validación — no puede exigirse como requisito PARA
 // finalizar, sería circular. Por eso se excluye del cálculo de "¿ya se
-// puede generar el certificado?".
+// puede generar el certificado?". Tampoco se puede finalizar una pieza
+// digital (nunca certifica) ni una ya rechazada, ni una que no haya pasado
+// las compuertas de autenticidad + calificación.
 function procesoListoParaFinalizar(p){
-  return p.pasos.filter(s=>s.key!=='registro').every(s=>s.done);
+  if(p.paquete === 'digital') return false;
+  if(p.estado === 'rechazada') return false;
+  const stepsOk = p.pasos.filter(s=>s.key!=='registro').every(s=>s.done);
+  return stepsOk && procesoAprueba(p) === true;
 }
 
 // Determina en qué fase visible está el proceso — se usa tanto para el
@@ -5566,17 +5710,24 @@ function procesoListoParaFinalizar(p){
 // así ambos siempre coinciden. Es la primera fase que todavía tiene un
 // paso pendiente, en el orden estricto de la metodología.
 function procesoFase(p){
+  if(p.paquete === 'digital'){
+    const dictStep = p.pasos.find(s=>s.key==='dictamen_digital');
+    return (dictStep && dictStep.done) ? 'listo' : 'en_linea';
+  }
+  if(p.estado === 'rechazada') return 'rechazada';
   if(procesoListoParaFinalizar(p)) return 'listo';
   const pendiente = p.pasos.find(s=>s.key!=='registro' && !s.done);
   const def = pendiente && METODO_PASOS.find(d=>d.key===pendiente.key);
   return def ? def.fase : 'sello';
 }
 const PROCESO_FASE_LABEL = {
+  en_linea: 'Validación en línea en curso',
   ingreso: 'Fase 1 · Ingreso y custodia',
   pericial: 'Fase 2 · Análisis pericial',
   dictamen: 'Fase 3 · Dictamen y calificación',
   sello: 'Fase 4 · Sello y entrega',
   listo: 'Todo listo — generando certificado',
+  rechazada: 'No aprobada — no continúa a certificación',
   completado: 'Certificado emitido'
 };
 
@@ -5587,11 +5738,16 @@ function buildProgresoCliente(p){
   const doneSteps = p.pasos.filter(s=>s.done).length;
   return {
     fase: procesoFase(p),
+    paquete: p.paquete,
     pct: Math.round(doneSteps / p.pasos.length * 100),
-    pasos: p.pasos.map(s=>({key:s.key, label:s.label, fase:s.fase, done:!!s.done})),
+    pasos: p.pasos.map(s=>({key:s.key, label:s.label, fase:s.fase||null, done:!!s.done})),
     piezaRecibidaTs: p.piezaRecibidaTs || null,
     citaFecha: p.citaFecha || '',
     citaHora: p.citaHora || '',
+    estado: p.estado || '',
+    rechazoMotivo: p.rechazoMotivo || null,
+    resultadoDigital: p.resultadoDigital || null,
+    precioFinal: p.precioFinal != null ? p.precioFinal : null,
     actualizadoTs: Date.now()
   };
 }
@@ -5601,6 +5757,12 @@ async function mirrorClientProgress(p){
   const r = await HVStorage.get('solicitud:'+p.solicitudId, true);
   const sol = JSON.parse(r.value);
   sol.progreso = buildProgresoCliente(p);
+  // El estado de la solicitud se queda en 'en_validacion' aunque el proceso
+  // ya haya terminado como rechazado o (en digital) como completado sin
+  // certificado — solo un folio real la pasa a 'completado'. El resultado
+  // exacto ya viaja en sol.progreso (fase/estado/rechazoMotivo/resultadoDigital)
+  // para quien lo necesite (rastreo del cliente, Historial de piezas), sin
+  // tocar los filtros existentes de Solicitudes que distinguen por estado.
   if(sol.estado !== 'completado') sol.estado = 'en_validacion';
   await HVStorage.set('solicitud:'+p.solicitudId, JSON.stringify(sol), true);
 }
@@ -5630,8 +5792,10 @@ function toggleStepOpen(pid, key){
 
 function renderProcesoDetail(p){
   CURRENT_PROCESO = p;
+  if(p.paquete === 'digital') return renderProcesoDetailDigital(p);
+  if(p.estado === 'rechazada') return renderProcesoDetailRechazada(p);
   const detail = document.getElementById('validacion-detail');
-  const isDigital = p.paquete === 'digital';
+  const isDigital = false;
   const recepcionStep = p.pasos.find(s=>s.key==='recepcion');
   const recepcionDone = !recepcionStep || recepcionStep.done;
   const doneCount = p.pasos.filter(s=>s.done).length;
@@ -5729,7 +5893,87 @@ function renderProcesoDetail(p){
       </div>
 
       ${fasesHtml}
-      ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado en el paso 8.</p>' : ''}
+      ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado en el paso 8. Recuerda: solo se certifica si el dictamen no es "Falso / Réplica" y la condición califica 6.0 o más — si no, el proceso se detiene solo y únicamente se cobra la validación base de $150.</p>' : ''}
+    </div>`;
+}
+
+// ===== Pieza rechazada — no pasó la compuerta de autenticidad (dictamen
+// "Falso / Réplica") o de calificación (menos de 6.0). El proceso se
+// detiene aquí: no hay certificado, no hay encapsulado, no hay entrega —
+// solo se cobra la validación base de $150. =====
+function renderProcesoDetailRechazada(p){
+  const detail = document.getElementById('validacion-detail');
+  if(!detail) return;
+  detail.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
+      <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+    </div>
+    <div class="card">
+      <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
+      <p style="font-size:13px;color:var(--sage);margin:0 0 14px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
+      <div class="next-action-banner" style="background:rgba(184,44,44,0.08);border-color:rgba(184,44,44,0.3);">
+        <div class="next-action-icon" style="background:var(--red);">✕</div>
+        <div class="next-action-text"><strong>No aprobada — proceso detenido</strong><span>${escapeHtml(p.rechazoMotivo || 'No pasó la validación.')}</span></div>
+      </div>
+      <p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">No continúa a certificación, encapsulado ni entrega. Costo final: <strong style="color:var(--ink);">$${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN</strong> (solo la validación base).</p>
+      <div class="row">
+        <button class="btn" onclick="notifyRechazo('${escapeHtml(p.id)}')">Notificar al cliente por WhatsApp</button>
+      </div>
+      <details style="margin-top:16px;">
+        <summary style="cursor:pointer;font-size:12.5px;color:var(--sage);">¿Fue un error? Reabrir el proceso</summary>
+        <p class="foot-note" style="border:none;padding-top:8px;">Si el dictamen o la calificación se capturaron mal, puedes reabrir el proceso para corregirlos.</p>
+        <button class="btn ghost small" onclick="reabrirProceso('${escapeHtml(p.id)}')">Reabrir proceso</button>
+      </details>
+    </div>`;
+}
+
+// ===== Flujo mínimo de Validación digital ($150) — sin certificado, sin
+// fases, solo 2 pasos: revisión de imágenes y dictamen preliminar por
+// WhatsApp. =====
+function renderProcesoDetailDigital(p){
+  const detail = document.getElementById('validacion-detail');
+  if(!detail) return;
+  const doneCount = p.pasos.filter(s=>s.done).length;
+  const pct = Math.round(doneCount / p.pasos.length * 100);
+  const completado = p.estado === 'completado';
+  const pendienteIdx = p.pasos.findIndex(s=>!s.done);
+  if(PROCESO_OPEN_STEP === undefined) PROCESO_OPEN_STEP = pendienteIdx !== -1 ? p.pasos[pendienteIdx].key : null;
+
+  const stepsHtml = p.pasos.map((s,i)=>{
+    const def = DIGITAL_PASOS.find(d=>d.key===s.key);
+    const isOpen = PROCESO_OPEN_STEP === s.key;
+    let bodyHtml = '';
+    if(isOpen){
+      if(def && def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
+      bodyHtml += def.type==='dictamen_digital' ? renderDictamenDigitalStepBody(p, s) : renderSimpleStepBody(p, s);
+    }
+    return `
+    <div class="step-row step-accordion ${isOpen?'open':''}">
+      <div class="step-row-head" onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')">
+        <div class="step-check ${s.done?'done':''}" onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
+        <h4>${i+1}. ${escapeHtml(s.label)}</h4>
+        <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
+      </div>
+      ${isOpen ? `<div class="step-body">${bodyHtml}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const resultadoTxt = p.resultadoDigital === 'original' ? 'Aparenta ser original' : (p.resultadoDigital === 'no_original' ? 'No aparenta ser original' : '');
+
+  detail.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
+      <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+    </div>
+    <div class="card">
+      <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
+      <p style="font-size:13px;color:var(--sage);margin:0 0 2px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · Validación digital</p>
+      <p style="font-size:12px;color:var(--brass-dim);margin:0 0 12px;">Sin certificado ni folio — solo determinación visual por fotos/video · $150 MXN</p>
+      <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
+      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneCount} de ${p.pasos.length} pasos completados</p>
+      ${completado ? `<div class="next-action-banner all-done"><div class="next-action-icon">✓</div><div class="next-action-text"><strong>Validación en línea completada</strong><span>${escapeHtml(resultadoTxt)} — cliente notificado.</span></div></div>` : ''}
+      ${stepsHtml}
     </div>`;
 }
 
@@ -5910,6 +6154,23 @@ function renderRegistroStepBody(p, step){
     ${!listo ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado.</p>' : ''}`;
 }
 
+// ===== Paso 2 del flujo digital — "Dictamen preliminar por WhatsApp" =====
+function renderDictamenDigitalStepBody(p, step){
+  const val = p.resultadoDigital;
+  return `
+    <div class="zz-field">
+      <label>¿Cómo se ve la pieza en las fotos?</label>
+      <div class="zz-toggle-group">
+        <button type="button" class="zz-toggle ${val==='original'?'active':''}" onclick="pickResultadoDigital('${escapeHtml(p.id)}','original',this)">Aparenta ser original</button>
+        <button type="button" class="zz-toggle ${val==='no_original'?'active':''}" onclick="pickResultadoDigital('${escapeHtml(p.id)}','no_original',this)">No aparenta ser original</button>
+      </div>
+    </div>
+    <textarea rows="2" placeholder="Notas del dictamen preliminar (opcional)…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(step.nota||'')}</textarea>
+    <div class="row" style="margin-top:10px;">
+      ${!step.done ? `<button class="btn small" ${!val?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeDigitalProceso('${escapeHtml(p.id)}')">Finalizar y notificar al cliente</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Notificado — validación en línea cerrada.</span>`}
+    </div>`;
+}
+
 async function zzPersist(){
   if(CURRENT_PROCESO) await setProceso(CURRENT_PROCESO).catch(()=>{});
 }
@@ -6042,16 +6303,103 @@ async function toggleProcesoStep(id, key){
 // Marca un paso "simple" (o el dictamen / condición) como completado por
 // acción explícita del admin, y abre automáticamente el siguiente paso —
 // así el acordeón guía el avance sin que se marquen dos casillas a la vez.
+// Justo después del dictamen y de la condición, revisa las dos compuertas
+// de negocio: si la pieza no es original, o si calificó menos de 6.0, el
+// proceso se detiene ahí mismo — no sigue a encapsulado ni a certificado.
 async function completeStep(pid, stepKey){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
   const idx = p.pasos.findIndex(s=>s.key===stepKey);
   if(idx===-1) return;
   p.pasos[idx].done = true;
+  CURRENT_PROCESO = p;
+
+  if(p.paquete !== 'digital' && stepKey === 'dictamen' && !procesoEsAutentico(p)){
+    await rejectProceso(p, 'El dictamen determinó que la pieza no es original (Falso / Réplica) — no continúa a calificación de condición ni a certificado.');
+    return;
+  }
+  if(p.paquete !== 'digital' && stepKey === 'condicion'){
+    const cal = procesoCalificacion(p);
+    if(cal != null && cal < CALIFICACION_MINIMA){
+      await rejectProceso(p, `La condición calificó ${cal.toFixed(1)}/10 — por debajo del mínimo de ${CALIFICACION_MINIMA.toFixed(1)} para certificar.`);
+      return;
+    }
+  }
+
   const next = p.pasos[idx+1];
   PROCESO_OPEN_STEP = next ? next.key : null;
+  await setProceso(p);
+  renderProcesoDetail(p);
+}
+
+// Detiene el proceso: no es original, o no alcanzó la calificación mínima.
+// Solo se cobra la validación base — nada de certificado, encapsulado ni
+// entrega. El cliente se entera por el rastreo en vivo y por WhatsApp.
+async function rejectProceso(p, motivo){
+  p.estado = 'rechazada';
+  p.rechazoMotivo = motivo;
+  p.rechazoTs = Date.now();
+  p.precioFinal = 150;
+  CURRENT_PROCESO = p;
+  PROCESO_OPEN_STEP = undefined;
+  await setProceso(p);
+  toast('Proceso detenido: ' + motivo);
+  renderProcesoDetail(p);
+}
+
+async function notifyRechazo(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  const msg = `Hola ${p.nombre}, te compartimos el resultado de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}): ${p.rechazoMotivo || 'no pasó la validación'}. No continúa a certificación — el costo final es de $${(p.precioFinal!=null?p.precioFinal:150)} MXN, solo la validación base. Cualquier duda, contáctanos. — Laboratorio HV México`;
+  window.open(waLink(msg), '_blank', 'noopener');
+}
+
+// Por si el dictamen o la calificación se capturaron mal — reabre el
+// proceso para poder corregirlos, sin perder lo demás ya llenado.
+async function reabrirProceso(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  p.estado = 'en_proceso';
+  p.rechazoMotivo = null;
+  // Restaura el precio del paquete completo — si se vuelve a rechazar,
+  // rejectProceso lo vuelve a bajar a $150 automáticamente. Si el proceso
+  // es de antes de que existiera este campo, recurre a la tabla base.
+  p.precioFinal = p.precioFinalOriginal != null ? p.precioFinalOriginal : (PKG_PRICE[p.nivel] || p.precioFinal);
+  CURRENT_PROCESO = p;
+  PROCESO_OPEN_STEP = undefined;
+  await setProceso(p);
+  toast('Proceso reabierto.');
+  renderProcesoDetail(p);
+}
+
+// Selección del veredicto preliminar de la Validación digital — no es un
+// dictamen formal (esa es la compuerta de los paquetes presenciales), solo
+// una impresión visual que se le comunica al cliente por WhatsApp.
+async function pickResultadoDigital(pid, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  p.resultadoDigital = (p.resultadoDigital === val) ? null : val;
+  if(btnEl){
+    const group = btnEl.closest('.zz-toggle-group');
+    if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
+    if(p.resultadoDigital === val) btnEl.classList.add('active');
+  }
+  await setProceso(p).catch(()=>{});
+  renderProcesoDetail(p);
+}
+
+// Cierra la Validación digital: nunca genera certificado ni folio — solo
+// notifica el resultado al cliente por WhatsApp y archiva el proceso.
+async function finalizeDigitalProceso(pid){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+  if(!p.resultadoDigital){ toast('Elige primero si la pieza aparenta ser original o no.'); return; }
+  const step = p.pasos.find(s=>s.key==='dictamen_digital');
+  if(step) step.done = true;
+  p.estado = 'completado';
+  p.precioFinal = 150;
   CURRENT_PROCESO = p;
   await setProceso(p);
   renderProcesoDetail(p);
+  const veredicto = p.resultadoDigital === 'original' ? 'aparenta ser ORIGINAL' : 'NO aparenta ser original';
+  const msg = `Hola ${p.nombre}, ya tenemos el dictamen preliminar de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) por Validación digital: ${veredicto}, según las fotos y video que nos compartiste. Recuerda que esta es solo una primera impresión visual, no un peritaje físico certificado. El costo de este servicio es de $150 MXN. — Laboratorio HV México`;
+  window.open(waLink(msg), '_blank', 'noopener');
+  toast('Validación en línea cerrada y cliente notificado.');
 }
 
 // Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
@@ -6105,6 +6453,10 @@ async function finalizeProceso(id){
   document.getElementById('a-color').value = p.color || '';
   document.getElementById('a-telefono').value = p.telefono || '';
   if(p.nivel) document.getElementById('a-nivel').value = p.nivel;
+  // Solo llega aquí una pieza que ya pasó las compuertas (procesoListoParaFinalizar
+  // exige procesoAprueba === true), así que precioFinal ya es el del paquete
+  // completo — lo pasamos al folio para que el historial y los ingresos lo reflejen.
+  document.getElementById('a-precio-final').value = p.precioFinal != null ? p.precioFinal : '';
 
   const condStep = p.pasos.find(s=>s.key==='condicion');
   if(condStep && condStep.zigzag){
@@ -6142,7 +6494,7 @@ async function finalizeProceso(id){
   const dictStep = p.pasos.find(s=>s.key==='dictamen');
   if(dictStep && dictStep.dictamen){
     const dc = dictStep.dictamen;
-    const ESTADO_MAP = {original:'Original', restaurado:'Restaurado', reparado:'Reparado', repintado:'Repintado', falso:'Falso / Réplica'};
+    const ESTADO_MAP = {original:'Original', restaurado:'Restaurado', reparado:'Reparado', repintado:'Repintado', falso:'Réplica'};
     if(dc.resultado && ESTADO_MAP[dc.resultado]) document.getElementById('a-estado').value = ESTADO_MAP[dc.resultado];
     const obsParts = [];
     if(dc.observaciones) obsParts.push(dc.observaciones);
@@ -6176,7 +6528,7 @@ async function updateAdminStats(){
     const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
     let ingresos = 0;
     for(const k of (fol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); ingresos += PKG_PRICE[d.nivel] || 0; }catch(e){}
+      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); ingresos += (d.precioFinal ? Number(d.precioFinal) : 0) || PKG_PRICE[d.nivel] || 0; }catch(e){}
     }
     const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
     setText('stat-solicitudes', pendientes);
@@ -6233,6 +6585,7 @@ function folioCardHtml(d){
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
         <div class="row">
           <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
+          ${Number(d.grado) >= 6 ? `<button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en Biblioteca</button>` : ''}
           <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteFolio('${escapeHtml(d.folio)}')">Eliminar</button>
         </div>
       </div>`;
@@ -6259,6 +6612,164 @@ function solicitudMiniHtml(d){
         <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)}</p>
         <button class="btn ghost small" onclick='prefillFolioFromSolicitud(${JSON.stringify(JSON.stringify(d))})'>Convertir en folio</button>
       </div>`;
+}
+
+// ============================================================
+// HISTORIAL DE PIEZAS — combina procesos (en curso / rechazados / en
+// línea) con folios (certificados) en una sola lista filtrable. Los
+// procesos físicos certificados YA NO existen como "proceso:" (createFolio
+// los borra al emitir el folio), así que la única forma de verlos aquí es
+// a través del folio mismo — por eso se combinan ambas colecciones.
+// ============================================================
+let HISTORIAL_ITEMS = [];
+let HISTORIAL_FILTER = 'todas';
+
+function historialCategoria(item){
+  if(item.tipo === 'folio') return 'certificada';
+  if(item.raw.paquete === 'digital') return 'en_linea';
+  if(item.raw.estado === 'rechazada') return 'rechazada';
+  return 'en_proceso';
+}
+
+function historialResultadoHtml(item){
+  if(item.tipo === 'folio'){
+    const f = item.raw;
+    return `<span class="pill ${pillClass(f.estado||'')}">${escapeHtml(f.estado||'Certificada')}</span> ${f.grado?`<span class="mono" style="font-size:12px;color:var(--brass-dim);">grado ${escapeHtml(f.grado)}</span>`:''}`;
+  }
+  const p = item.raw;
+  if(p.paquete === 'digital'){
+    if(p.estado === 'completado'){
+      const veredicto = p.resultadoDigital === 'original' ? 'Aparenta ser original' : 'No aparenta ser original';
+      return `<span class="pill completado">En línea completada</span> <span style="font-size:12px;color:var(--sage);">${escapeHtml(veredicto)}</span>`;
+    }
+    return `<span class="pill neutral">En línea — revisando</span>`;
+  }
+  if(p.estado === 'rechazada'){
+    return `<span class="pill replica">No aprobada</span> <span style="font-size:12px;color:var(--sage);">${escapeHtml(p.rechazoMotivo||'')}</span>`;
+  }
+  const doneCount = (p.pasos||[]).filter(s=>s.done).length;
+  return `<span class="pill pendiente">En proceso</span> <span style="font-size:12px;color:var(--sage);">${doneCount}/${(p.pasos||[]).length} pasos · ${escapeHtml(PROCESO_FASE_LABEL[procesoFase(p)]||'')}</span>`;
+}
+
+function historialRowHtml(item){
+  const d = item.raw;
+  const precio = d.precioFinal!=null ? `$${Number(d.precioFinal).toLocaleString('es-MX')} MXN` : '—';
+  const fecha = item.tipo === 'folio' ? (d.fecha||'') : (d.creado||'');
+  const nivel = d.nivel || (d.paquete==='digital' ? 'Validación digital' : '');
+  const canPublish = item.tipo === 'folio' && Number(d.grado) >= CALIFICACION_MINIMA;
+  return `
+    <div class="proc-card" style="cursor:default;">
+      <div class="row" style="justify-content:space-between;align-items:flex-start;">
+        <div>
+          <strong style="font-size:14px;">${escapeHtml(d.modelo||'')}</strong>
+          <p style="font-size:13px;color:var(--sage);margin:3px 0;">${escapeHtml(d.nombre||'')} · ${escapeHtml(nivel)}</p>
+        </div>
+        <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(item.tipo==='folio'?d.folio:d.id)}</span>
+      </div>
+      <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:6px;">
+        <div>${historialResultadoHtml(item)}</div>
+        <div class="row" style="gap:8px;">
+          <span class="mono" style="font-size:12px;color:var(--sage);">${escapeHtml(fecha)}</span>
+          <strong style="font-size:13px;">${precio}</strong>
+        </div>
+      </div>
+      ${canPublish ? `<div class="row" style="margin-top:8px;"><button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en la Biblioteca</button></div>` : ''}
+    </div>`;
+}
+
+async function refreshHistorial(){
+  const listBox = document.getElementById('historial-list');
+  const statsBox = document.getElementById('historial-stats');
+  if(!listBox) return;
+  listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
+  try{
+    const items = [];
+    const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
+    for(const k of (proc.keys||[])){
+      try{
+        const r = await HVStorage.get(k, true);
+        const p = JSON.parse(r.value);
+        migrateProcesoShape(p);
+        items.push({ tipo:'proceso', raw:p, sortTs: p.creadoTs || 0 });
+      }catch(e){}
+    }
+    const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
+    for(const k of (fol.keys||[])){
+      try{
+        const r = await HVStorage.get(k, true);
+        const f = JSON.parse(r.value);
+        const parsed = parseFechaFolio(f.fecha);
+        items.push({ tipo:'folio', raw:f, sortTs: parsed ? new Date(parsed.yyyy, parsed.mm-1).getTime() : 0 });
+      }catch(e){}
+    }
+    items.forEach(it => it.categoria = historialCategoria(it));
+    items.sort((a,b) => b.sortTs - a.sortTs);
+    HISTORIAL_ITEMS = items;
+
+    if(statsBox){
+      const counts = { todas: items.length, en_proceso:0, certificada:0, rechazada:0, en_linea:0 };
+      items.forEach(it => { if(counts[it.categoria]!=null) counts[it.categoria]++; });
+      const ingresos = items.reduce((s,it) => s + (it.raw.precioFinal!=null ? Number(it.raw.precioFinal) : 0), 0);
+      statsBox.innerHTML = `<p class="foot-note" style="border:none;padding:0;margin:0;">${counts.todas} pieza${counts.todas===1?'':'s'} en total · ${counts.certificada} certificada${counts.certificada===1?'':'s'} · ${counts.en_proceso} en proceso · ${counts.rechazada} no aprobada${counts.rechazada===1?'':'s'} · ${counts.en_linea} en línea · $${ingresos.toLocaleString('es-MX')} MXN acumulados</p>`;
+    }
+
+    filterHistorial(HISTORIAL_FILTER);
+  }catch(e){
+    listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudo cargar el historial.</p>';
+  }
+}
+
+function filterHistorial(filter){
+  HISTORIAL_FILTER = filter;
+  document.querySelectorAll('#admin-tab-historial .filter-btn').forEach(b=>b.classList.toggle('active', b.dataset.hfilter===filter));
+  const listBox = document.getElementById('historial-list');
+  if(!listBox) return;
+  const items = filter === 'todas' ? HISTORIAL_ITEMS : HISTORIAL_ITEMS.filter(it => it.categoria === filter);
+  listBox.innerHTML = items.length
+    ? items.map(historialRowHtml).join('')
+    : '<p style="color:var(--sage);font-size:14px;">No hay piezas en esta categoría todavía.</p>';
+}
+
+// ============================================================
+// PUBLICAR EN LA BIBLIOTECA — toma un folio ya certificado y, si califica
+// arriba del mínimo (misma regla que para certificar: 6.0), lo agrega a la
+// Biblioteca pública (site:piezas). Encapsulada o no, cualquier pieza que
+// pase esta calificación puede publicarse.
+// ============================================================
+function origenToCategoriaBiblioteca(origen){
+  const map = {'CIPSA':'cipsa', 'Bólidos':'bolidos', 'Aurimat':'aurimat'};
+  return map[origen] || 'otro';
+}
+async function publishPiezaFromFolio(folioId){
+  try{
+    const r = await HVStorage.get('folio:'+folioId, true);
+    if(!r || !r.value){ toast('No se encontró ese folio.'); return; }
+    const f = JSON.parse(r.value);
+    const grado = Number(f.grado);
+    if(!grado || grado < CALIFICACION_MINIMA){
+      toast(`Esta pieza calificó ${f.grado || '—'}/10 — solo piezas con ${CALIFICACION_MINIMA} o más pueden publicarse en la Biblioteca.`);
+      return;
+    }
+    const piezas = await getPiezas();
+    if(piezas.some(p => p.folio === folioId)){
+      toast('Esta pieza ya está publicada en la Biblioteca.');
+      return;
+    }
+    const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6,f.foto7].filter(Boolean).map(url => ({url, caption:''}));
+    if(!fotos.length){ toast('Este folio no tiene fotos guardadas — no se puede publicar.'); return; }
+    piezas.unshift({
+      id: 'PZA-' + Date.now(),
+      modelo: f.modelo || '',
+      categoria: origenToCategoriaBiblioteca(f.origen),
+      grado: f.grado || '',
+      folio: f.folio || folioId,
+      fotos
+    });
+    await setPiezas(piezas);
+    toast('Pieza publicada en la Biblioteca.');
+    renderPiezasAdmin();
+    filterHistorial(HISTORIAL_FILTER);
+  }catch(e){ toast('No se pudo publicar la pieza.'); }
 }
 
 async function refreshAdminLists(){
