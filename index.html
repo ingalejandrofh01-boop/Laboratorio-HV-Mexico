@@ -970,6 +970,37 @@
     body[data-print-mode="full"] .view.active *:not(:has(#print-target-full)):not(#print-target-full):not(#print-target-full *){display:none!important;}
     body[data-print-mode="full"] .view.active :has(#print-target-full),
     body[data-print-mode="full"] #print-target-full{display:block!important;}
+
+    /* Paginación del certificado: lo compactamos y evitamos que
+       bloques (tablas, firmas, fotos, QR) se corten a la mitad entre
+       una hoja y otra, para que el PDF quede en exactamente 2 hojas
+       bien integradas y sin cortes a medio bloque. */
+    @page{ size:letter; margin:11mm 12mm; }
+    #print-target-full .cert{box-shadow:none;border-width:1.5px;padding:16px 22px;margin:0;}
+    #print-target-full .cert-topband{padding-bottom:10px;margin-bottom:12px;}
+    #print-target-full .cert-grade-hero{margin-bottom:10px;gap:14px;}
+    #print-target-full .cert-grade-badge{width:76px;height:76px;}
+    #print-target-full .cert-grade-badge .cert-grade-num{font-size:28px;}
+    #print-target-full .subgrade-boxes{margin:10px 0;gap:8px;}
+    #print-target-full .subgrade-box{padding:6px 6px;}
+    #print-target-full .grid{gap:10px;}
+    #print-target-full .cert table td{padding:5px 6px;font-size:12.5px;}
+    #print-target-full .cert-authenticity-box{padding:8px 14px;margin:10px 0;}
+    #print-target-full p{margin:8px 0;}
+    #print-target-full .cert-signatures{margin-top:10px;gap:18px;}
+    #print-target-full .cert-topband,
+    #print-target-full .cert-grade-hero,
+    #print-target-full .subgrade-boxes,
+    #print-target-full .grid-2,
+    #print-target-full .cert-authenticity-box,
+    #print-target-full .cert-signatures,
+    #print-target-full .grid-3,
+    #print-target-full .cert > .row{
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+    #print-target-full .photobox{aspect-ratio:4/3;}
+    #print-target-full .divider{margin:10px 0;}
   }
   .cert-label{width:5cm;height:8cm;background:#fff;color:#1B1512;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;}
   .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.28cm .3cm .26cm;display:flex;flex-direction:column;gap:.13cm;}
