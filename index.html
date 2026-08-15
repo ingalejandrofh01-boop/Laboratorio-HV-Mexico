@@ -471,6 +471,17 @@
   .step-accordion-chevron{font-size:10px;color:var(--sage);flex:none;width:14px;text-align:center;}
   .step-accordion.step-locked .step-row-head{opacity:.55;cursor:not-allowed;}
   .step-accordion.open .step-row-head{background:rgba(184,134,47,0.08);}
+  .step-desc{font-size:12.5px;color:var(--sage);margin:0 0 12px;line-height:1.55;padding-left:36px;}
+
+  /* ===== Agrupación por fase en el detalle de validación — refleja las 4
+     fases de la metodología pública (#metodo-8-pasos) dentro del admin ===== */
+  .method-fase-group{margin:24px 0 8px;}
+  .method-fase-group:first-of-type{margin-top:6px;}
+  .method-fase-group-head{display:flex;align-items:center;gap:10px;padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--line);}
+  .method-fase-group-icon{font-size:17px;flex:none;}
+  .method-fase-group-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass-dim);margin:0;font-weight:600;}
+  .method-fase-group-count{margin-left:auto;font-size:11.5px;color:var(--sage);background:var(--panel-2);border-radius:20px;padding:2px 10px;border:1px solid var(--line);flex:none;}
+  .method-fase-group.done .method-fase-group-count{color:var(--ok);background:rgba(47,122,79,0.1);border-color:rgba(47,122,79,0.25);}
 
   /* ===== Formulario dinámico "Medición y evaluación — Protocolo Zigzag C-Z" ===== */
   .step-row-zigzag{padding-bottom:20px;}
@@ -998,16 +1009,6 @@
   .step-locked{position:relative;opacity:.55;pointer-events:none;filter:saturate(.4);}
   .step-locked-note{display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(27,36,32,0.04);border:1px dashed var(--line);border-radius:6px;font-size:12.5px;color:var(--sage);margin:8px 0;}
   html[data-theme="dark"] .step-locked-note{background:rgba(255,255,255,0.03);}
-  /* ===== Checklist del Protocolo de Autenticidad (8 puntos, SÍ/NO) ===== */
-  .auten-items{display:flex;flex-direction:column;gap:2px;margin-top:6px;}
-  .auten-item{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(27,36,32,0.06);}
-  html[data-theme="dark"] .auten-item{border-bottom-color:rgba(255,255,255,0.06);}
-  .auten-item:last-child{border-bottom:none;}
-  .auten-item-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;cursor:pointer;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
-  .auten-item.done .auten-item-check{background:var(--ok);border-color:var(--ok);color:#fff;}
-  .auten-item.locked{opacity:.5;}
-  .auten-item.locked .auten-item-check{cursor:not-allowed;}
-  .auten-item-label{font-size:13.5px;color:var(--ink);}
   .next-action-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;background:rgba(163,38,56,0.06);border:1px solid rgba(163,38,56,0.18);margin-bottom:14px;}
   .next-action-banner.all-done{background:rgba(47,122,79,0.08);border-color:rgba(47,122,79,0.25);}
   .next-action-icon{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px;font-weight:700;}
@@ -3896,52 +3897,54 @@ async function trackByCodigo(){
   }
 }
 
-// Construye la línea de tiempo del rastreo, en lenguaje simple para el
-// cliente — las mismas dos evaluaciones (Autenticidad + Condición ZigZag)
-// que ve el laboratorio, pero sin notas internas ni calificaciones a medio
-// evaluar.
+// Construye la línea de tiempo del rastreo con la misma metodología pública
+// de 4 fases (#metodo-8-pasos) que ve el laboratorio en el admin — sin
+// notas internas ni calificaciones a medio evaluar, pero con el mismo
+// avance en tiempo real, fase por fase.
 function renderClienteTracking(sol, live){
   const box = document.getElementById('c-track-result');
   if(!box) return;
   const isDigital = sol.paquete === 'digital';
   const prog = sol.progreso || null;
-  const fase = sol.estado === 'completado' ? 'completado' : (prog ? prog.fase : (sol.estado==='en_validacion' ? 'autenticidad' : 'recibida'));
+  const completado = sol.estado === 'completado';
+  const started = !!prog || sol.estado==='en_validacion' || completado;
   const citaTxt = (sol.fechaEntrega && sol.citaHora) ? formatCitaLarga(sol.fechaEntrega, sol.citaHora) : '';
+  const pasosProg = (prog && Array.isArray(prog.pasos)) ? prog.pasos : [];
+  const doneKeys = new Set(pasosProg.filter(s=>s.done).map(s=>s.key));
+  const activeFase = completado ? null : (prog ? prog.fase : (started ? 'ingreso' : null));
 
   const stages = [];
   stages.push({ key:'recibida', label:'Solicitud recibida', done:true });
-  if(!isDigital){
+  if(!started){
     stages.push({
-      key:'esperando_pieza',
-      label: citaTxt ? `Entrega de tu pieza · cita ${citaTxt}` : 'Entrega de tu pieza en el laboratorio',
-      done: fase !== 'recibida' && fase !== 'esperando_pieza',
-      current: fase === 'esperando_pieza' || fase === 'recibida'
+      key:'pendiente',
+      label: isDigital ? 'Tu validación está por iniciar' : (citaTxt ? `Entrega de tu pieza · cita ${citaTxt}` : 'Entrega de tu pieza en el laboratorio'),
+      current: true
+    });
+  } else {
+    (typeof METODO_FASES !== 'undefined' ? METODO_FASES : []).forEach(f=>{
+      const pasosFase = METODO_PASOS.filter(d=>d.fase===f.key);
+      const doneCount = pasosFase.filter(d=>completado || doneKeys.has(d.key)).length;
+      const faseDone = completado || doneCount === pasosFase.length;
+      const isCurrent = !completado && activeFase === f.key;
+      let sub = '';
+      if(faseDone) sub = `${pasosFase.length}/${pasosFase.length} pasos completados`;
+      else if(isCurrent){
+        const pendiente = pasosFase.find(d=>!doneKeys.has(d.key));
+        if(f.key==='ingreso' && !isDigital && pendiente && pendiente.key==='recepcion'){
+          sub = citaTxt ? `Cita agendada: ${citaTxt}` : 'Coordina la entrega con el laboratorio.';
+        } else {
+          sub = pendiente ? `Paso actual: ${pendiente.label} (${doneCount}/${pasosFase.length})` : `${doneCount}/${pasosFase.length} pasos completados`;
+        }
+      }
+      stages.push({ key:f.key, label:`${f.icon} ${f.label}`, sub, done:faseDone, current:isCurrent });
+    });
+    stages.push({
+      key:'completado', label:'Certificado y folio listos',
+      done: completado,
+      current: activeFase === 'listo'
     });
   }
-  const autenDoneCount = prog && prog.autenItems ? prog.autenItems.filter(i=>i.done).length : 0;
-  const autenTotal = prog && prog.autenItems ? prog.autenItems.length : 8;
-  stages.push({
-    key:'autenticidad', label:'Protocolo de Autenticidad',
-    sub: `A) ¿Es original? — checklist de proceso, ${autenDoneCount}/${autenTotal}`,
-    done: ['condicion','fotos','listo','completado'].includes(fase),
-    current: fase === 'autenticidad'
-  });
-  stages.push({
-    key:'condicion', label:'Protocolo de Condición — ZigZag C-Z',
-    sub: 'B) ¿En qué estado está? — evaluación por zonas',
-    done: ['fotos','listo','completado'].includes(fase),
-    current: fase === 'condicion'
-  });
-  stages.push({
-    key:'fotos', label:'Documentación fotográfica',
-    done: ['listo','completado'].includes(fase),
-    current: fase === 'fotos'
-  });
-  stages.push({
-    key:'completado', label:'Certificado y folio listos',
-    done: fase === 'completado',
-    current: fase === 'listo'
-  });
 
   const timelineHtml = stages.map(s=>`
     <div class="track-stage ${s.done?'done':''} ${s.current?'current':''}">
@@ -5094,70 +5097,121 @@ function filterSolicitudes(filter){
 }
 
 // ============================================================
-// VALIDACIÓN PASO A PASO
+// VALIDACIÓN PASO A PASO — Metodología de certificación, 8 pasos / 4 fases
 // ============================================================
-// Dos evaluaciones distintas y no promediables entre sí:
-// A) Protocolo de Autenticidad — checklist SÍ/NO, garantía de proceso (no se califica, se cumple).
-// B) Protocolo de Condición — Sistema ZigZag C-Z — sí se califica, se promedia por zonas.
-// Convergen en el dictamen final: Auténtico (A) + Calificación ZigZag (B).
-const STEP_DEFS = [
-  {key:'autenticidad', label:'Protocolo de Autenticidad', type:'autenticidad'},
-  {key:'zigzag', label:'Protocolo de Condición — Sistema ZigZag C-Z', type:'zigzag'},
-  {key:'fotos', label:'Fotografías de evidencia (7)', type:'simple'}
+// El admin aplica exactamente la misma metodología pública que ve el
+// cliente (sección #metodo-8-pasos): 4 fases, 8 pasos, en orden estricto.
+// Ningún paso se salta — el paso N solo se habilita cuando el paso N-1 ya
+// quedó marcado. Nada se imprime (certificado, etiqueta, sello) hasta
+// completar las 4 fases; eso ocurre al final, en el paso 8.
+const METODO_FASES = [
+  {key:'ingreso',  label:'Ingreso y custodia',     icon:'🗂️'},
+  {key:'pericial', label:'Análisis pericial',       icon:'🔬'},
+  {key:'dictamen', label:'Dictamen y calificación', icon:'⚖️'},
+  {key:'sello',    label:'Sello y entrega',         icon:'🔏'}
 ];
-// Checklist de 8 puntos del Protocolo de Autenticidad — es la garantía de
-// proceso ("ISO interno"): no lleva promedio, cada punto es SÍ/NO.
-const AUTENTICIDAD_ITEMS = [
-  {key:'recepcion', label:'Recepción de la pieza'},
-  {key:'custodia', label:'Cadena de custodia y folio de ingreso'},
-  {key:'visual', label:'Inspección visual'},
-  {key:'instrumental', label:'Análisis instrumental (lupa, UV, comparativa)'},
-  {key:'dictamen', label:'Dictamen de autenticidad'},
-  {key:'sello', label:'Sello de verificación'},
-  {key:'encapsulado', label:'Encapsulado de seguridad'},
-  {key:'registro', label:'Registro digital y entrega'}
+const METODO_PASOS = [
+  {key:'recepcion', fase:'ingreso', type:'recepcion',
+    label:'Recepción, registro y cadena de custodia',
+    desc:'Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.'},
+  {key:'identificacion', fase:'ingreso', type:'simple',
+    label:'Identificación y clasificación preliminar',
+    desc:'Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica.'},
+  {key:'visual', fase:'pericial', type:'simple',
+    label:'Inspección visual y análisis morfológico',
+    desc:'Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.'},
+  {key:'instrumental', fase:'pericial', type:'simple',
+    label:'Análisis técnico instrumental, comparativa y cotejo',
+    desc:'Lupa estereoscópica para pintura y tampografía, luz ultravioleta (UV) para detectar repintados y retoques, y comparativa/cotejo contra base de datos, catálogos oficiales y piezas testigo originales.'},
+  {key:'dictamen', fase:'dictamen', type:'dictamen',
+    label:'Confronta y dictamen pericial de autenticidad',
+    desc:'Doble filtro: el Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica el estado de la pieza.'},
+  {key:'condicion', fase:'dictamen', type:'condicion',
+    label:'Evaluación y calificación de condición',
+    desc:'Una vez autenticada como original, se califica su condición bajo la escala normalizada de 1.0 a 10.0 — pintura, cromo, llantas, base y conservación general. Calificación técnica, no sentimental.'},
+  {key:'encapsulado', fase:'sello', type:'simple',
+    label:'Encapsulado de seguridad y etiquetado',
+    desc:'La pieza aprobada es encapsulada en acrílico sellado y etiquetada con datos de certificación, calificación y folio.'},
+  {key:'registro', fase:'sello', type:'registro',
+    label:'Registro digital, certificación web y entrega',
+    desc:'Alta en base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite el certificado digital y se prepara la entrega o envío certificado al cliente.'}
 ];
-function ensureAutenticidad(step){
-  if(!step.autenticidad){
-    step.autenticidad = { items: AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done:false})) };
+function ensureDictamen(step){
+  if(!step.dictamen){
+    step.dictamen = { resultado:null, observaciones:'', verificador:'', fecha:'' };
   }
-  return step.autenticidad;
+  return step.dictamen;
 }
-// Migra procesos creados antes de esta reestructura (modelo plano de 3
-// pasos: recepcion/zigzag/fotos) al nuevo modelo (autenticidad[8 puntos
-// internos]/zigzag/fotos), preservando el estado de la compuerta de
-// recepción física para no romper validaciones ya en curso.
+
+// Migra procesos creados con cualquiera de las dos formas anteriores (el
+// modelo plano original de 3 pasos, o el checklist anidado de 8 puntos
+// dentro de "autenticidad" + "zigzag" con dictamen mezclado) al modelo
+// actual: 8 pasos planos, uno por cada paso real de la metodología,
+// agrupados por fase. Preserva todo el avance ya capturado para no romper
+// validaciones en curso.
 function migrateProcesoShape(p){
   if(!p || !Array.isArray(p.pasos)) return p;
-  const hasAutenticidad = p.pasos.some(s=>s.key==='autenticidad');
-  const legacyIdx = p.pasos.findIndex(s=>s.key==='recepcion');
-  if(!hasAutenticidad && legacyIdx !== -1){
-    const legacyDone = !!p.pasos[legacyIdx].done;
-    const autenStep = {
-      key:'autenticidad', label:'Protocolo de Autenticidad', done: legacyDone, nota:'',
-      autenticidad: { items: AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done: legacyDone})) }
-    };
-    p.pasos.splice(legacyIdx, 1, autenStep);
-    p._migrated = true;
-  }
+  const hasNewShape = METODO_PASOS.every(def => p.pasos.some(s=>s.key===def.key && s.fase));
+  if(hasNewShape) return p;
+
+  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
+  const zigzagStepOld = p.pasos.find(s=>s.key==='zigzag');
+  const fotosStepOld = p.pasos.find(s=>s.key==='fotos');
+  const legacyRecepcionStep = p.pasos.find(s=>s.key==='recepcion' && !s.fase);
+
+  const autenItems = (autenStep && autenStep.autenticidad && Array.isArray(autenStep.autenticidad.items))
+    ? autenStep.autenticidad.items : null;
+  const itemDone = (key) => autenItems ? !!(autenItems.find(i=>i.key===key)||{}).done : false;
+
+  const recepcionDone = autenItems ? itemDone('recepcion') : !!(legacyRecepcionStep && legacyRecepcionStep.done);
+  const identificacionDone = autenItems ? itemDone('custodia') : recepcionDone;
+  const visualDone = autenItems ? itemDone('visual') : false;
+  const instrumentalDone = autenItems ? itemDone('instrumental') : false;
+  const dictamenDoneFlag = autenItems ? itemDone('dictamen') : false;
+  const encapsuladoDone = autenItems ? itemDone('encapsulado') : false;
+  const registroDone = autenItems ? itemDone('registro') : false;
+  const oldZz = (zigzagStepOld && zigzagStepOld.zigzag) ? zigzagStepOld.zigzag : null;
+
+  p.pasos = METODO_PASOS.map(def=>{
+    const base = {key:def.key, label:def.label, fase:def.fase, done:false, nota:''};
+    if(def.key==='recepcion'){ base.done = recepcionDone; return base; }
+    if(def.key==='identificacion'){ base.done = identificacionDone; return base; }
+    if(def.key==='visual'){ base.done = visualDone; return base; }
+    if(def.key==='instrumental'){ base.done = instrumentalDone; return base; }
+    if(def.key==='dictamen'){
+      base.dictamen = {
+        resultado: oldZz ? (oldZz.dictamenFinal || null) : null,
+        observaciones: oldZz ? (oldZz.observaciones || '') : '',
+        verificador: oldZz ? (oldZz.verificador || '') : '',
+        fecha: oldZz ? (oldZz.fecha || '') : ''
+      };
+      base.done = dictamenDoneFlag || !!base.dictamen.resultado;
+      return base;
+    }
+    if(def.key==='condicion'){
+      base.zigzag = {
+        medidas: (oldZz && oldZz.medidas) || {peso:'', largo:'', ancho:'', alto:'', diametroLlantaTrasera:'', diametroLlantaDelantera:'', ok:false},
+        zonas: (oldZz && oldZz.zonas) || ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:null, instrumentos:[], nota:''})),
+        escalaFinal: (oldZz && oldZz.escalaFinal) || '',
+        origenTexto: (oldZz && oldZz.origenTexto) || ''
+      };
+      base.done = !!(zigzagStepOld && zigzagStepOld.done);
+      return base;
+    }
+    if(def.key==='encapsulado'){ base.done = encapsuladoDone; return base; }
+    if(def.key==='registro'){
+      base.done = registroDone;
+      base.nota = (fotosStepOld && fotosStepOld.nota) || '';
+      return base;
+    }
+    return base;
+  });
+  p._migrated = true;
   return p;
 }
 
-// El checklist del Protocolo de Autenticidad se va marcando solo, conforme
-// el laboratorio realiza las acciones reales que ese punto describe — no
-// hace falta darle clic a mano a cada uno. Solo marca (nunca desmarca) y
-// avisa si de verdad hubo un cambio, para que quien llama decida si vale
-// la pena volver a renderizar.
-function autoMarkAutenticidad(p, itemKey){
-  const step = p.pasos.find(s=>s.key==='autenticidad'); if(!step) return false;
-  const auten = ensureAutenticidad(step);
-  const item = auten.items.find(i=>i.key===itemKey); if(!item || item.done) return false;
-  item.done = true;
-  step.done = auten.items.every(i=>i.done);
-  return true;
-}
-
-// ===== Protocolo Zigzag C-Z: catálogos y helpers =====
+// ===== Protocolo Zigzag C-Z (paso 6, "Evaluación y calificación de
+// condición"): catálogos y helpers =====
 const ZZ_INSTRUMENTOS = [
   {key:'micro', label:'Micro digital'},
   {key:'vernier', label:'Vernier'},
@@ -5185,12 +5239,8 @@ function ensureZigzag(step){
     step.zigzag = {
       medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlantaTrasera:'', diametroLlantaDelantera:'', ok:false},
       zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:null, instrumentos:[], nota:''})),
-      dictamenFinal: null,
       escalaFinal: '',
-      origenTexto: '',
-      observaciones: '',
-      verificador: '',
-      fecha: ''
+      origenTexto: ''
     };
   }
   return step.zigzag;
@@ -5232,16 +5282,12 @@ const DEADLINE_DAYS = {'Validación digital':2, 'Peritaje físico + certificado'
 function getDeadlineDays(nivel){ return DEADLINE_DAYS[nivel] || 5; }
 // El plazo de entrega corre a partir de que la pieza está físicamente en el
 // laboratorio (piezaRecibidaTs) — no desde que se agendó la cita. Mientras
-// la recepción siga pendiente en un paquete presencial, el plazo está en
-// pausa (deadlineInfo regresa null) para no mostrar un reloj corriendo
-// sobre algo que todavía no podemos empezar a trabajar.
+// el paso 1 (recepción) siga pendiente en un paquete presencial, el plazo
+// está en pausa (deadlineInfo regresa null).
 function isPendienteRecepcion(p){
   if(p.paquete === 'digital') return false;
-  const s = p.pasos && p.pasos.find(x=>x.key==='autenticidad');
-  if(!s) return false;
-  const auten = ensureAutenticidad(s);
-  const item = auten.items.find(i=>i.key==='recepcion');
-  return !!(item && !item.done);
+  const s = p.pasos && p.pasos.find(x=>x.key==='recepcion');
+  return !!(s && !s.done);
 }
 function deadlineInfo(p){
   if(isPendienteRecepcion(p)) return null;
@@ -5279,21 +5325,16 @@ async function startValidacion(dJson){
     estado: 'en_proceso',
     creado: new Date().toLocaleDateString('es-MX'),
     creadoTs: Date.now(),
-    // Los paquetes presenciales arrancan con "recepción" bloqueada — el
-    // protocolo completo (Zigzag C-Z + fotos) se mantiene cerrado hasta que
-    // el admin confirme que la pieza ya está físicamente en el laboratorio.
-    // Los digitales no dependen de una entrega física, así que arrancan
-    // con este paso ya resuelto.
+    // Los paquetes presenciales arrancan con el paso 1 (recepción) bloqueado
+    // — toda la metodología se mantiene cerrada hasta que el admin confirme
+    // que la pieza ya está físicamente en el laboratorio. Los digitales no
+    // dependen de una entrega física, así que arrancan con este paso ya
+    // resuelto.
     piezaRecibidaTs: isDigital ? Date.now() : null,
-    pasos: STEP_DEFS.map(s=>{
-      if(s.key==='autenticidad'){
-        // El punto 1 (recepción) se resuelve solo para paquetes digitales,
-        // que no dependen de una entrega física. Los otros 7 puntos del
-        // checklist se completan igual, sea digital o presencial.
-        const items = AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done:(i.key==='recepcion' && isDigital)}));
-        return {key:s.key, label:s.label, done: items.every(i=>i.done), nota:'', autenticidad:{items}};
-      }
-      return {key:s.key, label:s.label, done:false, nota:''};
+    pasos: METODO_PASOS.map(def=>{
+      const base = {key:def.key, label:def.label, fase:def.fase, done:false, nota:''};
+      if(def.key==='recepcion') base.done = isDigital;
+      return base;
     })
   };
   try{
@@ -5311,18 +5352,16 @@ async function startValidacion(dJson){
 }
 
 const VALIDACION_BOARD_COLS = [
-  {key:'esperando_pieza', label:'Esperando pieza', icon:'⏳'},
-  {key:'autenticidad', label:'Protocolo Autenticidad', icon:'📋'},
-  {key:'condicion', label:'Protocolo Condición — ZigZag', icon:'⚡'},
-  {key:'fotos', label:'Fotografías', icon:'📷'},
-  {key:'listo', label:'Listo para certificar', icon:'✅'}
+  {key:'ingreso',  label:'Fase 1 · Ingreso y custodia',     icon:'🗂️'},
+  {key:'pericial', label:'Fase 2 · Análisis pericial',       icon:'🔬'},
+  {key:'dictamen', label:'Fase 3 · Dictamen y calificación', icon:'⚖️'},
+  {key:'sello',    label:'Fase 4 · Sello y entrega',         icon:'🔏'},
+  {key:'listo',    label:'Listo para certificar',            icon:'✅'}
 ];
 
 function procCardHtml(p){
-  const done = p.pasos.filter(s=>s.done).length;
-  const coreDone = autenticidadCoreDone(p);
-  const doneDisplay = (coreDone?1:0) + p.pasos.filter(s=>s.key!=='autenticidad' && s.done).length;
-  const pct = Math.round(doneDisplay / p.pasos.length * 100);
+  const doneCount = p.pasos.filter(s=>s.done).length;
+  const pct = Math.round(doneCount / p.pasos.length * 100);
   const dl = deadlineInfo(p);
   const pendiente = isPendienteRecepcion(p);
   return `
@@ -5335,8 +5374,8 @@ function procCardHtml(p){
       ${pendiente && p.citaFecha ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
-        <p class="foot-note" style="border:none;padding:0;margin:0;">${doneDisplay} de ${p.pasos.length} pasos completados</p>
-        ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando entrega</span>` : '')}
+        <p class="foot-note" style="border:none;padding:0;margin:0;">${doneCount} de ${p.pasos.length} pasos completados</p>
+        ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando ingreso de la pieza</span>` : '')}
       </div>
     </div>`;
 }
@@ -5415,62 +5454,42 @@ async function setProceso(p){
   mirrorClientProgress(p).catch(()=>{});
 }
 
-// Determina en qué fase visible está el proceso — se usa tanto para el
-// tablero de monitoreo del admin como para el rastreo en vivo del cliente,
-// así ambos siempre coinciden.
-// El punto 8 ("Registro digital y entrega") se marca solo al finalizar la
-// validación — no puede exigirse como requisito PARA finalizar, sería
-// circular. Estos dos helpers separan "el checklist ya está listo para
-// generar el certificado" (puntos 1–7) de "el checklist quedó 100%
-// completo" (los 8, que solo ocurre después de finalizar).
-function autenticidadCoreDone(p){
-  const step = p.pasos.find(s=>s.key==='autenticidad');
-  if(!step) return true;
-  const auten = ensureAutenticidad(step);
-  return auten.items.filter(i=>i.key!=='registro').every(i=>i.done);
-}
+// El paso 8 ("Registro digital, certificación web y entrega") se marca solo
+// al finalizar la validación — no puede exigirse como requisito PARA
+// finalizar, sería circular. Por eso se excluye del cálculo de "¿ya se
+// puede generar el certificado?".
 function procesoListoParaFinalizar(p){
-  return autenticidadCoreDone(p) && p.pasos.filter(s=>s.key!=='autenticidad').every(s=>s.done);
+  return p.pasos.filter(s=>s.key!=='registro').every(s=>s.done);
 }
 
+// Determina en qué fase visible está el proceso — se usa tanto para el
+// tablero de monitoreo del admin como para el rastreo en vivo del cliente,
+// así ambos siempre coinciden. Es la primera fase que todavía tiene un
+// paso pendiente, en el orden estricto de la metodología.
 function procesoFase(p){
-  const isDigital = p.paquete === 'digital';
-  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
-  const auten = autenStep ? ensureAutenticidad(autenStep) : {items:[]};
-  const recepcionItem = auten.items.find(i=>i.key==='recepcion');
-  const recepcionDone = !!(recepcionItem && recepcionItem.done);
-  if(!recepcionDone && !isDigital) return 'esperando_pieza';
-  if(!autenticidadCoreDone(p)) return 'autenticidad';
-  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
-  if(!zigzagStep || !zigzagStep.done) return 'condicion';
-  const fotosStep = p.pasos.find(s=>s.key==='fotos');
-  if(!fotosStep || !fotosStep.done) return 'fotos';
-  return 'listo';
+  if(procesoListoParaFinalizar(p)) return 'listo';
+  const pendiente = p.pasos.find(s=>s.key!=='registro' && !s.done);
+  const def = pendiente && METODO_PASOS.find(d=>d.key===pendiente.key);
+  return def ? def.fase : 'sello';
 }
 const PROCESO_FASE_LABEL = {
-  esperando_pieza: 'Esperando recepción de la pieza',
-  autenticidad: 'Protocolo de Autenticidad en curso',
-  condicion: 'Protocolo de Condición — ZigZag C-Z en curso',
-  fotos: 'Documentación fotográfica en curso',
+  ingreso: 'Fase 1 · Ingreso y custodia',
+  pericial: 'Fase 2 · Análisis pericial',
+  dictamen: 'Fase 3 · Dictamen y calificación',
+  sello: 'Fase 4 · Sello y entrega',
   listo: 'Todo listo — generando certificado',
   completado: 'Certificado emitido'
 };
 
 // Resumen ligero y apto para el cliente (sin notas internas ni
 // calificaciones a medio evaluar) que se guarda dentro de la propia
-// solicitud, para que "Mi historial" lo lea en tiempo real.
+// solicitud, para que "Mi historial" lo lea en tiempo real, fase por fase.
 function buildProgresoCliente(p){
-  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
-  const auten = autenStep ? ensureAutenticidad(autenStep) : {items:[]};
-  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
-  const fotosStep = p.pasos.find(s=>s.key==='fotos');
   const doneSteps = p.pasos.filter(s=>s.done).length;
   return {
     fase: procesoFase(p),
     pct: Math.round(doneSteps / p.pasos.length * 100),
-    autenItems: auten.items.map(i=>({key:i.key, label:i.label, done:!!i.done})),
-    zigzagDone: !!(zigzagStep && zigzagStep.done),
-    fotosDone: !!(fotosStep && fotosStep.done),
+    pasos: p.pasos.map(s=>({key:s.key, label:s.label, fase:s.fase, done:!!s.done})),
     piezaRecibidaTs: p.piezaRecibidaTs || null,
     citaFecha: p.citaFecha || '',
     citaHora: p.citaHora || '',
@@ -5501,8 +5520,8 @@ async function openProceso(id){
 
 // Qué paso está "abierto" (expandido) en el detalle de una validación — se
 // resetea cada vez que se abre un proceso distinto, y por defecto abre el
-// paso donde toca seguir trabajando. Así el admin ve un acordeón guiado en
-// vez de los 3 pasos (y las 10 zonas del Zigzag) desplegados todos juntos.
+// paso donde toca seguir trabajando. Así el admin ve un acordeón guiado,
+// agrupado por fase, en vez de los 8 pasos desplegados todos juntos.
 let PROCESO_OPEN_STEP = undefined;
 
 function toggleStepOpen(pid, key){
@@ -5514,72 +5533,76 @@ function renderProcesoDetail(p){
   CURRENT_PROCESO = p;
   const detail = document.getElementById('validacion-detail');
   const isDigital = p.paquete === 'digital';
-  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
-  const auten = autenStep ? ensureAutenticidad(autenStep) : null;
-  const recepcionItem = auten ? auten.items.find(i=>i.key==='recepcion') : null;
-  const recepcionDone = !recepcionItem || recepcionItem.done;
-  const locked = !recepcionDone && !isDigital;
-  const coreDone = autenticidadCoreDone(p);
-  const listoParaFinalizar = procesoListoParaFinalizar(p);
-  // Para la barra de avance y el "X de Y pasos" mostramos el checklist de
-  // Autenticidad como completo en cuanto sus 7 puntos accionables están
-  // listos (el 8vo, "Registro", se marca solo al finalizar) — si no, se ve
-  // atorado en 2/3 aunque ya se pueda generar el certificado.
-  const doneDisplay = (coreDone ? 1 : 0) + p.pasos.filter(s=>s.key!=='autenticidad' && s.done).length;
-  const pct = Math.round(doneDisplay / p.pasos.length * 100);
+  const recepcionStep = p.pasos.find(s=>s.key==='recepcion');
+  const recepcionDone = !recepcionStep || recepcionStep.done;
+  const doneCount = p.pasos.filter(s=>s.done).length;
+  const pct = Math.round(doneCount / p.pasos.length * 100);
   const dl = deadlineInfo(p);
   const pendienteRecepcion = isPendienteRecepcion(p);
+  const listoParaFinalizar = procesoListoParaFinalizar(p);
+  const registroStep = p.pasos.find(s=>s.key==='registro');
 
   // Guía al admin hacia el siguiente paso concreto, del inicio al certificado.
-  let nextAction, focusStepKey = null;
-  if(locked){
-    nextAction = { icon:'1', text:'Confirma la recepción de la pieza en cuanto el cliente la traiga al laboratorio.' };
-    focusStepKey = 'autenticidad';
-  } else if(auten && !coreDone){
-    const pendienteItem = auten.items.filter(i=>i.key!=='registro').find(i=>!i.done);
-    const idx = pendienteItem ? AUTENTICIDAD_ITEMS.findIndex(i=>i.key===pendienteItem.key) : 0;
-    nextAction = { icon:String(idx+1), text:`Continúa el Protocolo de Autenticidad: "${pendienteItem ? pendienteItem.label : ''}".` };
-    focusStepKey = 'autenticidad';
+  const pendienteIdx = p.pasos.findIndex(s=>!s.done && s.key!=='registro');
+  let nextAction, focusStepKey;
+  if(pendienteIdx !== -1){
+    const s = p.pasos[pendienteIdx];
+    nextAction = { icon:String(pendienteIdx+1), text:`Continúa con "${s.label}".` };
+    focusStepKey = s.key;
+  } else if(registroStep && !registroStep.done){
+    nextAction = { icon:'8', text:'Las 4 fases están completas — genera el certificado en el paso 8.', done:true };
+    focusStepKey = 'registro';
   } else {
-    const pendiente = p.pasos.find(s=>s.key!=='autenticidad' && !s.done);
-    if(pendiente){
-      const idx = p.pasos.findIndex(s=>s.key===pendiente.key);
-      nextAction = { icon:String(idx+1), text:`Continúa con "${pendiente.label}".` };
-      focusStepKey = pendiente.key;
-    } else {
-      nextAction = { icon:'✓', text:'Todos los pasos están completos — genera el certificado abajo.', done:true };
-    }
+    nextAction = { icon:'✓', text:'Validación finalizada.', done:true };
+    focusStepKey = 'registro';
   }
   // La primera vez que se abre este proceso, enfocamos el paso sugerido.
   if(PROCESO_OPEN_STEP === undefined) PROCESO_OPEN_STEP = focusStepKey;
 
-  const stepsHtml = p.pasos.map((s)=>{
-    const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
-    const def = STEP_DEFS.find(d=>d.key===s.key);
-    const type = (def && def.type) || 'simple';
-    const stepLocked = locked && type !== 'autenticidad';
-    const isOpen = PROCESO_OPEN_STEP === s.key;
-    const badge = type==='autenticidad' ? (coreDone?'✓':`${auten.items.filter(i=>i.done).length}/${auten.items.length}`) : (s.done?'✓':'');
-    const innerBody = !isOpen ? '' : (stepLocked
-      ? `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (punto 1 del Protocolo de Autenticidad).</div>`
-      : (type === 'zigzag' ? renderZigzagStepBody(p, s)
-        : type === 'autenticidad' ? renderAutenticidadStepBody(p, s)
-        : `<textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>`));
-    const checkClickable = !stepLocked && type !== 'autenticidad';
+  const fasesHtml = METODO_FASES.map(fase=>{
+    const pasosFase = p.pasos.filter(s=>s.fase===fase.key);
+    const faseDoneCount = pasosFase.filter(s=>s.done).length;
+    const faseDone = faseDoneCount === pasosFase.length;
+    const stepsHtml = pasosFase.map(s=>{
+      const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
+      const def = METODO_PASOS.find(d=>d.key===s.key);
+      const stepLocked = !recepcionDone && !isDigital && s.key !== 'recepcion';
+      const isOpen = PROCESO_OPEN_STEP === s.key;
+      let bodyHtml = '';
+      if(isOpen){
+        if(stepLocked){
+          bodyHtml = `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (paso 1).</div>`;
+        } else {
+          if(def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
+          if(def.type==='recepcion') bodyHtml += renderRecepcionStepBody(p, s);
+          else if(def.type==='dictamen') bodyHtml += renderDictamenStepBody(p, s);
+          else if(def.type==='condicion') bodyHtml += renderCondicionStepBody(p, s);
+          else if(def.type==='registro') bodyHtml += renderRegistroStepBody(p, s);
+          else bodyHtml += renderSimpleStepBody(p, s);
+          if(def.type!=='registro'){
+            bodyHtml += `<div class="row" style="margin-top:10px;"><button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button></div>`;
+          }
+        }
+      }
+      const checkClickable = !stepLocked;
+      return `
+      <div class="step-row step-accordion ${def.type==='condicion'?'step-row-zigzag':''} ${stepLocked?'step-locked':''} ${isOpen?'open':''}">
+        <div class="step-row-head" ${stepLocked?'':`onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')"`}>
+          <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
+          <h4>${globalIdx+1}. ${escapeHtml(s.label)}</h4>
+          <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
+        </div>
+        ${isOpen ? `<div class="step-body">${bodyHtml}</div>` : ''}
+      </div>`;
+    }).join('');
     return `
-    <div class="step-row step-accordion ${type==='zigzag'?'step-row-zigzag':''} ${stepLocked?'step-locked':''} ${isOpen?'open':''}">
-      <div class="step-row-head" onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')">
-        <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
-        <h4>${globalIdx+1}. ${escapeHtml(s.label)}</h4>
-        ${badge ? `<span class="step-accordion-badge ${s.done||coreDone&&type==='autenticidad'?'done':''}">${badge}</span>` : ''}
-        <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
+    <div class="method-fase-group ${faseDone?'done':''}">
+      <div class="method-fase-group-head">
+        <span class="method-fase-group-icon">${fase.icon}</span>
+        <p class="method-fase-group-eyebrow">${escapeHtml(PROCESO_FASE_LABEL[fase.key]||fase.label)}</p>
+        <span class="method-fase-group-count ${faseDone?'done':''}">${faseDoneCount}/${pasosFase.length}</span>
       </div>
-      ${isOpen ? `<div class="step-body">
-        ${innerBody}
-        ${(!stepLocked && type!=='autenticidad') ? `<div class="row" style="margin-top:${type==='zigzag'?'14px':'6px'};">
-          <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
-        </div>` : ''}
-      </div>` : ''}
+      ${stepsHtml}
     </div>`;
   }).join('');
 
@@ -5594,86 +5617,91 @@ function renderProcesoDetail(p){
           <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
           <p style="font-size:13px;color:var(--sage);margin:0 0 12px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
         </div>
-        ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : (pendienteRecepcion ? `<span class="cita-pill" style="margin-top:2px;">Esperando entrega</span>` : '')}
+        ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : (pendienteRecepcion ? `<span class="cita-pill" style="margin-top:2px;">Esperando ingreso de la pieza</span>` : '')}
       </div>
       ${dl ? `<p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">Recibida hace ${dl.elapsedDays>0?dl.elapsedDays+'d ':''}${dl.elapsedHours}h · plazo de ${dl.days} días para este paquete</p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
-      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneDisplay} de ${p.pasos.length} pasos completados</p>
+      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneCount} de ${p.pasos.length} pasos completados</p>
 
       <div class="next-action-banner ${nextAction.done?'all-done':''}">
         <div class="next-action-icon">${nextAction.icon}</div>
         <div class="next-action-text"><strong>Siguiente paso</strong><span>${escapeHtml(nextAction.text)}</span></div>
       </div>
 
-      ${stepsHtml}
-      <div class="row" style="margin-top:18px;">
-        <button class="btn" ${!listoParaFinalizar?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
-        <button class="btn ghost" onclick="notifyPickupReady('${escapeHtml(p.id)}')">Avisar que está lista para recoger</button>
-      </div>
-      ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa todos los pasos para poder generar el certificado.</p>' : ''}
+      ${fasesHtml}
+      ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado en el paso 8.</p>' : ''}
     </div>`;
 }
 
-// Actualiza solo el "badge" (contador X/8) del acordeón de Autenticidad sin
-// volver a renderizar todo el detalle — se llama tras un auto-check para
-// que el avance se note al instante aunque esa sección esté colapsada.
-function refreshAutenticidadTabBadge(p){
-  const row = document.querySelector('.step-row-head[onclick*="autenticidad"]');
-  if(!row) return;
-  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
-  if(!autenStep) return;
-  const auten = ensureAutenticidad(autenStep);
-  const badge = row.querySelector('.step-accordion-badge');
-  const coreDone = autenticidadCoreDone(p);
-  if(badge) badge.textContent = coreDone ? '✓' : `${auten.items.filter(i=>i.done).length}/${auten.items.length}`;
-}
-
-// ===== Formulario del paso "Protocolo de Autenticidad" — checklist de 8
-// puntos SÍ/NO. No se califica, se cumple: es la garantía de proceso. =====
-function renderAutenticidadStepBody(p, step){
-  const auten = ensureAutenticidad(step);
+// ===== Paso 1 — "Recepción, registro y cadena de custodia" (fase Ingreso) =====
+function renderRecepcionStepBody(p, step){
   const isDigital = p.paquete === 'digital';
-  const recepcionItem = auten.items.find(i=>i.key==='recepcion');
-  const recepcionDone = !!(recepcionItem && recepcionItem.done);
   const citaTxt = p.citaFecha ? formatCitaLarga(p.citaFecha, p.citaHora) : '';
-  const gateHtml = isDigital ? `
-    <div class="auten-item done">
-      <div class="auten-item-check">✓</div>
-      <span class="auten-item-label">1. Recepción de la pieza <span class="mono" style="font-weight:400;">(validación digital — no aplica entrega física)</span></span>
-    </div>` : `
-    <div class="recepcion-gate ${recepcionDone?'done':'pending'}">
+  if(isDigital){
+    return `<p class="zz-summary-hint" style="margin:0;">Validación digital — no aplica entrega física de la pieza. Este paso queda resuelto automáticamente.</p>`;
+  }
+  return `
+    <div class="recepcion-gate ${step.done?'done':'pending'}">
       <div class="recepcion-gate-head">
-        <div class="recepcion-gate-icon">${recepcionDone?'✓':'⏳'}</div>
+        <div class="recepcion-gate-icon">${step.done?'✓':'⏳'}</div>
         <div>
-          <h4 style="margin:0;font-size:14.5px;">1. Recepción de la pieza</h4>
-          <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${recepcionDone ? 'Pieza recibida — protocolo habilitado.' : (citaTxt ? 'Cita agendada: '+escapeHtml(citaTxt) : 'Sin cita agendada — coordina la entrega con el cliente.')}</p>
+          <h4 style="margin:0;font-size:14.5px;">Recepción física de la pieza</h4>
+          <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${step.done ? 'Pieza recibida — folio y cadena de custodia abiertos.' : (citaTxt ? 'Cita agendada: '+escapeHtml(citaTxt) : 'Sin cita agendada — coordina el ingreso con el cliente.')}</p>
         </div>
       </div>
-      ${recepcionDone
+      ${step.done
         ? `<p class="foot-note" style="border:none;padding:0;margin:0;">${p.piezaRecibidaTs ? 'Recibida el '+escapeHtml(new Date(p.piezaRecibidaTs).toLocaleString('es-MX',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})) : ''}</p>`
-        : `<button class="btn small" onclick="confirmarRecepcion('${escapeHtml(p.id)}')">Confirmar recepción de la pieza</button>`}
+        : `<button class="btn small" onclick="confirmarRecepcion('${escapeHtml(p.id)}')">Confirmar recepción y abrir cadena de custodia</button>`}
     </div>`;
-
-  const restLocked = !recepcionDone && !isDigital;
-  const restItems = auten.items.filter(i=>i.key!=='recepcion');
-  const itemsHtml = restItems.map((it,idx)=>`
-    <div class="auten-item ${it.done?'done':''} ${restLocked?'locked':''}">
-      <div class="auten-item-check" ${restLocked?'':`onclick="toggleAutenticidadItem('${escapeHtml(p.id)}','${it.key}')"`}>${it.done?'✓':''}</div>
-      <span class="auten-item-label">${idx+2}. ${escapeHtml(it.label)}</span>
-    </div>`).join('');
-
-  return `
-    <p class="zz-summary-hint" style="margin:0 0 12px;">Checklist de proceso — no se califica, se cumple. Es la garantía de que la pieza pasó por todos los controles antes del dictamen. (La condición física sí se califica, aparte, en el Protocolo ZigZag C-Z.)</p>
-    ${gateHtml}
-    <div class="auten-items">${itemsHtml}</div>
-    ${restLocked ? `<p class="step-locked-note" style="margin-top:8px;">🔒 Se habilitan al confirmar la recepción de la pieza (punto 1).</p>` : ''}
-  `;
 }
 
-// ===== Formulario dinámico del paso "Medición y evaluación — Protocolo Zigzag C-Z" =====
-function renderZigzagStepBody(p, step){
+// ===== Pasos "simples" (2, 3, 4, 7): identificación, inspección visual,
+// análisis instrumental, encapsulado — notas libres + acción explícita del
+// admin para avanzar. Nada se marca solo. =====
+function renderSimpleStepBody(p, step){
+  return `
+    <textarea rows="3" placeholder="Notas de este paso (opcional)…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(step.nota||'')}</textarea>
+    <div class="row" style="margin-top:10px;">
+      ${!step.done ? `<button class="btn small" onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Marcar como completado y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Paso completado.</span>`}
+    </div>`;
+}
+
+// ===== Paso 5 — "Confronta y dictamen pericial de autenticidad" (fase
+// Dictamen y calificación) =====
+function renderDictamenStepBody(p, step){
+  const dc = ensureDictamen(step);
+  if(!dc.fecha) dc.fecha = new Date().toISOString().slice(0,10);
+  const OPCIONES = [
+    {key:'original', label:'Original'},
+    {key:'restaurado', label:'Restaurado'},
+    {key:'reparado', label:'Reparado'},
+    {key:'repintado', label:'Repintado'},
+    {key:'falso', label:'Falso / Réplica'}
+  ];
+  return `
+    <div class="zz-field">
+      <label>Dictamen</label>
+      <div class="zz-toggle-group" style="flex-wrap:wrap;">
+        ${OPCIONES.map(o=>`<button type="button" class="zz-toggle ${dc.resultado===o.key?'active':''}" onclick="zzSetDictamen('${escapeHtml(p.id)}','${step.key}','${o.key}',this)">${o.label}</button>`).join('')}
+      </div>
+    </div>
+    <div class="zz-field">
+      <label>Observaciones</label>
+      <textarea rows="2" placeholder="Observaciones del dictamen…" onchange="zzSetObservaciones('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(dc.observaciones)}</textarea>
+    </div>
+    <div class="row">
+      <div style="flex:1;"><label>Verificador</label><input type="text" value="${escapeHtml(dc.verificador)}" onchange="zzSetVerificador('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
+      <div style="flex:1;"><label>Fecha</label><input type="date" value="${escapeHtml(dc.fecha)}" onchange="zzSetFecha('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      ${!step.done ? `<button class="btn small" ${!dc.resultado?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar dictamen y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Dictamen confirmado.</span>`}
+    </div>`;
+}
+
+// ===== Paso 6 — "Evaluación y calificación de condición" (fase Dictamen y
+// calificación) — Sistema Zigzag C-Z, por zonas. =====
+function renderCondicionStepBody(p, step){
   const zz = ensureZigzag(step);
-  if(!zz.fecha) zz.fecha = new Date().toISOString().slice(0,10);
   const overall = zzOverallAvg(zz);
   const m = zz.medidas;
   const zonasHtml = zz.zonas.map((zona, idx) => {
@@ -5752,17 +5780,9 @@ function renderZigzagStepBody(p, step){
       </details>
       <div class="zz-zones">${zonasHtml}</div>
 
-      <h5 class="zz-subhead">Dictamen final</h5>
-      <div class="zz-dictamen-grid">
+      <div class="zz-dictamen-grid" style="margin-top:16px;">
         <div class="zz-field">
-          <label>Dictamen</label>
-          <div class="zz-toggle-group">
-            <button type="button" class="zz-toggle ${zz.dictamenFinal==='original'?'active':''}" onclick="zzSetDictamen('${escapeHtml(p.id)}','${step.key}','original',this)">Original</button>
-            <button type="button" class="zz-toggle ${zz.dictamenFinal==='restaurado'?'active':''}" onclick="zzSetDictamen('${escapeHtml(p.id)}','${step.key}','restaurado',this)">Restaurado</button>
-          </div>
-        </div>
-        <div class="zz-field">
-          <label>Escala final 10–6 <span class="mono">(editable)</span></label>
+          <label>Escala final 1.0–10.0 <span class="mono">(editable)</span></label>
           <input type="number" step="0.1" id="zz-escala-final" value="${escapeHtml(zz.escalaFinal || (overall!=null?overall.toFixed(1):''))}" placeholder="${overall!=null?overall.toFixed(1):''}" onchange="zzSetEscalaFinal('${escapeHtml(p.id)}','${step.key}',this.value)">
         </div>
         <div class="zz-field">
@@ -5770,15 +5790,24 @@ function renderZigzagStepBody(p, step){
           <input type="text" value="${escapeHtml(zz.origenTexto)}" placeholder="Ej. México" onchange="zzSetOrigenTexto('${escapeHtml(p.id)}','${step.key}',this.value)">
         </div>
       </div>
-      <div class="zz-field">
-        <label>Observaciones</label>
-        <textarea rows="2" placeholder="Observaciones generales del peritaje…" onchange="zzSetObservaciones('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(zz.observaciones)}</textarea>
-      </div>
-      <div class="row">
-        <div style="flex:1;"><label>Verificador</label><input type="text" value="${escapeHtml(zz.verificador)}" onchange="zzSetVerificador('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
-        <div style="flex:1;"><label>Fecha</label><input type="date" value="${escapeHtml(zz.fecha)}" onchange="zzSetFecha('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
+      <div class="row" style="margin-top:12px;">
+        ${!step.done ? `<button class="btn small" ${overall==null?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar calificación y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Condición calificada.</span>`}
       </div>
     </div>`;
+}
+
+// ===== Paso 8 — "Registro digital, certificación web y entrega" (fase
+// Sello y entrega) — hospeda las acciones finales: nada de esto existe en
+// pasos anteriores, la entrega SIEMPRE es lo último. =====
+function renderRegistroStepBody(p, step){
+  const listo = procesoListoParaFinalizar(p);
+  return `
+    <textarea rows="2" placeholder="Notas de documentación fotográfica / entrega (opcional)…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(step.nota||'')}</textarea>
+    <div class="row" style="margin-top:14px;">
+      <button class="btn" ${!listo?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
+      <button class="btn ghost" onclick="notifyPickupReady('${escapeHtml(p.id)}')">Avisar que está lista para recoger</button>
+    </div>
+    ${!listo ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado.</p>' : ''}`;
 }
 
 async function zzPersist(){
@@ -5826,9 +5855,6 @@ async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   zzUpdateZoneScore(zona);
   const step = p.pasos.find(s=>s.key===stepKey);
   zzUpdateOverall(step.zigzag);
-  // Calificar una zona es, en los hechos, hacer la inspección visual — el
-  // punto 3 del Protocolo de Autenticidad se marca solo la primera vez.
-  if(autoMarkAutenticidad(p, 'visual')) refreshAutenticidadTabBadge(p);
   await zzPersist();
 }
 async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
@@ -5838,9 +5864,6 @@ async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
   const nowActive = idx === -1;
   if(nowActive) zona.instrumentos.push(insKey); else zona.instrumentos.splice(idx,1);
   btnEl.classList.toggle('active', nowActive);
-  // Usar un instrumento de medición/inspección es el punto 4 (análisis
-  // instrumental) del Protocolo de Autenticidad — se marca solo.
-  if(nowActive && autoMarkAutenticidad(p, 'instrumental')) refreshAutenticidadTabBadge(p);
   await zzPersist();
 }
 async function zzSetNota(pid, stepKey, zonaKey, value){
@@ -5866,15 +5889,12 @@ async function zzToggleMedidasOk(pid, stepKey, btnEl){
 async function zzSetDictamen(pid, stepKey, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
-  const zz = ensureZigzag(step);
-  zz.dictamenFinal = (zz.dictamenFinal === val) ? null : val;
-  const group = btnEl.closest('.zz-toggle-group');
-  if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
-  if(zz.dictamenFinal === val) btnEl.classList.add('active');
-  // Fijar el dictamen (Original/Restaurado) es el punto 5 del Protocolo de
-  // Autenticidad — se marca solo en cuanto queda definido.
-  if(zz.dictamenFinal && autoMarkAutenticidad(p, 'dictamen')) refreshAutenticidadTabBadge(p);
+  const dc = ensureDictamen(step);
+  dc.resultado = (dc.resultado === val) ? null : val;
   await zzPersist();
+  // Se vuelve a renderizar: el botón "Confirmar dictamen y continuar" se
+  // habilita o deshabilita según si ya quedó fijado un resultado.
+  renderProcesoDetail(p);
 }
 async function zzSetEscalaFinal(pid, stepKey, value){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
@@ -5891,22 +5911,25 @@ async function zzSetOrigenTexto(pid, stepKey, value){
 async function zzSetObservaciones(pid, stepKey, value){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
-  ensureZigzag(step).observaciones = value;
+  ensureDictamen(step).observaciones = value;
   await zzPersist();
 }
 async function zzSetVerificador(pid, stepKey, value){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
-  ensureZigzag(step).verificador = value;
+  ensureDictamen(step).verificador = value;
   await zzPersist();
 }
 async function zzSetFecha(pid, stepKey, value){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
-  ensureZigzag(step).fecha = value;
+  ensureDictamen(step).fecha = value;
   await zzPersist();
 }
 
+// Alterna manualmente el check de cualquiera de los 8 pasos — sirve como
+// corrección a mano; el flujo normal es completar cada paso con su propio
+// botón de acción ("Continuar", "Confirmar…"), nunca de forma automática.
 async function toggleProcesoStep(id, key){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
@@ -5916,41 +5939,33 @@ async function toggleProcesoStep(id, key){
   renderProcesoDetail(p);
 }
 
-// Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
-// el resto del protocolo (Zigzag C-Z + fotos) y arranca el reloj del plazo
-// de entrega desde este momento, no desde que se agendó la cita.
-async function confirmarRecepcion(id){
-  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  const step = p.pasos.find(s=>s.key==='autenticidad');
-  if(step){
-    const auten = ensureAutenticidad(step);
-    const item = auten.items.find(i=>i.key==='recepcion');
-    if(item) item.done = true;
-    // Recibir la pieza y abrirle folio es, en la práctica, el arranque de
-    // la cadena de custodia — el punto 2 se marca junto con el punto 1.
-    autoMarkAutenticidad(p, 'custodia');
-    step.done = auten.items.every(i=>i.done);
-  }
-  p.piezaRecibidaTs = Date.now();
+// Marca un paso "simple" (o el dictamen / condición) como completado por
+// acción explícita del admin, y abre automáticamente el siguiente paso —
+// así el acordeón guía el avance sin que se marquen dos casillas a la vez.
+async function completeStep(pid, stepKey){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+  const idx = p.pasos.findIndex(s=>s.key===stepKey);
+  if(idx===-1) return;
+  p.pasos[idx].done = true;
+  const next = p.pasos[idx+1];
+  PROCESO_OPEN_STEP = next ? next.key : null;
   CURRENT_PROCESO = p;
   await setProceso(p);
-  toast('Recepción confirmada — protocolo habilitado.');
   renderProcesoDetail(p);
 }
 
-// Alterna un punto (2–8) del checklist del Protocolo de Autenticidad. El
-// punto 1 (recepción) no se alterna aquí — se confirma con su propio botón
-// dedicado en confirmarRecepcion(), ya que actúa como compuerta física.
-async function toggleAutenticidadItem(pid, itemKey){
-  if(itemKey === 'recepcion') return;
-  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
-  const step = p.pasos.find(s=>s.key==='autenticidad'); if(!step) return;
-  const auten = ensureAutenticidad(step);
-  const item = auten.items.find(i=>i.key===itemKey); if(!item) return;
-  item.done = !item.done;
-  step.done = auten.items.every(i=>i.done);
+// Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
+// el resto de la metodología y arranca el reloj del plazo de entrega desde
+// este momento, no desde que se agendó la cita.
+async function confirmarRecepcion(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  const step = p.pasos.find(s=>s.key==='recepcion');
+  if(step) step.done = true;
+  p.piezaRecibidaTs = Date.now();
+  PROCESO_OPEN_STEP = 'identificacion';
   CURRENT_PROCESO = p;
   await setProceso(p);
+  toast('Recepción confirmada — protocolo habilitado.');
   renderProcesoDetail(p);
 }
 
@@ -5978,10 +5993,11 @@ async function notifyPickupReady(id){
 
 async function finalizeProceso(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  if(!procesoListoParaFinalizar(p)){ toast('Completa todos los pasos antes de finalizar.'); return; }
+  if(!procesoListoParaFinalizar(p)){ toast('Completa las 4 fases antes de finalizar.'); return; }
   // Generar el certificado ES, en los hechos, el registro digital — el
-  // punto 8 del Protocolo de Autenticidad se marca solo en este momento.
-  autoMarkAutenticidad(p, 'registro');
+  // paso 8 se marca en este momento, como consecuencia directa de finalizar.
+  const registroStep = p.pasos.find(s=>s.key==='registro');
+  if(registroStep) registroStep.done = true;
   await setProceso(p).catch(()=>{});
   document.getElementById('a-modelo').value = p.modelo || '';
   document.getElementById('a-anio').value = p.anio || '';
@@ -5990,15 +6006,13 @@ async function finalizeProceso(id){
   document.getElementById('a-telefono').value = p.telefono || '';
   if(p.nivel) document.getElementById('a-nivel').value = p.nivel;
 
-  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
-  if(zigzagStep && zigzagStep.zigzag){
-    const zz = zigzagStep.zigzag;
+  const condStep = p.pasos.find(s=>s.key==='condicion');
+  if(condStep && condStep.zigzag){
+    const zz = condStep.zigzag;
     const zonaByKey = k => zz.zonas.find(z=>z.key===k);
     if(zz.medidas.peso) document.getElementById('a-peso').value = zz.medidas.peso;
     const finalGrade = zz.escalaFinal || zzOverallAvg(zz);
     if(finalGrade!=null && finalGrade!=='') document.getElementById('a-grado').value = finalGrade;
-    if(zz.dictamenFinal === 'restaurado') document.getElementById('a-estado').value = 'Restaurado';
-    else if(zz.dictamenFinal === 'original') document.getElementById('a-estado').value = 'Original';
 
     const paintScores = ['trasera','toldo','cofre','lat_izq','lat_der'].map(zonaByKey).filter(Boolean).map(zzZoneScore).filter(v=>v!=null);
     if(paintScores.length) document.getElementById('a-sg-pintura').value = (Math.round((paintScores.reduce((a,b)=>a+b,0)/paintScores.length)*10)/10).toFixed(1);
@@ -6023,20 +6037,18 @@ async function finalizeProceso(id){
       const txt = remacheZona.nota || (sc!=null ? 'Calificación ' + sc.toFixed(1) + '/10' : '');
       if(txt) document.getElementById('a-remaches').value = txt;
     }
+  }
 
+  const dictStep = p.pasos.find(s=>s.key==='dictamen');
+  if(dictStep && dictStep.dictamen){
+    const dc = dictStep.dictamen;
+    const ESTADO_MAP = {original:'Original', restaurado:'Restaurado', reparado:'Reparado', repintado:'Repintado', falso:'Falso / Réplica'};
+    if(dc.resultado && ESTADO_MAP[dc.resultado]) document.getElementById('a-estado').value = ESTADO_MAP[dc.resultado];
     const obsParts = [];
-    if(zz.observaciones) obsParts.push(zz.observaciones);
-    if(zz.verificador) obsParts.push('Verificador: ' + zz.verificador);
-    if(zz.fecha) obsParts.push('Fecha de peritaje: ' + zz.fecha);
+    if(dc.observaciones) obsParts.push(dc.observaciones);
+    if(dc.verificador) obsParts.push('Verificador: ' + dc.verificador);
+    if(dc.fecha) obsParts.push('Fecha de peritaje: ' + dc.fecha);
     if(obsParts.length) document.getElementById('a-obs').value = obsParts.join(' · ');
-  } else {
-    const uvStep = p.pasos.find(s=>s.key==='uv');
-    const microStep = p.pasos.find(s=>s.key==='micro');
-    const remachesStep = p.pasos.find(s=>s.key==='remaches');
-    if(uvStep) document.getElementById('a-uv').value = uvStep.nota || '';
-    if(microStep) document.getElementById('a-micro').value = microStep.nota || '';
-    if(remachesStep) document.getElementById('a-remaches').value = remachesStep.nota || '';
-    document.getElementById('a-obs').value = p.pasos.filter(s=>s.nota).map(s=>`${s.label}: ${s.nota}`).join(' · ');
   }
 
   document.getElementById('a-linked-solicitud').value = p.solicitudId || '';
