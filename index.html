@@ -438,14 +438,39 @@
   .filter-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
   .proc-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease;background:var(--panel);}
   .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);transform:translateY(-1px);}
-  .step-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .proc-card-late{border-color:rgba(184,44,44,0.4);}
+  /* ===== Tablero de monitoreo — "Validación en curso" ===== */
+  .board-stats{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 18px;}
+  .board-stat{flex:1;min-width:112px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel);text-align:center;}
+  .board-stat-num{display:block;font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--red);line-height:1.1;}
+  .board-stat-lbl{display:block;font-size:11px;color:var(--sage);margin-top:2px;}
+  .board-stat-total{background:rgba(184,134,47,0.06);border-color:rgba(184,134,47,0.3);}
+  .board-stat-total .board-stat-num{color:var(--brass);}
+  .board-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-items:start;}
+  .board-col{background:var(--panel-2);border-radius:10px;padding:12px;}
+  .board-col-head{display:flex;align-items:center;gap:6px;margin:0 0 10px;font-size:13px;color:var(--ink);}
+  .board-col-count{margin-left:auto;background:var(--panel);border-radius:20px;padding:1px 9px;font-size:11px;color:var(--brass-dim);border:1px solid var(--line);}
+  .board-col .proc-card{margin-bottom:8px;}
+  .board-col .proc-card:last-child{margin-bottom:0;}
+  @media(max-width:640px){.board-cols{grid-template-columns:1fr;}}
+  .step-row{padding:4px 0;border-bottom:1px solid var(--line);}
   .step-row:last-child{border-bottom:none;}
-  .step-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;cursor:pointer;margin-top:2px;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
+  .step-check{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;cursor:pointer;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
   .step-check.done{background:var(--ok);border-color:var(--ok);color:#fff;}
-  .step-body{flex:1;min-width:0;}
+  .step-body{flex:1;min-width:0;padding:8px 0 10px 36px;}
   .step-body h4{margin:0 0 4px;font-size:14px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);}
   .step-progress{height:6px;background:var(--panel-2);border-radius:20px;overflow:hidden;margin:10px 0 4px;}
   .step-progress-bar{height:100%;background:var(--ok);border-radius:20px;transition:width .25s ease;}
+  /* ===== Acordeón guiado del detalle de validación — un paso a la vez,
+     para no forzar un scroll gigante con las 10 zonas del Zigzag ===== */
+  .step-row-head{display:flex;gap:12px;align-items:center;cursor:pointer;padding:10px 4px;border-radius:6px;transition:background .12s ease;}
+  .step-row-head:hover{background:rgba(184,134,47,0.06);}
+  .step-row-head h4{margin:0;font-size:14px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);flex:1;}
+  .step-accordion-badge{font-size:11px;font-weight:700;color:var(--brass-dim);background:var(--panel-2);border-radius:20px;padding:3px 9px;flex:none;letter-spacing:.02em;}
+  .step-accordion-badge.done{color:var(--ok);background:rgba(47,122,79,0.1);}
+  .step-accordion-chevron{font-size:10px;color:var(--sage);flex:none;width:14px;text-align:center;}
+  .step-accordion.step-locked .step-row-head{opacity:.55;cursor:not-allowed;}
+  .step-accordion.open .step-row-head{background:rgba(184,134,47,0.08);}
 
   /* ===== Formulario dinámico "Medición y evaluación — Protocolo Zigzag C-Z" ===== */
   .step-row-zigzag{padding-bottom:20px;}
@@ -938,6 +963,30 @@
   /* ===== Píldora de cita agendada (tarjeta de solicitud, panel admin) ===== */
   .cita-pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-family:'IBM Plex Mono',monospace;padding:3px 10px;border-radius:20px;font-weight:600;background:rgba(184,134,47,0.15);color:var(--brass);}
   .cita-pill::before{content:'📅';font-size:11px;}
+
+  /* ===== "Mi historial" — rastreo en tiempo real por código ===== */
+  .track-card{max-width:640px;padding:22px 24px;margin-top:18px;}
+  .track-card-label{margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
+  .track-phone-toggle{max-width:640px;margin-top:18px;font-size:13.5px;color:var(--sage);}
+  .track-phone-toggle summary{cursor:pointer;color:var(--brass);font-weight:600;}
+  .track-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .track-header-model{margin:0;font-family:'Fraunces',serif;font-size:17px;color:var(--ink);}
+  .track-header-sub{margin:2px 0 0;font-size:12.5px;color:var(--sage);}
+  .track-live-badge{flex:none;font-size:11px;font-weight:700;color:var(--ok);background:rgba(47,122,79,0.1);border-radius:20px;padding:4px 11px;white-space:nowrap;animation:trackPulse 2s ease-in-out infinite;}
+  @keyframes trackPulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .track-timeline{display:flex;flex-direction:column;}
+  .track-stage{display:flex;gap:14px;position:relative;padding-bottom:22px;}
+  .track-stage:last-child{padding-bottom:0;}
+  .track-stage::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--line);}
+  .track-stage:last-child::before{display:none;}
+  .track-stage.done::before{background:var(--ok);}
+  .track-stage-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);background:var(--panel);flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;z-index:1;}
+  .track-stage.done .track-stage-dot{background:var(--ok);border-color:var(--ok);}
+  .track-stage.current .track-stage-dot{border-color:var(--red);box-shadow:0 0 0 4px rgba(210,4,45,0.12);animation:trackPulse 1.6s ease-in-out infinite;}
+  .track-stage-body{padding-top:1px;}
+  .track-stage-label{margin:0;font-size:14px;font-weight:600;color:var(--sage);}
+  .track-stage.done .track-stage-label,.track-stage.current .track-stage-label{color:var(--ink);}
+  .track-stage-sub{margin:2px 0 0;font-size:12px;color:var(--sage);}
 
   /* ===== Recepción de la pieza — puerta de entrada al protocolo ===== */
   .recepcion-gate{border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-bottom:14px;background:var(--panel-2);}
@@ -2139,13 +2188,26 @@
 <div class="view" id="view-cliente">
   <section>
     <h2>Mi historial</h2>
-    <p style="color:var(--sage);">Ingresa el teléfono que registraste al hacer tu solicitud para ver el estatus de tus piezas.</p>
-    <div class="row" style="max-width:460px;">
-      <input id="c-telefono" placeholder="55 0000 0000" style="flex:1;">
-      <button class="btn" onclick="lookupCliente()">Consultar</button>
+    <p style="color:var(--sage);max-width:600px;">Rastrea tu pieza en tiempo real con tu código de seguimiento — el mismo que te dimos al enviar tu solicitud — o consulta todo tu historial con tu teléfono.</p>
+
+    <div class="card track-card">
+      <p class="track-card-label">Código de seguimiento</p>
+      <div class="row" style="max-width:460px;">
+        <input id="c-codigo" class="mono" placeholder="HV-MX-2026-000" style="flex:1;text-transform:uppercase;" onkeydown="if(event.key==='Enter')trackByCodigo();">
+        <button class="btn" onclick="trackByCodigo()">Rastrear</button>
+      </div>
+      <div id="c-track-result" style="margin-top:18px;"></div>
     </div>
-    <div id="c-result" style="margin-top:24px;"></div>
-    <p class="foot-note">Este acceso es solo por número de teléfono, sin contraseña — no compartas tu número con quien no quieras que vea tu historial.</p>
+
+    <details class="track-phone-toggle">
+      <summary>¿No tienes tu código? Consulta por teléfono</summary>
+      <div class="row" style="max-width:460px;margin-top:14px;">
+        <input id="c-telefono" placeholder="55 0000 0000" style="flex:1;">
+        <button class="btn ghost" onclick="lookupCliente()">Consultar</button>
+      </div>
+      <div id="c-result" style="margin-top:20px;"></div>
+      <p class="foot-note">Este acceso es solo por número de teléfono, sin contraseña — no compartas tu número con quien no quieras que vea tu historial.</p>
+    </details>
   </section>
 </div>
 
@@ -2257,7 +2319,8 @@
           <div class="admin-tab" id="admin-tab-validacion">
             <div id="validacion-list-wrap">
               <h3 style="font-size:16px;margin-top:0;">Piezas en proceso de validación</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Desde aquí vas registrando paso a paso el peritaje: recepción, medición y evaluación por zonas con el Protocolo Zigzag C-Z, y evidencia fotográfica — con notificación al cliente en cada etapa.</p>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Monitoreo en tiempo real: cómo va cada pieza, en qué fase está y qué necesita atención primero — con notificación al cliente en cada etapa.</p>
+              <div id="validacion-board-stats"></div>
               <div id="validacion-list"><p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p></div>
             </div>
             <div id="validacion-detail" style="display:none;"></div>
@@ -2833,6 +2896,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function go(view){
+  if(window.HV_CURRENT_VIEW === 'cliente' && view !== 'cliente' && typeof stopClienteTracking === 'function') stopClienteTracking();
   closeMobileNav();
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
@@ -3708,7 +3772,8 @@ async function submitSolicitud(){
     let confirmHtml = `<div class="card wiz-done-card" style="border-left:3px solid var(--ok);">
       <p class="wiz-step-kicker" style="margin-bottom:10px;">Paso 7 · Confirmación</p>
       <h3 style="margin:0 0 8px;">Solicitud recibida</h3>
-      <p style="margin:0;">Tu número de folio de seguimiento es <span class="mono" style="color:var(--red);font-weight:600;">${id}</span>. Guárdalo — lo vas a necesitar en "Mi historial".</p>`;
+      <p style="margin:0;">Tu <strong>código de seguimiento</strong> es <span class="mono" style="color:var(--red);font-weight:600;">${id}</span>. Guárdalo — con él puedes ver el avance de tu pieza en tiempo real en "Mi historial".</p>
+      <button type="button" class="btn ghost small" style="margin-top:10px;" onclick="go('cliente');document.getElementById('c-codigo').value='${id}';trackByCodigo();">Rastrear mi pieza ahora</button>`;
     if(data.fotosOmitidas){
       confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--warn);">Tus fotos pesaban demasiado para enviarse junto con la solicitud — mándalas por WhatsApp con tu folio, por favor.</p>`;
     } else if(SOLICITUD_FOTOS_DATA.length){
@@ -3772,11 +3837,136 @@ async function lookupCliente(){
       return;
     }
     box.innerHTML = `<div class="table-scroll"><table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
-      rows.map(r=>`<tr><td>${r.tipo}</td><td class="mono">${escapeHtml(r.ref)}</td><td>${escapeHtml(r.modelo)}</td><td><span class="pill ${r.estado==='completado'?'completado':'pendiente'}">${escapeHtml(r.estado)}</span></td><td>${escapeHtml(r.fecha)}</td></tr>`).join('')
+      rows.map(r=>`<tr>
+        <td>${r.tipo}</td>
+        <td class="mono">${r.tipo==='Solicitud'
+          ? `<a href="#" onclick="event.preventDefault();document.getElementById('c-codigo').value='${escapeHtml(r.ref)}';trackByCodigo();document.getElementById('c-codigo').scrollIntoView({behavior:'smooth',block:'center'});">${escapeHtml(r.ref)}</a>`
+          : escapeHtml(r.ref)}</td>
+        <td>${escapeHtml(r.modelo)}</td><td><span class="pill ${r.estado==='completado'?'completado':'pendiente'}">${escapeHtml(r.estado)}</span></td><td>${escapeHtml(r.fecha)}</td></tr>`).join('')
     }</table></div>`;
   }catch(e){
     box.innerHTML = '<div class="empty">No pudimos consultar tu historial en este momento.</div>';
   }
+}
+
+// ============================================================
+// RASTREO EN TIEMPO REAL — "Mi historial" por código de seguimiento
+// ============================================================
+let CLIENTE_TRACK_UNSUB = null;
+function stopClienteTracking(){
+  if(CLIENTE_TRACK_UNSUB){ try{ CLIENTE_TRACK_UNSUB(); }catch(e){} CLIENTE_TRACK_UNSUB = null; }
+}
+
+async function trackByCodigo(){
+  const raw = document.getElementById('c-codigo').value.trim().toUpperCase();
+  const box = document.getElementById('c-track-result');
+  stopClienteTracking();
+  if(!raw){ box.innerHTML = ''; return; }
+  box.innerHTML = '<div class="scan-loading"><span class="scan-radar"></span>Buscando tu pieza…</div>';
+  // Con Firestore disponible nos suscribimos en vivo: el estatus se
+  // actualiza solo, sin que el cliente tenga que recargar la página.
+  if(FIREBASE_READY && db){
+    try{
+      CLIENTE_TRACK_UNSUB = db.collection('solicitudes').doc(raw).onSnapshot(snap => {
+        if(!snap.exists){
+          box.innerHTML = '<div class="empty">No encontramos ese código. Revisa que esté completo, tal como te lo dimos al enviar tu solicitud.</div>';
+          return;
+        }
+        try{
+          const sol = JSON.parse(snap.data().value);
+          renderClienteTracking(sol, true);
+        }catch(e){
+          box.innerHTML = '<div class="empty">No pudimos leer el estatus de esa pieza.</div>';
+        }
+      }, err => {
+        console.error('Error al rastrear en vivo:', err);
+        box.innerHTML = '<div class="empty">No pudimos conectar el rastreo en vivo en este momento.</div>';
+      });
+      return;
+    }catch(e){ console.error(e); }
+  }
+  // Alternativa sin Firebase (o si algo falló al suscribirse): una
+  // consulta puntual, con botón para actualizar a mano.
+  try{
+    const r = await HVStorage.get('solicitud:'+raw, true);
+    const sol = JSON.parse(r.value);
+    renderClienteTracking(sol, false);
+  }catch(e){
+    box.innerHTML = '<div class="empty">No encontramos ese código. Revisa que esté completo, tal como te lo dimos al enviar tu solicitud.</div>';
+  }
+}
+
+// Construye la línea de tiempo del rastreo, en lenguaje simple para el
+// cliente — las mismas dos evaluaciones (Autenticidad + Condición ZigZag)
+// que ve el laboratorio, pero sin notas internas ni calificaciones a medio
+// evaluar.
+function renderClienteTracking(sol, live){
+  const box = document.getElementById('c-track-result');
+  if(!box) return;
+  const isDigital = sol.paquete === 'digital';
+  const prog = sol.progreso || null;
+  const fase = sol.estado === 'completado' ? 'completado' : (prog ? prog.fase : (sol.estado==='en_validacion' ? 'autenticidad' : 'recibida'));
+  const citaTxt = (sol.fechaEntrega && sol.citaHora) ? formatCitaLarga(sol.fechaEntrega, sol.citaHora) : '';
+
+  const stages = [];
+  stages.push({ key:'recibida', label:'Solicitud recibida', done:true });
+  if(!isDigital){
+    stages.push({
+      key:'esperando_pieza',
+      label: citaTxt ? `Entrega de tu pieza · cita ${citaTxt}` : 'Entrega de tu pieza en el laboratorio',
+      done: fase !== 'recibida' && fase !== 'esperando_pieza',
+      current: fase === 'esperando_pieza' || fase === 'recibida'
+    });
+  }
+  const autenDoneCount = prog && prog.autenItems ? prog.autenItems.filter(i=>i.done).length : 0;
+  const autenTotal = prog && prog.autenItems ? prog.autenItems.length : 8;
+  stages.push({
+    key:'autenticidad', label:'Protocolo de Autenticidad',
+    sub: `A) ¿Es original? — checklist de proceso, ${autenDoneCount}/${autenTotal}`,
+    done: ['condicion','fotos','listo','completado'].includes(fase),
+    current: fase === 'autenticidad'
+  });
+  stages.push({
+    key:'condicion', label:'Protocolo de Condición — ZigZag C-Z',
+    sub: 'B) ¿En qué estado está? — evaluación por zonas',
+    done: ['fotos','listo','completado'].includes(fase),
+    current: fase === 'condicion'
+  });
+  stages.push({
+    key:'fotos', label:'Documentación fotográfica',
+    done: ['listo','completado'].includes(fase),
+    current: fase === 'fotos'
+  });
+  stages.push({
+    key:'completado', label:'Certificado y folio listos',
+    done: fase === 'completado',
+    current: fase === 'listo'
+  });
+
+  const timelineHtml = stages.map(s=>`
+    <div class="track-stage ${s.done?'done':''} ${s.current?'current':''}">
+      <div class="track-stage-dot">${s.done?'✓':(s.current?'':'')}</div>
+      <div class="track-stage-body">
+        <p class="track-stage-label">${escapeHtml(s.label)}</p>
+        ${s.sub?`<p class="track-stage-sub">${escapeHtml(s.sub)}</p>`:''}
+      </div>
+    </div>`).join('');
+
+  const folioBtn = (sol.estado==='completado' && sol.folio)
+    ? `<button class="btn small" style="margin-top:14px;" onclick="go('verificar');document.getElementById('v-folio').value='${escapeHtml(sol.folio)}';verifyFolio();">Ver mi certificado — folio ${escapeHtml(sol.folio)}</button>`
+    : '';
+
+  box.innerHTML = `
+    <div class="track-header">
+      <div>
+        <p class="track-header-model">${escapeHtml(sol.modelo)}${sol.anio?' — '+escapeHtml(sol.anio):''}</p>
+        <p class="track-header-sub">${escapeHtml(sol.nivel||'')} · código <span class="mono">${escapeHtml(sol.id)}</span></p>
+      </div>
+      ${live ? `<span class="track-live-badge">🟢 En vivo</span>` : `<button class="btn ghost small" onclick="trackByCodigo()">Actualizar</button>`}
+    </div>
+    <div class="track-timeline">${timelineHtml}</div>
+    ${folioBtn}
+    <p class="foot-note" style="border:none;padding-top:10px;">Te vamos a avisar por WhatsApp en cada etapa importante. ${live?'Esta página se actualiza sola — no necesitas recargar.':''}</p>`;
 }
 
 // Solo estas cuentas de Google pueden entrar al panel de admin.
@@ -4766,6 +4956,8 @@ async function createFolio(){
         const r = await HVStorage.get('solicitud:'+linkedSolicitud, true);
         const sd = JSON.parse(r.value);
         sd.estado = 'completado';
+        sd.folio = folio;
+        sd.progreso = { fase:'completado', pct:100, folio, actualizadoTs: Date.now() };
         await HVStorage.set('solicitud:'+linkedSolicitud, JSON.stringify(sd), true);
         await HVStorage.delete('proceso:'+linkedSolicitud, true).catch(()=>{});
       }catch(e){}
@@ -4951,6 +5143,20 @@ function migrateProcesoShape(p){
   return p;
 }
 
+// El checklist del Protocolo de Autenticidad se va marcando solo, conforme
+// el laboratorio realiza las acciones reales que ese punto describe — no
+// hace falta darle clic a mano a cada uno. Solo marca (nunca desmarca) y
+// avisa si de verdad hubo un cambio, para que quien llama decida si vale
+// la pena volver a renderizar.
+function autoMarkAutenticidad(p, itemKey){
+  const step = p.pasos.find(s=>s.key==='autenticidad'); if(!step) return false;
+  const auten = ensureAutenticidad(step);
+  const item = auten.items.find(i=>i.key===itemKey); if(!item || item.done) return false;
+  item.done = true;
+  step.done = auten.items.every(i=>i.done);
+  return true;
+}
+
 // ===== Protocolo Zigzag C-Z: catálogos y helpers =====
 const ZZ_INSTRUMENTOS = [
   {key:'micro', label:'Micro digital'},
@@ -5104,8 +5310,43 @@ async function startValidacion(dJson){
   }
 }
 
+const VALIDACION_BOARD_COLS = [
+  {key:'esperando_pieza', label:'Esperando pieza', icon:'⏳'},
+  {key:'autenticidad', label:'Protocolo Autenticidad', icon:'📋'},
+  {key:'condicion', label:'Protocolo Condición — ZigZag', icon:'⚡'},
+  {key:'fotos', label:'Fotografías', icon:'📷'},
+  {key:'listo', label:'Listo para certificar', icon:'✅'}
+];
+
+function procCardHtml(p){
+  const done = p.pasos.filter(s=>s.done).length;
+  const coreDone = autenticidadCoreDone(p);
+  const doneDisplay = (coreDone?1:0) + p.pasos.filter(s=>s.key!=='autenticidad' && s.done).length;
+  const pct = Math.round(doneDisplay / p.pasos.length * 100);
+  const dl = deadlineInfo(p);
+  const pendiente = isPendienteRecepcion(p);
+  return `
+    <div class="proc-card ${dl&&dl.cls==='deadline-late'?'proc-card-late':''}" onclick="openProceso('${escapeHtml(p.id)}')">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <strong style="font-size:14px;">${escapeHtml(p.modelo)}</strong>
+        <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+      </div>
+      <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(p.nombre)} · ${escapeHtml(p.nivel)}</p>
+      ${pendiente && p.citaFecha ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
+      <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
+      <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
+        <p class="foot-note" style="border:none;padding:0;margin:0;">${doneDisplay} de ${p.pasos.length} pasos completados</p>
+        ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando entrega</span>` : '')}
+      </div>
+    </div>`;
+}
+
+// Tablero de monitoreo: agrupa todas las piezas activas por fase real (no
+// solo una lista plana), para que con 2, 10 o 20 piezas al mismo tiempo se
+// vea de un vistazo dónde está cada una y qué urge atender primero.
 async function refreshValidacionList(){
   const listBox = document.getElementById('validacion-list');
+  const statsBox = document.getElementById('validacion-board-stats');
   document.getElementById('validacion-detail').style.display = 'none';
   document.getElementById('validacion-list-wrap').style.display = 'block';
   if(!listBox) return;
@@ -5116,26 +5357,45 @@ async function refreshValidacionList(){
     for(const k of (list.keys||[])){
       try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); if(p.estado==='en_proceso') items.push(p); }catch(e){}
     }
-    items.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
-    listBox.innerHTML = items.length ? items.map(p=>{
-      const done = p.pasos.filter(s=>s.done).length;
-      const pct = Math.round(done / p.pasos.length * 100);
-      const dl = deadlineInfo(p);
-      const pendiente = isPendienteRecepcion(p);
-      return `
-        <div class="proc-card" onclick="openProceso('${escapeHtml(p.id)}')">
-          <div class="row" style="justify-content:space-between;align-items:center;">
-            <strong style="font-size:14px;">${escapeHtml(p.modelo)}</strong>
-            <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
-          </div>
-          <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(p.nombre)} · ${escapeHtml(p.nivel)}</p>
-          ${pendiente && p.citaFecha ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
-          <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
-          <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
-            <p class="foot-note" style="border:none;padding:0;margin:0;">${done} de ${p.pasos.length} pasos completados</p>
-            ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando entrega</span>` : '')}
-          </div>
-        </div>` }).join('') : '<p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p>';
+    if(!items.length){
+      if(statsBox) statsBox.innerHTML = '';
+      listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p>';
+      return;
+    }
+    // Ordena por urgencia dentro de cada columna: atrasadas primero, luego
+    // por plazo restante, luego las más recientes.
+    items.sort((a,b)=>{
+      const da = deadlineInfo(a), db_ = deadlineInfo(b);
+      const va = da ? (da.cls==='deadline-late' ? -1e12 : (da.days*24 - da.elapsedDays*24 - da.elapsedHours)) : 1e9;
+      const vb = db_ ? (db_.cls==='deadline-late' ? -1e12 : (db_.days*24 - db_.elapsedDays*24 - db_.elapsedHours)) : 1e9;
+      if(va !== vb) return va - vb;
+      return (b.id||'').localeCompare(a.id||'');
+    });
+    const byFase = {};
+    VALIDACION_BOARD_COLS.forEach(c=>byFase[c.key]=[]);
+    items.forEach(p=>{ const f = procesoFase(p); (byFase[f]||(byFase[f]=[])).push(p); });
+
+    if(statsBox){
+      statsBox.innerHTML = `<div class="board-stats">${VALIDACION_BOARD_COLS.map(c=>`
+        <div class="board-stat">
+          <span class="board-stat-num">${(byFase[c.key]||[]).length}</span>
+          <span class="board-stat-lbl">${c.icon} ${c.label}</span>
+        </div>`).join('')}
+        <div class="board-stat board-stat-total">
+          <span class="board-stat-num">${items.length}</span>
+          <span class="board-stat-lbl">Total activas</span>
+        </div>
+      </div>`;
+    }
+
+    listBox.innerHTML = `<div class="board-cols">${VALIDACION_BOARD_COLS.map(c=>{
+      const colItems = byFase[c.key]||[];
+      if(!colItems.length) return '';
+      return `<div class="board-col">
+        <h4 class="board-col-head">${c.icon} ${c.label} <span class="board-col-count">${colItems.length}</span></h4>
+        ${colItems.map(procCardHtml).join('')}
+      </div>`;
+    }).join('')}</div>`;
   }catch(e){ listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudo cargar la lista.</p>'; }
 }
 
@@ -5148,6 +5408,83 @@ async function getProceso(id){
 }
 async function setProceso(p){
   await HVStorage.set('proceso:'+p.id, JSON.stringify(p), true);
+  // Cada vez que se guarda el proceso, se refleja un resumen del avance en
+  // la solicitud del cliente (colección pública) para que "Mi historial"
+  // pueda mostrarlo en tiempo real sin exponer las notas internas del
+  // laboratorio.
+  mirrorClientProgress(p).catch(()=>{});
+}
+
+// Determina en qué fase visible está el proceso — se usa tanto para el
+// tablero de monitoreo del admin como para el rastreo en vivo del cliente,
+// así ambos siempre coinciden.
+// El punto 8 ("Registro digital y entrega") se marca solo al finalizar la
+// validación — no puede exigirse como requisito PARA finalizar, sería
+// circular. Estos dos helpers separan "el checklist ya está listo para
+// generar el certificado" (puntos 1–7) de "el checklist quedó 100%
+// completo" (los 8, que solo ocurre después de finalizar).
+function autenticidadCoreDone(p){
+  const step = p.pasos.find(s=>s.key==='autenticidad');
+  if(!step) return true;
+  const auten = ensureAutenticidad(step);
+  return auten.items.filter(i=>i.key!=='registro').every(i=>i.done);
+}
+function procesoListoParaFinalizar(p){
+  return autenticidadCoreDone(p) && p.pasos.filter(s=>s.key!=='autenticidad').every(s=>s.done);
+}
+
+function procesoFase(p){
+  const isDigital = p.paquete === 'digital';
+  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
+  const auten = autenStep ? ensureAutenticidad(autenStep) : {items:[]};
+  const recepcionItem = auten.items.find(i=>i.key==='recepcion');
+  const recepcionDone = !!(recepcionItem && recepcionItem.done);
+  if(!recepcionDone && !isDigital) return 'esperando_pieza';
+  if(!autenticidadCoreDone(p)) return 'autenticidad';
+  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
+  if(!zigzagStep || !zigzagStep.done) return 'condicion';
+  const fotosStep = p.pasos.find(s=>s.key==='fotos');
+  if(!fotosStep || !fotosStep.done) return 'fotos';
+  return 'listo';
+}
+const PROCESO_FASE_LABEL = {
+  esperando_pieza: 'Esperando recepción de la pieza',
+  autenticidad: 'Protocolo de Autenticidad en curso',
+  condicion: 'Protocolo de Condición — ZigZag C-Z en curso',
+  fotos: 'Documentación fotográfica en curso',
+  listo: 'Todo listo — generando certificado',
+  completado: 'Certificado emitido'
+};
+
+// Resumen ligero y apto para el cliente (sin notas internas ni
+// calificaciones a medio evaluar) que se guarda dentro de la propia
+// solicitud, para que "Mi historial" lo lea en tiempo real.
+function buildProgresoCliente(p){
+  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
+  const auten = autenStep ? ensureAutenticidad(autenStep) : {items:[]};
+  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
+  const fotosStep = p.pasos.find(s=>s.key==='fotos');
+  const doneSteps = p.pasos.filter(s=>s.done).length;
+  return {
+    fase: procesoFase(p),
+    pct: Math.round(doneSteps / p.pasos.length * 100),
+    autenItems: auten.items.map(i=>({key:i.key, label:i.label, done:!!i.done})),
+    zigzagDone: !!(zigzagStep && zigzagStep.done),
+    fotosDone: !!(fotosStep && fotosStep.done),
+    piezaRecibidaTs: p.piezaRecibidaTs || null,
+    citaFecha: p.citaFecha || '',
+    citaHora: p.citaHora || '',
+    actualizadoTs: Date.now()
+  };
+}
+
+async function mirrorClientProgress(p){
+  if(!p.solicitudId) return;
+  const r = await HVStorage.get('solicitud:'+p.solicitudId, true);
+  const sol = JSON.parse(r.value);
+  sol.progreso = buildProgresoCliente(p);
+  if(sol.estado !== 'completado') sol.estado = 'en_validacion';
+  await HVStorage.set('solicitud:'+p.solicitudId, JSON.stringify(sol), true);
 }
 
 async function openProceso(id){
@@ -5158,7 +5495,19 @@ async function openProceso(id){
   let p;
   try{ p = await getProceso(id); }catch(e){ detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se encontró esta validación.</p>'; return; }
   CURRENT_PROCESO = p;
+  PROCESO_OPEN_STEP = undefined; // cada proceso abre enfocado en su propio siguiente paso
   renderProcesoDetail(p);
+}
+
+// Qué paso está "abierto" (expandido) en el detalle de una validación — se
+// resetea cada vez que se abre un proceso distinto, y por defecto abre el
+// paso donde toca seguir trabajando. Así el admin ve un acordeón guiado en
+// vez de los 3 pasos (y las 10 zonas del Zigzag) desplegados todos juntos.
+let PROCESO_OPEN_STEP = undefined;
+
+function toggleStepOpen(pid, key){
+  PROCESO_OPEN_STEP = (PROCESO_OPEN_STEP === key) ? null : key;
+  if(CURRENT_PROCESO && CURRENT_PROCESO.id === pid) renderProcesoDetail(CURRENT_PROCESO);
 }
 
 function renderProcesoDetail(p){
@@ -5170,50 +5519,67 @@ function renderProcesoDetail(p){
   const recepcionItem = auten ? auten.items.find(i=>i.key==='recepcion') : null;
   const recepcionDone = !recepcionItem || recepcionItem.done;
   const locked = !recepcionDone && !isDigital;
-  const done = p.pasos.filter(s=>s.done).length;
-  const pct = Math.round(done / p.pasos.length * 100);
+  const coreDone = autenticidadCoreDone(p);
+  const listoParaFinalizar = procesoListoParaFinalizar(p);
+  // Para la barra de avance y el "X de Y pasos" mostramos el checklist de
+  // Autenticidad como completo en cuanto sus 7 puntos accionables están
+  // listos (el 8vo, "Registro", se marca solo al finalizar) — si no, se ve
+  // atorado en 2/3 aunque ya se pueda generar el certificado.
+  const doneDisplay = (coreDone ? 1 : 0) + p.pasos.filter(s=>s.key!=='autenticidad' && s.done).length;
+  const pct = Math.round(doneDisplay / p.pasos.length * 100);
   const dl = deadlineInfo(p);
   const pendienteRecepcion = isPendienteRecepcion(p);
 
   // Guía al admin hacia el siguiente paso concreto, del inicio al certificado.
-  let nextAction;
+  let nextAction, focusStepKey = null;
   if(locked){
     nextAction = { icon:'1', text:'Confirma la recepción de la pieza en cuanto el cliente la traiga al laboratorio.' };
-  } else if(auten && !autenStep.done){
-    const pendienteItem = auten.items.find(i=>!i.done);
+    focusStepKey = 'autenticidad';
+  } else if(auten && !coreDone){
+    const pendienteItem = auten.items.filter(i=>i.key!=='registro').find(i=>!i.done);
     const idx = pendienteItem ? AUTENTICIDAD_ITEMS.findIndex(i=>i.key===pendienteItem.key) : 0;
     nextAction = { icon:String(idx+1), text:`Continúa el Protocolo de Autenticidad: "${pendienteItem ? pendienteItem.label : ''}".` };
+    focusStepKey = 'autenticidad';
   } else {
     const pendiente = p.pasos.find(s=>s.key!=='autenticidad' && !s.done);
     if(pendiente){
       const idx = p.pasos.findIndex(s=>s.key===pendiente.key);
       nextAction = { icon:String(idx+1), text:`Continúa con "${pendiente.label}".` };
+      focusStepKey = pendiente.key;
     } else {
       nextAction = { icon:'✓', text:'Todos los pasos están completos — genera el certificado abajo.', done:true };
     }
   }
+  // La primera vez que se abre este proceso, enfocamos el paso sugerido.
+  if(PROCESO_OPEN_STEP === undefined) PROCESO_OPEN_STEP = focusStepKey;
 
   const stepsHtml = p.pasos.map((s)=>{
     const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
     const def = STEP_DEFS.find(d=>d.key===s.key);
     const type = (def && def.type) || 'simple';
     const stepLocked = locked && type !== 'autenticidad';
-    const innerBody = stepLocked
+    const isOpen = PROCESO_OPEN_STEP === s.key;
+    const badge = type==='autenticidad' ? (coreDone?'✓':`${auten.items.filter(i=>i.done).length}/${auten.items.length}`) : (s.done?'✓':'');
+    const innerBody = !isOpen ? '' : (stepLocked
       ? `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (punto 1 del Protocolo de Autenticidad).</div>`
       : (type === 'zigzag' ? renderZigzagStepBody(p, s)
         : type === 'autenticidad' ? renderAutenticidadStepBody(p, s)
-        : `<textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>`);
+        : `<textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>`));
     const checkClickable = !stepLocked && type !== 'autenticidad';
     return `
-    <div class="step-row ${type==='zigzag'?'step-row-zigzag':''} ${stepLocked?'step-locked':''}">
-      <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
-      <div class="step-body">
+    <div class="step-row step-accordion ${type==='zigzag'?'step-row-zigzag':''} ${stepLocked?'step-locked':''} ${isOpen?'open':''}">
+      <div class="step-row-head" onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')">
+        <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
         <h4>${globalIdx+1}. ${escapeHtml(s.label)}</h4>
+        ${badge ? `<span class="step-accordion-badge ${s.done||coreDone&&type==='autenticidad'?'done':''}">${badge}</span>` : ''}
+        <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
+      </div>
+      ${isOpen ? `<div class="step-body">
         ${innerBody}
         ${(!stepLocked && type!=='autenticidad') ? `<div class="row" style="margin-top:${type==='zigzag'?'14px':'6px'};">
           <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
         </div>` : ''}
-      </div>
+      </div>` : ''}
     </div>`;
   }).join('');
 
@@ -5232,7 +5598,7 @@ function renderProcesoDetail(p){
       </div>
       ${dl ? `<p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">Recibida hace ${dl.elapsedDays>0?dl.elapsedDays+'d ':''}${dl.elapsedHours}h · plazo de ${dl.days} días para este paquete</p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
-      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${done} de ${p.pasos.length} pasos completados</p>
+      <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneDisplay} de ${p.pasos.length} pasos completados</p>
 
       <div class="next-action-banner ${nextAction.done?'all-done':''}">
         <div class="next-action-icon">${nextAction.icon}</div>
@@ -5241,11 +5607,25 @@ function renderProcesoDetail(p){
 
       ${stepsHtml}
       <div class="row" style="margin-top:18px;">
-        <button class="btn" ${done<p.pasos.length?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
+        <button class="btn" ${!listoParaFinalizar?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
         <button class="btn ghost" onclick="notifyPickupReady('${escapeHtml(p.id)}')">Avisar que está lista para recoger</button>
       </div>
-      ${done<p.pasos.length ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa todos los pasos para poder generar el certificado.</p>' : ''}
+      ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa todos los pasos para poder generar el certificado.</p>' : ''}
     </div>`;
+}
+
+// Actualiza solo el "badge" (contador X/8) del acordeón de Autenticidad sin
+// volver a renderizar todo el detalle — se llama tras un auto-check para
+// que el avance se note al instante aunque esa sección esté colapsada.
+function refreshAutenticidadTabBadge(p){
+  const row = document.querySelector('.step-row-head[onclick*="autenticidad"]');
+  if(!row) return;
+  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
+  if(!autenStep) return;
+  const auten = ensureAutenticidad(autenStep);
+  const badge = row.querySelector('.step-accordion-badge');
+  const coreDone = autenticidadCoreDone(p);
+  if(badge) badge.textContent = coreDone ? '✓' : `${auten.items.filter(i=>i.done).length}/${auten.items.length}`;
 }
 
 // ===== Formulario del paso "Protocolo de Autenticidad" — checklist de 8
@@ -5446,6 +5826,9 @@ async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   zzUpdateZoneScore(zona);
   const step = p.pasos.find(s=>s.key===stepKey);
   zzUpdateOverall(step.zigzag);
+  // Calificar una zona es, en los hechos, hacer la inspección visual — el
+  // punto 3 del Protocolo de Autenticidad se marca solo la primera vez.
+  if(autoMarkAutenticidad(p, 'visual')) refreshAutenticidadTabBadge(p);
   await zzPersist();
 }
 async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
@@ -5455,6 +5838,9 @@ async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
   const nowActive = idx === -1;
   if(nowActive) zona.instrumentos.push(insKey); else zona.instrumentos.splice(idx,1);
   btnEl.classList.toggle('active', nowActive);
+  // Usar un instrumento de medición/inspección es el punto 4 (análisis
+  // instrumental) del Protocolo de Autenticidad — se marca solo.
+  if(nowActive && autoMarkAutenticidad(p, 'instrumental')) refreshAutenticidadTabBadge(p);
   await zzPersist();
 }
 async function zzSetNota(pid, stepKey, zonaKey, value){
@@ -5485,6 +5871,9 @@ async function zzSetDictamen(pid, stepKey, val, btnEl){
   const group = btnEl.closest('.zz-toggle-group');
   if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
   if(zz.dictamenFinal === val) btnEl.classList.add('active');
+  // Fijar el dictamen (Original/Restaurado) es el punto 5 del Protocolo de
+  // Autenticidad — se marca solo en cuanto queda definido.
+  if(zz.dictamenFinal && autoMarkAutenticidad(p, 'dictamen')) refreshAutenticidadTabBadge(p);
   await zzPersist();
 }
 async function zzSetEscalaFinal(pid, stepKey, value){
@@ -5537,6 +5926,9 @@ async function confirmarRecepcion(id){
     const auten = ensureAutenticidad(step);
     const item = auten.items.find(i=>i.key==='recepcion');
     if(item) item.done = true;
+    // Recibir la pieza y abrirle folio es, en la práctica, el arranque de
+    // la cadena de custodia — el punto 2 se marca junto con el punto 1.
+    autoMarkAutenticidad(p, 'custodia');
     step.done = auten.items.every(i=>i.done);
   }
   p.piezaRecibidaTs = Date.now();
@@ -5586,7 +5978,11 @@ async function notifyPickupReady(id){
 
 async function finalizeProceso(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  if(p.pasos.some(s=>!s.done)){ toast('Completa todos los pasos antes de finalizar.'); return; }
+  if(!procesoListoParaFinalizar(p)){ toast('Completa todos los pasos antes de finalizar.'); return; }
+  // Generar el certificado ES, en los hechos, el registro digital — el
+  // punto 8 del Protocolo de Autenticidad se marca solo en este momento.
+  autoMarkAutenticidad(p, 'registro');
+  await setProceso(p).catch(()=>{});
   document.getElementById('a-modelo').value = p.modelo || '';
   document.getElementById('a-anio').value = p.anio || '';
   if(p.origen) document.getElementById('a-origen').value = p.origen;
