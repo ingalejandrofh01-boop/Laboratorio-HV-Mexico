@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 <script>
 (function(){
   try{
@@ -65,7 +65,7 @@
   html[data-theme="dark"] body::before{background-image:repeating-linear-gradient(115deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 5px);}
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;transition:background-color .25s ease, color .25s ease;}
-  html{overflow-x:hidden;}
+  html{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
   body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
     background-image:repeating-linear-gradient(115deg, rgba(36,21,18,0.02) 0 2px, transparent 2px 5px);}
   .site-watermark{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;}
@@ -434,6 +434,51 @@
   .step-body h4{margin:0 0 4px;font-size:14px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);}
   .step-progress{height:6px;background:var(--panel-2);border-radius:20px;overflow:hidden;margin:10px 0 4px;}
   .step-progress-bar{height:100%;background:var(--ok);border-radius:20px;transition:width .25s ease;}
+
+  /* ===== Formulario dinámico "Medición y evaluación — Protocolo Zigzag C-Z" ===== */
+  .step-row-zigzag{padding-bottom:20px;}
+  .zz-form{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:16px;margin-top:8px;}
+  .zz-summary-bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding-bottom:14px;margin-bottom:14px;border-bottom:1px dashed var(--line);}
+  .zz-summary-score{display:flex;align-items:baseline;gap:9px;}
+  .zz-summary-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--sage-dim);}
+  .zz-summary-value{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--red);}
+  .zz-summary-hint{flex:1;min-width:200px;font-size:11.5px;color:var(--sage-dim);margin:0;}
+  .zz-subhead{font-family:'Fraunces',serif;font-size:14.5px;margin:20px 0 8px;color:var(--ink);}
+  .zz-subhead:first-of-type{margin-top:0;}
+  .zz-medidas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px 14px;align-items:end;}
+  .zz-medidas-grid label{margin:0 0 4px;}
+  .zz-medidas-grid input{padding:9px 10px;font-size:14px;}
+  .zz-medidas-ok{display:flex;align-items:flex-end;padding-bottom:1px;}
+  .zz-glossary{margin:0 0 14px;font-size:12px;}
+  .zz-glossary summary{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.03em;color:var(--brass-dim);}
+  .zz-glossary summary:hover{color:var(--red);}
+  .zz-glossary ul{margin:8px 0 0;padding-left:18px;color:var(--sage);line-height:1.6;}
+  .zz-zones{display:flex;flex-direction:column;gap:10px;}
+  .zz-zone{border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden;}
+  .zz-zone-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel-2);}
+  .zz-zone-num{width:22px;height:22px;border-radius:50%;background:var(--brass);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .zz-zone-head h5{margin:0;flex:1;min-width:0;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);}
+  .zz-zone-score{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--red);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 9px;flex:none;}
+  .zz-zone-body{padding:14px;display:flex;flex-direction:column;gap:12px;}
+  .zz-field label{margin:0 0 6px;}
+  .zz-na{margin:0;font-size:12px;color:var(--sage-dim);font-style:italic;}
+  .zz-toggle-group{display:flex;gap:6px;flex-wrap:wrap;}
+  .zz-toggle{font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:600;border:1.5px solid var(--line);background:var(--panel);color:var(--sage);padding:7px 14px;border-radius:20px;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,color .15s ease;}
+  .zz-toggle:hover{border-color:var(--brass);color:var(--ink);}
+  .zz-toggle.active{background:var(--red);border-color:var(--red);color:#fff;}
+  .zz-scale-group{display:flex;gap:6px;}
+  .zz-scale-btn{width:34px;height:34px;border-radius:6px;border:1.5px solid var(--line);background:var(--panel);color:var(--sage);font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,color .15s ease;}
+  .zz-scale-btn:hover{border-color:var(--brass);color:var(--ink);}
+  .zz-scale-btn.active{background:var(--brass);border-color:var(--brass);color:#fff;}
+  .zz-instr-group{display:flex;flex-wrap:wrap;gap:6px;}
+  .zz-chip{font-family:'IBM Plex Sans',sans-serif;display:inline-flex;align-items:center;font-size:11.5px;font-weight:600;border:1.5px solid var(--line);background:var(--panel);color:var(--sage);padding:6px 12px;border-radius:20px;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,color .15s ease;}
+  .zz-chip:hover{border-color:var(--brass);color:var(--ink);}
+  .zz-chip.active{background:rgba(184,134,47,0.16);border-color:var(--brass);color:var(--ink);}
+  .zz-dictamen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:6px;}
+  @media(max-width:640px){
+    .zz-medidas-grid{grid-template-columns:repeat(2,1fr);}
+    .zz-scale-btn{width:30px;height:30px;font-size:12px;}
+  }
   .activity-row{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline;min-width:0;}
   .activity-row span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .activity-row:last-child{border-bottom:none;}
@@ -2070,7 +2115,7 @@
           <div class="admin-tab" id="admin-tab-validacion">
             <div id="validacion-list-wrap">
               <h3 style="font-size:16px;margin-top:0;">Piezas en proceso de validación</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Desde aquí vas registrando paso a paso el peritaje: recepción, inspección visual, pruebas UV, microscopio, remaches y dictamen final — con evidencia fotográfica y notificación al cliente en cada etapa.</p>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Desde aquí vas registrando paso a paso el peritaje: recepción, medición y evaluación por zonas con el Protocolo Zigzag C-Z, y evidencia fotográfica — con notificación al cliente en cada etapa.</p>
               <div id="validacion-list"><p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p></div>
             </div>
             <div id="validacion-detail" style="display:none;"></div>
@@ -4537,14 +4582,81 @@ function filterSolicitudes(filter){
 // VALIDACIÓN PASO A PASO
 // ============================================================
 const STEP_DEFS = [
-  {key:'recepcion', label:'Recepción de la pieza'},
-  {key:'visual', label:'Inspección visual'},
-  {key:'uv', label:'Prueba UV (repintado)'},
-  {key:'micro', label:'Microscopio (desgaste / masilla)'},
-  {key:'remaches', label:'Remaches y ensamble'},
-  {key:'fotos', label:'Fotografías de evidencia'},
-  {key:'dictamen', label:'Dictamen final'}
+  {key:'recepcion', label:'Recepción de la pieza', type:'simple'},
+  {key:'zigzag', label:'Medición y evaluación por zonas — Protocolo Zigzag C-Z', type:'zigzag'},
+  {key:'fotos', label:'Fotografías de evidencia', type:'simple'}
 ];
+
+// ===== Protocolo Zigzag C-Z: catálogos y helpers =====
+const ZZ_INSTRUMENTOS = [
+  {key:'micro', label:'Micro digital'},
+  {key:'vernier', label:'Vernier'},
+  {key:'uv', label:'Luz UV'},
+  {key:'lupa', label:'Lupa 10-30x'},
+  {key:'bascula', label:'Báscula'},
+  {key:'endoscopio', label:'Endoscopio'}
+];
+const ZZ_ZONAS_DEF = [
+  {key:'trasera', label:'Parte trasera (cajuela)', tampoAplica:true},
+  {key:'toldo', label:'Toldo', tampoAplica:true},
+  {key:'cofre', label:'Cofre', tampoAplica:true},
+  {key:'lat_izq', label:'Lateral izquierdo', tampoAplica:true},
+  {key:'lat_der', label:'Lateral derecho', tampoAplica:true},
+  {key:'interiores', label:'Interiores', tampoAplica:false},
+  {key:'motor', label:'Motor (trasero o delantero)', tampoAplica:false},
+  {key:'base', label:'Base', tampoAplica:false},
+  {key:'llantas', label:'Llantas', tampoAplica:false},
+  {key:'remache', label:'Remache', tampoAplica:false}
+];
+let CURRENT_PROCESO = null;
+
+function ensureZigzag(step){
+  if(!step.zigzag){
+    step.zigzag = {
+      medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlanta:'', ok:false},
+      zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:null, instrumentos:[], nota:''})),
+      dictamenFinal: null,
+      escalaFinal: '',
+      origenTexto: '',
+      observaciones: '',
+      verificador: '',
+      fecha: ''
+    };
+  }
+  return step.zigzag;
+}
+
+function zzZoneScore(zona){
+  const pc = (zona.critPC!=null && zona.critPC!=='') ? Number(zona.critPC) : null;
+  const zg = (zona.critZigzag!=null && zona.critZigzag!=='') ? Number(zona.critZigzag) : null;
+  if(zona.tampoAplica){
+    if(pc!=null && zg!=null) return Math.round(((pc+zg)/2)*10)/10;
+    if(pc!=null) return pc;
+    if(zg!=null) return zg;
+    return null;
+  }
+  return pc;
+}
+
+function zzOverallAvg(zz){
+  const scores = zz.zonas.map(zzZoneScore).filter(v => v!=null);
+  if(!scores.length) return null;
+  return Math.round((scores.reduce((a,b)=>a+b,0)/scores.length)*10)/10;
+}
+
+function zzInstrumentSummary(zz, instrumentKeys){
+  const parts = [];
+  zz.zonas.forEach(zona => {
+    const used = zona.instrumentos.some(i => instrumentKeys.includes(i));
+    if(used){
+      const sc = zzZoneScore(zona);
+      let txt = zona.label + (sc!=null ? ' (' + sc.toFixed(1) + '/10)' : '');
+      if(zona.nota) txt += ': ' + zona.nota;
+      parts.push(txt);
+    }
+  });
+  return parts.join(' · ');
+}
 
 const DEADLINE_DAYS = {'Validación digital':2, 'Peritaje físico + certificado':5, 'Peritaje premium + encapsulado':8, 'Premium + encapsulado':8};
 function getDeadlineDays(nivel){ return DEADLINE_DAYS[nivel] || 5; }
@@ -4641,15 +4753,33 @@ async function openProceso(id){
   detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
   let p;
   try{ p = await getProceso(id); }catch(e){ detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se encontró esta validación.</p>'; return; }
+  CURRENT_PROCESO = p;
   renderProcesoDetail(p);
 }
 
 function renderProcesoDetail(p){
+  CURRENT_PROCESO = p;
   const detail = document.getElementById('validacion-detail');
   const done = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(done / p.pasos.length * 100);
   const dl = deadlineInfo(p);
-  const stepsHtml = p.pasos.map((s,i)=>`
+  const stepsHtml = p.pasos.map((s,i)=>{
+    const def = STEP_DEFS.find(d=>d.key===s.key);
+    const type = (def && def.type) || 'simple';
+    if(type === 'zigzag'){
+      return `
+      <div class="step-row step-row-zigzag">
+        <div class="step-check ${s.done?'done':''}" onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
+        <div class="step-body">
+          <h4>${i+1}. ${escapeHtml(s.label)}</h4>
+          ${renderZigzagStepBody(p, s)}
+          <div class="row" style="margin-top:14px;">
+            <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    return `
     <div class="step-row">
       <div class="step-check ${s.done?'done':''}" onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
       <div class="step-body">
@@ -4659,7 +4789,8 @@ function renderProcesoDetail(p){
           <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   detail.innerHTML = `
     <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
       <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
@@ -4685,23 +4816,245 @@ function renderProcesoDetail(p){
     </div>`;
 }
 
+// ===== Formulario dinámico del paso "Medición y evaluación — Protocolo Zigzag C-Z" =====
+function renderZigzagStepBody(p, step){
+  const zz = ensureZigzag(step);
+  if(!zz.fecha) zz.fecha = new Date().toISOString().slice(0,10);
+  const overall = zzOverallAvg(zz);
+  const m = zz.medidas;
+  const zonasHtml = zz.zonas.map((zona, idx) => {
+    const score = zzZoneScore(zona);
+    const tampoBlock = zona.tampoAplica ? `
+      <div class="zz-field">
+        <label>Tampo original o agregado (pegatina)</label>
+        <div class="zz-toggle-group">
+          <button type="button" class="zz-toggle ${zona.tampo==='si'?'active':''}" onclick="zzSetTampo('${escapeHtml(p.id)}','${step.key}','${zona.key}','si',this)">Sí — original</button>
+          <button type="button" class="zz-toggle ${zona.tampo==='no'?'active':''}" onclick="zzSetTampo('${escapeHtml(p.id)}','${step.key}','${zona.key}','no',this)">No — agregado</button>
+        </div>
+      </div>
+      <div class="zz-field">
+        <label>Criterio Zigzag C-Z — Tampo <span class="mono">(10–6)</span></label>
+        <div class="zz-scale-group">
+          ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critZigzag==n?'active':''}" onclick="zzSetScore('${escapeHtml(p.id)}','${step.key}','${zona.key}','critZigzag',${n},this)">${n}</button>`).join('')}
+        </div>
+      </div>` : `<p class="zz-na">No aplica tampo / pegatina en esta zona.</p>`;
+    return `
+      <div class="zz-zone">
+        <div class="zz-zone-head">
+          <span class="zz-zone-num">${idx+1}</span>
+          <h5>${escapeHtml(zona.label)}</h5>
+          <span class="zz-zone-score" id="zz-score-${zona.key}">${score!=null?score.toFixed(1):'—'}</span>
+        </div>
+        <div class="zz-zone-body">
+          ${tampoBlock}
+          <div class="zz-field">
+            <label>Criterio P/C — Vehículo <span class="mono">(10–6)</span></label>
+            <div class="zz-scale-group">
+              ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critPC==n?'active':''}" onclick="zzSetScore('${escapeHtml(p.id)}','${step.key}','${zona.key}','critPC',${n},this)">${n}</button>`).join('')}
+            </div>
+          </div>
+          <div class="zz-field">
+            <label>Instrumentos utilizados</label>
+            <div class="zz-instr-group">
+              ${ZZ_INSTRUMENTOS.map(ins=>`<button type="button" class="zz-chip ${zona.instrumentos.includes(ins.key)?'active':''}" id="zz-chip-${zona.key}-${ins.key}" onclick="zzToggleInstrumento('${escapeHtml(p.id)}','${step.key}','${zona.key}','${ins.key}',this)">${ins.label}</button>`).join('')}
+            </div>
+          </div>
+          <div class="zz-field">
+            <label>Nota rápida (opcional)</label>
+            <input type="text" value="${escapeHtml(zona.nota||'')}" placeholder="Hallazgo breve de esta zona…" onchange="zzSetNota('${escapeHtml(p.id)}','${step.key}','${zona.key}',this.value)">
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="zz-form">
+      <div class="zz-summary-bar">
+        <div class="zz-summary-score"><span class="zz-summary-label">Promedio general</span><span class="zz-summary-value" id="zz-overall-score">${overall!=null?overall.toFixed(1):'—'}</span></div>
+        <p class="zz-summary-hint">Se calcula automáticamente con las zonas ya calificadas — puedes ajustar la escala final abajo si tu criterio profesional difiere.</p>
+      </div>
+
+      <h5 class="zz-subhead">Mediciones <span class="mono">(Vernier + Báscula)</span></h5>
+      <div class="zz-medidas-grid">
+        <div><label>Peso (g)</label><input type="number" value="${escapeHtml(m.peso)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','peso',this.value)"></div>
+        <div><label>Largo (mm)</label><input type="number" value="${escapeHtml(m.largo)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','largo',this.value)"></div>
+        <div><label>Ancho (mm)</label><input type="number" value="${escapeHtml(m.ancho)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','ancho',this.value)"></div>
+        <div><label>Alto (mm)</label><input type="number" value="${escapeHtml(m.alto)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','alto',this.value)"></div>
+        <div><label>Diámetro llanta (mm)</label><input type="number" value="${escapeHtml(m.diametroLlanta)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','diametroLlanta',this.value)"></div>
+        <div class="zz-medidas-ok"><button type="button" class="zz-chip ${m.ok?'active':''}" onclick="zzToggleMedidasOk('${escapeHtml(p.id)}','${step.key}',this)">✓ Medidas OK</button></div>
+      </div>
+
+      <h5 class="zz-subhead">Evaluación por zonas <span class="mono">— Protocolo Zigzag C-Z</span></h5>
+      <details class="zz-glossary">
+        <summary>Ver glosario de siglas</summary>
+        <ul>
+          <li><strong>C-Z</strong>: Causas Original y Zonas de desgaste — método para determinar si el desgaste del tampo/pegatina corresponde al uso real de la pieza y detectar restauración.</li>
+          <li><strong>P/C</strong>: Perito Certificador — criterio del perito del laboratorio para evaluar estado físico: golpes, despintura, oxidación, deformación.</li>
+          <li><strong>Tampo (pegatina)</strong>: impresión decorativa aplicada a la pieza. Sí = original de fábrica / No = agregado o personalizado.</li>
+          <li><strong>Escala 10–6</strong>: 10 = Perfecto, 9 = Excelente, 8 = Muy bueno, 7 = Bueno con detalles, 6 = Regular.</li>
+        </ul>
+      </details>
+      <div class="zz-zones">${zonasHtml}</div>
+
+      <h5 class="zz-subhead">Dictamen final</h5>
+      <div class="zz-dictamen-grid">
+        <div class="zz-field">
+          <label>Dictamen</label>
+          <div class="zz-toggle-group">
+            <button type="button" class="zz-toggle ${zz.dictamenFinal==='original'?'active':''}" onclick="zzSetDictamen('${escapeHtml(p.id)}','${step.key}','original',this)">Original</button>
+            <button type="button" class="zz-toggle ${zz.dictamenFinal==='restaurado'?'active':''}" onclick="zzSetDictamen('${escapeHtml(p.id)}','${step.key}','restaurado',this)">Restaurado</button>
+          </div>
+        </div>
+        <div class="zz-field">
+          <label>Escala final 10–6 <span class="mono">(editable)</span></label>
+          <input type="number" step="0.1" id="zz-escala-final" value="${escapeHtml(zz.escalaFinal)}" placeholder="${overall!=null?overall.toFixed(1):''}" onchange="zzSetEscalaFinal('${escapeHtml(p.id)}','${step.key}',this.value)">
+        </div>
+        <div class="zz-field">
+          <label>Origen</label>
+          <input type="text" value="${escapeHtml(zz.origenTexto)}" placeholder="Ej. México" onchange="zzSetOrigenTexto('${escapeHtml(p.id)}','${step.key}',this.value)">
+        </div>
+      </div>
+      <div class="zz-field">
+        <label>Observaciones</label>
+        <textarea rows="2" placeholder="Observaciones generales del peritaje…" onchange="zzSetObservaciones('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(zz.observaciones)}</textarea>
+      </div>
+      <div class="row">
+        <div style="flex:1;"><label>Verificador</label><input type="text" value="${escapeHtml(zz.verificador)}" onchange="zzSetVerificador('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
+        <div style="flex:1;"><label>Fecha</label><input type="date" value="${escapeHtml(zz.fecha)}" onchange="zzSetFecha('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
+      </div>
+    </div>`;
+}
+
+async function zzPersist(){
+  if(CURRENT_PROCESO) await setProceso(CURRENT_PROCESO).catch(()=>{});
+}
+function zzGetZona(p, stepKey, zonaKey){
+  const step = p.pasos.find(s=>s.key===stepKey);
+  if(!step) return null;
+  const zz = ensureZigzag(step);
+  return zz.zonas.find(z=>z.key===zonaKey);
+}
+function zzUpdateZoneScore(zona){
+  const el = document.getElementById('zz-score-'+zona.key);
+  if(el){ const sc = zzZoneScore(zona); el.textContent = sc!=null ? sc.toFixed(1) : '—'; }
+}
+function zzUpdateOverall(zz){
+  const el = document.getElementById('zz-overall-score');
+  const avg = zzOverallAvg(zz);
+  if(el) el.textContent = avg!=null ? avg.toFixed(1) : '—';
+  const escalaInput = document.getElementById('zz-escala-final');
+  if(escalaInput && !escalaInput.value) escalaInput.placeholder = avg!=null ? avg.toFixed(1) : '';
+}
+async function zzSetTampo(pid, stepKey, zonaKey, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  zona.tampo = (zona.tampo === val) ? null : val;
+  const group = btnEl.closest('.zz-toggle-group');
+  if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
+  if(zona.tampo === val) btnEl.classList.add('active');
+  await zzPersist();
+}
+async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  zona[field] = (zona[field] == val) ? null : val;
+  const group = btnEl.closest('.zz-scale-group');
+  if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
+  if(zona[field] == val) btnEl.classList.add('active');
+  zzUpdateZoneScore(zona);
+  const step = p.pasos.find(s=>s.key===stepKey);
+  zzUpdateOverall(step.zigzag);
+  await zzPersist();
+}
+async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  const idx = zona.instrumentos.indexOf(insKey);
+  const nowActive = idx === -1;
+  if(nowActive) zona.instrumentos.push(insKey); else zona.instrumentos.splice(idx,1);
+  btnEl.classList.toggle('active', nowActive);
+  await zzPersist();
+}
+async function zzSetNota(pid, stepKey, zonaKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  zona.nota = value;
+  await zzPersist();
+}
+async function zzSetMedida(pid, stepKey, field, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).medidas[field] = value;
+  await zzPersist();
+}
+async function zzToggleMedidasOk(pid, stepKey, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = ensureZigzag(step);
+  zz.medidas.ok = !zz.medidas.ok;
+  btnEl.classList.toggle('active', zz.medidas.ok);
+  await zzPersist();
+}
+async function zzSetDictamen(pid, stepKey, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = ensureZigzag(step);
+  zz.dictamenFinal = (zz.dictamenFinal === val) ? null : val;
+  const group = btnEl.closest('.zz-toggle-group');
+  if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
+  if(zz.dictamenFinal === val) btnEl.classList.add('active');
+  await zzPersist();
+}
+async function zzSetEscalaFinal(pid, stepKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).escalaFinal = value;
+  await zzPersist();
+}
+async function zzSetOrigenTexto(pid, stepKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).origenTexto = value;
+  await zzPersist();
+}
+async function zzSetObservaciones(pid, stepKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).observaciones = value;
+  await zzPersist();
+}
+async function zzSetVerificador(pid, stepKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).verificador = value;
+  await zzPersist();
+}
+async function zzSetFecha(pid, stepKey, value){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  ensureZigzag(step).fecha = value;
+  await zzPersist();
+}
+
 async function toggleProcesoStep(id, key){
-  const p = await getProceso(id);
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
   if(step) step.done = !step.done;
+  CURRENT_PROCESO = p;
   await setProceso(p);
   renderProcesoDetail(p);
 }
 
 async function saveProcesoNota(id, key, value){
-  const p = await getProceso(id);
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
   if(step) step.nota = value;
+  CURRENT_PROCESO = p;
   await setProceso(p);
 }
 
 async function notifyProcesoStep(id, key){
-  const p = await getProceso(id);
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
   if(!step) return;
   const msg = `Hola ${p.nombre}, te compartimos un avance de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}):\n\n✔ ${step.label}${step.nota ? ': ' + step.nota : ''}\n\nSeguimos trabajando en tu peritaje. — Laboratorio HV México`;
@@ -4709,13 +5062,13 @@ async function notifyProcesoStep(id, key){
 }
 
 async function notifyPickupReady(id){
-  const p = await getProceso(id);
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const msg = `Hola ${p.nombre}, tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) ya está lista. Puedes pasar a recogerla en el laboratorio o coordinamos el envío contigo — avísanos qué prefieres. — Laboratorio HV México`;
   window.open(waLink(msg), '_blank', 'noopener');
 }
 
 async function finalizeProceso(id){
-  const p = await getProceso(id);
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   if(p.pasos.some(s=>!s.done)){ toast('Completa todos los pasos antes de finalizar.'); return; }
   document.getElementById('a-modelo').value = p.modelo || '';
   document.getElementById('a-anio').value = p.anio || '';
@@ -4723,14 +5076,56 @@ async function finalizeProceso(id){
   document.getElementById('a-color').value = p.color || '';
   document.getElementById('a-telefono').value = p.telefono || '';
   if(p.nivel) document.getElementById('a-nivel').value = p.nivel;
-  const uvStep = p.pasos.find(s=>s.key==='uv');
-  const microStep = p.pasos.find(s=>s.key==='micro');
-  const remachesStep = p.pasos.find(s=>s.key==='remaches');
-  const dictamenStep = p.pasos.find(s=>s.key==='dictamen');
-  if(uvStep) document.getElementById('a-uv').value = uvStep.nota || '';
-  if(microStep) document.getElementById('a-micro').value = microStep.nota || '';
-  if(remachesStep) document.getElementById('a-remaches').value = remachesStep.nota || '';
-  document.getElementById('a-obs').value = p.pasos.filter(s=>s.nota).map(s=>`${s.label}: ${s.nota}`).join(' · ');
+
+  const zigzagStep = p.pasos.find(s=>s.key==='zigzag');
+  if(zigzagStep && zigzagStep.zigzag){
+    const zz = zigzagStep.zigzag;
+    const zonaByKey = k => zz.zonas.find(z=>z.key===k);
+    if(zz.medidas.peso) document.getElementById('a-peso').value = zz.medidas.peso;
+    const finalGrade = zz.escalaFinal || zzOverallAvg(zz);
+    if(finalGrade!=null && finalGrade!=='') document.getElementById('a-grado').value = finalGrade;
+    if(zz.dictamenFinal === 'restaurado') document.getElementById('a-estado').value = 'Restaurado';
+    else if(zz.dictamenFinal === 'original') document.getElementById('a-estado').value = 'Original';
+
+    const paintScores = ['trasera','toldo','cofre','lat_izq','lat_der'].map(zonaByKey).filter(Boolean).map(zzZoneScore).filter(v=>v!=null);
+    if(paintScores.length) document.getElementById('a-sg-pintura').value = (Math.round((paintScores.reduce((a,b)=>a+b,0)/paintScores.length)*10)/10).toFixed(1);
+
+    const llantasScore = zzZoneScore(zonaByKey('llantas'));
+    if(llantasScore!=null) document.getElementById('a-sg-desgaste').value = llantasScore.toFixed(1);
+
+    const ensambleScores = [zzZoneScore(zonaByKey('remache')), zzZoneScore(zonaByKey('motor'))].filter(v=>v!=null);
+    if(ensambleScores.length) document.getElementById('a-sg-ensamble').value = (Math.round((ensambleScores.reduce((a,b)=>a+b,0)/ensambleScores.length)*10)/10).toFixed(1);
+
+    const baseScore = zzZoneScore(zonaByKey('base'));
+    if(baseScore!=null) document.getElementById('a-sg-autenticidad').value = baseScore.toFixed(1);
+
+    const uvSummary = zzInstrumentSummary(zz, ['uv']);
+    if(uvSummary) document.getElementById('a-uv').value = uvSummary;
+    const microSummary = zzInstrumentSummary(zz, ['micro','lupa','endoscopio']);
+    if(microSummary) document.getElementById('a-micro').value = microSummary;
+
+    const remacheZona = zonaByKey('remache');
+    if(remacheZona){
+      const sc = zzZoneScore(remacheZona);
+      const txt = remacheZona.nota || (sc!=null ? 'Calificación ' + sc.toFixed(1) + '/10' : '');
+      if(txt) document.getElementById('a-remaches').value = txt;
+    }
+
+    const obsParts = [];
+    if(zz.observaciones) obsParts.push(zz.observaciones);
+    if(zz.verificador) obsParts.push('Verificador: ' + zz.verificador);
+    if(zz.fecha) obsParts.push('Fecha de peritaje: ' + zz.fecha);
+    if(obsParts.length) document.getElementById('a-obs').value = obsParts.join(' · ');
+  } else {
+    const uvStep = p.pasos.find(s=>s.key==='uv');
+    const microStep = p.pasos.find(s=>s.key==='micro');
+    const remachesStep = p.pasos.find(s=>s.key==='remaches');
+    if(uvStep) document.getElementById('a-uv').value = uvStep.nota || '';
+    if(microStep) document.getElementById('a-micro').value = microStep.nota || '';
+    if(remachesStep) document.getElementById('a-remaches').value = remachesStep.nota || '';
+    document.getElementById('a-obs').value = p.pasos.filter(s=>s.nota).map(s=>`${s.label}: ${s.nota}`).join(' · ');
+  }
+
   document.getElementById('a-linked-solicitud').value = p.solicitudId || '';
   adminGo('certificados');
   toast('Validación completa. Revisa los datos y asigna el folio para emitir el certificado.');
