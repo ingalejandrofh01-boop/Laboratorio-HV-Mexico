@@ -2045,7 +2045,7 @@
           <h3>¿Qué nivel de peritaje necesitas?</h3>
           <p class="wiz-step-help">Elige según qué tan a fondo quieres la validación de tu pieza. Puedes cambiarlo más adelante si lo necesitas.</p>
           <div class="wiz-pkg-cards">
-            <button type="button" class="wiz-pkg-card" data-pkg="digital" onclick="wizSelectPackage('digital')">
+            <div class="wiz-pkg-card" data-pkg="digital" role="button" tabindex="0" onclick="wizSelectPackage('digital')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('digital');}">
               <span class="wiz-pkg-card-badge mono">Más rápido</span>
               <span class="wiz-pkg-card-icon">🔍</span>
               <span class="wiz-pkg-card-name">Validación digital</span>
@@ -2056,31 +2056,49 @@
                 <li>No requiere traer la pieza</li>
               </ul>
               <span class="wiz-pkg-card-time">⏱ Entrega en 24–48 h</span>
-            </button>
-            <button type="button" class="wiz-pkg-card featured" data-pkg="fisico" onclick="wizSelectPackage('fisico')">
+            </div>
+            <div class="wiz-pkg-card featured" data-pkg="fisico" role="button" tabindex="0" onclick="wizSelectPackage('fisico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('fisico');}">
               <span class="wiz-pkg-card-badge mono">Más completo</span>
               <span class="wiz-pkg-card-icon">🧪</span>
               <span class="wiz-pkg-card-name">Peritaje físico + certificado</span>
-              <span class="wiz-pkg-card-price">$400 <small>MXN</small></span>
+              <span class="wiz-pkg-card-price" id="wiz-pkg-price-fisico">$400 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li>Peritaje presencial en laboratorio</li>
                 <li>Folio y certificado físico</li>
                 <li>Grado de conservación oficial</li>
               </ul>
-              <span class="wiz-pkg-card-time">⏱ Entrega en 3–5 días</span>
-            </button>
-            <button type="button" class="wiz-pkg-card" data-pkg="premium" onclick="wizSelectPackage('premium')">
+              <div class="pkg-speed" onclick="event.stopPropagation();">
+                <p class="pkg-speed-label">Elige tu tiempo de entrega</p>
+                <div class="pkg-speed-chips" role="group" aria-label="Elegir tiempo de entrega para peritaje físico">
+                  <button type="button" class="pkg-speed-chip selected" data-tier="estandar" onclick="wizPkgSelectSpeed('fisico','estandar',this,event)">Estándar · 10 días</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="prioritario" onclick="wizPkgSelectSpeed('fisico','prioritario',this,event)">Prioritario · 5 días</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="express" onclick="wizPkgSelectSpeed('fisico','express',this,event)">Express · 72h</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="super" onclick="wizPkgSelectSpeed('fisico','super',this,event)">Super Express · 24–48h</button>
+                </div>
+              </div>
+              <span class="wiz-pkg-card-time" id="wiz-pkg-time-fisico">⏱ Entrega en 10 días (Estándar)</span>
+            </div>
+            <div class="wiz-pkg-card" data-pkg="premium" role="button" tabindex="0" onclick="wizSelectPackage('premium')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('premium');}">
               <span class="wiz-pkg-card-badge mono">Máxima protección</span>
               <span class="wiz-pkg-card-icon">🛡️</span>
               <span class="wiz-pkg-card-name">Premium + encapsulado</span>
-              <span class="wiz-pkg-card-price">$800 <small>MXN</small></span>
+              <span class="wiz-pkg-card-price" id="wiz-pkg-price-premium">$800 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li>Todo lo del peritaje físico</li>
                 <li>Encapsulado protector sellado</li>
                 <li>Prioridad en cola de laboratorio</li>
               </ul>
-              <span class="wiz-pkg-card-time">⏱ Entrega en 5–7 días</span>
-            </button>
+              <div class="pkg-speed" onclick="event.stopPropagation();">
+                <p class="pkg-speed-label">Elige tu tiempo de entrega</p>
+                <div class="pkg-speed-chips" role="group" aria-label="Elegir tiempo de entrega para paquete premium">
+                  <button type="button" class="pkg-speed-chip selected" data-tier="estandar" onclick="wizPkgSelectSpeed('premium','estandar',this,event)">Estándar · 10 días</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="prioritario" onclick="wizPkgSelectSpeed('premium','prioritario',this,event)">Prioritario · 5 días</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="express" onclick="wizPkgSelectSpeed('premium','express',this,event)">Express · 72h</button>
+                  <button type="button" class="pkg-speed-chip" data-tier="super" onclick="wizPkgSelectSpeed('premium','super',this,event)">Super Express · 24–48h</button>
+                </div>
+              </div>
+              <span class="wiz-pkg-card-time" id="wiz-pkg-time-premium">⏱ Entrega en 10 días (Estándar)</span>
+            </div>
           </div>
           <select id="s-nivel" class="wiz-sr-label" onchange="onPackageChange()" tabindex="-1" aria-hidden="true">
             <option value="digital">1. Validación digital — $150 MXN</option>
@@ -3321,6 +3339,58 @@ function pkgSelectSpeed(pkg, tier, btnEl){
   }
 }
 
+// Tiempo de entrega elegido por el cliente en el paso 1 del wizard de
+// "Solicitar validación", uno por paquete (así no se pierde si compara
+// varias tarjetas antes de decidirse). El costo final SÍ viaja con la
+// solicitud — a diferencia del simulador de #view-paquetes, este es el que
+// de verdad se cobra y el que arranca el reloj de entrega en el admin.
+let WIZ_TIER_BY_PKG = { fisico:'estandar', premium:'estandar' };
+const WIZ_VELOCIDAD_DIAS = { estandar:10, prioritario:5, express:3, super:2 };
+
+function wizPkgSelectSpeed(pkg, tier, btnEl, evt){
+  if(evt) evt.stopPropagation();
+  const data = PKG_SPEED_DATA[pkg] && PKG_SPEED_DATA[pkg][tier];
+  if(!data) return;
+  WIZ_TIER_BY_PKG[pkg] = tier;
+  const priceEl = document.getElementById('wiz-pkg-price-' + pkg);
+  const timeEl = document.getElementById('wiz-pkg-time-' + pkg);
+  if(priceEl) priceEl.innerHTML = '<span class="mono">$' + data.price.toLocaleString('es-MX') + '</span> <small>MXN</small>';
+  if(timeEl) timeEl.textContent = '⏱ Entrega en ' + data.time + ' (' + PKG_SPEED_LABELS[tier] + ')';
+  if(btnEl){
+    const group = btnEl.closest('.pkg-speed-chips');
+    if(group) group.querySelectorAll('.pkg-speed-chip').forEach(c => c.classList.toggle('selected', c === btnEl));
+  }
+  // Si ya estábamos en la revisión final, refleja el nuevo costo/tiempo ahí también.
+  if(wizCurrentStep === 'revision') renderWizardReview();
+}
+
+function wizPkgSpeedResetUI(){
+  WIZ_TIER_BY_PKG = { fisico:'estandar', premium:'estandar' };
+  ['fisico','premium'].forEach(pkg=>{
+    const data = PKG_SPEED_DATA[pkg].estandar;
+    const priceEl = document.getElementById('wiz-pkg-price-' + pkg);
+    const timeEl = document.getElementById('wiz-pkg-time-' + pkg);
+    if(priceEl) priceEl.innerHTML = '<span class="mono">$' + data.price.toLocaleString('es-MX') + '</span> <small>MXN</small>';
+    if(timeEl) timeEl.textContent = '⏱ Entrega en ' + data.time + ' (Estándar)';
+    document.querySelectorAll(`.wiz-pkg-card[data-pkg="${pkg}"] .pkg-speed-chip`).forEach(c => c.classList.toggle('selected', c.dataset.tier==='estandar'));
+  });
+}
+
+// Devuelve el precio final y los días de entrega prometidos según el
+// paquete y, si aplica, el tiempo de entrega elegido (fisico/premium).
+function wizPkgPricing(pkg){
+  if(pkg === 'digital') return { precio:150, dias:2, tier:'estandar', tierLabel:'Estándar (fijo)', tiempoTxt:'24–48 h' };
+  const tier = WIZ_TIER_BY_PKG[pkg] || 'estandar';
+  const data = PKG_SPEED_DATA[pkg] && PKG_SPEED_DATA[pkg][tier];
+  const base = pkg === 'fisico' ? 400 : 800;
+  return {
+    precio: data ? data.price : base,
+    dias: WIZ_VELOCIDAD_DIAS[tier] || 10,
+    tier, tierLabel: PKG_SPEED_LABELS[tier] || 'Estándar',
+    tiempoTxt: data ? data.time : '10 días'
+  };
+}
+
 // ============================================================
 // CALENDARIO DE CITAS — wizard "Solicitar validación" (paquetes presenciales)
 // ============================================================
@@ -3600,6 +3670,7 @@ function renderWizardReview(){
   const pkgSel = document.getElementById('s-nivel');
   const pkg = pkgSel.value;
   const pkgLabel = pkgSel.options[pkgSel.selectedIndex].text;
+  const pricing = wizPkgPricing(pkg);
   const nombre = document.getElementById('s-nombre').value.trim();
   const telefono = document.getElementById('s-telefono').value.trim();
   const modelo = document.getElementById('s-modelo').value.trim();
@@ -3612,7 +3683,11 @@ function renderWizardReview(){
   let html = `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Paquete</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('paquete','back')">Editar</button></div>
-      <ul class="wiz-review-list"><li><span>Nivel elegido</span><strong>${escapeHtml(pkgLabel)}</strong></li></ul>
+      <ul class="wiz-review-list">
+        <li><span>Nivel elegido</span><strong>${escapeHtml(pkgLabel)}</strong></li>
+        <li><span>Tiempo de entrega</span><strong>${escapeHtml(pricing.tierLabel)} · ${escapeHtml(pricing.tiempoTxt)}</strong></li>
+        <li><span>Costo total</span><strong>$${pricing.precio.toLocaleString('es-MX')} MXN</strong></li>
+      </ul>
     </div>
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Contacto</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('contacto','back')">Editar</button></div>
@@ -3715,6 +3790,7 @@ function resetWizard(){
   if(wizCard) wizCard.style.display = '';
   document.querySelectorAll('.wiz-pkg-card').forEach(c => c.classList.remove('selected'));
   wizPkgChosen = false;
+  wizPkgSpeedResetUI();
   SOLICITUD_FOTOS_DATA = [];
   renderSolicitudFotosPreview();
   const status = document.getElementById('s-fotos-status');
@@ -3747,6 +3823,11 @@ async function submitSolicitud(){
   const citaTs = (pkg !== 'digital' && fechaEntrega && citaHora) ? new Date(`${fechaEntrega}T${citaHora}:00`).getTime() : null;
   const id = 'SOL-' + Date.now();
   const pkgLabels = {digital:'Validación digital — $150', fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'};
+  // El nivel (paquete base) se guarda tal cual siempre lo ha hecho — de ahí
+  // depende el dropdown de certificados y los reportes de ingresos. El
+  // tiempo de entrega elegido y su costo final viajan aparte, en campos
+  // nuevos, para no romper nada de lo anterior.
+  const pricing = wizPkgPricing(pkg);
   const data = {
     id, nombre, telefono, modelo, paquete: pkg,
     anio: document.getElementById('s-anio').value.trim(),
@@ -3755,6 +3836,11 @@ async function submitSolicitud(){
     desc: document.getElementById('s-desc').value.trim(),
     fechaEntrega, citaHora, citaTs,
     nivel: pkgLabels[pkg] || pkg,
+    velocidad: pricing.tier,
+    velocidadLabel: pricing.tierLabel,
+    velocidadDias: pricing.dias,
+    velocidadTiempoTxt: pricing.tiempoTxt,
+    precioFinal: pricing.precio,
     estado: 'pendiente',
     fecha: new Date().toLocaleDateString('es-MX'),
     fotos: SOLICITUD_FOTOS_DATA.slice()
@@ -3774,6 +3860,7 @@ async function submitSolicitud(){
       <p class="wiz-step-kicker" style="margin-bottom:10px;">Paso 7 · Confirmación</p>
       <h3 style="margin:0 0 8px;">Solicitud recibida</h3>
       <p style="margin:0;">Tu <strong>código de seguimiento</strong> es <span class="mono" style="color:var(--red);font-weight:600;">${id}</span>. Guárdalo — con él puedes ver el avance de tu pieza en tiempo real en "Mi historial".</p>
+      <p style="margin:8px 0 0;font-size:13px;color:var(--sage);">Tiempo de entrega elegido: <strong style="color:var(--ink);">${escapeHtml(pricing.tierLabel)} · ${escapeHtml(pricing.tiempoTxt)}</strong> · Costo total: <strong style="color:var(--ink);">$${pricing.precio.toLocaleString('es-MX')} MXN</strong></p>
       <button type="button" class="btn ghost small" style="margin-top:10px;" onclick="go('cliente');document.getElementById('c-codigo').value='${id}';trackByCodigo();">Rastrear mi pieza ahora</button>`;
     if(data.fotosOmitidas){
       confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--warn);">Tus fotos pesaban demasiado para enviarse junto con la solicitud — mándalas por WhatsApp con tu folio, por favor.</p>`;
@@ -3791,7 +3878,7 @@ async function submitSolicitud(){
     } else {
       const citaTxt = formatCitaLarga(fechaEntrega, citaHora);
       nextStepsText = `Tu cita quedó agendada para <strong>${escapeHtml(citaTxt)}</strong> — te esperamos en el laboratorio (revisa la sección de Ubicación). Te confirmamos por WhatsApp.`;
-      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}". Mi cita quedó agendada para ${citaTxt} — quiero confirmarla.`;
+      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}", con entrega ${pricing.tierLabel} (${pricing.tiempoTxt}) — costo total $${pricing.precio.toLocaleString('es-MX')} MXN. Mi cita quedó agendada para ${citaTxt} — quiero confirmarla.`;
       waLabel = 'Confirmar cita por WhatsApp';
     }
     confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
@@ -5278,8 +5365,15 @@ function zzInstrumentSummary(zz, instrumentKeys){
   return parts.join(' · ');
 }
 
+// Tabla de respaldo por si un proceso no trae el tiempo de entrega que el
+// cliente eligió en el wizard (procesos antiguos, o pieza digital). Cuando
+// sí lo trae (p.velocidadDias — ver wizPkgPricing / startValidacion), ese es
+// el que manda: es el que de verdad se le prometió y cobró al cliente.
 const DEADLINE_DAYS = {'Validación digital':2, 'Peritaje físico + certificado':5, 'Peritaje premium + encapsulado':8, 'Premium + encapsulado':8};
-function getDeadlineDays(nivel){ return DEADLINE_DAYS[nivel] || 5; }
+function getDeadlineDays(p){
+  if(p && p.velocidadDias) return p.velocidadDias;
+  return DEADLINE_DAYS[p && p.nivel] || 5;
+}
 // El plazo de entrega corre a partir de que la pieza está físicamente en el
 // laboratorio (piezaRecibidaTs) — no desde que se agendó la cita. Mientras
 // el paso 1 (recepción) siga pendiente en un paquete presencial, el plazo
@@ -5293,7 +5387,7 @@ function deadlineInfo(p){
   if(isPendienteRecepcion(p)) return null;
   const baseTs = p.piezaRecibidaTs || p.creadoTs;
   if(!baseTs) return null;
-  const days = getDeadlineDays(p.nivel);
+  const days = getDeadlineDays(p);
   const limitTs = baseTs + days*24*60*60*1000;
   const now = Date.now();
   const elapsedMs = Math.max(0, now - baseTs);
@@ -5321,6 +5415,11 @@ async function startValidacion(dJson){
     id: d.id, solicitudId: d.id,
     nombre: d.nombre, telefono: d.telefono, modelo: d.modelo, anio: d.anio,
     origen: d.origen, color: d.color, paquete: d.paquete, nivel: d.nivel,
+    // Tiempo de entrega y costo que el cliente eligió al solicitar — de aquí
+    // sale el plazo real del reloj de entrega (ver getDeadlineDays).
+    velocidad: d.velocidad || 'estandar', velocidadLabel: d.velocidadLabel || 'Estándar',
+    velocidadDias: d.velocidadDias || null, velocidadTiempoTxt: d.velocidadTiempoTxt || '',
+    precioFinal: d.precioFinal != null ? d.precioFinal : null,
     citaFecha: d.fechaEntrega || '', citaHora: d.citaHora || '',
     estado: 'en_proceso',
     creado: new Date().toLocaleDateString('es-MX'),
@@ -5615,7 +5714,8 @@ function renderProcesoDetail(p){
       <div class="row" style="justify-content:space-between;align-items:flex-start;">
         <div>
           <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
-          <p style="font-size:13px;color:var(--sage);margin:0 0 12px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
+          <p style="font-size:13px;color:var(--sage);margin:0 0 2px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
+          ${p.velocidadLabel ? `<p style="font-size:12px;color:var(--brass-dim);margin:0 0 12px;">Tiempo elegido: ${escapeHtml(p.velocidadLabel)}${p.velocidadTiempoTxt?' · '+escapeHtml(p.velocidadTiempoTxt):''}${p.precioFinal!=null?' · $'+p.precioFinal.toLocaleString('es-MX')+' MXN':''}</p>` : ''}
         </div>
         ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : (pendienteRecepcion ? `<span class="cita-pill" style="margin-top:2px;">Esperando ingreso de la pieza</span>` : '')}
       </div>
