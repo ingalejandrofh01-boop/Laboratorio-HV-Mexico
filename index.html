@@ -1011,7 +1011,9 @@
       page-break-inside:avoid;
     }
     #print-target-full .photobox{aspect-ratio:4/3;}
-    #print-target-full .divider{margin:10px 0;}
+    #print-target-full .divider{margin:8px 0;}
+    #print-target-full .cert > .row{gap:12px;}
+    #print-target-full .cert .qr-embed{width:85px!important;height:85px!important;}
   }
   .cert-label{width:5cm;height:8cm;background:#fff;color:#1B1512;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;}
   .cert-label-head{background:linear-gradient(135deg,#D2042D,#7A0320);padding:.28cm .3cm .26cm;display:flex;flex-direction:column;gap:.13cm;}
@@ -4744,7 +4746,10 @@ async function startValidacion(dJson){
     adminGo('validacion');
     openProceso(d.id);
     refreshAdminLists();
-  }catch(e){ toast('No se pudo iniciar la validación.'); }
+  }catch(e){
+    console.error('startValidacion falló:', e);
+    toast('No se pudo iniciar la validación' + (e && e.message ? ': ' + e.message : '') + '.');
+  }
 }
 
 async function refreshValidacionList(){

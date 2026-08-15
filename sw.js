@@ -2,7 +2,7 @@
 // Habilita la instalación como app y un caché básico para que el sitio
 // cargue más rápido y funcione si la conexión falla momentáneamente.
 
-const CACHE_NAME = 'labhv-cache-v18';
+const CACHE_NAME = 'labhv-cache-v20';
 const CORE_ASSETS = [
   './',
   './index.html',
