@@ -908,6 +908,52 @@
     .step-arrow{display:flex;position:absolute;top:50%;right:-13px;transform:translateY(-50%);width:26px;height:26px;background:var(--paper);border:1px solid var(--line);border-radius:50%;align-items:center;justify-content:center;z-index:2;color:var(--red);font-size:14px;}
   }
   .branch-note{margin-top:14px;padding:10px 12px;background:rgba(163,38,56,0.06);border:1px dashed var(--bad);border-radius:4px;font-size:12.5px;color:var(--red-dim);}
+
+  /* ===== Calendario de citas — wizard "Solicitar validación" ===== */
+  .cal-widget{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px 18px;margin-top:6px;}
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .cal-month-label{font-family:'Fraunces',serif;font-size:15px;color:var(--ink);text-transform:capitalize;}
+  .cal-nav{background:var(--panel);border:1px solid var(--line);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--red);line-height:1;transition:background .15s ease,border-color .15s ease;}
+  .cal-nav:hover:not(:disabled){border-color:var(--red);}
+  .cal-nav:disabled{opacity:.3;cursor:not-allowed;}
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;}
+  .cal-weekdays span{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--brass-dim);text-align:center;}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-day{aspect-ratio:1;border:1px solid transparent;border-radius:6px;background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink);cursor:pointer;transition:border-color .12s ease,background .12s ease,color .12s ease;font-family:'IBM Plex Mono',monospace;}
+  .cal-day:hover:not(:disabled):not(.cal-day-empty){border-color:var(--red);}
+  .cal-day:disabled, .cal-day.cal-day-closed{opacity:.28;cursor:not-allowed;}
+  .cal-day.cal-day-empty{visibility:hidden;cursor:default;}
+  .cal-day.cal-day-today{border-color:var(--brass-dim);font-weight:600;}
+  .cal-day.cal-day-selected{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;}
+  .cal-slots-wrap{margin-top:14px;}
+  .cal-slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .cal-slot{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:7px 14px;font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:var(--ink);cursor:pointer;transition:border-color .12s ease,background .12s ease,color .12s ease;}
+  .cal-slot:hover{border-color:var(--red);}
+  .cal-slot.selected{background:var(--red);border-color:var(--red);color:#fff;}
+  .cal-selected-note{margin-top:12px;padding:10px 12px;background:rgba(47,122,79,0.08);border:1px dashed var(--ok);border-radius:4px;font-size:12.5px;color:var(--ok);display:none;}
+  .cal-selected-note.visible{display:block;}
+  .cal-closed-note{font-size:12px;color:var(--sage-dim);margin-top:4px;}
+
+  /* ===== Píldora de cita agendada (tarjeta de solicitud, panel admin) ===== */
+  .cita-pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-family:'IBM Plex Mono',monospace;padding:3px 10px;border-radius:20px;font-weight:600;background:rgba(184,134,47,0.15);color:var(--brass);}
+  .cita-pill::before{content:'📅';font-size:11px;}
+
+  /* ===== Recepción de la pieza — puerta de entrada al protocolo ===== */
+  .recepcion-gate{border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-bottom:14px;background:var(--panel-2);}
+  .recepcion-gate.pending{border-color:rgba(184,134,47,0.4);}
+  .recepcion-gate.done{border-color:rgba(47,122,79,0.35);}
+  .recepcion-gate-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .recepcion-gate-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-size:15px;background:rgba(184,134,47,0.15);color:var(--brass);}
+  .recepcion-gate.done .recepcion-gate-icon{background:rgba(47,122,79,0.12);color:var(--ok);}
+  .step-locked{position:relative;opacity:.55;pointer-events:none;filter:saturate(.4);}
+  .step-locked-note{display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(27,36,32,0.04);border:1px dashed var(--line);border-radius:6px;font-size:12.5px;color:var(--sage);margin:8px 0;}
+  html[data-theme="dark"] .step-locked-note{background:rgba(255,255,255,0.03);}
+  .next-action-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;background:rgba(163,38,56,0.06);border:1px solid rgba(163,38,56,0.18);margin-bottom:14px;}
+  .next-action-banner.all-done{background:rgba(47,122,79,0.08);border-color:rgba(47,122,79,0.25);}
+  .next-action-icon{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px;font-weight:700;}
+  .next-action-banner.all-done .next-action-icon{background:var(--ok);}
+  .next-action-text strong{display:block;font-size:13px;color:var(--ink);}
+  .next-action-text span{font-size:12px;color:var(--sage);}
   @media(max-width:760px){.stepper{grid-template-columns:1fr;}
     .step-card{border-radius:0!important;border-bottom:none;}
     .step-card:last-child{border-bottom:1px solid var(--line);border-radius:0 0 6px 6px!important;}
@@ -1996,11 +2042,27 @@
 
         <div class="wiz-step" data-step="logistica">
           <p class="wiz-step-kicker">Paso 4 · Logística de entrega</p>
-          <h3>¿Cuándo puedes traer tu pieza?</h3>
-          <p class="wiz-step-help">Este paquete requiere peritaje presencial en CDMX. Danos una fecha tentativa — la confirmamos por WhatsApp.</p>
+          <h3>Agenda tu cita para traer tu pieza</h3>
+          <p class="wiz-step-help">Este paquete requiere peritaje presencial en CDMX. Elige día y hora — así te esperamos listos para recibirte.</p>
           <div id="s-fecha-wrap">
-            <label for="s-fecha">Fecha tentativa para traer tu pieza al laboratorio</label>
-            <input id="s-fecha" type="date">
+            <label class="wiz-sr-label" for="s-fecha">Fecha y hora de tu cita</label>
+            <div class="cal-widget" id="s-cal-widget">
+              <div class="cal-header">
+                <button type="button" class="cal-nav" id="cal-prev-btn" onclick="calNav(-1)" aria-label="Mes anterior">‹</button>
+                <span class="cal-month-label" id="cal-month-label"></span>
+                <button type="button" class="cal-nav" id="cal-next-btn" onclick="calNav(1)" aria-label="Mes siguiente">›</button>
+              </div>
+              <div class="cal-weekdays"><span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span></div>
+              <div class="cal-days" id="cal-days"></div>
+            </div>
+            <div class="cal-slots-wrap" id="cal-slots-wrap" style="display:none;">
+              <label class="wiz-sr-label">Horario disponible</label>
+              <p style="font-size:12.5px;color:var(--sage);margin:0;">Horarios disponibles para <strong id="cal-slots-date"></strong></p>
+              <div class="cal-slots" id="cal-slots"></div>
+            </div>
+            <p class="cal-selected-note" id="cal-selected-note"></p>
+            <input type="hidden" id="s-fecha">
+            <input type="hidden" id="s-hora">
           </div>
           <div id="s-pkg-note" class="branch-note" style="margin-top:14px;"></div>
         </div>
@@ -2134,6 +2196,11 @@
               <div class="kpi"><p class="num" id="stat-validacion">—</p><p class="lbl">Validaciones en curso</p></div>
               <div class="kpi"><p class="num" id="stat-folios">—</p><p class="lbl">Folios emitidos</p></div>
               <div class="kpi"><p class="num" id="stat-ingresos">—</p><p class="lbl">Ingresos estimados</p></div>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">Próximas citas</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas presenciales agendadas — así sabes a quién esperar y cuándo.</p>
+              <div id="dash-citas"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
             </div>
             <div class="card">
               <h3 style="font-size:16px;">Actividad reciente</h3>
@@ -2680,16 +2747,20 @@ function startSolicitudesListener(){
       if(!solicitudesListenerReady) return; // no avisar de solicitudes ya existentes en la primera carga
       let d = {};
       try{ d = JSON.parse(change.doc.data().value || '{}'); }catch(e){}
+      const citaTxt = (d.paquete && d.paquete !== 'digital' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
+      const title = citaTxt ? 'Nueva cita agendada' : 'Nueva solicitud de certificación';
       notify({
         type:'solicitud',
-        title:'Nueva solicitud de certificación',
-        message:`${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'}${d.nivel ? ' · ' + d.nivel : ''}`,
+        title,
+        message: citaTxt
+          ? `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'} · ${citaTxt}`
+          : `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'}${d.nivel ? ' · ' + d.nivel : ''}`,
         duration:9000,
         onClick:() => { go('admin'); adminGo('solicitudes'); }
       });
       addAdminNotif({
-        title:'Nueva solicitud de certificación',
-        message:`${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'}`,
+        title,
+        message: citaTxt ? `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'} · ${citaTxt}` : `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'}`,
         tab:'solicitudes'
       });
       playNotifChime();
@@ -3146,6 +3217,160 @@ function pkgSelectSpeed(pkg, tier, btnEl){
   }
 }
 
+// ============================================================
+// CALENDARIO DE CITAS — wizard "Solicitar validación" (paquetes presenciales)
+// ============================================================
+// Horario de atención del laboratorio para recibir piezas en persona.
+// 0=domingo … 6=sábado. Ajusta aquí si cambian los horarios reales.
+const BUSINESS_HOURS = {
+  1:{open:'10:00',close:'18:00'}, // lunes
+  2:{open:'10:00',close:'18:00'}, // martes
+  3:{open:'10:00',close:'18:00'}, // miércoles
+  4:{open:'10:00',close:'18:00'}, // jueves
+  5:{open:'10:00',close:'18:00'}, // viernes
+  6:{open:'10:00',close:'14:00'}  // sábado
+  // domingo: cerrado (sin entrada = deshabilitado en el calendario)
+};
+const CAL_SLOT_MINUTES = 30;
+const CAL_MIN_LEAD_HOURS = 2;   // no se puede agendar con menos de 2h de anticipación
+const CAL_MAX_MONTHS_AHEAD = 2; // no se puede agendar a más de 2 meses vista
+const CAL_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const CAL_DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+let calState = null;
+
+function calToday(){ const t = new Date(); t.setHours(0,0,0,0); return t; }
+function calInitState(){
+  const today = new Date();
+  calState = { year: today.getFullYear(), month: today.getMonth(), selDate: null };
+}
+function formatHora12(hhmm){
+  if(!hhmm) return '';
+  const [hh,mm] = hhmm.split(':').map(Number);
+  const ampm = hh < 12 ? 'a.m.' : 'p.m.';
+  let hh12 = hh % 12; if(hh12===0) hh12 = 12;
+  return `${hh12}:${String(mm).padStart(2,'0')} ${ampm}`;
+}
+function formatCitaLarga(fechaISO, horaHHMM){
+  if(!fechaISO) return '';
+  const [y,m,d] = fechaISO.split('-').map(Number);
+  if(!y||!m||!d) return '';
+  const dt = new Date(y, m-1, d);
+  const horaTxt = horaHHMM ? ` · ${formatHora12(horaHHMM)}` : '';
+  return `${CAL_DIAS[dt.getDay()]} ${d} de ${CAL_MESES[m-1]}${horaTxt}`;
+}
+
+function calRenderMonth(){
+  if(!calState) calInitState();
+  const label = document.getElementById('cal-month-label');
+  const daysBox = document.getElementById('cal-days');
+  if(!label || !daysBox) return;
+  label.textContent = `${CAL_MESES[calState.month]} ${calState.year}`;
+
+  const today = calToday();
+  const firstOfMonth = new Date(calState.year, calState.month, 1);
+  const daysInMonth = new Date(calState.year, calState.month+1, 0).getDate();
+  const startWeekday = firstOfMonth.getDay();
+
+  const minMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const maxMonth = new Date(today.getFullYear(), today.getMonth()+CAL_MAX_MONTHS_AHEAD, 1);
+  const prevBtn = document.getElementById('cal-prev-btn');
+  const nextBtn = document.getElementById('cal-next-btn');
+  if(prevBtn) prevBtn.disabled = (calState.year===minMonth.getFullYear() && calState.month===minMonth.getMonth());
+  if(nextBtn) nextBtn.disabled = (calState.year===maxMonth.getFullYear() && calState.month===maxMonth.getMonth());
+
+  let html = '';
+  for(let i=0;i<startWeekday;i++) html += `<button type="button" class="cal-day cal-day-empty" disabled tabindex="-1"></button>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const dateObj = new Date(calState.year, calState.month, d);
+    const weekday = dateObj.getDay();
+    const isPast = dateObj < today;
+    const isClosed = !BUSINESS_HOURS[weekday];
+    const isToday = dateObj.getTime() === today.getTime();
+    const isSelected = !!(calState.selDate && calState.selDate.y===calState.year && calState.selDate.m===calState.month && calState.selDate.d===d);
+    const disabled = isPast || isClosed;
+    const cls = ['cal-day'];
+    if(isToday) cls.push('cal-day-today');
+    if(isSelected) cls.push('cal-day-selected');
+    if(isClosed && !isPast) cls.push('cal-day-closed');
+    html += `<button type="button" class="${cls.join(' ')}" ${disabled?'disabled':''} onclick="calSelectDay(${calState.year},${calState.month},${d})">${d}</button>`;
+  }
+  daysBox.innerHTML = html;
+}
+
+function calNav(delta){
+  if(!calState) calInitState();
+  let m = calState.month + delta, y = calState.year;
+  if(m<0){ m=11; y--; } else if(m>11){ m=0; y++; }
+  calState.month = m; calState.year = y;
+  calRenderMonth();
+}
+
+function calSelectDay(y, m, d){
+  if(!calState) calInitState();
+  calState.selDate = {y,m,d};
+  calRenderMonth();
+  const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  const fechaInput = document.getElementById('s-fecha');
+  const horaInput = document.getElementById('s-hora');
+  if(fechaInput) fechaInput.value = iso;
+  if(horaInput) horaInput.value = '';
+  const note = document.getElementById('cal-selected-note');
+  if(note){ note.classList.remove('visible'); note.textContent = ''; }
+
+  const weekday = new Date(y,m,d).getDay();
+  const hours = BUSINESS_HOURS[weekday];
+  const slotsWrap = document.getElementById('cal-slots-wrap');
+  const slotsBox = document.getElementById('cal-slots');
+  const slotsDateLabel = document.getElementById('cal-slots-date');
+  if(slotsDateLabel) slotsDateLabel.textContent = formatCitaLarga(iso, '');
+  if(!hours || !slotsWrap || !slotsBox){ if(slotsWrap) slotsWrap.style.display = 'none'; updateSolicitudProgress(); return; }
+
+  const [openH,openM] = hours.open.split(':').map(Number);
+  const [closeH,closeM] = hours.close.split(':').map(Number);
+  const openMinutes = openH*60+openM, closeMinutes = closeH*60+closeM;
+  const isToday = new Date(y,m,d).getTime() === calToday().getTime();
+  const now = new Date();
+  const minMinutesToday = isToday ? (now.getHours()*60 + now.getMinutes() + CAL_MIN_LEAD_HOURS*60) : -1;
+
+  let slotsHtml = '', anySlot = false;
+  for(let t=openMinutes; t<closeMinutes; t+=CAL_SLOT_MINUTES){
+    if(isToday && t < minMinutesToday) continue;
+    anySlot = true;
+    const hhmm = `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+    slotsHtml += `<button type="button" class="cal-slot" onclick="calSelectSlot('${hhmm}',this)">${formatHora12(hhmm)}</button>`;
+  }
+  slotsWrap.style.display = 'block';
+  slotsBox.innerHTML = anySlot ? slotsHtml : `<p class="cal-closed-note">No quedan horarios disponibles para hoy — elige otro día.</p>`;
+  updateSolicitudProgress();
+}
+
+function calSelectSlot(hhmm, el){
+  const horaInput = document.getElementById('s-hora');
+  if(horaInput) horaInput.value = hhmm;
+  document.querySelectorAll('.cal-slot').forEach(b=>b.classList.remove('selected'));
+  if(el) el.classList.add('selected');
+  const fecha = document.getElementById('s-fecha').value;
+  const note = document.getElementById('cal-selected-note');
+  if(note){
+    note.textContent = `Cita agendada: ${formatCitaLarga(fecha, hhmm)}. La confirmamos por WhatsApp.`;
+    note.classList.add('visible');
+  }
+  updateSolicitudProgress();
+}
+
+function calReset(){
+  calState = null;
+  const fechaInput = document.getElementById('s-fecha');
+  const horaInput = document.getElementById('s-hora');
+  if(fechaInput) fechaInput.value = '';
+  if(horaInput) horaInput.value = '';
+  const slotsWrap = document.getElementById('cal-slots-wrap');
+  if(slotsWrap) slotsWrap.style.display = 'none';
+  const note = document.getElementById('cal-selected-note');
+  if(note){ note.classList.remove('visible'); note.textContent = ''; }
+  calRenderMonth();
+}
+
 function onPackageChange(){
   const pkg = document.getElementById('s-nivel').value;
   const fechaWrap = document.getElementById('s-fecha-wrap');
@@ -3155,7 +3380,8 @@ function onPackageChange(){
     note.innerHTML = 'Este paquete es 100% en línea: después de enviar tus datos te vamos a redirigir a WhatsApp para que nos mandes las fotos y el video de tu pieza.';
   } else {
     fechaWrap.style.display = 'block';
-    note.innerHTML = 'Este paquete requiere traer la pieza físicamente al laboratorio. Después de enviar tus datos te decimos cómo agendar tu entrega, y también puedes escribirnos directo por WhatsApp.';
+    note.innerHTML = 'Este paquete requiere traer la pieza físicamente al laboratorio. Elige tu cita arriba — la confirmamos por WhatsApp en cuanto la recibamos.';
+    calRenderMonth();
   }
   updateSolicitudProgress();
 }
@@ -3184,6 +3410,7 @@ function isWizardStepValid(stepId){
     case 'paquete': return wizPkgChosen;
     case 'contacto': return !!(document.getElementById('s-nombre').value.trim() && document.getElementById('s-telefono').value.trim());
     case 'pieza': return !!document.getElementById('s-modelo').value.trim();
+    case 'logistica': return !!(document.getElementById('s-fecha').value && document.getElementById('s-hora').value);
     default: return true;
   }
 }
@@ -3277,6 +3504,7 @@ function renderWizardReview(){
   const color = document.getElementById('s-color').value.trim();
   const desc = document.getElementById('s-desc').value.trim();
   const fecha = document.getElementById('s-fecha').value;
+  const hora = document.getElementById('s-hora').value;
   let html = `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Paquete</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('paquete','back')">Editar</button></div>
@@ -3302,7 +3530,7 @@ function renderWizardReview(){
     ${pkg !== 'digital' ? `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Logística</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('logistica','back')">Editar</button></div>
-      <ul class="wiz-review-list"><li><span>Fecha tentativa</span><strong>${fecha ? escapeHtml(fecha) : 'Por confirmar'}</strong></li></ul>
+      <ul class="wiz-review-list"><li><span>Tu cita</span><strong>${fecha && hora ? escapeHtml(formatCitaLarga(fecha, hora)) : 'Por agendar'}</strong></li></ul>
     </div>` : ''}
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Evidencia visual</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('evidencia','back')">Editar</button></div>
@@ -3388,6 +3616,7 @@ function resetWizard(){
   const status = document.getElementById('s-fotos-status');
   if(status) status.textContent = 'Aún no subes fotos.';
   document.getElementById('s-nivel').value = 'digital';
+  calReset();
   onPackageChange();
   wizGoToStep('paquete');
   const view = document.getElementById('view-solicitar');
@@ -3404,6 +3633,14 @@ async function submitSolicitud(){
     wizGoToStep(!nombre || !telefono ? 'contacto' : 'pieza', 'back');
     return;
   }
+  const fechaEntrega = document.getElementById('s-fecha').value;
+  const citaHora = document.getElementById('s-hora').value;
+  if(pkg !== 'digital' && !(fechaEntrega && citaHora)){
+    toast('Elige la fecha y hora de tu cita.');
+    wizGoToStep('logistica', 'back');
+    return;
+  }
+  const citaTs = (pkg !== 'digital' && fechaEntrega && citaHora) ? new Date(`${fechaEntrega}T${citaHora}:00`).getTime() : null;
   const id = 'SOL-' + Date.now();
   const pkgLabels = {digital:'Validación digital — $150', fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'};
   const data = {
@@ -3412,7 +3649,7 @@ async function submitSolicitud(){
     origen: document.getElementById('s-origen').value,
     color: document.getElementById('s-color').value.trim(),
     desc: document.getElementById('s-desc').value.trim(),
-    fechaEntrega: document.getElementById('s-fecha').value,
+    fechaEntrega, citaHora, citaTs,
     nivel: pkgLabels[pkg] || pkg,
     estado: 'pendiente',
     fecha: new Date().toLocaleDateString('es-MX'),
@@ -3447,9 +3684,10 @@ async function submitSolicitud(){
       waMsg = `Hola, soy ${nombre}. Acabo de registrar mi solicitud ${id} para Validación digital de mi pieza "${modelo}".${hayFotos ? '' : ' Les mando las fotos y el video.'}`;
       waLabel = hayFotos ? 'Enviar video por WhatsApp' : 'Enviar fotos por WhatsApp';
     } else {
-      nextStepsText = 'Este paquete requiere traer tu pieza al laboratorio (revisa la sección de Ubicación). Si prefieres, agenda tu entrega directo por WhatsApp.';
-      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}". Quiero agendar la entrega física.`;
-      waLabel = 'Agendar por WhatsApp';
+      const citaTxt = formatCitaLarga(fechaEntrega, citaHora);
+      nextStepsText = `Tu cita quedó agendada para <strong>${escapeHtml(citaTxt)}</strong> — te esperamos en el laboratorio (revisa la sección de Ubicación). Te confirmamos por WhatsApp.`;
+      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}". Mi cita quedó agendada para ${citaTxt} — quiero confirmarla.`;
+      waLabel = 'Confirmar cita por WhatsApp';
     }
     confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
       <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(waMsg)}" target="_blank" rel="noopener">${waLabel}</a>
@@ -3458,7 +3696,7 @@ async function submitSolicitud(){
 
     document.getElementById('s-confirm').innerHTML = confirmHtml;
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
-    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha'].forEach(fid=>document.getElementById(fid).value='');
+    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora'].forEach(fid=>document.getElementById(fid).value='');
     SOLICITUD_FOTOS_DATA = [];
   }catch(e){
     toast('No se pudo enviar la solicitud, intenta de nuevo.');
@@ -4577,6 +4815,7 @@ function esDigital(paquete){ return paquete === 'digital'; }
 function solicitudCardHtml(d){
   const tipo = esDigital(d.paquete) ? '<span class="pill original" style="font-size:11px;">En línea</span>' : '<span class="pill pendiente" style="font-size:11px;">Presencial</span>';
   const enValidacion = d.estado === 'en_validacion';
+  const citaTxt = (!esDigital(d.paquete) && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
   return `
       <div class="card" style="margin-bottom:10px;">
         <div class="row" style="justify-content:space-between;">
@@ -4585,6 +4824,7 @@ function solicitudCardHtml(d){
         </div>
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
         <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)} · ${escapeHtml(d.fecha||'')}</p>
+        ${citaTxt ? `<p style="margin:0 0 8px;"><span class="cita-pill">Cita: ${escapeHtml(citaTxt)}</span></p>` : ''}
         ${d.desc ? `<p style="font-size:12.5px;color:var(--sage);margin:0 0 8px;">${escapeHtml(d.desc)}</p>` : ''}
         <div class="row">
           ${d.estado==='completado' ? '' : (enValidacion
@@ -4704,12 +4944,23 @@ function zzInstrumentSummary(zz, instrumentKeys){
 
 const DEADLINE_DAYS = {'Validación digital':2, 'Peritaje físico + certificado':5, 'Peritaje premium + encapsulado':8, 'Premium + encapsulado':8};
 function getDeadlineDays(nivel){ return DEADLINE_DAYS[nivel] || 5; }
+// El plazo de entrega corre a partir de que la pieza está físicamente en el
+// laboratorio (piezaRecibidaTs) — no desde que se agendó la cita. Mientras
+// la recepción siga pendiente en un paquete presencial, el plazo está en
+// pausa (deadlineInfo regresa null) para no mostrar un reloj corriendo
+// sobre algo que todavía no podemos empezar a trabajar.
+function isPendienteRecepcion(p){
+  const r = p.pasos && p.pasos.find(s=>s.key==='recepcion');
+  return !!(r && !r.done && p.paquete !== 'digital');
+}
 function deadlineInfo(p){
-  if(!p.creadoTs) return null;
+  if(isPendienteRecepcion(p)) return null;
+  const baseTs = p.piezaRecibidaTs || p.creadoTs;
+  if(!baseTs) return null;
   const days = getDeadlineDays(p.nivel);
-  const limitTs = p.creadoTs + days*24*60*60*1000;
+  const limitTs = baseTs + days*24*60*60*1000;
   const now = Date.now();
-  const elapsedMs = Math.max(0, now - p.creadoTs);
+  const elapsedMs = Math.max(0, now - baseTs);
   const remainingMs = limitTs - now;
   const elapsedDays = Math.floor(elapsedMs / (24*60*60*1000));
   const elapsedHours = Math.floor((elapsedMs % (24*60*60*1000)) / (60*60*1000));
@@ -4729,14 +4980,22 @@ function deadlineInfo(p){
 
 async function startValidacion(dJson){
   const d = JSON.parse(dJson);
+  const isDigital = d.paquete === 'digital';
   const proceso = {
     id: d.id, solicitudId: d.id,
     nombre: d.nombre, telefono: d.telefono, modelo: d.modelo, anio: d.anio,
     origen: d.origen, color: d.color, paquete: d.paquete, nivel: d.nivel,
+    citaFecha: d.fechaEntrega || '', citaHora: d.citaHora || '',
     estado: 'en_proceso',
     creado: new Date().toLocaleDateString('es-MX'),
     creadoTs: Date.now(),
-    pasos: STEP_DEFS.map(s=>({key:s.key, label:s.label, done:false, nota:''}))
+    // Los paquetes presenciales arrancan con "recepción" bloqueada — el
+    // protocolo completo (Zigzag C-Z + fotos) se mantiene cerrado hasta que
+    // el admin confirme que la pieza ya está físicamente en el laboratorio.
+    // Los digitales no dependen de una entrega física, así que arrancan
+    // con este paso ya resuelto.
+    piezaRecibidaTs: isDigital ? Date.now() : null,
+    pasos: STEP_DEFS.map(s=>({key:s.key, label:s.label, done: (s.key==='recepcion' && isDigital), nota:''}))
   };
   try{
     await HVStorage.set('proceso:'+d.id, JSON.stringify(proceso), true);
@@ -4769,6 +5028,7 @@ async function refreshValidacionList(){
       const done = p.pasos.filter(s=>s.done).length;
       const pct = Math.round(done / p.pasos.length * 100);
       const dl = deadlineInfo(p);
+      const pendiente = isPendienteRecepcion(p);
       return `
         <div class="proc-card" onclick="openProceso('${escapeHtml(p.id)}')">
           <div class="row" style="justify-content:space-between;align-items:center;">
@@ -4776,10 +5036,11 @@ async function refreshValidacionList(){
             <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
           </div>
           <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(p.nombre)} · ${escapeHtml(p.nivel)}</p>
+          ${pendiente && p.citaFecha ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
           <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
           <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
             <p class="foot-note" style="border:none;padding:0;margin:0;">${done} de ${p.pasos.length} pasos completados</p>
-            ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : ''}
+            ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando entrega</span>` : '')}
           </div>
         </div>` }).join('') : '<p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p>';
   }catch(e){ listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudo cargar la lista.</p>'; }
@@ -4807,37 +5068,67 @@ async function openProceso(id){
 function renderProcesoDetail(p){
   CURRENT_PROCESO = p;
   const detail = document.getElementById('validacion-detail');
+  const isDigital = p.paquete === 'digital';
+  const recepcionStep = p.pasos.find(s=>s.key==='recepcion');
+  const recepcionDone = !recepcionStep || recepcionStep.done;
+  const locked = !recepcionDone && !isDigital;
+  const otherSteps = p.pasos.filter(s=>s.key!=='recepcion');
   const done = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(done / p.pasos.length * 100);
   const dl = deadlineInfo(p);
-  const stepsHtml = p.pasos.map((s,i)=>{
+  const pendienteRecepcion = isPendienteRecepcion(p);
+
+  // Guía al admin hacia el siguiente paso concreto, del inicio al certificado.
+  let nextAction;
+  if(locked){
+    nextAction = { icon:'1', text:'Confirma la recepción de la pieza en cuanto el cliente la traiga al laboratorio.' };
+  } else {
+    const pendiente = otherSteps.find(s=>!s.done);
+    if(pendiente){
+      const idx = p.pasos.findIndex(s=>s.key===pendiente.key);
+      nextAction = { icon:String(idx+1), text:`Continúa con "${pendiente.label}".` };
+    } else {
+      nextAction = { icon:'✓', text:'Todos los pasos están completos — genera el certificado abajo.', done:true };
+    }
+  }
+
+  const stepsHtml = otherSteps.map((s)=>{
+    const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
     const def = STEP_DEFS.find(d=>d.key===s.key);
     const type = (def && def.type) || 'simple';
-    if(type === 'zigzag'){
-      return `
-      <div class="step-row step-row-zigzag">
-        <div class="step-check ${s.done?'done':''}" onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
-        <div class="step-body">
-          <h4>${i+1}. ${escapeHtml(s.label)}</h4>
-          ${renderZigzagStepBody(p, s)}
-          <div class="row" style="margin-top:14px;">
-            <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
-          </div>
-        </div>
-      </div>`;
-    }
+    const innerBody = locked
+      ? `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (paso 1).</div>`
+      : (type === 'zigzag'
+        ? renderZigzagStepBody(p, s)
+        : `<textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>`);
     return `
-    <div class="step-row">
-      <div class="step-check ${s.done?'done':''}" onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
+    <div class="step-row ${type==='zigzag'?'step-row-zigzag':''} ${locked?'step-locked':''}">
+      <div class="step-check ${s.done?'done':''}" ${locked?'':`onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`}>${s.done?'✓':''}</div>
       <div class="step-body">
-        <h4>${i+1}. ${escapeHtml(s.label)}</h4>
-        <textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>
-        <div class="row" style="margin-top:6px;">
+        <h4>${globalIdx+1}. ${escapeHtml(s.label)}</h4>
+        ${innerBody}
+        ${!locked ? `<div class="row" style="margin-top:${type==='zigzag'?'14px':'6px'};">
           <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
-        </div>
+        </div>` : ''}
       </div>
     </div>`;
   }).join('');
+
+  const citaTxt = p.citaFecha ? formatCitaLarga(p.citaFecha, p.citaHora) : '';
+  const recepcionGateHtml = isDigital ? '' : `
+    <div class="recepcion-gate ${recepcionDone?'done':'pending'}">
+      <div class="recepcion-gate-head">
+        <div class="recepcion-gate-icon">${recepcionDone?'✓':'⏳'}</div>
+        <div>
+          <h4 style="margin:0;font-size:14.5px;">1. Recepción de la pieza</h4>
+          <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${recepcionDone ? 'Pieza recibida — protocolo habilitado.' : (citaTxt ? 'Cita agendada: '+escapeHtml(citaTxt) : 'Sin cita agendada — coordina la entrega con el cliente.')}</p>
+        </div>
+      </div>
+      ${recepcionDone
+        ? `<p class="foot-note" style="border:none;padding:0;margin:0;">${p.piezaRecibidaTs ? 'Recibida el '+escapeHtml(new Date(p.piezaRecibidaTs).toLocaleString('es-MX',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})) : ''}</p>`
+        : `<button class="btn small" onclick="confirmarRecepcion('${escapeHtml(p.id)}')">Confirmar recepción de la pieza</button>`}
+    </div>`;
+
   detail.innerHTML = `
     <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
       <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
@@ -4849,11 +5140,18 @@ function renderProcesoDetail(p){
           <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
           <p style="font-size:13px;color:var(--sage);margin:0 0 12px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · ${escapeHtml(p.nivel)}</p>
         </div>
-        ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : ''}
+        ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : (pendienteRecepcion ? `<span class="cita-pill" style="margin-top:2px;">Esperando entrega</span>` : '')}
       </div>
-      ${dl ? `<p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">Iniciado hace ${dl.elapsedDays>0?dl.elapsedDays+'d ':''}${dl.elapsedHours}h · plazo de ${dl.days} días para este paquete</p>` : ''}
+      ${dl ? `<p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">Recibida hace ${dl.elapsedDays>0?dl.elapsedDays+'d ':''}${dl.elapsedHours}h · plazo de ${dl.days} días para este paquete</p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${done} de ${p.pasos.length} pasos completados</p>
+
+      <div class="next-action-banner ${nextAction.done?'all-done':''}">
+        <div class="next-action-icon">${nextAction.icon}</div>
+        <div class="next-action-text"><strong>Siguiente paso</strong><span>${escapeHtml(nextAction.text)}</span></div>
+      </div>
+
+      ${recepcionGateHtml}
       ${stepsHtml}
       <div class="row" style="margin-top:18px;">
         <button class="btn" ${done<p.pasos.length?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
@@ -5092,6 +5390,20 @@ async function toggleProcesoStep(id, key){
   renderProcesoDetail(p);
 }
 
+// Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
+// el resto del protocolo (Zigzag C-Z + fotos) y arranca el reloj del plazo
+// de entrega desde este momento, no desde que se agendó la cita.
+async function confirmarRecepcion(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  const step = p.pasos.find(s=>s.key==='recepcion');
+  if(step) step.done = true;
+  p.piezaRecibidaTs = Date.now();
+  CURRENT_PROCESO = p;
+  await setProceso(p);
+  toast('Recepción confirmada — protocolo habilitado.');
+  renderProcesoDetail(p);
+}
+
 async function saveProcesoNota(id, key, value){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
@@ -5289,6 +5601,7 @@ async function refreshAdminLists(){
   const solMiniBox = document.getElementById('a-solicitudes-mini');
   const folBox = document.getElementById('a-folios');
   const dashBox = document.getElementById('dash-actividad');
+  const citasBox = document.getElementById('dash-citas');
   if(!solBox) return;
   solBox.innerHTML = 'Cargando…';
   if(solMiniBox) solMiniBox.innerHTML = 'Cargando…';
@@ -5326,6 +5639,24 @@ async function refreshAdminLists(){
     dashBox.innerHTML = actividad.length ? actividad.map(a=>`
       <div class="activity-row"><span class="dot"></span><span style="flex:1;">${escapeHtml(a.texto)}</span><span class="mono" style="color:var(--brass-dim);">${escapeHtml(a.fecha)}</span></div>
     `).join('') : '<p style="color:var(--sage);font-size:14px;">Sin actividad todavía.</p>';
+  }
+
+  if(citasBox){
+    const now = Date.now();
+    const citas = solItems
+      .filter(d => !esDigital(d.paquete) && d.fechaEntrega && d.citaHora && d.estado !== 'completado' && (d.citaTs==null || d.citaTs >= now - 3*60*60*1000))
+      .sort((a,b) => (a.citaTs||0) - (b.citaTs||0))
+      .slice(0,6);
+    citasBox.innerHTML = citas.length ? citas.map(d => `
+      <div class="activity-row" style="align-items:flex-start;cursor:pointer;" onclick="adminGo('solicitudes')">
+        <span class="dot"></span>
+        <span style="flex:1;">
+          <strong style="font-size:13.5px;">${escapeHtml(d.modelo)}</strong> — ${escapeHtml(d.nombre)}
+          <span style="display:block;font-size:12px;color:var(--sage);margin-top:2px;">${escapeHtml(d.nivel||'')} · ${escapeHtml(d.telefono||'')}</span>
+        </span>
+        <span class="cita-pill">${escapeHtml(formatCitaLarga(d.fechaEntrega, d.citaHora))}</span>
+      </div>
+    `).join('') : '<p style="color:var(--sage);font-size:14px;">No hay citas presenciales agendadas por ahora.</p>';
   }
 }
 </script>
