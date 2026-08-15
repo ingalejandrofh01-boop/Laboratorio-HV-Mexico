@@ -392,6 +392,7 @@
   .cert-authenticity-box{border:1px solid rgba(184,134,47,0.35);border-left:3px solid var(--brass);border-radius:4px;padding:14px 16px;margin:14px 0;background:rgba(184,134,47,0.05);}
   .cert-authenticity-label{margin:0 0 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
   .cert-authenticity-text{margin:0;font-size:13px;line-height:1.5;color:var(--ink);}
+  .cert-protocol-line{margin:0 0 6px;font-size:11px;color:var(--brass-dim);}
   .cert-signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px;}
   .cert-sign-block{text-align:center;}
   .cert-sign-line{border-top:1px solid var(--ink);margin:34px 14px 8px;}
@@ -948,6 +949,16 @@
   .step-locked{position:relative;opacity:.55;pointer-events:none;filter:saturate(.4);}
   .step-locked-note{display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(27,36,32,0.04);border:1px dashed var(--line);border-radius:6px;font-size:12.5px;color:var(--sage);margin:8px 0;}
   html[data-theme="dark"] .step-locked-note{background:rgba(255,255,255,0.03);}
+  /* ===== Checklist del Protocolo de Autenticidad (8 puntos, SÍ/NO) ===== */
+  .auten-items{display:flex;flex-direction:column;gap:2px;margin-top:6px;}
+  .auten-item{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(27,36,32,0.06);}
+  html[data-theme="dark"] .auten-item{border-bottom-color:rgba(255,255,255,0.06);}
+  .auten-item:last-child{border-bottom:none;}
+  .auten-item-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;cursor:pointer;background:var(--panel);transition:background .15s ease,border-color .15s ease;}
+  .auten-item.done .auten-item-check{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .auten-item.locked{opacity:.5;}
+  .auten-item.locked .auten-item-check{cursor:not-allowed;}
+  .auten-item-label{font-size:13.5px;color:var(--ink);}
   .next-action-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;background:rgba(163,38,56,0.06);border:1px solid rgba(163,38,56,0.18);margin-bottom:14px;}
   .next-action-banner.all-done{background:rgba(47,122,79,0.08);border-color:rgba(47,122,79,0.25);}
   .next-action-icon{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:14px;font-weight:700;}
@@ -1056,6 +1067,13 @@
       break-inside:avoid;
       page-break-inside:avoid;
     }
+    /* El PDF se renderiza contra el tamaño de página (carta), no el
+       viewport de pantalla — así que la media query general
+       "@media(max-width:900px){.grid-3{...2 columnas...}}" (pensada para
+       tablet/celular) también se dispara aquí y colapsa la cuadrícula de
+       fotos a 2 columnas, alargando la hoja. La forzamos de vuelta a 3
+       columnas solo dentro del certificado impreso. */
+    #print-target-full .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
     #print-target-full .photobox{aspect-ratio:4/3;}
     #print-target-full .divider{margin:8px 0;}
     #print-target-full .cert > .row{gap:12px;}
@@ -1592,18 +1610,19 @@
 
   <section id="metodo-fotos">
     <p class="section-eyebrow">Protocolo de laboratorio</p>
-    <h2>Protocolo de evaluación — 6 fotografías obligatorias</h2>
+    <h2>Protocolo de evaluación — 7 fotografías obligatorias</h2>
     <p style="color:var(--sage);max-width:640px;">Cada pieza que evaluamos sigue el mismo protocolo fotográfico y de laboratorio, para que el folio sea comparable entre piezas y verificable en el tiempo. Este es el expediente real de un Cockney Cab amarillo — folio con dictamen <strong>Original</strong>, calificación <strong>8.0/10 Near Mint‑Mint</strong>.</p>
     <div class="photo-diagram">
       <p class="pd-hint">👆 Pasa el cursor o toca cada número para ver el acercamiento de esa zona</p>
       <div class="photo-diagram-stage">
-        <img class="photo-diagram-photo" src="showcase-piece.jpg" alt="Cockney Cab amarillo, pieza de referencia del protocolo de 6 fotografías" loading="lazy" />
+        <img class="photo-diagram-photo" src="showcase-piece.jpg" alt="Cockney Cab amarillo, pieza de referencia del protocolo de 7 fotografías" loading="lazy" />
         <div class="photo-diagram-pin" style="left:42.0%;top:66.0%;" title="Base completa" data-zoom="pd-zoom-01.jpg">01</div>
         <div class="photo-diagram-pin" style="left:61.5%;top:75.3%;" title="Llantas" data-zoom="pd-zoom-02.jpg">02</div>
-        <div class="photo-diagram-pin" style="left:87.0%;top:61.3%;" title="Frente y trasera" data-zoom="pd-zoom-03.jpg">03</div>
+        <div class="photo-diagram-pin" style="left:87.0%;top:61.3%;" title="Frente" data-zoom="pd-zoom-03.jpg">03</div>
         <div class="photo-diagram-pin" style="left:56.0%;top:25.3%;" title="Techo y cofre a 45°" data-zoom="pd-zoom-04.jpg">04</div>
         <div class="photo-diagram-pin" style="left:28.0%;top:33.3%;" title="Interior por ventanas" data-zoom="pd-zoom-05.jpg">05</div>
         <div class="photo-diagram-pin" style="left:40.0%;top:46.7%;" title="Borde de pintura UV / microscopio" data-zoom="pd-zoom-06.jpg">06</div>
+        <div class="photo-diagram-pin" style="left:14.0%;top:56.0%;" title="Trasera (cajuela)" data-zoom="pd-zoom-07.jpg">07</div>
         <div class="pd-lens" aria-hidden="true"></div>
       </div>
     </div>
@@ -1639,7 +1658,7 @@
           <span class="pd-zoom-icon" aria-hidden="true">🔍</span>
         </figure>
         <div>
-          <strong>Frente y trasera</strong>
+          <strong>Frente</strong>
           <p class="pd-zoom-caption">Acercamiento de esta foto: parrilla cromada y motor supercargado.</p>
           <p class="pd-finding">Lo que encontramos: parrilla cromada y defensas sin golpes ni piezas faltantes; conserva intacto el detalle del motor supercargado.</p>
         </div>
@@ -1680,12 +1699,24 @@
           <p class="pd-finding">Lo que encontramos: sin fluorescencia anómala bajo UV en los bordes de pintura — descarta retoques o repintado parcial.</p>
         </div>
       </div>
+      <div class="step">
+        <div class="num">07</div>
+        <figure class="pd-zoom-fig">
+          <img class="pd-zoom-thumb" src="pd-zoom-07.jpg" alt="Acercamiento de la parte trasera, guardafango y rin trasero de la pieza" loading="lazy">
+          <span class="pd-zoom-icon" aria-hidden="true">🔍</span>
+        </figure>
+        <div>
+          <strong>Trasera (cajuela)</strong>
+          <p class="pd-zoom-caption">Acercamiento de esta foto: guardafango trasero, cajuela y rin trasero.</p>
+          <p class="pd-finding">Lo que encontramos: línea de cajuela y guardafango trasero sin golpes ni deformaciones; llanta trasera con desgaste parejo, congruente con el resto de la pieza.</p>
+        </div>
+      </div>
     </div>
     <div class="pd-result">
       <span class="grade-medal tier-silver">8.0–8.9</span>
       <div class="pd-result-text">
         <p class="pd-result-label">Resultado del dictamen <span class="pill original">Original</span></p>
-        <p>Las 6 fotografías, cotejadas contra el molde y el catálogo CIPSA de la época, no muestran evidencia de repintado, restauración ni sustitución de piezas. La pieza calificó <strong>8.0/10 — Near Mint‑Mint</strong>: desgaste leve y parejo propio del uso y el paso del tiempo, sin daño que comprometa su autenticidad.</p>
+        <p>Las 7 fotografías, cotejadas contra el molde y el catálogo CIPSA de la época, no muestran evidencia de repintado, restauración ni sustitución de piezas. La pieza calificó <strong>8.0/10 — Near Mint‑Mint</strong>: desgaste leve y parejo propio del uso y el paso del tiempo, sin daño que comprometa su autenticidad.</p>
       </div>
     </div>
   </section>
@@ -2302,7 +2333,7 @@
                     <input type="file" accept="image/*" id="a-foto3-file" style="display:none;" onchange="handlePhotoUpload(3,this)">
                     <input type="hidden" id="a-foto3">
                     <img class="photo-preview" id="a-foto3-preview" style="display:none;">
-                    <span class="photo-drop-label" id="a-foto3-label">Foto 3 — frente/trasera<br><small>Toca para adjuntar</small></span>
+                    <span class="photo-drop-label" id="a-foto3-label">Foto 3 — frente<br><small>Toca para adjuntar</small></span>
                     <button type="button" class="photo-clear" id="a-foto3-clear" style="display:none;" onclick="clearPhotoUpload(3,event)">✕</button>
                   </div>
                   <div class="photo-drop" id="a-foto4-drop" onclick="document.getElementById('a-foto4-file').click()">
@@ -2325,6 +2356,13 @@
                     <img class="photo-preview" id="a-foto6-preview" style="display:none;">
                     <span class="photo-drop-label" id="a-foto6-label">Foto 6 — UV/microscopio<br><small>Toca para adjuntar</small></span>
                     <button type="button" class="photo-clear" id="a-foto6-clear" style="display:none;" onclick="clearPhotoUpload(6,event)">✕</button>
+                  </div>
+                  <div class="photo-drop" id="a-foto7-drop" onclick="document.getElementById('a-foto7-file').click()">
+                    <input type="file" accept="image/*" id="a-foto7-file" style="display:none;" onchange="handlePhotoUpload(7,this)">
+                    <input type="hidden" id="a-foto7">
+                    <img class="photo-preview" id="a-foto7-preview" style="display:none;">
+                    <span class="photo-drop-label" id="a-foto7-label">Foto 7 — trasera<br><small>Toca para adjuntar</small></span>
+                    <button type="button" class="photo-clear" id="a-foto7-clear" style="display:none;" onclick="clearPhotoUpload(7,event)">✕</button>
                   </div>
                 </div>
                 <p id="a-foto-status" class="foot-note" style="border:none;padding-top:6px;"></p>
@@ -2849,8 +2887,8 @@ function tierLabel(tier){
 }
 
 function renderCert(f){
-  const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6];
-  const labels = ['Base','Llantas','Frente/trasera','Techo/cofre 45°','Interior','UV/microscopio'];
+  const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6,f.foto7];
+  const labels = ['Base','Llantas','Frente','Techo/cofre 45°','Interior','UV/microscopio','Trasera'];
   let fotoHtml = fotos.map((u,i)=> `<div class="photobox">${u ? `<img src="${escapeHtml(u)}" alt="${labels[i]}">` : labels[i]}</div>`).join('');
   const tier = tierForGrade(f.grado, f.estado);
   const subgrades = [
@@ -2906,6 +2944,7 @@ function renderCert(f){
     <div class="divider"></div>
     <div class="cert-authenticity-box">
       <p class="cert-authenticity-label">Dictamen de autenticidad</p>
+      <p class="cert-protocol-line mono">A) Protocolo de Autenticidad: <strong>Aprobado</strong> &nbsp;·&nbsp; B) Protocolo de Condición — ZigZag C-Z: <strong>${escapeHtml(f.grado||'—')}/10</strong></p>
       <p class="cert-authenticity-text">${dictamenText(f)}</p>
     </div>
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
@@ -4634,7 +4673,7 @@ function clearPhotoUpload(n, ev){
 }
 
 function resetAllPhotoUploads(){
-  for(let n=1; n<=6; n++){ clearPhotoUpload(n, null); }
+  for(let n=1; n<=7; n++){ clearPhotoUpload(n, null); }
 }
 
 function collectLiveFormData(){
@@ -4646,7 +4685,7 @@ function collectLiveFormData(){
     sgPintura: g('a-sg-pintura'), sgDesgaste: g('a-sg-desgaste'), sgEnsamble: g('a-sg-ensamble'), sgAutenticidad: g('a-sg-autenticidad'),
     uv: g('a-uv'), micro: g('a-micro'), remaches: g('a-remaches'), color: g('a-color'), obs: g('a-obs'),
     nivel: g('a-nivel'), telefono: g('a-telefono'),
-    foto1: g('a-foto1'), foto2: g('a-foto2'), foto3: g('a-foto3'), foto4: g('a-foto4'), foto5: g('a-foto5'), foto6: g('a-foto6'),
+    foto1: g('a-foto1'), foto2: g('a-foto2'), foto3: g('a-foto3'), foto4: g('a-foto4'), foto5: g('a-foto5'), foto6: g('a-foto6'), foto7: g('a-foto7'),
     fecha: new Date().toLocaleDateString('es-MX')
   };
 }
@@ -4865,11 +4904,52 @@ function filterSolicitudes(filter){
 // ============================================================
 // VALIDACIÓN PASO A PASO
 // ============================================================
+// Dos evaluaciones distintas y no promediables entre sí:
+// A) Protocolo de Autenticidad — checklist SÍ/NO, garantía de proceso (no se califica, se cumple).
+// B) Protocolo de Condición — Sistema ZigZag C-Z — sí se califica, se promedia por zonas.
+// Convergen en el dictamen final: Auténtico (A) + Calificación ZigZag (B).
 const STEP_DEFS = [
-  {key:'recepcion', label:'Recepción de la pieza', type:'simple'},
-  {key:'zigzag', label:'Medición y evaluación por zonas — Protocolo Zigzag C-Z', type:'zigzag'},
-  {key:'fotos', label:'Fotografías de evidencia', type:'simple'}
+  {key:'autenticidad', label:'Protocolo de Autenticidad', type:'autenticidad'},
+  {key:'zigzag', label:'Protocolo de Condición — Sistema ZigZag C-Z', type:'zigzag'},
+  {key:'fotos', label:'Fotografías de evidencia (7)', type:'simple'}
 ];
+// Checklist de 8 puntos del Protocolo de Autenticidad — es la garantía de
+// proceso ("ISO interno"): no lleva promedio, cada punto es SÍ/NO.
+const AUTENTICIDAD_ITEMS = [
+  {key:'recepcion', label:'Recepción de la pieza'},
+  {key:'custodia', label:'Cadena de custodia y folio de ingreso'},
+  {key:'visual', label:'Inspección visual'},
+  {key:'instrumental', label:'Análisis instrumental (lupa, UV, comparativa)'},
+  {key:'dictamen', label:'Dictamen de autenticidad'},
+  {key:'sello', label:'Sello de verificación'},
+  {key:'encapsulado', label:'Encapsulado de seguridad'},
+  {key:'registro', label:'Registro digital y entrega'}
+];
+function ensureAutenticidad(step){
+  if(!step.autenticidad){
+    step.autenticidad = { items: AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done:false})) };
+  }
+  return step.autenticidad;
+}
+// Migra procesos creados antes de esta reestructura (modelo plano de 3
+// pasos: recepcion/zigzag/fotos) al nuevo modelo (autenticidad[8 puntos
+// internos]/zigzag/fotos), preservando el estado de la compuerta de
+// recepción física para no romper validaciones ya en curso.
+function migrateProcesoShape(p){
+  if(!p || !Array.isArray(p.pasos)) return p;
+  const hasAutenticidad = p.pasos.some(s=>s.key==='autenticidad');
+  const legacyIdx = p.pasos.findIndex(s=>s.key==='recepcion');
+  if(!hasAutenticidad && legacyIdx !== -1){
+    const legacyDone = !!p.pasos[legacyIdx].done;
+    const autenStep = {
+      key:'autenticidad', label:'Protocolo de Autenticidad', done: legacyDone, nota:'',
+      autenticidad: { items: AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done: legacyDone})) }
+    };
+    p.pasos.splice(legacyIdx, 1, autenStep);
+    p._migrated = true;
+  }
+  return p;
+}
 
 // ===== Protocolo Zigzag C-Z: catálogos y helpers =====
 const ZZ_INSTRUMENTOS = [
@@ -4897,7 +4977,7 @@ let CURRENT_PROCESO = null;
 function ensureZigzag(step){
   if(!step.zigzag){
     step.zigzag = {
-      medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlanta:'', ok:false},
+      medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlantaTrasera:'', diametroLlantaDelantera:'', ok:false},
       zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:null, instrumentos:[], nota:''})),
       dictamenFinal: null,
       escalaFinal: '',
@@ -4912,7 +4992,7 @@ function ensureZigzag(step){
 
 function zzZoneScore(zona){
   const pc = (zona.critPC!=null && zona.critPC!=='') ? Number(zona.critPC) : null;
-  const zg = (zona.critZigzag!=null && zona.critZigzag!=='') ? Number(zona.critZigzag) : null;
+  const zg = (zona.tampo!=='no' && zona.critZigzag!=null && zona.critZigzag!=='') ? Number(zona.critZigzag) : null;
   if(zona.tampoAplica){
     if(pc!=null && zg!=null) return Math.round(((pc+zg)/2)*10)/10;
     if(pc!=null) return pc;
@@ -4950,8 +5030,12 @@ function getDeadlineDays(nivel){ return DEADLINE_DAYS[nivel] || 5; }
 // pausa (deadlineInfo regresa null) para no mostrar un reloj corriendo
 // sobre algo que todavía no podemos empezar a trabajar.
 function isPendienteRecepcion(p){
-  const r = p.pasos && p.pasos.find(s=>s.key==='recepcion');
-  return !!(r && !r.done && p.paquete !== 'digital');
+  if(p.paquete === 'digital') return false;
+  const s = p.pasos && p.pasos.find(x=>x.key==='autenticidad');
+  if(!s) return false;
+  const auten = ensureAutenticidad(s);
+  const item = auten.items.find(i=>i.key==='recepcion');
+  return !!(item && !item.done);
 }
 function deadlineInfo(p){
   if(isPendienteRecepcion(p)) return null;
@@ -4995,7 +5079,16 @@ async function startValidacion(dJson){
     // Los digitales no dependen de una entrega física, así que arrancan
     // con este paso ya resuelto.
     piezaRecibidaTs: isDigital ? Date.now() : null,
-    pasos: STEP_DEFS.map(s=>({key:s.key, label:s.label, done: (s.key==='recepcion' && isDigital), nota:''}))
+    pasos: STEP_DEFS.map(s=>{
+      if(s.key==='autenticidad'){
+        // El punto 1 (recepción) se resuelve solo para paquetes digitales,
+        // que no dependen de una entrega física. Los otros 7 puntos del
+        // checklist se completan igual, sea digital o presencial.
+        const items = AUTENTICIDAD_ITEMS.map(i=>({key:i.key, label:i.label, done:(i.key==='recepcion' && isDigital)}));
+        return {key:s.key, label:s.label, done: items.every(i=>i.done), nota:'', autenticidad:{items}};
+      }
+      return {key:s.key, label:s.label, done:false, nota:''};
+    })
   };
   try{
     await HVStorage.set('proceso:'+d.id, JSON.stringify(proceso), true);
@@ -5021,7 +5114,7 @@ async function refreshValidacionList(){
     const list = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
     const items = [];
     for(const k of (list.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado==='en_proceso') items.push(p); }catch(e){}
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); if(p.estado==='en_proceso') items.push(p); }catch(e){}
     }
     items.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
     listBox.innerHTML = items.length ? items.map(p=>{
@@ -5048,7 +5141,10 @@ async function refreshValidacionList(){
 
 async function getProceso(id){
   const r = await HVStorage.get('proceso:'+id, true);
-  return JSON.parse(r.value);
+  const p = JSON.parse(r.value);
+  migrateProcesoShape(p);
+  if(p._migrated){ delete p._migrated; await setProceso(p).catch(()=>{}); }
+  return p;
 }
 async function setProceso(p){
   await HVStorage.set('proceso:'+p.id, JSON.stringify(p), true);
@@ -5069,10 +5165,11 @@ function renderProcesoDetail(p){
   CURRENT_PROCESO = p;
   const detail = document.getElementById('validacion-detail');
   const isDigital = p.paquete === 'digital';
-  const recepcionStep = p.pasos.find(s=>s.key==='recepcion');
-  const recepcionDone = !recepcionStep || recepcionStep.done;
+  const autenStep = p.pasos.find(s=>s.key==='autenticidad');
+  const auten = autenStep ? ensureAutenticidad(autenStep) : null;
+  const recepcionItem = auten ? auten.items.find(i=>i.key==='recepcion') : null;
+  const recepcionDone = !recepcionItem || recepcionItem.done;
   const locked = !recepcionDone && !isDigital;
-  const otherSteps = p.pasos.filter(s=>s.key!=='recepcion');
   const done = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(done / p.pasos.length * 100);
   const dl = deadlineInfo(p);
@@ -5082,8 +5179,12 @@ function renderProcesoDetail(p){
   let nextAction;
   if(locked){
     nextAction = { icon:'1', text:'Confirma la recepción de la pieza en cuanto el cliente la traiga al laboratorio.' };
+  } else if(auten && !autenStep.done){
+    const pendienteItem = auten.items.find(i=>!i.done);
+    const idx = pendienteItem ? AUTENTICIDAD_ITEMS.findIndex(i=>i.key===pendienteItem.key) : 0;
+    nextAction = { icon:String(idx+1), text:`Continúa el Protocolo de Autenticidad: "${pendienteItem ? pendienteItem.label : ''}".` };
   } else {
-    const pendiente = otherSteps.find(s=>!s.done);
+    const pendiente = p.pasos.find(s=>s.key!=='autenticidad' && !s.done);
     if(pendiente){
       const idx = p.pasos.findIndex(s=>s.key===pendiente.key);
       nextAction = { icon:String(idx+1), text:`Continúa con "${pendiente.label}".` };
@@ -5092,42 +5193,29 @@ function renderProcesoDetail(p){
     }
   }
 
-  const stepsHtml = otherSteps.map((s)=>{
+  const stepsHtml = p.pasos.map((s)=>{
     const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
     const def = STEP_DEFS.find(d=>d.key===s.key);
     const type = (def && def.type) || 'simple';
-    const innerBody = locked
-      ? `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (paso 1).</div>`
-      : (type === 'zigzag'
-        ? renderZigzagStepBody(p, s)
+    const stepLocked = locked && type !== 'autenticidad';
+    const innerBody = stepLocked
+      ? `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (punto 1 del Protocolo de Autenticidad).</div>`
+      : (type === 'zigzag' ? renderZigzagStepBody(p, s)
+        : type === 'autenticidad' ? renderAutenticidadStepBody(p, s)
         : `<textarea rows="2" placeholder="Notas / hallazgos de este paso…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${s.key}',this.value)">${escapeHtml(s.nota||'')}</textarea>`);
+    const checkClickable = !stepLocked && type !== 'autenticidad';
     return `
-    <div class="step-row ${type==='zigzag'?'step-row-zigzag':''} ${locked?'step-locked':''}">
-      <div class="step-check ${s.done?'done':''}" ${locked?'':`onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`}>${s.done?'✓':''}</div>
+    <div class="step-row ${type==='zigzag'?'step-row-zigzag':''} ${stepLocked?'step-locked':''}">
+      <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
       <div class="step-body">
         <h4>${globalIdx+1}. ${escapeHtml(s.label)}</h4>
         ${innerBody}
-        ${!locked ? `<div class="row" style="margin-top:${type==='zigzag'?'14px':'6px'};">
+        ${(!stepLocked && type!=='autenticidad') ? `<div class="row" style="margin-top:${type==='zigzag'?'14px':'6px'};">
           <button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button>
         </div>` : ''}
       </div>
     </div>`;
   }).join('');
-
-  const citaTxt = p.citaFecha ? formatCitaLarga(p.citaFecha, p.citaHora) : '';
-  const recepcionGateHtml = isDigital ? '' : `
-    <div class="recepcion-gate ${recepcionDone?'done':'pending'}">
-      <div class="recepcion-gate-head">
-        <div class="recepcion-gate-icon">${recepcionDone?'✓':'⏳'}</div>
-        <div>
-          <h4 style="margin:0;font-size:14.5px;">1. Recepción de la pieza</h4>
-          <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${recepcionDone ? 'Pieza recibida — protocolo habilitado.' : (citaTxt ? 'Cita agendada: '+escapeHtml(citaTxt) : 'Sin cita agendada — coordina la entrega con el cliente.')}</p>
-        </div>
-      </div>
-      ${recepcionDone
-        ? `<p class="foot-note" style="border:none;padding:0;margin:0;">${p.piezaRecibidaTs ? 'Recibida el '+escapeHtml(new Date(p.piezaRecibidaTs).toLocaleString('es-MX',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})) : ''}</p>`
-        : `<button class="btn small" onclick="confirmarRecepcion('${escapeHtml(p.id)}')">Confirmar recepción de la pieza</button>`}
-    </div>`;
 
   detail.innerHTML = `
     <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -5151,7 +5239,6 @@ function renderProcesoDetail(p){
         <div class="next-action-text"><strong>Siguiente paso</strong><span>${escapeHtml(nextAction.text)}</span></div>
       </div>
 
-      ${recepcionGateHtml}
       ${stepsHtml}
       <div class="row" style="margin-top:18px;">
         <button class="btn" ${done<p.pasos.length?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeProceso('${escapeHtml(p.id)}')">Finalizar validación y generar certificado</button>
@@ -5159,6 +5246,48 @@ function renderProcesoDetail(p){
       </div>
       ${done<p.pasos.length ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa todos los pasos para poder generar el certificado.</p>' : ''}
     </div>`;
+}
+
+// ===== Formulario del paso "Protocolo de Autenticidad" — checklist de 8
+// puntos SÍ/NO. No se califica, se cumple: es la garantía de proceso. =====
+function renderAutenticidadStepBody(p, step){
+  const auten = ensureAutenticidad(step);
+  const isDigital = p.paquete === 'digital';
+  const recepcionItem = auten.items.find(i=>i.key==='recepcion');
+  const recepcionDone = !!(recepcionItem && recepcionItem.done);
+  const citaTxt = p.citaFecha ? formatCitaLarga(p.citaFecha, p.citaHora) : '';
+  const gateHtml = isDigital ? `
+    <div class="auten-item done">
+      <div class="auten-item-check">✓</div>
+      <span class="auten-item-label">1. Recepción de la pieza <span class="mono" style="font-weight:400;">(validación digital — no aplica entrega física)</span></span>
+    </div>` : `
+    <div class="recepcion-gate ${recepcionDone?'done':'pending'}">
+      <div class="recepcion-gate-head">
+        <div class="recepcion-gate-icon">${recepcionDone?'✓':'⏳'}</div>
+        <div>
+          <h4 style="margin:0;font-size:14.5px;">1. Recepción de la pieza</h4>
+          <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${recepcionDone ? 'Pieza recibida — protocolo habilitado.' : (citaTxt ? 'Cita agendada: '+escapeHtml(citaTxt) : 'Sin cita agendada — coordina la entrega con el cliente.')}</p>
+        </div>
+      </div>
+      ${recepcionDone
+        ? `<p class="foot-note" style="border:none;padding:0;margin:0;">${p.piezaRecibidaTs ? 'Recibida el '+escapeHtml(new Date(p.piezaRecibidaTs).toLocaleString('es-MX',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})) : ''}</p>`
+        : `<button class="btn small" onclick="confirmarRecepcion('${escapeHtml(p.id)}')">Confirmar recepción de la pieza</button>`}
+    </div>`;
+
+  const restLocked = !recepcionDone && !isDigital;
+  const restItems = auten.items.filter(i=>i.key!=='recepcion');
+  const itemsHtml = restItems.map((it,idx)=>`
+    <div class="auten-item ${it.done?'done':''} ${restLocked?'locked':''}">
+      <div class="auten-item-check" ${restLocked?'':`onclick="toggleAutenticidadItem('${escapeHtml(p.id)}','${it.key}')"`}>${it.done?'✓':''}</div>
+      <span class="auten-item-label">${idx+2}. ${escapeHtml(it.label)}</span>
+    </div>`).join('');
+
+  return `
+    <p class="zz-summary-hint" style="margin:0 0 12px;">Checklist de proceso — no se califica, se cumple. Es la garantía de que la pieza pasó por todos los controles antes del dictamen. (La condición física sí se califica, aparte, en el Protocolo ZigZag C-Z.)</p>
+    ${gateHtml}
+    <div class="auten-items">${itemsHtml}</div>
+    ${restLocked ? `<p class="step-locked-note" style="margin-top:8px;">🔒 Se habilitan al confirmar la recepción de la pieza (punto 1).</p>` : ''}
+  `;
 }
 
 // ===== Formulario dinámico del paso "Medición y evaluación — Protocolo Zigzag C-Z" =====
@@ -5177,12 +5306,13 @@ function renderZigzagStepBody(p, step){
           <button type="button" class="zz-toggle ${zona.tampo==='no'?'active':''}" onclick="zzSetTampo('${escapeHtml(p.id)}','${step.key}','${zona.key}','no',this)">No — agregado</button>
         </div>
       </div>
+      ${zona.tampo==='no' ? `<p class="zz-na">Tampo no original — no aplica calificar Criterio Zigzag C-Z de tampo en esta zona.</p>` : `
       <div class="zz-field">
         <label>Criterio Zigzag C-Z — Tampo <span class="mono">(10–6)</span></label>
         <div class="zz-scale-group">
           ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critZigzag==n?'active':''}" onclick="zzSetScore('${escapeHtml(p.id)}','${step.key}','${zona.key}','critZigzag',${n},this)">${n}</button>`).join('')}
         </div>
-      </div>` : `<p class="zz-na">No aplica tampo / pegatina en esta zona.</p>`;
+      </div>`}` : `<p class="zz-na">No aplica tampo / pegatina en esta zona.</p>`;
     return `
       <div class="zz-zone">
         <div class="zz-zone-head">
@@ -5225,7 +5355,8 @@ function renderZigzagStepBody(p, step){
         <div><label>Largo (mm)</label><input type="number" value="${escapeHtml(m.largo)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','largo',this.value)"></div>
         <div><label>Ancho (mm)</label><input type="number" value="${escapeHtml(m.ancho)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','ancho',this.value)"></div>
         <div><label>Alto (mm)</label><input type="number" value="${escapeHtml(m.alto)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','alto',this.value)"></div>
-        <div><label>Diámetro llanta (mm)</label><input type="number" value="${escapeHtml(m.diametroLlanta)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','diametroLlanta',this.value)"></div>
+        <div><label>Diámetro llanta trasera (mm)</label><input type="number" value="${escapeHtml(m.diametroLlantaTrasera)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','diametroLlantaTrasera',this.value)"></div>
+        <div><label>Diámetro llanta delantera (mm)</label><input type="number" value="${escapeHtml(m.diametroLlantaDelantera)}" onchange="zzSetMedida('${escapeHtml(p.id)}','${step.key}','diametroLlantaDelantera',this.value)"></div>
         <div class="zz-medidas-ok"><button type="button" class="zz-chip ${m.ok?'active':''}" onclick="zzToggleMedidasOk('${escapeHtml(p.id)}','${step.key}',this)">✓ Medidas OK</button></div>
       </div>
 
@@ -5252,7 +5383,7 @@ function renderZigzagStepBody(p, step){
         </div>
         <div class="zz-field">
           <label>Escala final 10–6 <span class="mono">(editable)</span></label>
-          <input type="number" step="0.1" id="zz-escala-final" value="${escapeHtml(zz.escalaFinal)}" placeholder="${overall!=null?overall.toFixed(1):''}" onchange="zzSetEscalaFinal('${escapeHtml(p.id)}','${step.key}',this.value)">
+          <input type="number" step="0.1" id="zz-escala-final" value="${escapeHtml(zz.escalaFinal || (overall!=null?overall.toFixed(1):''))}" placeholder="${overall!=null?overall.toFixed(1):''}" onchange="zzSetEscalaFinal('${escapeHtml(p.id)}','${step.key}',this.value)">
         </div>
         <div class="zz-field">
           <label>Origen</label>
@@ -5288,16 +5419,22 @@ function zzUpdateOverall(zz){
   const avg = zzOverallAvg(zz);
   if(el) el.textContent = avg!=null ? avg.toFixed(1) : '—';
   const escalaInput = document.getElementById('zz-escala-final');
-  if(escalaInput && !escalaInput.value) escalaInput.placeholder = avg!=null ? avg.toFixed(1) : '';
+  if(escalaInput && !escalaInput.value){
+    escalaInput.placeholder = avg!=null ? avg.toFixed(1) : '';
+    if(avg!=null) escalaInput.value = avg.toFixed(1);
+  }
 }
 async function zzSetTampo(pid, stepKey, zonaKey, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
   zona.tampo = (zona.tampo === val) ? null : val;
-  const group = btnEl.closest('.zz-toggle-group');
-  if(group) group.querySelectorAll('.zz-toggle').forEach(b => b.classList.remove('active'));
-  if(zona.tampo === val) btnEl.classList.add('active');
+  // Si el tampo no es original, no tiene sentido conservar una calificación
+  // de Criterio Zigzag C-Z de tampo previamente asignada — se descarta.
+  if(zona.tampo === 'no') zona.critZigzag = null;
   await zzPersist();
+  // Se vuelve a renderizar todo el detalle: el bloque de calificación de
+  // tampo aparece u oculta según el nuevo valor de zona.tampo.
+  renderProcesoDetail(p);
 }
 async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
@@ -5395,12 +5532,33 @@ async function toggleProcesoStep(id, key){
 // de entrega desde este momento, no desde que se agendó la cita.
 async function confirmarRecepcion(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  const step = p.pasos.find(s=>s.key==='recepcion');
-  if(step) step.done = true;
+  const step = p.pasos.find(s=>s.key==='autenticidad');
+  if(step){
+    const auten = ensureAutenticidad(step);
+    const item = auten.items.find(i=>i.key==='recepcion');
+    if(item) item.done = true;
+    step.done = auten.items.every(i=>i.done);
+  }
   p.piezaRecibidaTs = Date.now();
   CURRENT_PROCESO = p;
   await setProceso(p);
   toast('Recepción confirmada — protocolo habilitado.');
+  renderProcesoDetail(p);
+}
+
+// Alterna un punto (2–8) del checklist del Protocolo de Autenticidad. El
+// punto 1 (recepción) no se alterna aquí — se confirma con su propio botón
+// dedicado en confirmarRecepcion(), ya que actúa como compuerta física.
+async function toggleAutenticidadItem(pid, itemKey){
+  if(itemKey === 'recepcion') return;
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+  const step = p.pasos.find(s=>s.key==='autenticidad'); if(!step) return;
+  const auten = ensureAutenticidad(step);
+  const item = auten.items.find(i=>i.key===itemKey); if(!item) return;
+  item.done = !item.done;
+  step.done = auten.items.every(i=>i.done);
+  CURRENT_PROCESO = p;
+  await setProceso(p);
   renderProcesoDetail(p);
 }
 
