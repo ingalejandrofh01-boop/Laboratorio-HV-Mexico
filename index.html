@@ -679,12 +679,23 @@
   .metodo-subnav-link:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
   .metodo-subnav-link.active{background:var(--red);color:#fff;}
 
-  .method-phase{position:relative;}
-  .method-phase-head{display:flex;align-items:center;gap:14px;padding:22px 0 16px 30px;position:relative;}
+  .method-hint{display:flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.03em;color:var(--sage-dim);margin:14px 0 0 17px;}
+  .method-phase{position:relative;list-style:none;}
+  .method-phase summary{list-style:none;cursor:pointer;}
+  .method-phase summary::-webkit-details-marker{display:none;}
+  .method-phase-head{display:flex;align-items:center;gap:14px;padding:22px 14px 16px 30px;position:relative;border-radius:8px;transition:background-color .15s ease;}
+  .method-phase-head:hover{background:rgba(210,4,45,0.05);}
+  .method-phase-head:focus-visible{outline:2px solid var(--red);outline-offset:2px;}
   .method-phase:first-child .method-phase-head{padding-top:2px;}
   .method-phase-icon{position:absolute;left:-21px;top:14px;width:42px;height:42px;border-radius:50%;background:var(--panel);border:2px solid var(--brass);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 0 4px var(--bg);flex:none;}
   .method-phase-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 2px;}
   .method-phase-title{font-family:'Fraunces',serif;font-size:18px;margin:0;color:var(--ink);}
+  .method-phase-toggle{margin-left:auto;flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--sage);transition:transform .25s ease, border-color .15s ease;}
+  .method-phase-toggle::before{content:'';width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translate(-1px,-1px);}
+  .method-phase[open] .method-phase-toggle{transform:rotate(180deg);}
+  .method-phase-head:hover .method-phase-toggle{border-color:var(--red);color:var(--red);}
+  .method-phase-body{padding-bottom:2px;}
+  @media(prefers-reduced-motion:reduce){.method-phase-toggle{transition:none;}}
 
   /* Diagrama del protocolo fotográfico */
   .photo-diagram{position:relative;margin-top:20px;border:1px solid var(--line);border-radius:10px;padding:26px 20px;background-image:linear-gradient(var(--panel-2) 1px, transparent 1px),linear-gradient(90deg, var(--panel-2) 1px, transparent 1px);background-size:26px 26px;background-color:var(--panel);overflow:hidden;}
@@ -693,7 +704,10 @@
   .photo-diagram-svg .pd-car{fill:none;stroke:var(--brass-dim);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;}
   .photo-diagram-svg .pd-detail{fill:none;stroke:var(--brass-dim);stroke-width:1.6;opacity:.75;}
   .photo-diagram-svg .pd-hub{fill:var(--panel);stroke:var(--brass-dim);stroke-width:2;}
-  .photo-diagram-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;box-shadow:0 0 0 4px var(--panel), 0 2px 8px rgba(0,0,0,.25);}
+  .photo-diagram-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;box-shadow:0 0 0 4px var(--panel), 0 2px 8px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;}
+  .photo-diagram-pin:hover,.photo-diagram-pin.active,.photo-diagram-pin:focus-visible{transform:translate(-50%,-50%) scale(1.3);box-shadow:0 0 0 4px var(--panel), 0 0 0 7px var(--red), 0 2px 10px rgba(0,0,0,.3);outline:none;z-index:3;}
+  #metodo-fotos .steps .step{border-radius:6px;transition:background-color .15s ease;cursor:default;}
+  #metodo-fotos .steps .step.active{background:rgba(210,4,45,0.07);}
   .photo-diagram-tag{position:absolute;transform:translate(-50%,0);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:11.5px;color:var(--ink);white-space:nowrap;box-shadow:0 3px 10px rgba(36,21,18,.1);}
   .photo-diagram-tag strong{color:var(--red);font-family:'IBM Plex Mono',monospace;margin-right:5px;}
   @media(max-width:620px){
@@ -706,6 +720,24 @@
   .grade-medal{width:58px;height:58px;padding:2px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:12.5px;line-height:1.15;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.18);flex:none;}
   .grade-medal.tier-gold{background:linear-gradient(150deg,#C99A3F,#8C6524);}
   .grade-medal.tier-silver{background:linear-gradient(150deg,#9AA5B1,#5F6A75);}
+
+  /* Dictamen de autenticidad: tarjetas dinámicas */
+  .dictamen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:6px;}
+  .dictamen-card{position:relative;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--sage);border-radius:8px;padding:18px 16px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+  .dictamen-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(36,21,18,.12);}
+  .dictamen-card.tier-ok{border-top-color:var(--ok);}
+  .dictamen-card.tier-warn{border-top-color:var(--warn);}
+  .dictamen-card.tier-bad{border-top-color:var(--bad);}
+  .dictamen-icon{font-size:23px;display:block;margin-bottom:10px;}
+  .dictamen-card h4{font-family:'Fraunces',serif;font-size:15px;margin:0 0 6px;color:var(--ink);}
+  .dictamen-card p{font-size:12.5px;color:var(--sage);line-height:1.55;margin:0 0 12px;}
+
+  /* Showcase compacto reutilizado dentro de Metodología */
+  .showcase.compact .showcase-photo{padding:26px;}
+  .showcase.compact .showcase-photo .frame{max-width:260px;margin:0 auto;}
+  .showcase.compact .showcase-text{padding:24px 30px 28px 8px;}
+  .showcase.compact .showcase-text h2{font-size:19px;}
+  @media(max-width:760px){.showcase.compact .showcase-text{padding:6px 22px 26px;}}
   .pkg-card{position:relative;display:flex;flex-direction:column;transition:transform .18s ease, box-shadow .18s ease;}
   .pkg-card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(36,21,18,0.1);}
   .pkg-num{position:absolute;top:14px;right:16px;width:26px;height:26px;border-radius:50%;background:var(--panel-2);color:var(--sage);font-family:'IBM Plex Mono',monospace;font-size:13px;display:flex;align-items:center;justify-content:center;}
@@ -1298,68 +1330,81 @@
     <p class="section-eyebrow">Protocolo pericial</p>
     <h2>Metodología de certificación — 8 pasos</h2>
     <p style="color:var(--sage);max-width:680px;">Ninguna pieza se certifica si no pasa los 8 pasos. Si no es original, no se encapsula. Están agrupados en 4 fases del proceso de laboratorio.</p>
+    <p class="method-hint"><svg viewBox="0 0 24 24" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:4px;"><path d="m6 9 6 6 6-6"/></svg>Toca cada fase para expandirla o colapsarla.</p>
     <div class="method-steps">
-      <div class="method-phase">
-        <div class="method-phase-head">
+      <details class="method-phase" open>
+        <summary class="method-phase-head">
           <span class="method-phase-icon">🗂️</span>
           <div><p class="method-phase-eyebrow">Fase 1</p><h3 class="method-phase-title">Ingreso y custodia</h3></div>
+          <span class="method-phase-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="method-phase-body">
+          <div class="method-step"><div class="step-num">1</div><div>
+            <h3>Recepción, registro y cadena de custodia</h3>
+            <p>Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.</p>
+          </div></div>
+          <div class="method-step"><div class="step-num">2</div><div>
+            <h3>Identificación y clasificación preliminar</h3>
+            <p>Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica contra los que será evaluada.</p>
+          </div></div>
         </div>
-        <div class="method-step"><div class="step-num">1</div><div>
-          <h3>Recepción, registro y cadena de custodia</h3>
-          <p>Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.</p>
-        </div></div>
-        <div class="method-step"><div class="step-num">2</div><div>
-          <h3>Identificación y clasificación preliminar</h3>
-          <p>Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica contra los que será evaluada.</p>
-        </div></div>
-      </div>
-      <div class="method-phase">
-        <div class="method-phase-head">
+      </details>
+      <details class="method-phase" open>
+        <summary class="method-phase-head">
           <span class="method-phase-icon">🔬</span>
           <div><p class="method-phase-eyebrow">Fase 2</p><h3 class="method-phase-title">Análisis pericial</h3></div>
+          <span class="method-phase-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="method-phase-body">
+          <div class="method-step"><div class="step-num">3</div><div>
+            <h3>Inspección visual y análisis morfológico</h3>
+            <p>Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.</p>
+          </div></div>
+          <div class="method-step"><div class="step-num">4</div><div>
+            <h3>Análisis técnico instrumental, comparativa y cotejo</h3>
+            <p>Es la fase pericial más importante:</p>
+            <ul style="color:var(--sage);font-size:13.5px;padding-left:18px;margin:6px 0 0;line-height:1.7;">
+              <li>Análisis con lupa estereoscópica de aumento para pintura y tampografía.</li>
+              <li>Luz ultravioleta (UV) para detección de repintados, retoques y reparaciones.</li>
+              <li>Comparativa y cotejo directo: confronta de la pieza contra nuestra base de datos, catálogos oficiales de fábrica y piezas testigo originales. Se cotejan tono de pintura Spectraflame, tipo de base, remaches, ejes, llantas y país de fabricación para descartar cualquier alteración.</li>
+            </ul>
+          </div></div>
         </div>
-        <div class="method-step"><div class="step-num">3</div><div>
-          <h3>Inspección visual y análisis morfológico</h3>
-          <p>Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.</p>
-        </div></div>
-        <div class="method-step"><div class="step-num">4</div><div>
-          <h3>Análisis técnico instrumental, comparativa y cotejo</h3>
-          <p>Es la fase pericial más importante:</p>
-          <ul style="color:var(--sage);font-size:13.5px;padding-left:18px;margin:6px 0 0;line-height:1.7;">
-            <li>Análisis con lupa estereoscópica de aumento para pintura y tampografía.</li>
-            <li>Luz ultravioleta (UV) para detección de repintados, retoques y reparaciones.</li>
-            <li>Comparativa y cotejo directo: confronta de la pieza contra nuestra base de datos, catálogos oficiales de fábrica y piezas testigo originales. Se cotejan tono de pintura Spectraflame, tipo de base, remaches, ejes, llantas y país de fabricación para descartar cualquier alteración.</li>
-          </ul>
-        </div></div>
-      </div>
-      <div class="method-phase">
-        <div class="method-phase-head">
+      </details>
+      <details class="method-phase" open>
+        <summary class="method-phase-head">
           <span class="method-phase-icon">⚖️</span>
           <div><p class="method-phase-eyebrow">Fase 3</p><h3 class="method-phase-title">Dictamen y calificación</h3></div>
+          <span class="method-phase-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="method-phase-body">
+          <div class="method-step"><div class="step-num">5</div><div>
+            <h3>Confronta y dictamen pericial de autenticidad</h3>
+            <p>Aquí interviene el doble filtro. El Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica: <strong style="color:var(--ink);">Original, Restaurado, Reparado, Repintado</strong> o <strong style="color:var(--ink);">Falso / Réplica</strong>.</p>
+          </div></div>
+          <div class="method-step"><div class="step-num">6</div><div>
+            <h3>Evaluación y calificación de condición</h3>
+            <p>Una vez autenticada como original, se califica su condición bajo nuestra escala normalizada de 1.0 a 10.0, evaluando pintura, cromo, llantas, base y conservación general. La calificación es técnica, no sentimental.</p>
+          </div></div>
         </div>
-        <div class="method-step"><div class="step-num">5</div><div>
-          <h3>Confronta y dictamen pericial de autenticidad</h3>
-          <p>Aquí interviene el doble filtro. El Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica: <strong style="color:var(--ink);">Original, Restaurado, Reparado, Repintado</strong> o <strong style="color:var(--ink);">Falso / Réplica</strong>.</p>
-        </div></div>
-        <div class="method-step"><div class="step-num">6</div><div>
-          <h3>Evaluación y calificación de condición</h3>
-          <p>Una vez autenticada como original, se califica su condición bajo nuestra escala normalizada de 1.0 a 10.0, evaluando pintura, cromo, llantas, base y conservación general. La calificación es técnica, no sentimental.</p>
-        </div></div>
-      </div>
-      <div class="method-phase">
-        <div class="method-phase-head">
+      </details>
+      <details class="method-phase" open>
+        <summary class="method-phase-head">
           <span class="method-phase-icon">🔏</span>
           <div><p class="method-phase-eyebrow">Fase 4</p><h3 class="method-phase-title">Sello y entrega</h3></div>
+          <span class="method-phase-toggle" aria-hidden="true"></span>
+        </summary>
+        <div class="method-phase-body">
+          <div class="method-step"><div class="step-num">7</div><div>
+            <h3>Encapsulado de seguridad y etiquetado</h3>
+            <p>La pieza aprobada es encapsulada en acrílico sellado y etiquetado con datos de certificación, calificación y folio.</p>
+          </div></div>
+          <div class="method-step"><div class="step-num">8</div><div>
+            <h3>Registro digital, certificación web y entrega</h3>
+            <p>Se da de alta en nuestra base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite certificado digital y se prepara para entrega o envío certificado al cliente.</p>
+          </div></div>
         </div>
-        <div class="method-step"><div class="step-num">7</div><div>
-          <h3>Encapsulado de seguridad y etiquetado</h3>
-          <p>La pieza aprobada es encapsulada en acrílico sellado y etiquetado con datos de certificación, calificación y folio.</p>
-        </div></div>
-        <div class="method-step"><div class="step-num">8</div><div>
-          <h3>Registro digital, certificación web y entrega</h3>
-          <p>Se da de alta en nuestra base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite certificado digital y se prepara para entrega o envío certificado al cliente.</p>
-        </div></div>
-      </div>
+      </details>
     </div>
   </section>
 
@@ -1437,16 +1482,63 @@
       <div class="scale-row"><div class="grade-medal tier-silver">≤6.0</div><div><strong style="color:var(--ink);">Buena a Regular</strong> — Desgaste evidente, pérdida de pintura, cromo opaco o llantas gastadas. Auténtica pero con historia de juego.</div></div>
     </div>
 
-    <h3 style="font-size:16px;margin-top:26px;">Dictamen de autenticidad <span style="color:var(--sage);font-weight:400;font-size:13px;">(independiente a la calificación)</span></h3>
-    <div class="card" style="margin-top:12px;">
-      <div class="row" style="gap:10px;flex-wrap:wrap;">
+    <h3 style="font-size:16px;margin-top:30px;">Dictamen de autenticidad <span style="color:var(--sage);font-weight:400;font-size:13px;">(independiente a la calificación)</span></h3>
+    <p style="color:var(--sage);font-size:13.5px;max-width:640px;margin:6px 0 16px;">Antes de calificar la condición, cada pieza recibe un dictamen categórico sobre su autenticidad. Solo <strong style="color:var(--ink);">Original</strong> continúa a calificación y encapsulado.</p>
+    <div class="dictamen-grid">
+      <div class="dictamen-card tier-ok">
+        <span class="dictamen-icon">🏅</span>
+        <h4>Original</h4>
+        <p>100% auténtica de fábrica. Continúa a calificación de condición y encapsulado.</p>
         <span class="pill original">Original</span>
+      </div>
+      <div class="dictamen-card tier-warn">
+        <span class="dictamen-icon">🎨</span>
+        <h4>Repintado</h4>
+        <p>Pieza original con pintura aplicada después de fábrica. Se certifica con la salvedad indicada en el folio.</p>
         <span class="pill restaurado">Repintado</span>
+      </div>
+      <div class="dictamen-card tier-warn">
+        <span class="dictamen-icon">🧰</span>
+        <h4>Restaurado</h4>
+        <p>Pieza original con restauración visible en carrocería o acabados. Se certifica con la observación correspondiente.</p>
         <span class="pill restaurado">Restaurado</span>
+      </div>
+      <div class="dictamen-card tier-warn">
+        <span class="dictamen-icon">🔩</span>
+        <h4>Reparado</h4>
+        <p>Pieza original con reparaciones menores — ejes, llantas o remaches. Se certifica con la observación correspondiente.</p>
         <span class="pill restaurado">Reparado</span>
+      </div>
+      <div class="dictamen-card tier-bad">
+        <span class="dictamen-icon">🚫</span>
+        <h4>Réplica</h4>
+        <p>No es una pieza original. No se emite certificado de autenticidad; se informa el hallazgo al cliente.</p>
         <span class="pill replica">Réplica</span>
       </div>
-      <p class="foot-note" style="border:none;margin-top:14px;padding-top:0;">Además del dictamen, cada folio publica su calificación numérica exacta (por ejemplo, 8.5), no solo el rango.</p>
+    </div>
+    <p class="foot-note" style="margin-top:18px;">Además del dictamen, cada folio publica su calificación numérica exacta (por ejemplo, 8.5), no solo el rango.</p>
+
+    <div class="showcase compact" style="margin-top:28px;">
+      <div class="showcase-checker"></div>
+      <div class="showcase-inner">
+        <div class="showcase-photo">
+          <div class="frame">
+            <img src="showcase-piece.jpg" alt="Pieza certificada como Original por el laboratorio">
+            <div class="spotlight"></div>
+          </div>
+        </div>
+        <div class="showcase-text">
+          <span class="showcase-ribbon">Ejemplo real de folio</span>
+          <h2 style="font-size:19px;">Así se ve un dictamen Original en el folio</h2>
+          <p>La misma metodología que acabas de leer, aplicada a una pieza real certificada por el laboratorio.</p>
+          <div class="showcase-plaque">
+            <div class="row"><span class="k">Modelo</span><span class="v">Cockney Cab</span></div>
+            <div class="row" style="margin-top:8px;"><span class="k">Origen</span><span class="v">CIPSA</span></div>
+            <div class="row" style="margin-top:8px;"><span class="k">Dictamen</span><span class="v">Original</span></div>
+            <div class="row" style="margin-top:8px;"><span class="k">Grado</span><span class="v">8.0 / 10 — Near Mint-Mint</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3878,6 +3970,39 @@ function initMetodoSubnav(){
   }
 }
 
+function initPhotoDiagram(){
+  const diagram = document.querySelector('.photo-diagram');
+  if(!diagram) return;
+  const pins = Array.from(diagram.querySelectorAll('.photo-diagram-pin'));
+  const legendRows = Array.from(document.querySelectorAll('#metodo-fotos .steps .step'));
+  function setActive(n){
+    pins.forEach(p => p.classList.toggle('active', p.textContent.trim() === n));
+    legendRows.forEach(r => {
+      const num = r.querySelector('.num');
+      r.classList.toggle('active', !!num && num.textContent.trim() === n);
+    });
+  }
+  function clearActive(){
+    pins.forEach(p => p.classList.remove('active'));
+    legendRows.forEach(r => r.classList.remove('active'));
+  }
+  pins.forEach(p => {
+    p.tabIndex = 0;
+    p.setAttribute('role', 'button');
+    p.setAttribute('aria-label', p.getAttribute('title') || ('Foto ' + p.textContent.trim()));
+    p.addEventListener('mouseenter', () => setActive(p.textContent.trim()));
+    p.addEventListener('mouseleave', clearActive);
+    p.addEventListener('focus', () => setActive(p.textContent.trim()));
+    p.addEventListener('blur', clearActive);
+  });
+  legendRows.forEach(r => {
+    const num = r.querySelector('.num');
+    if(!num) return;
+    r.addEventListener('mouseenter', () => setActive(num.textContent.trim()));
+    r.addEventListener('mouseleave', clearActive);
+  });
+}
+
 function fitCertMini(){
   document.querySelectorAll('[data-cert-mini]').forEach(vp => {
     const canvas = vp.querySelector('.cert-mini-canvas');
@@ -3918,6 +4043,7 @@ function initDynamicUI(){
   initMethodTimeline();
   initCertFlipCard();
   initMetodoSubnav();
+  initPhotoDiagram();
   syncHeaderHeightVar();
   window.addEventListener('resize', syncHeaderHeightVar);
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(syncHeaderHeightVar); }
