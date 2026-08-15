@@ -699,21 +699,25 @@
 
   /* Diagrama del protocolo fotográfico */
   .photo-diagram{position:relative;margin-top:20px;border:1px solid var(--line);border-radius:10px;padding:26px 20px;background-image:linear-gradient(var(--panel-2) 1px, transparent 1px),linear-gradient(90deg, var(--panel-2) 1px, transparent 1px);background-size:26px 26px;background-color:var(--panel);overflow:hidden;}
-  .photo-diagram-stage{position:relative;width:100%;max-width:640px;margin:0 auto;aspect-ratio:640/340;}
-  .photo-diagram-svg{position:absolute;inset:0;width:100%;height:100%;}
-  .photo-diagram-svg .pd-car{fill:none;stroke:var(--brass-dim);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;}
-  .photo-diagram-svg .pd-detail{fill:none;stroke:var(--brass-dim);stroke-width:1.6;opacity:.75;}
-  .photo-diagram-svg .pd-hub{fill:var(--panel);stroke:var(--brass-dim);stroke-width:2;}
-  .photo-diagram-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;box-shadow:0 0 0 4px var(--panel), 0 2px 8px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;}
-  .photo-diagram-pin:hover,.photo-diagram-pin.active,.photo-diagram-pin:focus-visible{transform:translate(-50%,-50%) scale(1.3);box-shadow:0 0 0 4px var(--panel), 0 0 0 7px var(--red), 0 2px 10px rgba(0,0,0,.3);outline:none;z-index:3;}
-  #metodo-fotos .steps .step{border-radius:6px;transition:background-color .15s ease;cursor:default;}
+  .photo-diagram-stage{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:4/3;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px rgba(36,21,18,.16);}
+  .photo-diagram-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-diagram-pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;box-shadow:0 0 0 4px #fff, 0 2px 8px rgba(0,0,0,.35);cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;}
+  .photo-diagram-pin:hover,.photo-diagram-pin.active,.photo-diagram-pin:focus-visible{transform:translate(-50%,-50%) scale(1.3);box-shadow:0 0 0 4px #fff, 0 0 0 7px var(--red), 0 2px 10px rgba(0,0,0,.4);outline:none;z-index:3;}
+  #metodo-fotos .steps .step{border-radius:6px;transition:background-color .15s ease;cursor:default;padding-left:8px;padding-right:8px;}
   #metodo-fotos .steps .step.active{background:rgba(210,4,45,0.07);}
+  #metodo-fotos .steps .step strong{display:block;color:var(--ink);}
+  .pd-finding{margin:5px 0 0;color:var(--sage);font-size:13.5px;line-height:1.5;}
+  .pd-result{display:flex;gap:16px;align-items:flex-start;margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);}
+  .pd-result-label{margin:0 0 6px;font-family:'Fraunces',serif;font-weight:600;font-size:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .pd-result-text p{margin:0;color:var(--sage);font-size:13.5px;line-height:1.6;}
+  .pd-result-text p + p{margin-top:6px;}
   .photo-diagram-tag{position:absolute;transform:translate(-50%,0);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:11.5px;color:var(--ink);white-space:nowrap;box-shadow:0 3px 10px rgba(36,21,18,.1);}
   .photo-diagram-tag strong{color:var(--red);font-family:'IBM Plex Mono',monospace;margin-right:5px;}
   @media(max-width:620px){
     .photo-diagram{padding:16px 10px;}
     .photo-diagram-tag{font-size:10px;padding:4px 8px;white-space:normal;text-align:center;max-width:90px;}
     .photo-diagram-pin{width:20px;height:20px;font-size:9.5px;}
+    .pd-result{flex-direction:column;align-items:flex-start;}
   }
 
   /* Medallas de la escala de calificación (mismo estilo que el certificado real) */
@@ -1411,60 +1415,68 @@
   <section id="metodo-fotos">
     <p class="section-eyebrow">Protocolo de laboratorio</p>
     <h2>Protocolo de evaluación — 6 fotografías obligatorias</h2>
-    <p style="color:var(--sage);max-width:640px;">Cada pieza que evaluamos sigue el mismo protocolo fotográfico y de laboratorio, para que el folio sea comparable entre piezas y verificable en el tiempo.</p>
+    <p style="color:var(--sage);max-width:640px;">Cada pieza que evaluamos sigue el mismo protocolo fotográfico y de laboratorio, para que el folio sea comparable entre piezas y verificable en el tiempo. Este es el expediente real de un Cockney Cab amarillo — folio con dictamen <strong>Original</strong>, calificación <strong>8.0/10 Near Mint‑Mint</strong>.</p>
     <div class="photo-diagram">
       <div class="photo-diagram-stage">
-        <svg class="photo-diagram-svg" viewBox="0 0 640 340" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <g class="pd-car">
-            <path d="M95,240
-              C95,225 102,214 118,212
-              L128,210
-              C135,188 158,170 190,162
-              L215,148
-              C238,132 268,122 305,120
-              L390,120
-              C420,121 444,130 462,148
-              L484,170
-              C505,173 528,180 542,192
-              C552,200 555,212 550,224
-              L540,226
-              L540,240
-              L470,240
-              L470,226
-              C470,208 456,194 438,194
-              C420,194 406,208 406,226
-              L406,240
-              L235,240
-              L235,226
-              C235,208 221,194 203,194
-              C185,194 171,208 171,226
-              L171,240
-              L118,240
-              C104,240 95,235 95,240 Z" />
-            <path class="pd-detail" d="M195,160 C215,146 240,136 270,132 L270,160 C245,160 220,160 195,160 Z" />
-            <path class="pd-detail" d="M285,131 L380,131 C400,132 416,138 428,148 L428,161 L285,161 Z" />
-            <line class="pd-detail" x1="285" y1="131" x2="285" y2="161" />
-          </g>
-          <circle class="pd-hub" cx="203" cy="226" r="34" />
-          <circle cx="203" cy="226" r="13" style="fill:none;stroke:var(--brass-dim);stroke-width:2;" />
-          <circle class="pd-hub" cx="438" cy="226" r="34" />
-          <circle cx="438" cy="226" r="13" style="fill:none;stroke:var(--brass-dim);stroke-width:2;" />
-        </svg>
-        <div class="photo-diagram-pin" style="left:46.9%;top:70.9%;" title="Base completa">01</div>
-        <div class="photo-diagram-pin" style="left:68.4%;top:66.5%;" title="Llantas">02</div>
-        <div class="photo-diagram-pin" style="left:87.5%;top:60.3%;" title="Frente y trasera">03</div>
-        <div class="photo-diagram-pin" style="left:51.6%;top:35.3%;" title="Techo y cofre a 45°">04</div>
-        <div class="photo-diagram-pin" style="left:54.7%;top:43.5%;" title="Interior por ventanas">05</div>
-        <div class="photo-diagram-pin" style="left:78.1%;top:54.4%;" title="Borde de pintura UV / microscopio">06</div>
+        <img class="photo-diagram-photo" src="showcase-piece.jpg" alt="Cockney Cab amarillo, pieza de referencia del protocolo de 6 fotografías" loading="lazy" />
+        <div class="photo-diagram-pin" style="left:42.0%;top:66.0%;" title="Base completa">01</div>
+        <div class="photo-diagram-pin" style="left:61.5%;top:75.3%;" title="Llantas">02</div>
+        <div class="photo-diagram-pin" style="left:87.0%;top:61.3%;" title="Frente y trasera">03</div>
+        <div class="photo-diagram-pin" style="left:56.0%;top:25.3%;" title="Techo y cofre a 45°">04</div>
+        <div class="photo-diagram-pin" style="left:28.0%;top:33.3%;" title="Interior por ventanas">05</div>
+        <div class="photo-diagram-pin" style="left:40.0%;top:46.7%;" title="Borde de pintura UV / microscopio">06</div>
       </div>
     </div>
     <div class="steps" style="margin-top:20px;">
-      <div class="step"><div class="num">01</div><div>Base completa, con leyenda legible</div></div>
-      <div class="step"><div class="num">02</div><div>Llantas, lado derecho e izquierdo</div></div>
-      <div class="step"><div class="num">03</div><div>Frente y trasera</div></div>
-      <div class="step"><div class="num">04</div><div>Techo y cofre a 45°</div></div>
-      <div class="step"><div class="num">05</div><div>Interior por ventanas</div></div>
-      <div class="step"><div class="num">06</div><div>Borde de pintura bajo luz UV y microscopio digital</div></div>
+      <div class="step">
+        <div class="num">01</div>
+        <div>
+          <strong>Base completa, con leyenda legible</strong>
+          <p class="pd-finding">Lo que encontramos: la base conserva la leyenda «CIPSA MÉXICO» completamente legible, sin corrosión que la afecte — coincide con el molde original de fábrica.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <div>
+          <strong>Llantas, lado derecho e izquierdo</strong>
+          <p class="pd-finding">Lo que encontramos: llantas originales de rayas rojas («redline»), con desgaste ligero y parejo en ambos lados — congruente con manipulación moderada, no con reemplazo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <div>
+          <strong>Frente y trasera</strong>
+          <p class="pd-finding">Lo que encontramos: parrilla cromada y defensas sin golpes ni piezas faltantes; conserva intacto el detalle del motor supercargado.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <div>
+          <strong>Techo y cofre a 45°</strong>
+          <p class="pd-finding">Lo que encontramos: pintura amarilla original sin repintes visibles bajo luz directa; el ángulo de 45° no muestra diferencia de brillo entre paneles.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">05</div>
+        <div>
+          <strong>Interior por ventanas</strong>
+          <p class="pd-finding">Lo que encontramos: interior gris original visible por las 4 ventanas, sin decoloración ni piezas sustituidas.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">06</div>
+        <div>
+          <strong>Borde de pintura bajo luz UV y microscopio digital</strong>
+          <p class="pd-finding">Lo que encontramos: sin fluorescencia anómala bajo UV en los bordes de pintura — descarta retoques o repintado parcial.</p>
+        </div>
+      </div>
+    </div>
+    <div class="pd-result">
+      <span class="grade-medal tier-silver">8.0–8.9</span>
+      <div class="pd-result-text">
+        <p class="pd-result-label">Resultado del dictamen <span class="pill original">Original</span></p>
+        <p>Las 6 fotografías, cotejadas contra el molde y el catálogo CIPSA de la época, no muestran evidencia de repintado, restauración ni sustitución de piezas. La pieza calificó <strong>8.0/10 — Near Mint‑Mint</strong>: desgaste leve y parejo propio del uso y el paso del tiempo, sin daño que comprometa su autenticidad.</p>
+      </div>
     </div>
   </section>
 
