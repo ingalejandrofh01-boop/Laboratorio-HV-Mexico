@@ -173,6 +173,21 @@
   .wiz-video-note span{font-size:17px;flex:none;}
   .wiz-video-note p{margin:0;font-size:12.5px;color:var(--sage);line-height:1.5;}
 
+  /* Logística de entrega: cómo llega y cómo se regresa la pieza */
+  .entrega-block{margin-bottom:20px;}
+  .entrega-block-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 8px;}
+  .entrega-chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .entrega-chip{flex:1;min-width:190px;text-align:left;font-family:inherit;font-size:13px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);padding:12px 14px;border-radius:8px;cursor:pointer;transition:border-color .15s ease,background-color .15s ease;}
+  .entrega-chip strong{display:block;font-size:13.5px;margin-bottom:2px;}
+  .entrega-chip span{display:block;font-size:12px;color:var(--sage);}
+  .entrega-chip:hover{border-color:var(--brass);}
+  .entrega-chip.selected{border-color:var(--red);background:rgba(210,4,45,0.05);}
+  .entrega-chip.selected strong{color:var(--red);}
+  .wiz-bank-note{display:flex;gap:10px;align-items:flex-start;margin-top:6px;padding:12px 14px;background:rgba(184,134,47,0.08);border:1px dashed var(--warn);border-radius:8px;}
+  .wiz-bank-note span{font-size:17px;flex:none;}
+  .wiz-bank-note p{margin:0;font-size:12.5px;color:var(--sage);line-height:1.5;}
+  .wiz-bank-note strong{color:var(--ink);}
+
   /* Revisión final: resumen tipo "expediente" */
   .wiz-review{display:flex;flex-direction:column;gap:14px;}
   .wiz-review-block{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--panel-2);}
@@ -2141,8 +2156,35 @@
 
         <div class="wiz-step" data-step="logistica">
           <p class="wiz-step-kicker">Paso 4 · Logística de entrega</p>
-          <h3>Agenda tu cita para traer tu pieza</h3>
-          <p class="wiz-step-help">Este paquete requiere peritaje presencial en CDMX. Elige día y hora — así te esperamos listos para recibirte.</p>
+          <h3>¿Cómo va y viene tu pieza?</h3>
+          <p class="wiz-step-help">Este paquete requiere peritaje presencial. Dinos cómo nos la vas a hacer llegar y cómo quieres que te la regresemos — puede ser distinto en cada sentido.</p>
+
+          <div class="entrega-block">
+            <p class="entrega-block-label">¿Cómo nos haces llegar tu pieza?</p>
+            <div class="entrega-chips" role="group" aria-label="Cómo llega tu pieza al laboratorio">
+              <button type="button" class="entrega-chip selected" data-val="presencial" onclick="wizSetEntregaIda('presencial',this)">
+                <strong>Yo la traigo</strong><span>La llevas tú mismo(a) al laboratorio — sin costo extra</span>
+              </button>
+              <button type="button" class="entrega-chip" data-val="envio" onclick="wizSetEntregaIda('envio',this)">
+                <strong>La envío por paquetería</strong><span>Tú la envías al laboratorio — aprox. $200 MXN</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="entrega-block">
+            <p class="entrega-block-label">¿Cómo quieres que te la regresemos?</p>
+            <div class="entrega-chips" role="group" aria-label="Cómo se regresa tu pieza">
+              <button type="button" class="entrega-chip selected" data-val="presencial" onclick="wizSetEntregaVuelta('presencial',this)">
+                <strong>Yo la recojo</strong><span>Pasas tú mismo(a) por ella al laboratorio — sin costo extra</span>
+              </button>
+              <button type="button" class="entrega-chip" data-val="envio" onclick="wizSetEntregaVuelta('envio',this)">
+                <strong>Que me la envíen</strong><span>Te la enviamos por paquetería — aprox. $200 MXN</span>
+              </button>
+            </div>
+          </div>
+          <input type="hidden" id="s-entrega-ida" value="presencial">
+          <input type="hidden" id="s-entrega-vuelta" value="presencial">
+
           <div id="s-fecha-wrap">
             <label class="wiz-sr-label" for="s-fecha">Fecha y hora de tu cita</label>
             <div class="cal-widget" id="s-cal-widget">
@@ -2163,6 +2205,19 @@
             <input type="hidden" id="s-fecha">
             <input type="hidden" id="s-hora">
           </div>
+
+          <div id="s-envio-direccion-wrap" style="display:none;margin-top:16px;">
+            <label style="display:block;font-size:12.5px;color:var(--sage);margin-bottom:6px;" for="s-envio-direccion">Dirección para el envío de regreso</label>
+            <textarea id="s-envio-direccion" rows="2" placeholder="Calle, número, colonia, ciudad, CP, referencias" oninput="updateSolicitudProgress()" style="width:100%;"></textarea>
+          </div>
+
+          <div id="s-envio-bank-note" style="display:none;">
+            <div class="wiz-bank-note">
+              <span>🏦</span>
+              <p>Como tu pieza requiere envío, es necesario hacer una <strong>transferencia bancaria</strong> antes de enviarla o de que te la regresemos (aprox. <strong id="s-envio-costo-txt">$200 MXN</strong>, según el envío que elegiste). Te compartimos los datos de la cuenta y confirmamos el pago por WhatsApp.</p>
+            </div>
+          </div>
+
           <div id="s-pkg-note" class="branch-note" style="margin-top:14px;"></div>
         </div>
 
@@ -2599,6 +2654,29 @@ const FIREBASE_CONFIG = {
   appId: "1:663595953603:web:9d006e2913419464e5e176"
 };
 const FIREBASE_READY = FIREBASE_CONFIG.apiKey !== "TU_API_KEY";
+
+// ============================================================
+// DATOS BANCARIOS PARA COBRO DE ENVÍOS — EDITAR AQUÍ cuando se tengan los
+// datos reales. Mientras "cuenta" esté vacío, el sitio NO muestra ningún
+// número al cliente — solo avisa que se le compartirán por WhatsApp, para
+// no publicar datos bancarios a medias ni equivocados.
+// ============================================================
+const BANK_TRANSFER_INFO = {
+  banco: "",
+  titular: "",
+  cuenta: "",
+  clabe: ""
+};
+function bankTransferInfoReady(){ return !!(BANK_TRANSFER_INFO.cuenta || BANK_TRANSFER_INFO.clabe); }
+function bankTransferInfoHtml(){
+  if(!bankTransferInfoReady()) return '';
+  return `<ul class="wiz-review-list" style="margin-top:8px;">
+    ${BANK_TRANSFER_INFO.banco?`<li><span>Banco</span><strong>${escapeHtml(BANK_TRANSFER_INFO.banco)}</strong></li>`:''}
+    ${BANK_TRANSFER_INFO.titular?`<li><span>Titular</span><strong>${escapeHtml(BANK_TRANSFER_INFO.titular)}</strong></li>`:''}
+    ${BANK_TRANSFER_INFO.cuenta?`<li><span>Cuenta</span><strong class="mono">${escapeHtml(BANK_TRANSFER_INFO.cuenta)}</strong></li>`:''}
+    ${BANK_TRANSFER_INFO.clabe?`<li><span>CLABE</span><strong class="mono">${escapeHtml(BANK_TRANSFER_INFO.clabe)}</strong></li>`:''}
+  </ul>`;
+}
 
 let db = null, fbAuth = null;
 try{
@@ -3565,17 +3643,71 @@ function calReset(){
 
 function onPackageChange(){
   const pkg = document.getElementById('s-nivel').value;
-  const fechaWrap = document.getElementById('s-fecha-wrap');
   const note = document.getElementById('s-pkg-note');
   if(pkg === 'digital'){
-    fechaWrap.style.display = 'none';
     note.innerHTML = 'Este paquete es 100% en línea: después de enviar tus datos te vamos a redirigir a WhatsApp para que nos mandes las fotos y el video de tu pieza.';
   } else {
-    fechaWrap.style.display = 'block';
-    note.innerHTML = 'Este paquete requiere traer la pieza físicamente al laboratorio. Elige tu cita arriba — la confirmamos por WhatsApp en cuanto la recibamos.';
-    calRenderMonth();
+    note.innerHTML = 'Este paquete requiere peritaje físico. Arriba nos dices cómo va y viene tu pieza — si la traes/recoges tú, elige tu cita; si prefieres envío, te decimos cómo pagarlo.';
   }
+  updateEntregaUI();
   updateSolicitudProgress();
+}
+
+// ============================================================
+// LOGÍSTICA DE ENTREGA — cómo llega la pieza al laboratorio (ida) y cómo
+// se le regresa al cliente (vuelta). Cada sentido es independiente: puede
+// traerla él mismo y que se la enviemos de regreso, o al revés, o ambos
+// por paquetería, o los dos en persona (sin costo). $200 MXN aprox. por
+// cada sentido que sea por envío — se paga por transferencia bancaria.
+// ============================================================
+const ENVIO_COSTO_TRAMO = 200;
+
+function wizSetEntregaIda(val, el){
+  document.getElementById('s-entrega-ida').value = val;
+  if(el) el.closest('.entrega-chips').querySelectorAll('.entrega-chip').forEach(b=>b.classList.toggle('selected', b===el));
+  updateEntregaUI();
+  updateSolicitudProgress();
+}
+function wizSetEntregaVuelta(val, el){
+  document.getElementById('s-entrega-vuelta').value = val;
+  if(el) el.closest('.entrega-chips').querySelectorAll('.entrega-chip').forEach(b=>b.classList.toggle('selected', b===el));
+  updateEntregaUI();
+  updateSolicitudProgress();
+}
+function wizEntregaCosto(){
+  const ida = document.getElementById('s-entrega-ida');
+  const vuelta = document.getElementById('s-entrega-vuelta');
+  if(!ida || !vuelta) return 0;
+  return (ida.value==='envio'?ENVIO_COSTO_TRAMO:0) + (vuelta.value==='envio'?ENVIO_COSTO_TRAMO:0);
+}
+function updateEntregaUI(){
+  const pkg = document.getElementById('s-nivel').value;
+  const fechaWrap = document.getElementById('s-fecha-wrap');
+  const idaEl = document.getElementById('s-entrega-ida');
+  const vueltaEl = document.getElementById('s-entrega-vuelta');
+  if(!idaEl || !vueltaEl) return;
+  const ida = idaEl.value, vuelta = vueltaEl.value;
+
+  // Solo se pide cita presencial si el cliente va a traer la pieza él
+  // mismo; si la va a enviar por paquetería no hay cita que agendar.
+  if(fechaWrap) fechaWrap.style.display = (pkg !== 'digital' && ida === 'presencial') ? 'block' : 'none';
+  if(pkg !== 'digital' && ida === 'presencial') calRenderMonth();
+
+  // La dirección de envío de regreso solo aplica si le vamos a enviar la
+  // pieza al cliente (nosotros necesitamos saber a dónde mandarla).
+  const dirWrap = document.getElementById('s-envio-direccion-wrap');
+  if(dirWrap) dirWrap.style.display = (vuelta === 'envio') ? 'block' : 'none';
+
+  const costo = wizEntregaCosto();
+  const bankNote = document.getElementById('s-envio-bank-note');
+  const costoTxt = document.getElementById('s-envio-costo-txt');
+  if(bankNote) bankNote.style.display = costo > 0 ? 'block' : 'none';
+  if(costoTxt) costoTxt.textContent = `$${costo.toLocaleString('es-MX')} MXN`;
+}
+function entregaResumenTxt(ida, vuelta){
+  const idaTxt = ida === 'envio' ? 'la envías por paquetería' : 'la traes tú';
+  const vueltaTxt = vuelta === 'envio' ? 'te la enviamos por paquetería' : 'la recoges tú';
+  return `Para traerla, ${idaTxt}; para el regreso, ${vueltaTxt}.`;
 }
 
 // ============================================================
@@ -3602,7 +3734,13 @@ function isWizardStepValid(stepId){
     case 'paquete': return wizPkgChosen;
     case 'contacto': return !!(document.getElementById('s-nombre').value.trim() && document.getElementById('s-telefono').value.trim());
     case 'pieza': return !!document.getElementById('s-modelo').value.trim();
-    case 'logistica': return !!(document.getElementById('s-fecha').value && document.getElementById('s-hora').value);
+    case 'logistica': {
+      const ida = document.getElementById('s-entrega-ida').value;
+      const vuelta = document.getElementById('s-entrega-vuelta').value;
+      const citaOk = ida !== 'presencial' || !!(document.getElementById('s-fecha').value && document.getElementById('s-hora').value);
+      const direccionOk = vuelta !== 'envio' || !!document.getElementById('s-envio-direccion').value.trim();
+      return citaOk && direccionOk;
+    }
     default: return true;
   }
 }
@@ -3698,6 +3836,10 @@ function renderWizardReview(){
   const desc = document.getElementById('s-desc').value.trim();
   const fecha = document.getElementById('s-fecha').value;
   const hora = document.getElementById('s-hora').value;
+  const entregaIda = document.getElementById('s-entrega-ida') ? document.getElementById('s-entrega-ida').value : 'presencial';
+  const entregaVuelta = document.getElementById('s-entrega-vuelta') ? document.getElementById('s-entrega-vuelta').value : 'presencial';
+  const envioDireccion = document.getElementById('s-envio-direccion') ? document.getElementById('s-envio-direccion').value.trim() : '';
+  const envioCosto = wizEntregaCosto();
   let html = `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Paquete</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('paquete','back')">Editar</button></div>
@@ -3727,7 +3869,13 @@ function renderWizardReview(){
     ${pkg !== 'digital' ? `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Logística</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('logistica','back')">Editar</button></div>
-      <ul class="wiz-review-list"><li><span>Tu cita</span><strong>${fecha && hora ? escapeHtml(formatCitaLarga(fecha, hora)) : 'Por agendar'}</strong></li></ul>
+      <ul class="wiz-review-list">
+        <li><span>Cómo la traes</span><strong>${entregaIda==='envio'?'Por paquetería (tú la envías)':'Tú la traes'}</strong></li>
+        ${entregaIda==='presencial' ? `<li><span>Tu cita</span><strong>${fecha && hora ? escapeHtml(formatCitaLarga(fecha, hora)) : 'Por agendar'}</strong></li>` : ''}
+        <li><span>Cómo se regresa</span><strong>${entregaVuelta==='envio'?'Por paquetería (te la enviamos)':'Tú la recoges'}</strong></li>
+        ${entregaVuelta==='envio' && envioDireccion ? `<li><span>Dirección de envío</span><strong>${escapeHtml(envioDireccion)}</strong></li>` : ''}
+        ${envioCosto>0 ? `<li><span>Costo de envío</span><strong>$${envioCosto.toLocaleString('es-MX')} MXN (transferencia, se confirma por WhatsApp)</strong></li>` : ''}
+      </ul>
     </div>` : ''}
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Evidencia visual</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('evidencia','back')">Editar</button></div>
@@ -3814,6 +3962,10 @@ function resetWizard(){
   const status = document.getElementById('s-fotos-status');
   if(status) status.textContent = 'Aún no subes fotos.';
   document.getElementById('s-nivel').value = 'digital';
+  document.getElementById('s-entrega-ida').value = 'presencial';
+  document.getElementById('s-entrega-vuelta').value = 'presencial';
+  document.getElementById('s-envio-direccion').value = '';
+  document.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
   calReset();
   onPackageChange();
   wizGoToStep('paquete');
@@ -3833,8 +3985,16 @@ async function submitSolicitud(){
   }
   const fechaEntrega = document.getElementById('s-fecha').value;
   const citaHora = document.getElementById('s-hora').value;
-  if(pkg !== 'digital' && !(fechaEntrega && citaHora)){
+  const entregaIda = pkg !== 'digital' ? document.getElementById('s-entrega-ida').value : null;
+  const entregaVuelta = pkg !== 'digital' ? document.getElementById('s-entrega-vuelta').value : null;
+  const envioDireccion = document.getElementById('s-envio-direccion').value.trim();
+  if(pkg !== 'digital' && entregaIda === 'presencial' && !(fechaEntrega && citaHora)){
     toast('Elige la fecha y hora de tu cita.');
+    wizGoToStep('logistica', 'back');
+    return;
+  }
+  if(pkg !== 'digital' && entregaVuelta === 'envio' && !envioDireccion){
+    toast('Escribe la dirección para el envío de regreso.');
     wizGoToStep('logistica', 'back');
     return;
   }
@@ -3846,6 +4006,10 @@ async function submitSolicitud(){
   // tiempo de entrega elegido y su costo final viajan aparte, en campos
   // nuevos, para no romper nada de lo anterior.
   const pricing = wizPkgPricing(pkg);
+  // El costo de envío es aparte del precio del paquete — no entra a la
+  // compuerta de aprobación (procesoAprueba) ni se toca si la pieza se
+  // rechaza; es un cobro de logística, siempre se debe si se eligió envío.
+  const envioCosto = pkg !== 'digital' ? ((entregaIda==='envio'?ENVIO_COSTO_TRAMO:0) + (entregaVuelta==='envio'?ENVIO_COSTO_TRAMO:0)) : 0;
   const data = {
     id, nombre, telefono, modelo, paquete: pkg,
     anio: document.getElementById('s-anio').value.trim(),
@@ -3853,6 +4017,10 @@ async function submitSolicitud(){
     color: document.getElementById('s-color').value.trim(),
     desc: document.getElementById('s-desc').value.trim(),
     fechaEntrega, citaHora, citaTs,
+    entregaIda: entregaIda || null,
+    entregaVuelta: entregaVuelta || null,
+    envioDireccion: envioDireccion || '',
+    envioCosto,
     nivel: pkgLabels[pkg] || pkg,
     velocidad: pricing.tier,
     velocidadLabel: pricing.tierLabel,
@@ -3894,10 +4062,21 @@ async function submitSolicitud(){
       waMsg = `Hola, soy ${nombre}. Acabo de registrar mi solicitud ${id} para Validación digital de mi pieza "${modelo}".${hayFotos ? '' : ' Les mando las fotos y el video.'}`;
       waLabel = hayFotos ? 'Enviar video por WhatsApp' : 'Enviar fotos por WhatsApp';
     } else {
-      const citaTxt = formatCitaLarga(fechaEntrega, citaHora);
-      nextStepsText = `Tu cita quedó agendada para <strong>${escapeHtml(citaTxt)}</strong> — te esperamos en el laboratorio (revisa la sección de Ubicación). Te confirmamos por WhatsApp.`;
-      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}", con entrega ${pricing.tierLabel} (${pricing.tiempoTxt}) — costo total $${pricing.precio.toLocaleString('es-MX')} MXN. Mi cita quedó agendada para ${citaTxt} — quiero confirmarla.`;
-      waLabel = 'Confirmar cita por WhatsApp';
+      const entregaTxt = entregaResumenTxt(entregaIda, entregaVuelta);
+      if(entregaIda === 'presencial'){
+        const citaTxt = formatCitaLarga(fechaEntrega, citaHora);
+        nextStepsText = `Tu cita quedó agendada para <strong>${escapeHtml(citaTxt)}</strong> — te esperamos en el laboratorio (revisa la sección de Ubicación). Te confirmamos por WhatsApp.`;
+      } else {
+        nextStepsText = `Vas a enviar tu pieza por paquetería — en breve te contactamos por WhatsApp para darte la dirección del laboratorio y los datos de la transferencia.`;
+      }
+      if(envioCosto > 0){
+        nextStepsText += ` ${entregaTxt} Como hay envío de por medio, se requiere una transferencia de <strong>$${envioCosto.toLocaleString('es-MX')} MXN</strong> — te compartimos los datos bancarios por WhatsApp.`;
+      }
+      const waEnvioTxt = envioCosto > 0
+        ? ` Para el envío (${entregaTxt.toLowerCase()}), ¿me pueden compartir los datos bancarios para hacer la transferencia de $${envioCosto.toLocaleString('es-MX')} MXN?`
+        : '';
+      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}", con entrega ${pricing.tierLabel} (${pricing.tiempoTxt}) — costo total $${pricing.precio.toLocaleString('es-MX')} MXN. ${entregaIda==='presencial' ? `Mi cita quedó agendada para ${formatCitaLarga(fechaEntrega, citaHora)} — quiero confirmarla.` : entregaTxt}${waEnvioTxt}`;
+      waLabel = envioCosto > 0 ? 'Confirmar por WhatsApp y pedir datos de transferencia' : 'Confirmar cita por WhatsApp';
     }
     confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
       <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(waMsg)}" target="_blank" rel="noopener">${waLabel}</a>
@@ -3906,7 +4085,7 @@ async function submitSolicitud(){
 
     document.getElementById('s-confirm').innerHTML = confirmHtml;
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
-    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora'].forEach(fid=>document.getElementById(fid).value='');
+    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion'].forEach(fid=>document.getElementById(fid).value='');
     SOLICITUD_FOTOS_DATA = [];
   }catch(e){
     toast('No se pudo enviar la solicitud, intenta de nuevo.');
@@ -5206,10 +5385,63 @@ let SOLICITUDES_FILTER = 'todas';
 
 function esDigital(paquete){ return paquete === 'digital'; }
 
+// Resumen corto de logística de entrega/envío — usado en varias tarjetas
+// del admin para que se note de un vistazo cuándo hay que gestionar un
+// envío (y su transferencia) además del peritaje en sí.
+function envioBadgeHtml(d){
+  if(esDigital(d.paquete) || !d.entregaIda) return '';
+  const partes = [];
+  if(d.entregaIda === 'envio') partes.push('envío de ida');
+  if(d.entregaVuelta === 'envio') partes.push('envío de vuelta');
+  if(!partes.length) return '';
+  const costo = d.envioCosto || (partes.length * ENVIO_COSTO_TRAMO);
+  return `<span class="pill" style="background:rgba(184,134,47,0.12);color:var(--warn);border:1px solid var(--warn);">📦 ${partes.join(' + ')} · $${costo.toLocaleString('es-MX')} MXN</span>`;
+}
+// Bloque completo de logística de envío dentro del detalle de un proceso —
+// resumen + acciones (mandar datos bancarios por WhatsApp, marcar pagado).
+function envioInfoHtml(p){
+  const badge = envioBadgeHtml(p);
+  if(!badge) return '';
+  return `
+    <div class="card" style="background:var(--panel-2);padding:12px 14px;margin:10px 0 16px;">
+      <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div>${badge} ${p.envioPagado ? '<span class="pill completado" style="font-size:11px;">Transferencia recibida</span>' : '<span class="pill pendiente" style="font-size:11px;">Transferencia pendiente</span>'}</div>
+        <div class="row" style="gap:8px;">
+          <button class="btn ghost small" onclick="notifyEnvioDatos('${escapeHtml(p.id)}')">Mandar datos de transferencia por WhatsApp</button>
+          <button class="btn ghost small" onclick="toggleEnvioPagado('${escapeHtml(p.id)}')">${p.envioPagado?'Marcar como no pagado':'Marcar transferencia recibida'}</button>
+        </div>
+      </div>
+      ${p.envioDireccion ? `<p class="foot-note" style="border:none;padding:6px 0 0;">📍 Dirección de envío de regreso: ${escapeHtml(p.envioDireccion)}</p>` : ''}
+    </div>`;
+}
+async function notifyEnvioDatos(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  const partes = [];
+  if(p.entregaIda === 'envio') partes.push('el envío de tu pieza a nuestro laboratorio');
+  if(p.entregaVuelta === 'envio') partes.push('el envío de regreso de tu pieza');
+  const costo = p.envioCosto || 0;
+  let msg = `Hola ${p.nombre}, para ${partes.join(' y ')} (folio de seguimiento ${p.id}) se necesita una transferencia de $${costo.toLocaleString('es-MX')} MXN.`;
+  if(bankTransferInfoReady()){
+    msg += ` Estos son los datos: ${BANK_TRANSFER_INFO.banco?('Banco '+BANK_TRANSFER_INFO.banco+', '):''}${BANK_TRANSFER_INFO.titular?('titular '+BANK_TRANSFER_INFO.titular+', '):''}${BANK_TRANSFER_INFO.cuenta?('cuenta '+BANK_TRANSFER_INFO.cuenta+', '):''}${BANK_TRANSFER_INFO.clabe?('CLABE '+BANK_TRANSFER_INFO.clabe):''}. En cuanto hagas el pago, mándanos el comprobante por aquí.`;
+  } else {
+    msg += ' En un momento te comparto los datos de la cuenta bancaria para hacerla.';
+  }
+  msg += ' — Laboratorio HV México';
+  window.open(waLink(msg), '_blank', 'noopener');
+}
+async function toggleEnvioPagado(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  p.envioPagado = !p.envioPagado;
+  CURRENT_PROCESO = p;
+  await setProceso(p);
+  toast(p.envioPagado ? 'Transferencia marcada como recibida.' : 'Transferencia marcada como pendiente.');
+  renderProcesoDetail(p);
+}
 function solicitudCardHtml(d){
   const tipo = esDigital(d.paquete) ? '<span class="pill original" style="font-size:11px;">En línea</span>' : '<span class="pill pendiente" style="font-size:11px;">Presencial</span>';
   const enValidacion = d.estado === 'en_validacion';
-  const citaTxt = (!esDigital(d.paquete) && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
+  const citaTxt = (!esDigital(d.paquete) && d.entregaIda !== 'envio' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
+  const envioBadge = envioBadgeHtml(d);
   return `
       <div class="card" style="margin-bottom:10px;">
         <div class="row" style="justify-content:space-between;">
@@ -5219,6 +5451,8 @@ function solicitudCardHtml(d){
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.nombre)} · ${escapeHtml(d.telefono)} · ${escapeHtml(d.nivel)}</p>
         <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0 0 8px;">${escapeHtml(d.id)} · ${escapeHtml(d.fecha||'')}</p>
         ${citaTxt ? `<p style="margin:0 0 8px;"><span class="cita-pill">Cita: ${escapeHtml(citaTxt)}</span></p>` : ''}
+        ${envioBadge ? `<p style="margin:0 0 8px;">${envioBadge}</p>` : ''}
+        ${d.envioDireccion ? `<p style="font-size:12px;color:var(--sage);margin:0 0 8px;">📍 ${escapeHtml(d.envioDireccion)}</p>` : ''}
         ${d.desc ? `<p style="font-size:12.5px;color:var(--sage);margin:0 0 8px;">${escapeHtml(d.desc)}</p>` : ''}
         <div class="row">
           ${d.estado==='completado' ? '' : (enValidacion
@@ -5557,6 +5791,12 @@ async function startValidacion(dJson){
     // de haber sido rechazado (rejectProceso baja precioFinal a $150).
     precioFinalOriginal: isDigital ? 150 : (d.precioFinal != null ? d.precioFinal : null),
     citaFecha: d.fechaEntrega || '', citaHora: d.citaHora || '',
+    // Cómo va y viene la pieza — independiente en cada sentido. El costo de
+    // envío es aparte del precio del paquete (no se ve afectado si la pieza
+    // se rechaza) y se cobra por transferencia bancaria antes de enviar.
+    entregaIda: d.entregaIda || null, entregaVuelta: d.entregaVuelta || null,
+    envioDireccion: d.envioDireccion || '', envioCosto: d.envioCosto || 0,
+    envioPagado: false,
     estado: 'en_proceso',
     creado: new Date().toLocaleDateString('es-MX'),
     creadoTs: Date.now(),
@@ -5609,7 +5849,8 @@ function procCardHtml(p){
         <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
       </div>
       <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(p.nombre)} · ${escapeHtml(p.nivel)}</p>
-      ${pendiente && p.citaFecha ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
+      ${pendiente && p.citaFecha && p.entregaIda!=='envio' ? `<p style="margin:0 0 6px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
+      ${envioBadgeHtml(p) ? `<p style="margin:0 0 6px;">${envioBadgeHtml(p)}${p.envioPagado?' <span class="pill completado" style="font-size:11px;">Transferencia recibida</span>':''}</p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
         <p class="foot-note" style="border:none;padding:0;margin:0;">${doneCount} de ${p.pasos.length} pasos completados</p>
@@ -5883,6 +6124,7 @@ function renderProcesoDetail(p){
         </div>
         ${dl ? `<span class="deadline-pill ${dl.cls}" style="margin-top:2px;">${dl.label}</span>` : (pendienteRecepcion ? `<span class="cita-pill" style="margin-top:2px;">Esperando ingreso de la pieza</span>` : '')}
       </div>
+      ${envioInfoHtml(p)}
       ${dl ? `<p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">Recibida hace ${dl.elapsedDays>0?dl.elapsedDays+'d ':''}${dl.elapsedHours}h · plazo de ${dl.days} días para este paquete</p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneCount} de ${p.pasos.length} pasos completados</p>
@@ -5916,7 +6158,8 @@ function renderProcesoDetailRechazada(p){
         <div class="next-action-icon" style="background:var(--red);">✕</div>
         <div class="next-action-text"><strong>No aprobada — proceso detenido</strong><span>${escapeHtml(p.rechazoMotivo || 'No pasó la validación.')}</span></div>
       </div>
-      <p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">No continúa a certificación, encapsulado ni entrega. Costo final: <strong style="color:var(--ink);">$${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN</strong> (solo la validación base).</p>
+      ${envioInfoHtml(p)}
+      <p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">No continúa a certificación ni a encapsulado. Costo final: <strong style="color:var(--ink);">$${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN</strong> (solo la validación base)${p.entregaVuelta==='envio'?' + el envío de regreso':''}.</p>
       <div class="row">
         <button class="btn" onclick="notifyRechazo('${escapeHtml(p.id)}')">Notificar al cliente por WhatsApp</button>
       </div>
@@ -6673,6 +6916,7 @@ function historialRowHtml(item){
           <strong style="font-size:13px;">${precio}</strong>
         </div>
       </div>
+      ${item.tipo==='proceso' && envioBadgeHtml(d) ? `<div class="row" style="margin-top:6px;">${envioBadgeHtml(d)}${d.envioPagado?' <span class="pill completado" style="font-size:11px;">Transferencia recibida</span>':''}</div>` : ''}
       ${canPublish ? `<div class="row" style="margin-top:8px;"><button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en la Biblioteca</button></div>` : ''}
     </div>`;
 }
