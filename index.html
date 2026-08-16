@@ -78,6 +78,13 @@
   @media(max-width:760px){.site-watermark .wm-img{opacity:.12;}}
   h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0 0 .4em;color:var(--ink);}
   .mono{font-family:'IBM Plex Mono',monospace;}
+  /* ---- Código de seguimiento con botón de copiar rápido ---- */
+  .code-copy-row{display:inline-flex;align-items:center;gap:8px;margin:8px 0 0;padding:8px 10px 8px 14px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;}
+  .code-copy-value{font-size:15px;font-weight:600;color:var(--red);letter-spacing:.01em;}
+  .copy-btn{flex:none;display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--sage);cursor:pointer;padding:0;transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;}
+  .copy-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .copy-btn:hover{border-color:var(--red);color:var(--red);}
+  .copy-btn.copied{background:rgba(47,122,79,0.12);border-color:var(--ok);color:var(--ok);transform:scale(1.05);}
   a{color:var(--red);}
   .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
   .ruler{height:38px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:8px;}
@@ -379,6 +386,18 @@
   .pill.pendiente{background:rgba(184,134,47,0.12);color:var(--warn);border:1px solid var(--warn);}
   .pill.completado{background:rgba(47,122,79,0.1);color:var(--ok);border:1px solid var(--ok);}
   .foot-note{font-size:12px;color:var(--sage-dim);border-top:1px solid var(--line);padding-top:16px;margin-top:24px;}
+  /* Documento informal del paquete de $150 (Validación) — deliberadamente
+     distinto al certificado: sin logo, sin sello rojo, sin lenguaje de
+     "veredicto" oficial. Es solo una referencia rápida para el cliente. */
+  .papel-informal{max-width:560px;margin:14px 0;padding:22px 26px;border:1.5px dashed var(--line);border-radius:10px;background:var(--panel-2);}
+  .papel-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);margin:0 0 6px;}
+  .papel-informal h3{margin:0 0 4px;font-size:18px;}
+  .papel-informal table{width:100%;border-collapse:collapse;margin:12px 0;}
+  .papel-informal td{padding:6px 4px;font-size:13px;border-bottom:1px solid var(--line);}
+  .papel-informal td:first-child{color:var(--sage);width:42%;}
+  .papel-resultado{margin:12px 0;}
+  .papel-resultado p{margin:6px 0;font-size:13.5px;}
+  .papel-disclaimer{font-size:11.5px;color:var(--sage-dim);border-top:1px solid var(--line);padding-top:10px;margin-top:14px;}
   .cert{background:var(--paper);color:var(--ink);border-radius:6px;padding:32px;position:relative;border:2px solid var(--red);box-shadow:0 0 0 5px rgba(163,38,56,0.06);container-type:inline-size;container-name:certcard;}
   /* En contenedores angostos (p.ej. la vista previa del admin, a la mitad
      de la pantalla) las dos tablas de datos y la cuadrícula de fotos ya
@@ -1098,7 +1117,7 @@
     body{background:#fff;color:#000;}
     .view{display:none!important;}
     .view.active{display:block!important;}
-    #print-target-cert,#print-target-seal,#print-target-full{display:none;}
+    #print-target-cert,#print-target-seal,#print-target-full,#print-target-papel{display:none;}
     /* Aislamos lo que se imprime: el print-target puede estar anidado varios
        niveles adentro (p.ej. dentro del panel de administrador), así que
        escondemos todo lo demás en la vista activa — excepto los ancestros
@@ -1113,6 +1132,9 @@
     body[data-print-mode="full"] .view.active *:not(:has(#print-target-full)):not(#print-target-full):not(#print-target-full *){display:none!important;}
     body[data-print-mode="full"] .view.active :has(#print-target-full),
     body[data-print-mode="full"] #print-target-full{display:block!important;}
+    body[data-print-mode="papel"] .view.active *:not(:has(#print-target-papel)):not(#print-target-papel):not(#print-target-papel *){display:none!important;}
+    body[data-print-mode="papel"] .view.active :has(#print-target-papel),
+    body[data-print-mode="papel"] #print-target-papel{display:block!important;}
 
     /* Paginación del certificado: lo compactamos y evitamos que
        bloques (tablas, firmas, fotos, QR) se corten a la mitad entre
@@ -1859,21 +1881,21 @@
       <div class="card tag-notch pkg-card" data-pkg="digital">
         <span class="pkg-card-badge mono">Más rápido</span>
         <span class="pkg-card-icon">🔍</span>
-        <h3 class="pkg-card-name">Validación digital</h3>
+        <h3 class="pkg-card-name">Validación</h3>
         <p class="pkg-card-price"><span class="mono">$150</span> <small>MXN</small></p>
-        <span class="pkg-card-time">⏱ Entrega en 24–48 h</span>
+        <span class="pkg-card-time">⏱ En línea: 24–48 h · Presencial: el mismo día</span>
         <ul class="pkg-list">
-          <li>Evaluación por fotos y video</li>
-          <li>Dictamen preliminar por WhatsApp</li>
-          <li>No requiere traer la pieza</li>
+          <li>Elige evaluación en línea (fotos/video) o presencial</li>
+          <li>Dictamen + calificación preliminar (0–10)</li>
+          <li>Documento informal de referencia — no es certificado</li>
         </ul>
-        <p class="pkg-note">Se puede semi-validar a distancia, pero no es 100% certera — depende de la calidad de las fotos y los ángulos.</p>
+        <p class="pkg-note">Es una primera impresión, no un peritaje físico completo. La modalidad presencial es más precisa que la evaluación por fotos.</p>
         <details class="pkg-detail">
           <summary>Ver protocolo completo</summary>
           <ul class="pkg-detail-body">
-            <li>Revisión por foto y video con checklist de ángulos clave</li>
-            <li>Veredicto preliminar: Auténtico / No auténtico / Requiere físico</li>
-            <li>QR digital temporal · sin folio oficial</li>
+            <li>En línea: revisión por foto y video con checklist de ángulos clave. Presencial: inspección visual directa en el laboratorio.</li>
+            <li>Dictamen preliminar: aparenta ser original / no aparenta ser original, con calificación 0–10</li>
+            <li>Documento informal (PDF) con modelo, calificación y resultado — sin folio oficial ni logo del laboratorio</li>
           </ul>
         </details>
         <div class="pkg-cta">
@@ -1974,7 +1996,7 @@
         </thead>
         <tbody>
         <tr id="pricing-row-digital">
-          <td><strong>Validación digital</strong><br><span class="foot-note" style="border:none;padding:0;margin:0;">$150 MXN</span></td>
+          <td><strong>Validación</strong> <span class="foot-note" style="border:none;padding:0;margin:0;">(en línea o presencial)</span><br><span class="foot-note" style="border:none;padding:0;margin:0;">$150 MXN</span></td>
           <td class="mono highlight-cell">$150<br><span style="font-size:11px;">24h fijo</span></td>
           <td class="muted-cell">No aplica</td>
           <td class="muted-cell">No aplica</td>
@@ -2073,14 +2095,20 @@
             <div class="wiz-pkg-card" data-pkg="digital" role="button" tabindex="0" onclick="wizSelectPackage('digital')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('digital');}">
               <span class="wiz-pkg-card-badge mono">Más rápido</span>
               <span class="wiz-pkg-card-icon">🔍</span>
-              <span class="wiz-pkg-card-name">Validación digital</span>
+              <span class="wiz-pkg-card-name">Validación</span>
               <span class="wiz-pkg-card-price">$150 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
-                <li>Evaluación por fotos y video</li>
-                <li>Dictamen preliminar por WhatsApp</li>
-                <li>No requiere traer la pieza</li>
+                <li>Dictamen + calificación preliminar (0–10)</li>
+                <li>Documento informal de referencia — no es certificado</li>
               </ul>
-              <span class="wiz-pkg-card-time">⏱ Entrega en 24–48 h</span>
+              <div class="pkg-speed" onclick="event.stopPropagation();">
+                <p class="pkg-speed-label">¿Cómo prefieres la validación?</p>
+                <div class="pkg-speed-chips" role="group" aria-label="Elegir modo de validación">
+                  <button type="button" class="pkg-speed-chip selected" data-modo="en_linea" onclick="wizSetModoDigital('en_linea',this,event)">En línea · fotos</button>
+                  <button type="button" class="pkg-speed-chip" data-modo="presencial" onclick="wizSetModoDigital('presencial',this,event)">Presencial · más preciso</button>
+                </div>
+              </div>
+              <span class="wiz-pkg-card-time" id="wiz-pkg-time-digital">⏱ Entrega en 24–48 h</span>
             </div>
             <div class="wiz-pkg-card featured" data-pkg="fisico" role="button" tabindex="0" onclick="wizSelectPackage('fisico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('fisico');}">
               <span class="wiz-pkg-card-badge mono">Más completo</span>
@@ -2126,10 +2154,11 @@
             </div>
           </div>
           <select id="s-nivel" class="wiz-sr-label" onchange="onPackageChange()" tabindex="-1" aria-hidden="true">
-            <option value="digital">1. Validación digital — $150 MXN</option>
+            <option value="digital">1. Validación — $150 MXN</option>
             <option value="fisico">2. Peritaje físico + certificado — $400 MXN</option>
             <option value="premium">3. Peritaje premium + encapsulado — $800 MXN</option>
           </select>
+          <input type="hidden" id="s-modo-digital" value="en_linea">
         </div>
 
         <div class="wiz-step" data-step="contacto">
@@ -2167,7 +2196,7 @@
         <div class="wiz-step" data-step="logistica">
           <p class="wiz-step-kicker">Paso 4 · Logística de entrega</p>
           <h3>¿Cómo va y viene tu pieza?</h3>
-          <p class="wiz-step-help">Este paquete requiere peritaje presencial. Dinos cómo nos la vas a hacer llegar y cómo quieres que te la regresemos — puede ser distinto en cada sentido.</p>
+          <p class="wiz-step-help">Esta modalidad requiere que tu pieza esté físicamente en el laboratorio. Dinos cómo nos la vas a hacer llegar y cómo quieres que te la regresemos — puede ser distinto en cada sentido.</p>
 
           <div class="entrega-block">
             <p class="entrega-block-label">¿Cómo nos haces llegar tu pieza?</p>
@@ -3177,6 +3206,42 @@ function tierForGrade(grado, estado){
   return 'gold';
 }
 
+// Documento informal de referencia del paquete de $150 (Validación) — NO es
+// un certificado: sin logo del laboratorio, sin folio, sin sello ni firma,
+// sin lenguaje de "veredicto" o dictamen oficial. Solo le da al cliente una
+// idea rápida de su pieza (modelo, calificación preliminar, si aparenta ser
+// original) para el servicio de $150, tal como se pidió explícitamente.
+function renderPapelInformal(data){
+  const veredictoTxt = data.veredicto === 'original' ? 'Aparenta ser original'
+    : (data.veredicto === 'no_original' ? 'No aparenta ser original' : 'Sin determinar');
+  const calTxt = (data.calificacion != null && data.calificacion !== '') ? Number(data.calificacion).toFixed(1) + '/10' : 'No asignada';
+  const modoTxt = data.modo === 'presencial' ? 'Presencial (inspección directa)' : 'En línea (fotos/video)';
+  return `
+  <div class="print-target" id="print-target-papel">
+  <div class="papel-informal">
+    <p class="papel-kicker">Documento informal de referencia — no es un certificado</p>
+    <h3>${escapeHtml(data.modelo||'')}${data.anio ? ' — '+escapeHtml(data.anio) : ''}</h3>
+    <p class="mono" style="font-size:12px;color:var(--brass-dim);margin:0;">Código ${escapeHtml(data.codigo||'')} · ${escapeHtml(data.fecha||'')}</p>
+    <table>
+      <tr><td>Modelo</td><td>${escapeHtml(data.modelo||'—')}</td></tr>
+      <tr><td>Año aprox.</td><td>${escapeHtml(data.anio||'—')}</td></tr>
+      <tr><td>Origen</td><td>${escapeHtml(data.origen||'—')}</td></tr>
+      <tr><td>Color</td><td>${escapeHtml(data.color||'—')}</td></tr>
+      <tr><td>Modalidad de validación</td><td>${modoTxt}</td></tr>
+    </table>
+    <div class="papel-resultado">
+      <p><strong>¿Aparenta ser original?</strong> ${escapeHtml(veredictoTxt)}</p>
+      <p><strong>Calificación preliminar:</strong> ${escapeHtml(calTxt)}</p>
+      ${data.notas ? `<p><strong>Notas del evaluador:</strong> ${escapeHtml(data.notas)}</p>` : ''}
+    </div>
+    <p class="papel-disclaimer">Este documento es solo una referencia informativa de nuestro servicio de Validación ($150 MXN) — no es un certificado oficial ni un dictamen final de autenticidad, no lleva folio, sello ni firma. Para un dictamen certificado con folio oficial, solicita Peritaje físico o Premium.</p>
+  </div>
+  </div>
+  <div class="no-print row" style="margin-top:12px;">
+    <button class="btn ghost small" onclick="printOnly('papel')">Descargar / imprimir documento</button>
+  </div>`;
+}
+
 function printOnly(which){
   document.body.setAttribute('data-print-mode', which);
   window.print();
@@ -3390,6 +3455,19 @@ const SITE_DOMAIN = "https://labhvmexico.com"; // TODO: reemplaza cuando tengas 
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
+// Plantilla estándar para TODOS los mensajes automáticos de WhatsApp del
+// sitio — mismo look en cualquier mensaje: encabezado con marca, cuerpo en
+// líneas cortas con *negritas* (las negritas con asteriscos son propias de
+// WhatsApp, se ven igual en Android y iPhone) y emojis Unicode estándar
+// (soportados en ambos sistemas desde hace años, sin variantes raras que
+// puedan salir como cuadro en algún teléfono), y un cierre consistente.
+// lineas: array de strings (líneas vacías o falsy se omiten solas).
+function waTemplate(emoji, titulo, lineas, cierre){
+  const header = `${emoji} *${titulo}*\n🏁 *Laboratorio HV México*`;
+  const body = lineas.filter(Boolean).join('\n');
+  const footer = cierre || '¿Dudas? Escríbenos por aquí mismo. 🙌';
+  return `${header}\n\n${body}\n\n${footer}`;
+}
 // Botón consistente para acciones de WhatsApp (enlace, no <button>) — con
 // ícono, buen contraste en claro/oscuro y el mismo look en todo el sitio.
 function waBtnHtml(message, label, opts){
@@ -3398,6 +3476,48 @@ function waBtnHtml(message, label, opts){
     <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>
     <span>${escapeHtml(label)}</span>
   </a>`;
+}
+
+// Botón rápido de "copiar" para códigos de seguimiento y folios — evita
+// tener que seleccionar el texto a mano. Usa la API moderna del
+// portapapeles y cae de vuelta a la forma clásica (textarea + execCommand)
+// si el navegador no la soporta.
+function copyBtnHtml(text){
+  return `<button type="button" class="copy-btn" onclick="copyToClipboard('${escapeHtml(text)}', this)" aria-label="Copiar código" title="Copiar">
+    <svg viewBox="0 0 24 24" class="icon-copy"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+    <svg viewBox="0 0 24 24" class="icon-check" style="display:none;"><path d="M20 6 9 17l-5-5"/></svg>
+  </button>`;
+}
+async function copyToClipboard(text, btnEl){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    toast('Código copiado ✓');
+    if(btnEl){
+      btnEl.classList.add('copied');
+      const iconCopy = btnEl.querySelector('.icon-copy');
+      const iconCheck = btnEl.querySelector('.icon-check');
+      if(iconCopy) iconCopy.style.display = 'none';
+      if(iconCheck) iconCheck.style.display = '';
+      setTimeout(() => {
+        btnEl.classList.remove('copied');
+        if(iconCopy) iconCopy.style.display = '';
+        if(iconCheck) iconCheck.style.display = 'none';
+      }, 1800);
+    }
+  }catch(e){
+    toast('No se pudo copiar — selecciona el código manualmente.');
+  }
 }
 
 async function shareCert(folio, modelo){
@@ -3491,10 +3611,42 @@ function wizPkgSpeedResetUI(){
   });
 }
 
+// ============================================================
+// MODO DE VALIDACIÓN del paquete de $150 — el cliente elige si la
+// evaluación es en línea (por fotos/video) o presencial (trae la pieza al
+// laboratorio). Presencial es más preciso, pero requiere logística de
+// entrega igual que los paquetes físicos (ver wizRequiresLogistica).
+// ============================================================
+function wizModoDigital(){
+  const el = document.getElementById('s-modo-digital');
+  return el ? el.value : 'en_linea';
+}
+function wizRequiresLogistica(pkg){
+  return pkg !== 'digital' || wizModoDigital() === 'presencial';
+}
+function wizSetModoDigital(modo, el, evt){
+  if(evt) evt.stopPropagation();
+  const input = document.getElementById('s-modo-digital');
+  if(input) input.value = modo;
+  if(el){
+    const group = el.closest('.pkg-speed-chips');
+    if(group) group.querySelectorAll('.pkg-speed-chip').forEach(c => c.classList.toggle('selected', c === el));
+  }
+  const timeEl = document.getElementById('wiz-pkg-time-digital');
+  if(timeEl) timeEl.textContent = modo === 'presencial' ? '⏱ Entrega el mismo día de tu cita' : '⏱ Entrega en 24–48 h';
+  onPackageChange();
+  if(wizCurrentStep === 'revision') renderWizardReview();
+}
+
 // Devuelve el precio final y los días de entrega prometidos según el
 // paquete y, si aplica, el tiempo de entrega elegido (fisico/premium).
 function wizPkgPricing(pkg){
-  if(pkg === 'digital') return { precio:150, dias:2, tier:'estandar', tierLabel:'Estándar (fijo)', tiempoTxt:'24–48 h' };
+  if(pkg === 'digital'){
+    const modo = wizModoDigital();
+    return modo === 'presencial'
+      ? { precio:150, dias:1, tier:'estandar', tierLabel:'Estándar (fijo)', tiempoTxt:'El mismo día de tu cita', modo }
+      : { precio:150, dias:2, tier:'estandar', tierLabel:'Estándar (fijo)', tiempoTxt:'24–48 h', modo };
+  }
   const tier = WIZ_TIER_BY_PKG[pkg] || 'estandar';
   const data = PKG_SPEED_DATA[pkg] && PKG_SPEED_DATA[pkg][tier];
   const base = pkg === 'fisico' ? 400 : 800;
@@ -3692,7 +3844,9 @@ function onPackageChange(){
   const pkg = document.getElementById('s-nivel').value;
   const note = document.getElementById('s-pkg-note');
   if(pkg === 'digital'){
-    note.innerHTML = 'Este paquete es 100% en línea: después de enviar tus datos te vamos a redirigir a WhatsApp para que nos mandes las fotos y el video de tu pieza.';
+    note.innerHTML = wizModoDigital() === 'presencial'
+      ? 'Elegiste modalidad presencial: vas a traer tu pieza al laboratorio para una inspección visual directa — más precisa que por fotos. Abajo nos dices cómo va y viene, y tu cita.'
+      : 'Este paquete es 100% en línea: después de enviar tus datos te vamos a redirigir a WhatsApp para que nos mandes las fotos y el video de tu pieza.';
   } else {
     note.innerHTML = 'Este paquete requiere peritaje físico. Arriba nos dices cómo va y viene tu pieza — si la traes/recoges tú, elige tu cita; si prefieres envío, te decimos cómo pagarlo.';
   }
@@ -3729,6 +3883,7 @@ function wizEntregaCosto(){
 }
 function updateEntregaUI(){
   const pkg = document.getElementById('s-nivel').value;
+  const needsLogistica = wizRequiresLogistica(pkg);
   const fechaWrap = document.getElementById('s-fecha-wrap');
   const idaEl = document.getElementById('s-entrega-ida');
   const vueltaEl = document.getElementById('s-entrega-vuelta');
@@ -3737,8 +3892,8 @@ function updateEntregaUI(){
 
   // Solo se pide cita presencial si el cliente va a traer la pieza él
   // mismo; si la va a enviar por paquetería no hay cita que agendar.
-  if(fechaWrap) fechaWrap.style.display = (pkg !== 'digital' && ida === 'presencial') ? 'block' : 'none';
-  if(pkg !== 'digital' && ida === 'presencial') calRenderMonth();
+  if(fechaWrap) fechaWrap.style.display = (needsLogistica && ida === 'presencial') ? 'block' : 'none';
+  if(needsLogistica && ida === 'presencial') calRenderMonth();
 
   // La dirección de envío de regreso solo aplica si le vamos a enviar la
   // pieza al cliente (nosotros necesitamos saber a dónde mandarla).
@@ -3773,7 +3928,7 @@ const SOLICITUD_FOTOS_MAX = 4;
 function activeWizardSteps(){
   const pkgEl = document.getElementById('s-nivel');
   const pkg = pkgEl ? pkgEl.value : 'digital';
-  return WIZARD_STEP_ORDER.filter(id => id !== 'logistica' || pkg !== 'digital');
+  return WIZARD_STEP_ORDER.filter(id => id !== 'logistica' || wizRequiresLogistica(pkg));
 }
 
 function isWizardStepValid(stepId){
@@ -3892,6 +4047,7 @@ function renderWizardReview(){
       <div class="wiz-review-head"><strong>Paquete</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('paquete','back')">Editar</button></div>
       <ul class="wiz-review-list">
         <li><span>Nivel elegido</span><strong>${escapeHtml(pkgLabel)}</strong></li>
+        ${pkg==='digital' ? `<li><span>Modo</span><strong>${wizModoDigital()==='presencial'?'Presencial (traes la pieza)':'En línea (fotos/video)'}</strong></li>` : ''}
         <li><span>Tiempo de entrega</span><strong>${escapeHtml(pricing.tierLabel)} · ${escapeHtml(pricing.tiempoTxt)}</strong></li>
         <li><span>Costo total</span><strong>$${pricing.precio.toLocaleString('es-MX')} MXN</strong></li>
       </ul>
@@ -3913,7 +4069,7 @@ function renderWizardReview(){
       </ul>
       ${desc ? `<p style="font-size:12.5px;color:var(--sage);margin:10px 0 0;">${escapeHtml(desc)}</p>` : ''}
     </div>
-    ${pkg !== 'digital' ? `
+    ${wizRequiresLogistica(pkg) ? `
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>Logística</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('logistica','back')">Editar</button></div>
       <ul class="wiz-review-list">
@@ -4009,6 +4165,11 @@ function resetWizard(){
   const status = document.getElementById('s-fotos-status');
   if(status) status.textContent = 'Aún no subes fotos.';
   document.getElementById('s-nivel').value = 'digital';
+  const modoEl = document.getElementById('s-modo-digital');
+  if(modoEl) modoEl.value = 'en_linea';
+  document.querySelectorAll('.wiz-pkg-card[data-pkg="digital"] .pkg-speed-chip').forEach(c => c.classList.toggle('selected', c.dataset.modo==='en_linea'));
+  const timeEl = document.getElementById('wiz-pkg-time-digital');
+  if(timeEl) timeEl.textContent = '⏱ Entrega en 24–48 h';
   document.getElementById('s-entrega-ida').value = 'presencial';
   document.getElementById('s-entrega-vuelta').value = 'presencial';
   document.getElementById('s-envio-direccion').value = '';
@@ -4030,24 +4191,29 @@ async function submitSolicitud(){
     wizGoToStep(!nombre || !telefono ? 'contacto' : 'pieza', 'back');
     return;
   }
+  const modoDigital = pkg === 'digital' ? wizModoDigital() : null;
+  const requiresLogistica = wizRequiresLogistica(pkg);
   const fechaEntrega = document.getElementById('s-fecha').value;
   const citaHora = document.getElementById('s-hora').value;
-  const entregaIda = pkg !== 'digital' ? document.getElementById('s-entrega-ida').value : null;
-  const entregaVuelta = pkg !== 'digital' ? document.getElementById('s-entrega-vuelta').value : null;
+  const entregaIda = requiresLogistica ? document.getElementById('s-entrega-ida').value : null;
+  const entregaVuelta = requiresLogistica ? document.getElementById('s-entrega-vuelta').value : null;
   const envioDireccion = document.getElementById('s-envio-direccion').value.trim();
-  if(pkg !== 'digital' && entregaIda === 'presencial' && !(fechaEntrega && citaHora)){
+  if(requiresLogistica && entregaIda === 'presencial' && !(fechaEntrega && citaHora)){
     toast('Elige la fecha y hora de tu cita.');
     wizGoToStep('logistica', 'back');
     return;
   }
-  if(pkg !== 'digital' && entregaVuelta === 'envio' && !envioDireccion){
+  if(requiresLogistica && entregaVuelta === 'envio' && !envioDireccion){
     toast('Escribe la dirección para el envío de regreso.');
     wizGoToStep('logistica', 'back');
     return;
   }
-  const citaTs = (pkg !== 'digital' && fechaEntrega && citaHora) ? new Date(`${fechaEntrega}T${citaHora}:00`).getTime() : null;
+  const citaTs = (requiresLogistica && fechaEntrega && citaHora) ? new Date(`${fechaEntrega}T${citaHora}:00`).getTime() : null;
   const id = 'SOL-' + Date.now();
-  const pkgLabels = {digital:'Validación digital — $150', fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'};
+  const pkgLabels = {
+    digital: modoDigital === 'presencial' ? 'Validación (presencial) — $150' : 'Validación (en línea) — $150',
+    fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'
+  };
   // El nivel (paquete base) se guarda tal cual siempre lo ha hecho — de ahí
   // depende el dropdown de certificados y los reportes de ingresos. El
   // tiempo de entrega elegido y su costo final viajan aparte, en campos
@@ -4056,9 +4222,10 @@ async function submitSolicitud(){
   // El costo de envío es aparte del precio del paquete — no entra a la
   // compuerta de aprobación (procesoAprueba) ni se toca si la pieza se
   // rechaza; es un cobro de logística, siempre se debe si se eligió envío.
-  const envioCosto = pkg !== 'digital' ? ((entregaIda==='envio'?ENVIO_COSTO_TRAMO:0) + (entregaVuelta==='envio'?ENVIO_COSTO_TRAMO:0)) : 0;
+  const envioCosto = requiresLogistica ? ((entregaIda==='envio'?ENVIO_COSTO_TRAMO:0) + (entregaVuelta==='envio'?ENVIO_COSTO_TRAMO:0)) : 0;
   const data = {
     id, nombre, telefono, modelo, paquete: pkg,
+    modoValidacion: modoDigital,
     anio: document.getElementById('s-anio').value.trim(),
     origen: document.getElementById('s-origen').value,
     color: document.getElementById('s-color').value.trim(),
@@ -4092,7 +4259,11 @@ async function submitSolicitud(){
     let confirmHtml = `<div class="card wiz-done-card" style="border-left:3px solid var(--ok);">
       <p class="wiz-step-kicker" style="margin-bottom:10px;">Paso 7 · Confirmación</p>
       <h3 style="margin:0 0 8px;">Solicitud recibida</h3>
-      <p style="margin:0;">Tu <strong>código de seguimiento</strong> es <span class="mono" style="color:var(--red);font-weight:600;">${id}</span>. Guárdalo — con él puedes ver el avance de tu pieza en tiempo real en "Mi historial".</p>
+      <p style="margin:0;">Tu <strong>código de seguimiento</strong> es lo que necesitas para ver el avance de tu pieza en tiempo real en "Mi historial":</p>
+      <div class="code-copy-row">
+        <span class="mono code-copy-value">${id}</span>
+        ${copyBtnHtml(id)}
+      </div>
       <p style="margin:8px 0 0;font-size:13px;color:var(--sage);">Tiempo de entrega elegido: <strong style="color:var(--ink);">${escapeHtml(pricing.tierLabel)} · ${escapeHtml(pricing.tiempoTxt)}</strong> · Costo total: <strong style="color:var(--ink);">$${pricing.precio.toLocaleString('es-MX')} MXN</strong></p>
       <button type="button" class="btn ghost small" style="margin-top:10px;" onclick="go('cliente');document.getElementById('c-codigo').value='${id}';trackByCodigo();">Rastrear mi pieza ahora</button>`;
     if(data.fotosOmitidas){
@@ -4101,12 +4272,19 @@ async function submitSolicitud(){
       confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--sage);">Recibimos ${SOLICITUD_FOTOS_DATA.length} foto(s) de tu pieza junto con tu solicitud.</p>`;
     }
     let waMsg, waLabel, nextStepsText;
-    if(pkg === 'digital'){
+    if(pkg === 'digital' && modoDigital !== 'presencial'){
       const hayFotos = SOLICITUD_FOTOS_DATA.length && !data.fotosOmitidas;
       nextStepsText = hayFotos
         ? 'Si quieres, también puedes mandarnos un video de tu pieza por WhatsApp — nos ayuda a ver reflejos y detalles en movimiento.'
         : 'Ahora mándanos las fotos y el video de tu pieza por WhatsApp para que empecemos la validación.';
-      waMsg = `Hola, soy ${nombre}. Acabo de registrar mi solicitud ${id} para Validación digital de mi pieza "${modelo}".${hayFotos ? '' : ' Les mando las fotos y el video.'}`;
+      waMsg = waTemplate('🎉', '¡Solicitud recibida!', [
+        `👤 *Cliente:* ${nombre}`,
+        `📦 *Servicio:* Validación digital`,
+        `🚗 *Pieza:* ${modelo}`,
+        `🔖 *Código:* ${id}`,
+        '',
+        hayFotos ? '📸 Aquí les mando un video de mi pieza:' : '📸 Aquí les mando las fotos y el video de mi pieza:'
+      ], '¡Gracias por su atención! 🙌');
       waLabel = hayFotos ? 'Enviar video por WhatsApp' : 'Enviar fotos por WhatsApp';
     } else {
       const entregaTxt = entregaResumenTxt(entregaIda, entregaVuelta);
@@ -4119,10 +4297,16 @@ async function submitSolicitud(){
       if(envioCosto > 0){
         nextStepsText += ` ${entregaTxt} Como hay envío de por medio, se requiere una transferencia de <strong>$${envioCosto.toLocaleString('es-MX')} MXN</strong> — te compartimos los datos bancarios por WhatsApp.`;
       }
-      const waEnvioTxt = envioCosto > 0
-        ? ` Para el envío (${entregaTxt.toLowerCase()}), ¿me pueden compartir los datos bancarios para hacer la transferencia de $${envioCosto.toLocaleString('es-MX')} MXN?`
-        : '';
-      waMsg = `Hola, soy ${nombre}. Registré la solicitud ${id} para "${pkgLabels[pkg]}" de mi pieza "${modelo}", con entrega ${pricing.tierLabel} (${pricing.tiempoTxt}) — costo total $${pricing.precio.toLocaleString('es-MX')} MXN. ${entregaIda==='presencial' ? `Mi cita quedó agendada para ${formatCitaLarga(fechaEntrega, citaHora)} — quiero confirmarla.` : entregaTxt}${waEnvioTxt}`;
+      waMsg = waTemplate('🎉', '¡Solicitud recibida!', [
+        `👤 *Cliente:* ${nombre}`,
+        `📦 *Servicio:* ${pkgLabels[pkg]}`,
+        `🚗 *Pieza:* ${modelo}`,
+        `🔖 *Código:* ${id}`,
+        `🕒 *Tiempo elegido:* ${pricing.tierLabel} (${pricing.tiempoTxt})`,
+        `💰 *Costo total:* $${pricing.precio.toLocaleString('es-MX')} MXN`,
+        entregaIda === 'presencial' ? `📅 *Mi cita:* ${formatCitaLarga(fechaEntrega, citaHora)} — quiero confirmarla` : `📦 *Entrega:* ${entregaTxt}`,
+        envioCosto > 0 ? `💳 *Envío:* ¿me comparten los datos bancarios para la transferencia de $${envioCosto.toLocaleString('es-MX')} MXN?` : ''
+      ], entregaIda === 'presencial' ? '¡Nos vemos pronto! 🙌' : 'Quedo al pendiente de sus indicaciones. 🙌');
       waLabel = envioCosto > 0 ? 'Confirmar por WhatsApp y pedir datos de transferencia' : 'Confirmar cita por WhatsApp';
     }
     confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
@@ -4268,33 +4452,45 @@ function renderClienteTracking(sol, live){
       <p class="foot-note" style="border:none;padding-top:10px;">No continúa a certificación, encapsulado ni entrega. Costo final: <strong style="color:var(--ink);">$${(prog.precioFinal!=null?prog.precioFinal:150).toLocaleString('es-MX')} MXN</strong> (solo la validación base). ${live?'Esta página se actualiza sola.':''}</p>`;
     return;
   }
-  // Validación digital ya cerrada — nunca lleva certificado ni folio, solo
-  // el dictamen preliminar que ya se le mandó por WhatsApp.
+  // Validación ya cerrada — nunca lleva certificado ni folio, solo el
+  // dictamen preliminar que ya se le mandó por WhatsApp más un documento
+  // informal de referencia (sin logo ni veredicto oficial).
   if(isDigital && prog && prog.estado === 'completado'){
     const veredicto = prog.resultadoDigital === 'original' ? 'Aparenta ser original' : 'No aparenta ser original';
+    const modo = prog.modoValidacion || sol.modoValidacion || 'en_linea';
+    const origenTxt = modo === 'presencial' ? 'según la inspección presencial de tu pieza' : 'según las fotos y video compartidos';
+    const calTxt = prog.calificacionDigital != null ? Number(prog.calificacionDigital).toFixed(1)+'/10' : '—';
     box.innerHTML = `${headerHtml}
       <div class="track-stage done" style="padding-bottom:0;">
         <div class="track-stage-dot">✓</div>
         <div class="track-stage-body">
-          <p class="track-stage-label">Validación en línea completada</p>
-          <p class="track-stage-sub">Dictamen preliminar: ${escapeHtml(veredicto)} — según las fotos y video compartidos.</p>
+          <p class="track-stage-label">Validación completada</p>
+          <p class="track-stage-sub">Resultado preliminar: ${escapeHtml(veredicto)} — ${origenTxt}. Calificación preliminar: ${calTxt}.</p>
         </div>
       </div>
-      <p class="foot-note" style="border:none;padding-top:10px;">Es solo una primera impresión visual, no un peritaje físico certificado. No incluye certificado ni folio. Costo: <strong style="color:var(--ink);">$150 MXN</strong>. ${live?'Esta página se actualiza sola.':''}</p>`;
+      ${renderPapelInformal({
+        modelo:sol.modelo, anio:sol.anio, origen:sol.origen, color:sol.color,
+        codigo:sol.id, fecha:sol.fecha, modo,
+        veredicto:prog.resultadoDigital, calificacion:prog.calificacionDigital, notas:null
+      })}
+      <p class="foot-note" style="border:none;padding-top:10px;">Es solo una primera impresión, no un peritaje físico certificado. No incluye certificado ni folio. Costo: <strong style="color:var(--ink);">$150 MXN</strong>. ${live?'Esta página se actualiza sola.':''}</p>`;
     return;
   }
-  // Validación digital todavía en revisión — flujo de 2 pasos, sin fases,
-  // así que no usa la línea de tiempo de la metodología física.
+  // Validación todavía en revisión — flujo mínimo, sin fases, así que no
+  // usa la línea de tiempo de la metodología física.
   if(isDigital){
+    const modoTxt = sol.modoValidacion === 'presencial' ? 'tu pieza (revisión presencial)' : 'tus fotos y video';
+    const citaTxtDigital = (sol.modoValidacion === 'presencial' && citaTxt) ? `<p style="margin:0 0 8px;"><span class="cita-pill">Cita: ${escapeHtml(citaTxt)}</span></p>` : '';
     box.innerHTML = `${headerHtml}
+      ${citaTxtDigital}
       <div class="track-stage current" style="padding-bottom:0;">
         <div class="track-stage-dot"></div>
         <div class="track-stage-body">
-          <p class="track-stage-label">Revisando tus fotos y video</p>
+          <p class="track-stage-label">Revisando ${modoTxt}</p>
           <p class="track-stage-sub">Te avisamos por WhatsApp en cuanto tengamos el dictamen preliminar.</p>
         </div>
       </div>
-      <p class="foot-note" style="border:none;padding-top:10px;">Validación digital · sin certificado ni folio · $150 MXN. ${live?'Esta página se actualiza sola.':''}</p>`;
+      <p class="foot-note" style="border:none;padding-top:10px;">Validación · sin certificado ni folio · $150 MXN. ${live?'Esta página se actualiza sola.':''}</p>`;
     return;
   }
 
@@ -5469,13 +5665,24 @@ async function notifyEnvioDatos(id){
   if(p.entregaIda === 'envio') partes.push('el envío de tu pieza a nuestro laboratorio');
   if(p.entregaVuelta === 'envio') partes.push('el envío de regreso de tu pieza');
   const costo = p.envioCosto || 0;
-  let msg = `Hola ${p.nombre}, para ${partes.join(' y ')} (folio de seguimiento ${p.id}) se necesita una transferencia de $${costo.toLocaleString('es-MX')} MXN.`;
-  if(bankTransferInfoReady()){
-    msg += ` Estos son los datos: ${BANK_TRANSFER_INFO.banco?('Banco '+BANK_TRANSFER_INFO.banco+', '):''}${BANK_TRANSFER_INFO.titular?('titular '+BANK_TRANSFER_INFO.titular+', '):''}${BANK_TRANSFER_INFO.cuenta?('cuenta '+BANK_TRANSFER_INFO.cuenta+', '):''}${BANK_TRANSFER_INFO.clabe?('CLABE '+BANK_TRANSFER_INFO.clabe):''}. En cuanto hagas el pago, mándanos el comprobante por aquí.`;
-  } else {
-    msg += ' En un momento te comparto los datos de la cuenta bancaria para hacerla.';
-  }
-  msg += ' — Laboratorio HV México';
+  const bankLines = bankTransferInfoReady() ? [
+    BANK_TRANSFER_INFO.banco ? `🏦 *Banco:* ${BANK_TRANSFER_INFO.banco}` : '',
+    BANK_TRANSFER_INFO.titular ? `👤 *Titular:* ${BANK_TRANSFER_INFO.titular}` : '',
+    BANK_TRANSFER_INFO.cuenta ? `🔢 *Cuenta:* ${BANK_TRANSFER_INFO.cuenta}` : '',
+    BANK_TRANSFER_INFO.clabe ? `🔢 *CLABE:* ${BANK_TRANSFER_INFO.clabe}` : '',
+    '',
+    'En cuanto hagas el pago, mándanos el comprobante por aquí. 🙏'
+  ] : ['🏦 En un momento te compartimos los datos de la cuenta bancaria para hacerla.'];
+  const msg = waTemplate('📦', 'Datos para tu envío', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    `Para ${partes.join(' y ')} se necesita una transferencia de:`,
+    `💰 *$${costo.toLocaleString('es-MX')} MXN*`,
+    '',
+    ...bankLines
+  ], 'Gracias por tu paciencia. 🙌');
   window.open(waLink(msg), '_blank', 'noopener');
 }
 async function toggleEnvioPagado(id){
@@ -5487,9 +5694,12 @@ async function toggleEnvioPagado(id){
   renderProcesoDetail(p);
 }
 function solicitudCardHtml(d){
-  const tipo = esDigital(d.paquete) ? '<span class="pill original" style="font-size:11px;">En línea</span>' : '<span class="pill pendiente" style="font-size:11px;">Presencial</span>';
+  const digitalPresencial = esDigital(d.paquete) && d.modoValidacion === 'presencial';
+  const tipo = esDigital(d.paquete)
+    ? (digitalPresencial ? '<span class="pill pendiente" style="font-size:11px;">Validación presencial</span>' : '<span class="pill original" style="font-size:11px;">En línea</span>')
+    : '<span class="pill pendiente" style="font-size:11px;">Presencial</span>';
   const enValidacion = d.estado === 'en_validacion';
-  const citaTxt = (!esDigital(d.paquete) && d.entregaIda !== 'envio' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
+  const citaTxt = ((!esDigital(d.paquete) || digitalPresencial) && d.entregaIda !== 'envio' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
   const envioBadge = envioBadgeHtml(d);
   return `
       <div class="card" style="margin-bottom:10px;">
@@ -5586,18 +5796,31 @@ function ensureDictamen(step){
   return step.dictamen;
 }
 
-// La Validación digital ($150) NO sigue la metodología física de 4 fases /
-// 8 pasos — es solo una primera impresión por fotos/video, tratada por
-// WhatsApp, sin certificado ni folio. Su proceso en el admin es un flujo
-// mínimo de 2 pasos, aparte del de piezas presenciales.
-const DIGITAL_PASOS = [
-  {key:'revision', type:'simple',
-    label:'Revisión de fotos y video',
-    desc:'Se revisan las fotos (y el video, si lo mandó por WhatsApp) que el cliente adjuntó al solicitar. No sustituye un peritaje físico — es solo una primera impresión visual.'},
-  {key:'dictamen_digital', type:'dictamen_digital',
-    label:'Dictamen preliminar por WhatsApp',
-    desc:'Con base en las imágenes, se determina si la pieza aparenta ser original o no, y se le notifica el resultado al cliente. Aquí termina el servicio — no incluye certificado ni folio.'}
-];
+// La Validación ($150) NO sigue la metodología física de 4 fases / 8 pasos
+// — es solo una primera impresión (por fotos/video, o presencial si el
+// cliente eligió esa modalidad), sin certificado ni folio: al cerrar, se
+// notifica por WhatsApp y se entrega un documento informal de referencia
+// (ver renderPapelInformal). Su proceso en el admin es un flujo mínimo,
+// aparte de la metodología completa de piezas presenciales certificadas.
+// El modo ('en_linea' | 'presencial') decide si se agrega el paso extra de
+// recepción física al inicio.
+function digitalPasoDefs(modo){
+  const pasos = [];
+  if(modo === 'presencial'){
+    pasos.push({key:'recepcion_digital', type:'simple',
+      label:'Recepción de la pieza en el laboratorio',
+      desc:'Confirma que el cliente ya trajo la pieza a su cita. La inspección presencial es más precisa que la revisión por fotos.'});
+  }
+  pasos.push({key:'revision', type:'simple',
+    label: modo === 'presencial' ? 'Revisión visual presencial' : 'Revisión de fotos y video',
+    desc: modo === 'presencial'
+      ? 'Inspección visual directa de la pieza en el laboratorio: molde, pintura, ejes, remaches. Es más precisa que por fotos, pero sigue sin sustituir el peritaje físico completo con Protocolo Zigzag C-Z.'
+      : 'Se revisan las fotos (y el video, si lo mandó por WhatsApp) que el cliente adjuntó al solicitar. No sustituye un peritaje físico — es solo una primera impresión visual.'});
+  pasos.push({key:'dictamen_digital', type:'dictamen_digital',
+    label:'Dictamen y calificación preliminar',
+    desc:'Con base en la revisión, se determina si la pieza aparenta ser original, se asigna una calificación preliminar de 0 a 10, y se le notifica el resultado al cliente. No incluye certificado ni folio — solo un documento informal de referencia, sin logo ni veredicto oficial.'});
+  return pasos;
+}
 
 // Migra procesos creados con cualquiera de las dos formas anteriores (el
 // modelo plano original de 3 pasos, o el checklist anidado de 8 puntos
@@ -5608,15 +5831,16 @@ const DIGITAL_PASOS = [
 function migrateProcesoShape(p){
   if(!p || !Array.isArray(p.pasos)) return p;
 
-  // Las piezas digitales llevan su propio flujo mínimo (2 pasos, sin fases)
-  // — nunca deben pasar por la migración de la metodología física de 8
-  // pasos, así hayan sido creadas antes de que existiera esta separación.
+  // Las piezas digitales llevan su propio flujo mínimo (sin fases) — nunca
+  // deben pasar por la migración de la metodología física de 8 pasos, así
+  // hayan sido creadas antes de que existiera esta separación.
   if(p.paquete === 'digital'){
-    const hasDigitalShape = DIGITAL_PASOS.every(def => p.pasos.some(s=>s.key===def.key));
+    const defs = digitalPasoDefs(p.modoValidacion || 'en_linea');
+    const hasDigitalShape = defs.every(def => p.pasos.some(s=>s.key===def.key));
     if(hasDigitalShape) return p;
     // Mejor esfuerzo: conserva cualquier nota ya escrita, reinicia el resto.
     const notaPrevia = p.pasos.map(s=>s.nota).filter(Boolean).join(' · ');
-    p.pasos = DIGITAL_PASOS.map((def,i)=>({key:def.key, label:def.label, done:false, nota: i===0?notaPrevia:''}));
+    p.pasos = defs.map((def,i)=>({key:def.key, label:def.label, done:false, nota: i===0?notaPrevia:''}));
     p._migrated = true;
     return p;
   }
@@ -5825,6 +6049,11 @@ async function startValidacion(dJson){
     id: d.id, solicitudId: d.id,
     nombre: d.nombre, telefono: d.telefono, modelo: d.modelo, anio: d.anio,
     origen: d.origen, color: d.color, paquete: d.paquete, nivel: d.nivel,
+    // Solo aplica a la Validación ($150): si el cliente eligió evaluación
+    // en línea (por fotos/video) o presencial (trae la pieza). Decide si el
+    // flujo mínimo de abajo agrega el paso extra de recepción física.
+    modoValidacion: isDigital ? (d.modoValidacion || 'en_linea') : null,
+    calificacionDigital: null,
     // Tiempo de entrega y costo que el cliente eligió al solicitar — de aquí
     // sale el plazo real del reloj de entrega (ver getDeadlineDays).
     velocidad: d.velocidad || 'estandar', velocidadLabel: d.velocidadLabel || 'Estándar',
@@ -5856,7 +6085,7 @@ async function startValidacion(dJson){
     // resuelto.
     piezaRecibidaTs: isDigital ? Date.now() : null,
     pasos: isDigital
-      ? DIGITAL_PASOS.map(def=>({key:def.key, label:def.label, done:false, nota:''}))
+      ? digitalPasoDefs(d.modoValidacion || 'en_linea').map(def=>({key:def.key, label:def.label, done:false, nota:''}))
       : METODO_PASOS.map(def=>{
           const base = {key:def.key, label:def.label, fase:def.fase, done:false, nota:''};
           if(def.key==='recepcion') base.done = false;
@@ -6037,6 +6266,8 @@ function buildProgresoCliente(p){
     estado: p.estado || '',
     rechazoMotivo: p.rechazoMotivo || null,
     resultadoDigital: p.resultadoDigital || null,
+    calificacionDigital: p.calificacionDigital != null ? p.calificacionDigital : null,
+    modoValidacion: p.modoValidacion || null,
     precioFinal: p.precioFinal != null ? p.precioFinal : null,
     actualizadoTs: Date.now()
   };
@@ -6226,6 +6457,8 @@ function renderProcesoDetailRechazada(p){
 function renderProcesoDetailDigital(p){
   const detail = document.getElementById('validacion-detail');
   if(!detail) return;
+  const modo = p.modoValidacion || 'en_linea';
+  const modoTxt = modo === 'presencial' ? 'presencial' : 'en línea';
   const doneCount = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(doneCount / p.pasos.length * 100);
   const completado = p.estado === 'completado';
@@ -6233,7 +6466,7 @@ function renderProcesoDetailDigital(p){
   if(PROCESO_OPEN_STEP === undefined) PROCESO_OPEN_STEP = pendienteIdx !== -1 ? p.pasos[pendienteIdx].key : null;
 
   const stepsHtml = p.pasos.map((s,i)=>{
-    const def = DIGITAL_PASOS.find(d=>d.key===s.key);
+    const def = digitalPasoDefs(modo).find(d=>d.key===s.key);
     const isOpen = PROCESO_OPEN_STEP === s.key;
     let bodyHtml = '';
     if(isOpen){
@@ -6252,6 +6485,7 @@ function renderProcesoDetailDigital(p){
   }).join('');
 
   const resultadoTxt = p.resultadoDigital === 'original' ? 'Aparenta ser original' : (p.resultadoDigital === 'no_original' ? 'No aparenta ser original' : '');
+  const dictamenStep = p.pasos.find(s=>s.key==='dictamen_digital');
 
   detail.innerHTML = `
     <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -6260,12 +6494,19 @@ function renderProcesoDetailDigital(p){
     </div>
     <div class="card">
       <h3 style="font-size:17px;margin-top:0;margin-bottom:2px;">${escapeHtml(p.modelo)}</h3>
-      <p style="font-size:13px;color:var(--sage);margin:0 0 2px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · Validación digital</p>
-      <p style="font-size:12px;color:var(--brass-dim);margin:0 0 12px;">Sin certificado ni folio — solo determinación visual por fotos/video · $150 MXN</p>
+      <p style="font-size:13px;color:var(--sage);margin:0 0 2px;">${escapeHtml(p.nombre)} · ${escapeHtml(p.telefono)} · Validación (${modoTxt})</p>
+      <p style="font-size:12px;color:var(--brass-dim);margin:0 0 12px;">Sin certificado ni folio — solo documento informal de referencia · $150 MXN</p>
+      ${modo==='presencial' && p.citaFecha ? `<p style="margin:0 0 12px;"><span class="cita-pill">Cita: ${escapeHtml(formatCitaLarga(p.citaFecha, p.citaHora))}</span></p>` : ''}
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <p class="foot-note" style="border:none;padding:0;margin:2px 0 16px;">${doneCount} de ${p.pasos.length} pasos completados</p>
-      ${completado ? `<div class="next-action-banner all-done"><div class="next-action-icon">✓</div><div class="next-action-text"><strong>Validación en línea completada</strong><span>${escapeHtml(resultadoTxt)} — cliente notificado.</span></div></div>` : ''}
+      ${completado ? `<div class="next-action-banner all-done"><div class="next-action-icon">✓</div><div class="next-action-text"><strong>Validación completada</strong><span>${escapeHtml(resultadoTxt)}${p.calificacionDigital!=null?' · calificación '+Number(p.calificacionDigital).toFixed(1)+'/10':''} — cliente notificado.</span></div></div>` : ''}
       ${stepsHtml}
+      ${completado ? renderPapelInformal({
+        modelo:p.modelo, anio:p.anio, origen:p.origen, color:p.color,
+        codigo:p.id, fecha:p.creado, modo,
+        veredicto:p.resultadoDigital, calificacion:p.calificacionDigital,
+        notas: dictamenStep ? dictamenStep.nota : ''
+      }) : ''}
     </div>`;
 }
 
@@ -6455,17 +6696,23 @@ function renderRegistroStepBody(p, step){
 // ===== Paso 2 del flujo digital — "Dictamen preliminar por WhatsApp" =====
 function renderDictamenDigitalStepBody(p, step){
   const val = p.resultadoDigital;
+  const cal = p.calificacionDigital;
+  const modo = p.modoValidacion || 'en_linea';
   return `
     <div class="zz-field">
-      <label>¿Cómo se ve la pieza en las fotos?</label>
+      <label>¿Cómo se ve la pieza${modo==='presencial' ? ' en la inspección presencial' : ' en las fotos'}?</label>
       <div class="zz-toggle-group">
         <button type="button" class="zz-toggle ${val==='original'?'active':''}" onclick="pickResultadoDigital('${escapeHtml(p.id)}','original',this)">Aparenta ser original</button>
         <button type="button" class="zz-toggle ${val==='no_original'?'active':''}" onclick="pickResultadoDigital('${escapeHtml(p.id)}','no_original',this)">No aparenta ser original</button>
       </div>
     </div>
+    <div class="zz-field">
+      <label>Calificación preliminar (0 a 10)</label>
+      <input type="number" min="0" max="10" step="0.5" value="${cal!=null?escapeHtml(String(cal)):''}" placeholder="Ej. 7.5" onchange="setCalificacionDigital('${escapeHtml(p.id)}',this.value)">
+    </div>
     <textarea rows="2" placeholder="Notas del dictamen preliminar (opcional)…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(step.nota||'')}</textarea>
     <div class="row" style="margin-top:10px;">
-      ${!step.done ? `<button class="btn small" ${!val?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeDigitalProceso('${escapeHtml(p.id)}')">Finalizar y notificar al cliente</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Notificado — validación en línea cerrada.</span>`}
+      ${!step.done ? `<button class="btn small" ${(!val || cal==null)?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="finalizeDigitalProceso('${escapeHtml(p.id)}')">Finalizar y notificar al cliente</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Notificado — validación cerrada.</span>`}
     </div>`;
 }
 
@@ -6612,13 +6859,16 @@ async function completeStep(pid, stepKey){
   CURRENT_PROCESO = p;
 
   if(p.paquete !== 'digital' && stepKey === 'dictamen' && !procesoEsAutentico(p)){
-    await rejectProceso(p, 'El dictamen determinó que la pieza no es original (Falso / Réplica) — no continúa a calificación de condición ni a certificado.');
+    // Motivo corto y sin redundancia — el "no continúa a calificación ni a
+    // certificado" ya lo explican por su cuenta la tarjeta de rechazo y el
+    // mensaje de WhatsApp (notifyRechazo), así que no se repite aquí.
+    await rejectProceso(p, 'El dictamen determinó que la pieza no es original (Falso / Réplica).');
     return;
   }
   if(p.paquete !== 'digital' && stepKey === 'condicion'){
     const cal = procesoCalificacion(p);
     if(cal != null && cal < CALIFICACION_MINIMA){
-      await rejectProceso(p, `La condición calificó ${cal.toFixed(1)}/10 — por debajo del mínimo de ${CALIFICACION_MINIMA.toFixed(1)} para certificar.`);
+      await rejectProceso(p, `La condición calificó ${cal.toFixed(1)}/10 — por debajo del mínimo de ${CALIFICACION_MINIMA.toFixed(1)} requerido.`);
       return;
     }
   }
@@ -6647,10 +6897,20 @@ async function rejectProceso(p, motivo){
 async function notifyRechazo(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const entregaTxt = p.entregaVuelta === 'envio'
-    ? 'Como elegiste que te la enviáramos de regreso, en cuanto se confirme el pago del envío te la mandamos por paquetería.'
-    : 'Ya puedes pasar a recogerla al laboratorio cuando gustes.';
+    ? 'Como elegiste que te la enviáramos de regreso, en cuanto se confirme el pago del envío te la mandamos por paquetería. 📦'
+    : 'Ya puedes pasar a recogerla al laboratorio cuando gustes. 📍';
   const envioTxt = p.envioCosto ? ` + $${Number(p.envioCosto).toLocaleString('es-MX')} MXN de envío` : '';
-  const msg = `Hola ${p.nombre}, gracias por usar nuestro servicio. Te compartimos el resultado de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}): ${p.rechazoMotivo || 'no pasó la validación'}. El proceso termina aquí — no continúa a calificación de condición ni a certificado. El costo final es de $${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN${envioTxt}, solo la validación base. ${entregaTxt} Cualquier duda, contáctanos. — Laboratorio HV México`;
+  const msg = waTemplate('📄', 'Resultado de tu validación', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    `🔴 *Resultado:* ${p.rechazoMotivo || 'no pasó la validación'}`,
+    '⛔ El proceso termina aquí — no continúa a calificación de condición ni a certificado.',
+    '',
+    `💰 *Costo final:* $${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN${envioTxt} (solo validación base)`,
+    entregaTxt
+  ], 'Gracias por confiar en Laboratorio HV México. 🙏');
   window.open(waLink(msg), '_blank', 'noopener');
 }
 
@@ -6662,8 +6922,17 @@ async function notifyDictamenOriginal(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const dictStep = p.pasos.find(s=>s.key==='dictamen');
   const resultado = dictStep && dictStep.dictamen ? dictStep.dictamen.resultado : 'original';
-  const ESTADO_TXT = {original:'es original', restaurado:'es original, con restauración detectada', reparado:'es original, con reparación detectada', repintado:'es original, con repintado detectado'};
-  const msg = `Hola ${p.nombre}, buenas noticias: el dictamen de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) determinó que ${ESTADO_TXT[resultado] || 'es original'}. Continuamos con el proceso de calificación y certificación. Puedes seguir el avance cuando quieras desde "Mi historial" en nuestra página, con tu código ${p.id}. — Laboratorio HV México`;
+  const ESTADO_TXT = {original:'es original ✅', restaurado:'es original, con restauración detectada', reparado:'es original, con reparación detectada', repintado:'es original, con repintado detectado'};
+  const msg = waTemplate('✅', '¡Buenas noticias!', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    `🔎 *Dictamen:* tu pieza ${ESTADO_TXT[resultado] || 'es original'}.`,
+    '➡️ Continuamos con el proceso de calificación y certificación.',
+    '',
+    `🔍 Puedes seguir el avance cuando quieras desde *"Mi historial"* en nuestra página, con tu código.`
+  ], '¡Seguimos trabajando en tu certificación! 🙌');
   window.open(waLink(msg), '_blank', 'noopener');
 }
 
@@ -6710,11 +6979,25 @@ async function pickResultadoDigital(pid, val, btnEl){
   renderProcesoDetail(p);
 }
 
-// Cierra la Validación digital: nunca genera certificado ni folio — solo
-// notifica el resultado al cliente por WhatsApp y archiva el proceso.
+// Calificación preliminar (0 a 10) de la Validación — más ligera que el
+// Protocolo Zigzag C-Z de los paquetes presenciales completos, pero da al
+// cliente algo más que un simple "sí/no" en su documento informal.
+async function setCalificacionDigital(pid, value){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+  const n = parseFloat(value);
+  p.calificacionDigital = (value === '' || isNaN(n)) ? null : Math.max(0, Math.min(10, n));
+  CURRENT_PROCESO = p;
+  await setProceso(p).catch(()=>{});
+  renderProcesoDetail(p);
+}
+
+// Cierra la Validación: nunca genera certificado ni folio — solo notifica
+// el resultado al cliente por WhatsApp, junto con un documento informal de
+// referencia (ver renderPapelInformal), y archiva el proceso.
 async function finalizeDigitalProceso(pid){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
   if(!p.resultadoDigital){ toast('Elige primero si la pieza aparenta ser original o no.'); return; }
+  if(p.calificacionDigital == null){ toast('Asigna una calificación preliminar (0 a 10) antes de finalizar.'); return; }
   const step = p.pasos.find(s=>s.key==='dictamen_digital');
   if(step) step.done = true;
   p.estado = 'completado';
@@ -6722,10 +7005,23 @@ async function finalizeDigitalProceso(pid){
   CURRENT_PROCESO = p;
   await setProceso(p);
   renderProcesoDetail(p);
-  const veredicto = p.resultadoDigital === 'original' ? 'aparenta ser ORIGINAL' : 'NO aparenta ser original';
-  const msg = `Hola ${p.nombre}, ya tenemos el dictamen preliminar de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) por Validación digital: ${veredicto}, según las fotos y video que nos compartiste. Recuerda que esta es solo una primera impresión visual, no un peritaje físico certificado. El costo de este servicio es de $150 MXN. — Laboratorio HV México`;
+  const veredicto = p.resultadoDigital === 'original' ? '*APARENTA SER ORIGINAL* ✅' : '*NO aparenta ser original* 🔴';
+  const calTxt = Number(p.calificacionDigital).toFixed(1);
+  const modo = p.modoValidacion || 'en_linea';
+  const msg = waTemplate('✅', 'Validación completada', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    `🔎 *Resultado preliminar:* ${veredicto}`,
+    `⭐ *Calificación preliminar:* ${calTxt}/10`,
+    modo === 'presencial' ? 'Según la inspección visual presencial de tu pieza.' : 'Según las fotos y video que nos compartiste.',
+    'ℹ️ Es solo una primera impresión, no un peritaje físico certificado. Puedes ver tu documento informal de referencia en "Mi historial" — sin folio ni certificado oficial.',
+    '',
+    `💰 *Costo:* $150 MXN`
+  ], 'Gracias por confiar en Laboratorio HV México. 🙌');
   window.open(waLink(msg), '_blank', 'noopener');
-  toast('Validación en línea cerrada y cliente notificado.');
+  toast('Validación cerrada y cliente notificado.');
 }
 
 // Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
@@ -6755,13 +7051,25 @@ async function notifyProcesoStep(id, key){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
   const step = p.pasos.find(s=>s.key===key);
   if(!step) return;
-  const msg = `Hola ${p.nombre}, te compartimos un avance de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}):\n\n✔ ${step.label}${step.nota ? ': ' + step.nota : ''}\n\nSeguimos trabajando en tu peritaje. — Laboratorio HV México`;
+  const msg = waTemplate('🔍', 'Avance de tu validación', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    `✅ *${step.label}*${step.nota ? '\n' + step.nota : ''}`
+  ], 'Seguimos trabajando en tu peritaje — te avisamos en cada etapa. 🙌');
   window.open(waLink(msg), '_blank', 'noopener');
 }
 
 async function notifyPickupReady(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  const msg = `Hola ${p.nombre}, tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) ya está lista. Puedes pasar a recogerla en el laboratorio o coordinamos el envío contigo — avísanos qué prefieres. — Laboratorio HV México`;
+  const msg = waTemplate('🎉', '¡Tu pieza está lista!', [
+    `👤 *Cliente:* ${p.nombre}`,
+    `🚗 *Pieza:* ${p.modelo}`,
+    `🔖 *Código:* ${p.id}`,
+    '',
+    '📍 Puedes pasar a recogerla en el laboratorio, o coordinamos el envío contigo — avísanos qué prefieres.'
+  ], '¡Gracias por tu confianza! 🙌');
   window.open(waLink(msg), '_blank', 'noopener');
 }
 
@@ -6964,11 +7272,13 @@ function historialResultadoHtml(item){
   }
   const p = item.raw;
   if(p.paquete === 'digital'){
+    const modoLbl = p.modoValidacion === 'presencial' ? 'Presencial' : 'En línea';
     if(p.estado === 'completado'){
       const veredicto = p.resultadoDigital === 'original' ? 'Aparenta ser original' : 'No aparenta ser original';
-      return `<span class="pill completado">En línea completada</span> <span style="font-size:12px;color:var(--sage);">${escapeHtml(veredicto)}</span>`;
+      const calTxt = p.calificacionDigital != null ? ` · ${Number(p.calificacionDigital).toFixed(1)}/10` : '';
+      return `<span class="pill completado">${modoLbl} completada</span> <span style="font-size:12px;color:var(--sage);">${escapeHtml(veredicto)}${calTxt}</span>`;
     }
-    return `<span class="pill neutral">En línea — revisando</span>`;
+    return `<span class="pill neutral">${modoLbl} — revisando</span>`;
   }
   if(p.estado === 'rechazada'){
     return `<span class="pill replica">No aprobada</span> <span style="font-size:12px;color:var(--sage);">${escapeHtml(p.rechazoMotivo||'')}</span>`;
