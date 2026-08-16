@@ -215,7 +215,12 @@
   html[data-theme="dark"] .theme-toggle .icon-sun{display:none;}
   html[data-theme="dark"] .theme-toggle .icon-moon{display:block;}
   @media(max-width:760px){
-    .theme-toggle{top:14px;right:64px;width:36px;height:36px;}
+    /* En móvil el botón de tema deja de ir "flotando" con coordenadas
+       fijas (eso lo hacía verse encimado con el botón de menú cuando el
+       texto de la marca ocupaba más alto de lo normal). Aquí se vuelve un
+       elemento normal del navbar, alineado y espaciado igual que el botón
+       de menú — así siempre quedan parejos, sin encimarse. */
+    .theme-toggle{position:static;width:36px;height:36px;margin-left:auto;}
   }
 
   /* ---- Notificaciones flotantes ---- */
@@ -278,7 +283,7 @@
     .brand{gap:10px;}
     .brand .brand-name{font-size:17px;}
     .brand .tagline{font-size:9px;}
-    .nav-toggle{display:flex;}
+    .nav-toggle{display:flex;width:36px;height:36px;}
     .nav-backdrop{opacity:0;pointer-events:none;}
     body.nav-open .nav-backdrop{display:block;opacity:1;pointer-events:auto;}
     #main-nav{position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;grid-template-columns:none;width:min(80vw,320px);height:100%;height:100dvh;margin:0;background:var(--paper);border-radius:0;padding:70px 18px 24px;gap:4px;box-shadow:-10px 0 30px rgba(27,17,14,.25);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:100;}
@@ -290,17 +295,22 @@
   label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sage);margin:14px 0 6px;}
   input,select,textarea{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:10px 12px;border-radius:4px;font-family:'IBM Plex Sans',sans-serif;font-size:16px;transition:background-color .25s ease, border-color .25s ease, color .25s ease;}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--red);}
-  button.btn{position:relative;overflow:hidden;background:var(--red);color:#FFFFFF;border:none;padding:11px 22px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px;letter-spacing:.01em;box-shadow:0 2px 6px rgba(210,4,45,0.25);transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, background .15s ease;}
-  button.btn:hover{background:var(--red-dim);transform:translateY(-3px) scale(1.025);box-shadow:0 10px 20px rgba(210,4,45,0.35);}
-  button.btn:active{transform:translateY(-1px) scale(0.97);box-shadow:0 3px 8px rgba(210,4,45,0.3);transition:transform .08s ease;}
-  button.btn.ghost{background:transparent;border:1.5px solid var(--red);color:var(--red);box-shadow:none;}
-  button.btn.ghost:hover{background:rgba(210,4,45,0.06);box-shadow:0 6px 14px rgba(210,4,45,0.12);transform:translateY(-3px) scale(1.02);}
-  button.btn.small{padding:8px 14px;font-size:12px;}
+  .btn{position:relative;overflow:hidden;display:inline-block;text-decoration:none;background:var(--red);color:#FFFFFF!important;border:none;padding:11px 22px;border-radius:6px;font-weight:600;cursor:pointer;font-size:14px;letter-spacing:.01em;box-shadow:0 2px 6px rgba(210,4,45,0.25);transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, background .15s ease;}
+  .btn:hover{background:var(--red-dim);transform:translateY(-3px) scale(1.025);box-shadow:0 10px 20px rgba(210,4,45,0.35);}
+  .btn:active{transform:translateY(-1px) scale(0.97);box-shadow:0 3px 8px rgba(210,4,45,0.3);transition:transform .08s ease;}
+  .btn.ghost{background:transparent;border:1.5px solid var(--red);color:var(--red)!important;box-shadow:none;}
+  .btn.ghost:hover{background:rgba(210,4,45,0.06);box-shadow:0 6px 14px rgba(210,4,45,0.12);transform:translateY(-3px) scale(1.02);}
+  .btn.small{padding:8px 14px;font-size:12px;}
   .btn-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);pointer-events:none;animation:btn-ripple-anim .55s ease-out forwards;}
-  button.btn.ghost .btn-ripple{background:rgba(210,4,45,.22);}
+  .btn.ghost .btn-ripple{background:rgba(210,4,45,.22);}
+  /* Botón de acción de WhatsApp (enlaces .btn.wa-btn) — verde de marca,
+     con texto siempre blanco y buen contraste en claro y oscuro. */
+  .btn.wa-btn{background:#25D366!important;color:#FFFFFF!important;display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(37,211,102,0.3);}
+  .btn.wa-btn:hover{background:#1EBE5A!important;box-shadow:0 10px 20px rgba(37,211,102,0.35);}
+  .btn.wa-btn svg{width:16px;height:16px;flex:none;fill:#FFFFFF;}
   @keyframes btn-ripple-anim{to{transform:scale(2.6);opacity:0;}}
   @media(prefers-reduced-motion:reduce){
-    button.btn, button.btn:hover, button.btn:active{transition:none!important;transform:none!important;}
+    .btn, .btn:hover, .btn:active{transition:none!important;transform:none!important;}
     .btn-ripple{display:none;}
   }
 
@@ -1474,7 +1484,7 @@
         <div class="loc-detail"><div class="loc-icon">📍</div><div><strong>Dirección</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;">Calle Norte 164 #466, Col. Pensador Mexicano, Venustiano Carranza, CDMX</p></div></div>
         <div class="loc-detail"><div class="loc-icon">🚇</div><div><strong>Metro más cercano</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;">Metro Romero Rubio, a dos calles del centro comercial Encuentro Oceanía.</p></div></div>
         <div class="loc-detail"><div class="loc-icon">🚌</div><div><strong>Camión / RTP</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;">Paradas sobre Av. del Peñón y Norte 172, a 2 minutos caminando.</p></div></div>
-        <div class="loc-detail"><div class="loc-icon">🕒</div><div><strong>Visítanos</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;">Con cita agendada desde "Solicitar validación" para entrega en persona.</p></div></div>
+        <div class="loc-detail"><div class="loc-icon">🕒</div><div><strong>Horario de atención</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;">Lunes a viernes, 10:00 am – 6:00 pm. Con cita agendada desde "Solicitar validación" — una pieza por horario, por favor sé puntual.</p></div></div>
       </div>
     </div>
   </section>
@@ -3380,6 +3390,15 @@ const SITE_DOMAIN = "https://labhvmexico.com"; // TODO: reemplaza cuando tengas 
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
+// Botón consistente para acciones de WhatsApp (enlace, no <button>) — con
+// ícono, buen contraste en claro/oscuro y el mismo look en todo el sitio.
+function waBtnHtml(message, label, opts){
+  const cls = 'btn wa-btn' + (opts && opts.small ? ' small' : '');
+  return `<a class="${cls}" href="${waLink(message)}" target="_blank" rel="noopener">
+    <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>
+    <span>${escapeHtml(label)}</span>
+  </a>`;
+}
 
 async function shareCert(folio, modelo){
   const url = `${SITE_DOMAIN}/?folio=${encodeURIComponent(folio)}`;
@@ -3491,18 +3510,27 @@ function wizPkgPricing(pkg){
 // CALENDARIO DE CITAS — wizard "Solicitar validación" (paquetes presenciales)
 // ============================================================
 // Horario de atención del laboratorio para recibir piezas en persona.
-// 0=domingo … 6=sábado. Ajusta aquí si cambian los horarios reales.
+// 0=domingo … 6=sábado. Solo de lunes a viernes — ajusta aquí si cambian
+// los horarios reales.
 const BUSINESS_HOURS = {
   1:{open:'10:00',close:'18:00'}, // lunes
   2:{open:'10:00',close:'18:00'}, // martes
   3:{open:'10:00',close:'18:00'}, // miércoles
   4:{open:'10:00',close:'18:00'}, // jueves
-  5:{open:'10:00',close:'18:00'}, // viernes
-  6:{open:'10:00',close:'14:00'}  // sábado
-  // domingo: cerrado (sin entrada = deshabilitado en el calendario)
+  5:{open:'10:00',close:'18:00'}  // viernes
+  // sábado y domingo: cerrado (sin entrada = deshabilitado en el calendario)
 };
-const CAL_SLOT_MINUTES = 30;
-const CAL_MIN_LEAD_HOURS = 2;   // no se puede agendar con menos de 2h de anticipación
+// Las citas van intercaladas cada hora en punto — solo se recibe una
+// pieza por hora. El último horario del día es 17:00 (recepción de 5 a 6
+// de la tarde); después de eso ya no se recibe y hay que agendar otro día.
+const CAL_SLOT_MINUTES = 60;
+// Para una cita EL MISMO DÍA se necesitan al menos 5 horas de anticipación
+// (ver calSameDayEarliestMinutes). Si todavía no abrimos (antes de las
+// 10 am), el horario más próximo disponible hoy es la misma hora en
+// punto pero de la tarde (1 am -> 1 pm, 2 am -> 2 pm, etc.) — así, para
+// agendar el horario de las 10 am hay que hacerlo a más tardar a las
+// 23:59 del día anterior.
+const CAL_SAME_DAY_LEAD_HOURS = 5;
 const CAL_MAX_MONTHS_AHEAD = 2; // no se puede agendar a más de 2 meses vista
 const CAL_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const CAL_DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
@@ -3567,6 +3595,26 @@ function calRenderMonth(){
   daysBox.innerHTML = html;
 }
 
+// Calcula, en minutos desde medianoche, el horario disponible más próximo
+// para una cita EL MISMO DÍA — combina las dos reglas que nos pediste:
+// (1) antes de que abramos, el más próximo es la misma hora pero de la
+// tarde (así, para la cita de las 10 am hay que agendar antes de las
+// 23:59 del día anterior — pasada esa hora ya solo aplica la regla 2);
+// (2) ya en horario de atención, se piden 5 horas de anticipación mínima,
+// redondeado a la hora en punto siguiente.
+function calSameDayEarliestMinutes(openMinutes, closeMinutes){
+  const now = new Date();
+  const nowMinutes = now.getHours()*60 + now.getMinutes();
+  if(nowMinutes < openMinutes){
+    return (now.getHours() + 12) * 60;
+  }
+  if(nowMinutes < closeMinutes){
+    const target = nowMinutes + CAL_SAME_DAY_LEAD_HOURS*60;
+    return Math.ceil(target/60)*60;
+  }
+  return Infinity; // ya cerramos por hoy — hay que elegir otro día
+}
+
 function calNav(delta){
   if(!calState) calInitState();
   let m = calState.month + delta, y = calState.year;
@@ -3599,8 +3647,7 @@ function calSelectDay(y, m, d){
   const [closeH,closeM] = hours.close.split(':').map(Number);
   const openMinutes = openH*60+openM, closeMinutes = closeH*60+closeM;
   const isToday = new Date(y,m,d).getTime() === calToday().getTime();
-  const now = new Date();
-  const minMinutesToday = isToday ? (now.getHours()*60 + now.getMinutes() + CAL_MIN_LEAD_HOURS*60) : -1;
+  const minMinutesToday = isToday ? calSameDayEarliestMinutes(openMinutes, closeMinutes) : -1;
 
   let slotsHtml = '', anySlot = false;
   for(let t=openMinutes; t<closeMinutes; t+=CAL_SLOT_MINUTES){
@@ -4079,8 +4126,10 @@ async function submitSolicitud(){
       waLabel = envioCosto > 0 ? 'Confirmar por WhatsApp y pedir datos de transferencia' : 'Confirmar cita por WhatsApp';
     }
     confirmHtml += `<p style="margin-top:10px;">${nextStepsText}</p>
-      <a class="btn small" style="text-decoration:none;display:inline-block;background:#25D366;" href="${waLink(waMsg)}" target="_blank" rel="noopener">${waLabel}</a>
-      <button type="button" class="btn ghost small" style="margin-left:8px;" onclick="resetWizard()">Enviar otra solicitud</button>
+      <div class="row" style="align-items:center;flex-wrap:wrap;">
+        ${waBtnHtml(waMsg, waLabel)}
+        <button type="button" class="btn ghost small" onclick="resetWizard()">Enviar otra solicitud</button>
+      </div>
     </div>`;
 
     document.getElementById('s-confirm').innerHTML = confirmHtml;
@@ -6280,8 +6329,14 @@ function renderDictamenStepBody(p, step){
       <div style="flex:1;"><label>Verificador</label><input type="text" value="${escapeHtml(dc.verificador)}" onchange="zzSetVerificador('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
       <div style="flex:1;"><label>Fecha</label><input type="date" value="${escapeHtml(dc.fecha)}" onchange="zzSetFecha('${escapeHtml(p.id)}','${step.key}',this.value)"></div>
     </div>
+    ${(!step.done && dc.resultado === 'falso') ? `
+    <div class="branch-note" style="margin-top:12px;">🛑 Al confirmar, el proceso se detiene aquí mismo: no pasa a calificación de condición ni a certificado. Se le notifica al cliente por WhatsApp de una vez, con el resultado y si pasa a recoger su pieza o se le envía.</div>` : ''}
     <div class="row" style="margin-top:10px;">
-      ${!step.done ? `<button class="btn small" ${!dc.resultado?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar dictamen y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Dictamen confirmado.</span>`}
+      ${!step.done
+        ? (dc.resultado === 'falso'
+            ? `<button class="btn" style="background:var(--bad);box-shadow:0 2px 6px rgba(163,38,56,0.3);" onclick="confirmDictamenResultado('${escapeHtml(p.id)}','${step.key}')">🛑 Confirmar que NO es original — terminar y notificar</button>`
+            : `<button class="btn small" ${!dc.resultado?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="confirmDictamenResultado('${escapeHtml(p.id)}','${step.key}')">Confirmar dictamen y continuar</button>`)
+        : `<span class="foot-note" style="border:none;padding:0;">✓ Dictamen confirmado.</span>`}
     </div>`;
 }
 
@@ -6591,8 +6646,36 @@ async function rejectProceso(p, motivo){
 
 async function notifyRechazo(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
-  const msg = `Hola ${p.nombre}, te compartimos el resultado de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}): ${p.rechazoMotivo || 'no pasó la validación'}. No continúa a certificación — el costo final es de $${(p.precioFinal!=null?p.precioFinal:150)} MXN, solo la validación base. Cualquier duda, contáctanos. — Laboratorio HV México`;
+  const entregaTxt = p.entregaVuelta === 'envio'
+    ? 'Como elegiste que te la enviáramos de regreso, en cuanto se confirme el pago del envío te la mandamos por paquetería.'
+    : 'Ya puedes pasar a recogerla al laboratorio cuando gustes.';
+  const envioTxt = p.envioCosto ? ` + $${Number(p.envioCosto).toLocaleString('es-MX')} MXN de envío` : '';
+  const msg = `Hola ${p.nombre}, gracias por usar nuestro servicio. Te compartimos el resultado de la validación de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}): ${p.rechazoMotivo || 'no pasó la validación'}. El proceso termina aquí — no continúa a calificación de condición ni a certificado. El costo final es de $${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN${envioTxt}, solo la validación base. ${entregaTxt} Cualquier duda, contáctanos. — Laboratorio HV México`;
   window.open(waLink(msg), '_blank', 'noopener');
+}
+
+// Notifica que el dictamen SÍ resultó original (o con intervención pero
+// original) — la pieza continúa al resto de la metodología. Distinta del
+// aviso de rechazo: aquí se le dice al cliente que siga el avance por
+// "Mi historial" con su código de seguimiento.
+async function notifyDictamenOriginal(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  const dictStep = p.pasos.find(s=>s.key==='dictamen');
+  const resultado = dictStep && dictStep.dictamen ? dictStep.dictamen.resultado : 'original';
+  const ESTADO_TXT = {original:'es original', restaurado:'es original, con restauración detectada', reparado:'es original, con reparación detectada', repintado:'es original, con repintado detectado'};
+  const msg = `Hola ${p.nombre}, buenas noticias: el dictamen de tu pieza "${p.modelo}" (folio de seguimiento ${p.id}) determinó que ${ESTADO_TXT[resultado] || 'es original'}. Continuamos con el proceso de calificación y certificación. Puedes seguir el avance cuando quieras desde "Mi historial" en nuestra página, con tu código ${p.id}. — Laboratorio HV México`;
+  window.open(waLink(msg), '_blank', 'noopener');
+}
+
+// Acción única del botón de confirmar dictamen: completa el paso (lo que
+// dispara el rechazo automático si resultó "Falso / Réplica") y, según
+// cómo haya quedado el proceso, manda de una vez el WhatsApp que
+// corresponde — de rechazo, o de "sí es original, seguimos".
+async function confirmDictamenResultado(pid, stepKey){
+  await completeStep(pid, stepKey);
+  if(!CURRENT_PROCESO || CURRENT_PROCESO.id !== pid) return;
+  if(CURRENT_PROCESO.estado === 'rechazada') await notifyRechazo(pid);
+  else await notifyDictamenOriginal(pid);
 }
 
 // Por si el dictamen o la calificación se capturaron mal — reabre el
