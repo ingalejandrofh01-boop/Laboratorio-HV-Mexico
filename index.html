@@ -684,6 +684,48 @@
     .book-stage-close{top:14px;right:14px;}
   }
 
+  /* ---- Presentación institucional (review de la empresa) ---- */
+  .pres-showcase{margin-top:30px;background:linear-gradient(155deg,var(--ink),#37211c);border-radius:14px;padding:34px 30px;position:relative;overflow:hidden;}
+  .pres-showcase::before{content:"";position:absolute;top:-40%;right:-10%;width:320px;height:320px;background:radial-gradient(circle,rgba(210,4,45,.25),transparent 70%);pointer-events:none;}
+  .pres-showcase-head{position:relative;max-width:640px;}
+  .pres-showcase .section-eyebrow{color:var(--brass);}
+  .pres-showcase h3{color:#fff;font-size:20px;margin:0 0 8px;}
+  .pres-showcase p{color:#D8C9B8;font-size:13.5px;margin:0;}
+  .pres-strip{position:relative;display:flex;gap:12px;margin-top:24px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;}
+  .pres-strip::-webkit-scrollbar{height:6px;}
+  .pres-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:3px;}
+  .pres-thumb{flex:0 0 auto;width:150px;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:#000;position:relative;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .18s ease, box-shadow .18s ease;padding:0;}
+  .pres-thumb img{display:block;width:100%;height:auto;opacity:.92;transition:opacity .18s ease;}
+  .pres-thumb:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.45);}
+  .pres-thumb:hover img{opacity:1;}
+  .pres-thumb .n{position:absolute;left:6px;bottom:6px;background:rgba(14,9,7,.75);color:#fff;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 6px;border-radius:3px;letter-spacing:.03em;}
+  .pres-cta-row{position:relative;display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;}
+  .pres-cta-row .btn.ghost{border-color:#fff;color:#fff!important;}
+  .pres-cta-row .btn.ghost:hover{background:rgba(255,255,255,.08);}
+
+  .pres-stage{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease, visibility 0s linear .25s;}
+  .pres-stage.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease;}
+  .pres-stage-backdrop{position:absolute;inset:0;background:rgba(10,6,5,.88);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+  .pres-stage-inner{position:relative;width:100%;max-width:1120px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .pres-stage-imgwrap{position:relative;width:100%;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);background:#1b110e;line-height:0;}
+  .pres-stage-imgwrap img{width:100%;height:auto;display:block;transform:scale(.98);opacity:0;transition:opacity .2s ease, transform .25s ease;}
+  .pres-stage-imgwrap img.show{opacity:1;transform:scale(1);}
+  .pres-stage-close{position:absolute;top:-14px;right:-14px;width:38px;height:38px;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.32);z-index:3;display:flex;align-items:center;justify-content:center;padding:0;}
+  .pres-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);transition:background .15s ease, transform .15s ease;}
+  .pres-nav-btn:hover{background:rgba(255,255,255,.24);}
+  .pres-nav-btn.prev{left:10px;}
+  .pres-nav-btn.next{right:10px;}
+  .pres-nav-btn[disabled]{opacity:.25;pointer-events:none;}
+  .pres-stage-foot{display:flex;align-items:center;gap:16px;color:#D8C9B8;font-size:12.5px;font-family:'IBM Plex Mono',monospace;}
+  .pres-stage-foot a{color:#fff;text-decoration:underline;text-underline-offset:2px;}
+  @media(max-width:760px){
+    .pres-stage{padding:0;}
+    .pres-stage-inner{max-width:100%;gap:8px;}
+    .pres-stage-imgwrap{border-radius:0;}
+    .pres-nav-btn{width:38px;height:38px;}
+    .pres-stage-close{top:10px;right:10px;}
+  }
+
   /* ---- Vitrina de piezas (grid dentro del libro) ---- */
   .piece-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;}
   .piece-card{display:flex;flex-direction:column;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;padding:0;text-align:left;font-family:inherit;transition:transform .18s ease, box-shadow .18s ease;}
@@ -1580,9 +1622,22 @@
         <p style="color:var(--sage);font-size:13.5px;margin:0;">Perito con amplia trayectoria en el reconocimiento de variantes, pintura original, bases, remaches y características de fabricación. Responsable directo del monitoreo visual, la confronta física de la pieza y la elaboración del dictamen pericial de originalidad y condición.</p>
       </div>
     </div>
+
+    <div class="pres-showcase">
+      <div class="pres-showcase-head">
+        <p class="section-eyebrow">Presentación institucional</p>
+        <h3>Conoce el laboratorio a detalle</h3>
+        <p>Metodología, herramientas, escala de calificación, precios y garantías — todo explicado a fondo en 19 láminas. Ideal si tienes dudas antes de solicitar tu certificación.</p>
+      </div>
+      <div class="pres-strip" id="pres-strip"></div>
+      <div class="pres-cta-row">
+        <button class="btn" onclick="openPresentacion(0)">Ver presentación completa</button>
+        <a class="btn ghost" href="laboratorio-hv-presentacion.pdf" target="_blank" rel="noopener">Descargar en PDF</a>
+      </div>
+    </div>
   </section>
 
-  
+
 </div>
 
 <div class="view" id="view-metodologia">
@@ -2666,6 +2721,22 @@
 
 </div>
 
+<div class="pres-stage" id="pres-stage">
+  <div class="pres-stage-backdrop" onclick="closePresentacion()"></div>
+  <div class="pres-stage-inner">
+    <button class="pres-stage-close" type="button" onclick="closePresentacion()" aria-label="Cerrar presentación">✕</button>
+    <div class="pres-stage-imgwrap">
+      <img id="pres-stage-img" src="" alt="Presentación institucional Laboratorio HV México">
+      <button class="pres-nav-btn prev" type="button" onclick="presPrev()" aria-label="Diapositiva anterior">‹</button>
+      <button class="pres-nav-btn next" type="button" onclick="presNext()" aria-label="Siguiente diapositiva">›</button>
+    </div>
+    <div class="pres-stage-foot">
+      <span id="pres-stage-counter">1 / 19</span>
+      <a href="laboratorio-hv-presentacion.pdf" target="_blank" rel="noopener">Descargar en PDF</a>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap" style="text-align:center;">
     <img class="hv-logo lg" alt="Laboratorio HV México" style="margin:0 auto 16px;">
@@ -3057,6 +3128,7 @@ function go(view){
   document.querySelectorAll('#main-nav button').forEach(b=>b.classList.toggle('active', b.dataset.v===view));
   window.scrollTo({top:0, behavior:'smooth'});
   if(view==='admin') refreshAdminLists();
+  if(view==='quienes' && typeof renderPresStrip === 'function') renderPresStrip();
   window.HV_CURRENT_VIEW = view;
   if(typeof updateStickyCta === 'function') updateStickyCta();
   setTimeout(() => {
@@ -4921,6 +4993,74 @@ document.addEventListener('keydown', (e) => {
     const stage = document.getElementById('book-stage');
     if(stage && stage.classList.contains('open')) closeBook();
   }
+});
+
+// ============================================================
+// PRESENTACIÓN INSTITUCIONAL — visor de láminas en pantalla completa
+// ============================================================
+const PRES_TOTAL = 19;
+const PRES_SLIDES = Array.from({length: PRES_TOTAL}, (_, i) => {
+  const n = String(i + 1).padStart(2, '0');
+  return { full: `pres-${n}.jpg`, thumb: `pres-thumb-${n}.jpg`, n: i + 1 };
+});
+let PRES_INDEX = 0;
+
+function renderPresStrip(){
+  const box = document.getElementById('pres-strip');
+  if(!box || box.dataset.rendered) return;
+  box.dataset.rendered = '1';
+  box.innerHTML = PRES_SLIDES.map(s => `
+    <button type="button" class="pres-thumb" onclick="openPresentacion(${s.n - 1})" aria-label="Ver lámina ${s.n} de la presentación">
+      <img src="${s.thumb}" alt="Lámina ${s.n} de la presentación institucional" loading="lazy">
+      <span class="n">${s.n}/${PRES_TOTAL}</span>
+    </button>`).join('');
+}
+
+function presPreload(i){
+  if(i < 0 || i >= PRES_TOTAL) return;
+  const img = new Image();
+  img.src = PRES_SLIDES[i].full;
+}
+
+function renderPresStage(){
+  const img = document.getElementById('pres-stage-img');
+  const counter = document.getElementById('pres-stage-counter');
+  if(!img || !counter) return;
+  img.classList.remove('show');
+  const swap = () => {
+    img.src = PRES_SLIDES[PRES_INDEX].full;
+    img.onload = () => img.classList.add('show');
+  };
+  swap();
+  counter.textContent = `${PRES_INDEX + 1} / ${PRES_TOTAL}`;
+  document.querySelector('.pres-nav-btn.prev').disabled = PRES_INDEX === 0;
+  document.querySelector('.pres-nav-btn.next').disabled = PRES_INDEX === PRES_TOTAL - 1;
+  presPreload(PRES_INDEX - 1);
+  presPreload(PRES_INDEX + 1);
+}
+
+function openPresentacion(startIndex){
+  PRES_INDEX = Math.min(Math.max(startIndex || 0, 0), PRES_TOTAL - 1);
+  document.getElementById('pres-stage').classList.add('open');
+  document.body.classList.add('book-open');
+  renderPresStage();
+}
+function closePresentacion(){
+  document.getElementById('pres-stage').classList.remove('open');
+  document.body.classList.remove('book-open');
+}
+function presNext(){
+  if(PRES_INDEX < PRES_TOTAL - 1){ PRES_INDEX++; renderPresStage(); }
+}
+function presPrev(){
+  if(PRES_INDEX > 0){ PRES_INDEX--; renderPresStage(); }
+}
+document.addEventListener('keydown', (e) => {
+  const stage = document.getElementById('pres-stage');
+  if(!stage || !stage.classList.contains('open')) return;
+  if(e.key === 'Escape') closePresentacion();
+  else if(e.key === 'ArrowRight') presNext();
+  else if(e.key === 'ArrowLeft') presPrev();
 });
 
 function placeholderHtml(){

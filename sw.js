@@ -2,7 +2,7 @@
 // Habilita la instalación como app y un caché básico para que el sitio
 // cargue más rápido y funcione si la conexión falla momentáneamente.
 
-const CACHE_NAME = 'labhv-cache-v31';
+const CACHE_NAME = 'labhv-cache-v32';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -23,7 +23,26 @@ const CORE_ASSETS = [
   './pd-zoom-04.jpg',
   './pd-zoom-05.jpg',
   './pd-zoom-06.jpg',
-  './pd-zoom-07.jpg'
+  './pd-zoom-07.jpg',
+  './pres-thumb-01.jpg',
+  './pres-thumb-02.jpg',
+  './pres-thumb-03.jpg',
+  './pres-thumb-04.jpg',
+  './pres-thumb-05.jpg',
+  './pres-thumb-06.jpg',
+  './pres-thumb-07.jpg',
+  './pres-thumb-08.jpg',
+  './pres-thumb-09.jpg',
+  './pres-thumb-10.jpg',
+  './pres-thumb-11.jpg',
+  './pres-thumb-12.jpg',
+  './pres-thumb-13.jpg',
+  './pres-thumb-14.jpg',
+  './pres-thumb-15.jpg',
+  './pres-thumb-16.jpg',
+  './pres-thumb-17.jpg',
+  './pres-thumb-18.jpg',
+  './pres-thumb-19.jpg'
 ];
 
 self.addEventListener('install', (event) => {
