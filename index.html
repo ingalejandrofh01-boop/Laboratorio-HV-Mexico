@@ -437,12 +437,15 @@
   .cert-authenticity-label{margin:0 0 4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
   .cert-authenticity-text{margin:0;font-size:13px;line-height:1.5;color:var(--ink);}
   .cert-protocol-line{margin:0 0 6px;font-size:11px;color:var(--brass-dim);}
+  /* Los antiguos renglones de firma ("____________") se sustituyeron por
+     los sellos oficiales del laboratorio — cada perito tiene su propio
+     sello, ambos se muestran siempre juntos como respaldo del dictamen. */
   .cert-signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px;}
   .cert-sign-block{text-align:center;}
-  .cert-sign-line{border-top:1px solid var(--ink);margin:34px 14px 8px;}
+  .cert-seal-img{width:96px;height:96px;object-fit:contain;display:block;margin:0 auto 6px;filter:drop-shadow(0 2px 4px rgba(36,21,18,0.25));}
   .cert-sign-role{margin:0;font-size:11.5px;font-weight:600;color:var(--ink);}
   .cert-sign-lab{margin:1px 0 0;font-size:9.5px;color:var(--brass-dim);text-transform:uppercase;letter-spacing:.04em;}
-  @media(max-width:480px){.cert-signatures{grid-template-columns:1fr;gap:14px;}}
+  @media(max-width:480px){.cert-signatures{grid-template-columns:1fr;gap:14px;}.cert-seal-img{width:72px;height:72px;}}
   .cert h2{color:var(--ink);}
   .cert .divider{border-top:1px dashed var(--brass-dim);margin:18px 0;}
   .cert table td{border-bottom:1px solid rgba(27,36,32,0.12);color:var(--ink);overflow-wrap:break-word;}
@@ -483,6 +486,17 @@
   .proc-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease;background:var(--panel);}
   .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);transform:translateY(-1px);}
   .proc-card-late{border-color:rgba(184,44,44,0.4);}
+  /* ===== Listas largas agrupadas por mes/año (Solicitudes, Historial) —
+     evita el scroll interminable: cada mes es un acordeón nativo <details>,
+     solo el más reciente empieza abierto. ===== */
+  .month-group{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;background:var(--panel);overflow:hidden;}
+  .month-group-summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;font-family:'Fraunces',serif;font-size:14.5px;color:var(--ink);user-select:none;}
+  .month-group-summary::-webkit-details-marker{display:none;}
+  .month-group-summary::before{content:'▸';font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--brass-dim);margin-right:8px;transition:transform .15s ease;}
+  .month-group[open] > .month-group-summary::before{transform:rotate(90deg);}
+  .month-group-count{margin-left:auto;background:var(--panel-2);border:1px solid var(--line);border-radius:20px;padding:1px 10px;font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--brass-dim);}
+  .month-group-body{padding:0 14px 12px;border-top:1px solid var(--line);}
+  .month-group-body > *:first-child{margin-top:12px;}
   /* ===== Tablero de monitoreo — "Validación en curso" ===== */
   .board-stats{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 18px;}
   .board-stat{flex:1;min-width:112px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel);text-align:center;}
@@ -685,7 +699,11 @@
   }
 
   /* ---- Quiénes somos — presentación editorial ---- */
-  .qh-hero{position:relative;background:linear-gradient(155deg,var(--ink),#37211c);border-radius:16px;padding:40px 34px;overflow:hidden;isolation:isolate;}
+  /* Fondo SIEMPRE oscuro a propósito (efecto vintage), con texto claro fijo
+     encima — por eso usa un color fijo (#241512) y no var(--ink): esa
+     variable se invierte a un tono claro en modo oscuro, lo que dejaba el
+     texto claro casi invisible sobre un fondo que también se volvía claro. */
+  .qh-hero{position:relative;background:linear-gradient(155deg,#241512,#37211c);border-radius:16px;padding:40px 34px;overflow:hidden;isolation:isolate;}
   .qh-hero::before{content:"";position:absolute;top:-45%;left:-8%;width:360px;height:360px;background:radial-gradient(circle,rgba(210,4,45,.22),transparent 70%);pointer-events:none;z-index:-1;}
   .qh-flag{position:absolute;top:20px;right:24px;display:grid;grid-template-columns:repeat(6,10px);grid-template-rows:repeat(6,10px);gap:0;opacity:.9;pointer-events:none;}
   .qh-flag span{width:10px;height:10px;}
@@ -748,7 +766,9 @@
   .qh-section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:36px 0 6px;}
 
   /* ---- Presentación institucional (review de la empresa) ---- */
-  .pres-showcase{margin-top:30px;background:linear-gradient(155deg,var(--ink),#37211c);border-radius:14px;padding:34px 30px;position:relative;overflow:hidden;}
+  /* Mismo fondo siempre-oscuro que .qh-hero y por la misma razón: color fijo,
+     no var(--ink), para que el texto claro no desaparezca en modo oscuro. */
+  .pres-showcase{margin-top:30px;background:linear-gradient(155deg,#241512,#37211c);border-radius:14px;padding:34px 30px;position:relative;overflow:hidden;}
   .pres-showcase::before{content:"";position:absolute;top:-40%;right:-10%;width:320px;height:320px;background:radial-gradient(circle,rgba(210,4,45,.25),transparent 70%);pointer-events:none;}
   .pres-showcase-head{position:relative;max-width:640px;}
   .pres-showcase .section-eyebrow{color:var(--brass);}
@@ -1046,7 +1066,14 @@
   .pricing-table td:first-child{background:var(--panel);}
   .pricing-table tr:nth-child(even) td:first-child{background:var(--panel-2);}
   .pricing-table tr.pkg-row-featured td{background:rgba(210,4,45,0.05);}
-  .pricing-table tr.pkg-row-featured td:first-child{background:rgba(210,4,45,0.09);}
+  /* La primera columna es "sticky" (se queda fija al deslizar la tabla a la
+     derecha) — por eso necesita un fondo 100% opaco. Antes usaba el mismo
+     rojo translúcido que el resto de la fila (rgba con 9% de opacidad), así
+     que al deslizar, los precios de las columnas de atrás se alcanzaban a
+     ver encimados debajo de "Peritaje físico + certificado". color-mix()
+     mezcla el rojo con el color de fondo real del tema (claro u oscuro)
+     para lograr el mismo tono, pero totalmente opaco. */
+  .pricing-table tr.pkg-row-featured td:first-child{background:color-mix(in srgb, var(--red) 9%, var(--panel));}
   .pricing-table tr.pkg-row-featured td:first-child strong{color:var(--red);}
   .cell-flash{animation:pkgCellFlash 1.1s ease;}
   @keyframes pkgCellFlash{0%{background:rgba(210,4,45,0.35);}100%{background:transparent;}}
@@ -1332,6 +1359,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 </head>
 <body>
 
@@ -1791,7 +1819,7 @@
       <div class="step-card tag-notch">
         <div class="step-num">3</div>
         <h3 style="font-size:16px;">Encapsulado y sello</h3>
-        <p style="color:var(--sage);font-size:13.5px;">La pieza se sella en acrílico con el holograma del laboratorio y su etiqueta de grado. El folio con QR de verificación queda publicado en esta página.</p>
+        <p style="color:var(--sage);font-size:13.5px;">La pieza se sella en acrílico con el sello del laboratorio y su etiqueta de grado. El folio con QR de verificación queda publicado en esta página.</p>
       </div>
     </div>
   </section>
@@ -2821,18 +2849,29 @@
           <div class="admin-tab" id="admin-tab-respaldo">
             <div class="card">
               <h3 style="font-size:16px;">Respaldo de datos</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Toda tu información vive en Firebase — descarga un respaldo en CSV cada tanto para tener copia local.</p>
-              <div class="row">
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Toda tu información vive en Firebase — descarga un respaldo cada tanto para tener copia local.</p>
+              <div class="row" style="flex-wrap:wrap;">
+                <button class="btn small" onclick="exportExcelCompleto()">Exportar base completa (Excel)</button>
                 <button class="btn ghost small" onclick="exportCSV('solicitudes')">Exportar solicitudes (CSV)</button>
                 <button class="btn ghost small" onclick="exportCSV('folios')">Exportar folios (CSV)</button>
               </div>
+              <p class="foot-note" style="border:none;padding-top:10px;margin:0;">El Excel trae todo en un solo archivo, organizado en hojas: Solicitudes, Folios emitidos, Ingresos por mes y Piezas en la Biblioteca — listo para guardar como resguardo o revisar fuera del sistema.</p>
+            </div>
+            <div class="card" style="margin-top:18px;">
+              <h3 style="font-size:16px;">Limpieza de datos antiguos</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Para mantener el panel ligero, puedes eliminar en bloque las solicitudes y folios anteriores a una fecha — exporta tu respaldo en Excel antes de usar esto, por si acaso.</p>
+              <div class="row" style="align-items:flex-end;flex-wrap:wrap;">
+                <div><label>Eliminar todo lo anterior a</label><input type="month" id="a-cleanup-cutoff" style="max-width:180px;"></div>
+                <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="cleanupOldData()">Eliminar registros antiguos</button>
+              </div>
+              <p id="a-cleanup-status" class="foot-note" style="border:none;padding-top:8px;margin:0;"></p>
             </div>
             <div class="card" style="margin-top:18px;border-color:rgba(210,4,45,0.3);">
               <h3 style="font-size:16px;color:var(--red);">Zona de pruebas</h3>
               <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Úsalo mientras estás probando el sistema, antes de operar con clientes reales.</p>
               <p style="font-size:13px;color:var(--sage);margin:0 0 8px;">El contador de folios sugiere automáticamente el siguiente número (001, 002…). Si hiciste pruebas y quieres que el próximo folio real vuelva a empezar en 001:</p>
               <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="resetFolioCounter()">Reiniciar contador de folios a 1</button>
-              <p style="font-size:13px;color:var(--sage);margin:16px 0 0;">Para borrar un certificado o solicitud ya publicado, ve a "Certificados y folios" o "Solicitudes" y usa el botón "Eliminar" de cada tarjeta.</p>
+              <p style="font-size:13px;color:var(--sage);margin:16px 0 0;">Para borrar un certificado o solicitud puntual, ve a "Certificados y folios", "Solicitudes" o "Historial de piezas" y usa el botón "Eliminar" de cada tarjeta.</p>
             </div>
           </div>
 
@@ -2867,6 +2906,7 @@
       <a href="#" id="footer-whatsapp" target="_blank" rel="noopener" title="WhatsApp" style="background:#25D366;"><svg viewBox="0 0 32 32" fill="#fff"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg></a>
     </div>
     <p style="max-width:600px;margin:0 auto;text-align:center;"><img class="mx-flag sm" src="mx-flag.jpg" alt="Bandera de México"> Laboratorio HV México — laboratorio independiente de coleccionismo, con sede física en Ciudad de México. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
+    <p style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--sage-dim);">Algunos elementos gráficos de este sitio (como los sellos oficiales del laboratorio) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
     <button data-v="admin" onclick="go('admin')" style="background:none;border:none;cursor:pointer;color:var(--sage-dim);opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
   </div>
 </footer>
@@ -3307,7 +3347,7 @@ function tierLabel(tier){
   return tier === 'gold' ? 'EJEMPLAR SOBRESALIENTE' : tier === 'silver' ? 'BUEN ESTADO' : 'REQUIERE REVISIÓN';
 }
 
-function renderCert(f){
+function renderCert(f, isAdmin){
   const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6,f.foto7];
   const labels = ['Base','Llantas','Frente','Techo/cofre 45°','Interior','UV/microscopio','Trasera'];
   let fotoHtml = fotos.map((u,i)=> `<div class="photobox">${u ? `<img src="${escapeHtml(u)}" alt="${labels[i]}">` : labels[i]}</div>`).join('');
@@ -3371,14 +3411,14 @@ function renderCert(f){
     <p style="font-size:12px;color:var(--brass-dim);">Evaluación profesional independiente, no afiliada a Mattel, Inc. ni a Hot Wheels®. Opinión experta basada en inspección física, análisis UV y microscopía. No constituye avalúo comercial.</p>
     <div class="cert-signatures">
       <div class="cert-sign-block">
-        <div class="cert-sign-line"></div>
-        <p class="cert-sign-role">Técnico Certificador Especializado</p>
-        <p class="cert-sign-lab">Laboratorio HV México</p>
+        <img class="cert-seal-img" src="sello-ricardo.png" alt="Sello oficial — Ricardo Muñoz, Técnico Certificador Especializado">
+        <p class="cert-sign-role">Ricardo Muñoz</p>
+        <p class="cert-sign-lab">Técnico Certificador Especializado</p>
       </div>
       <div class="cert-sign-block">
-        <div class="cert-sign-line"></div>
-        <p class="cert-sign-role">Director General</p>
-        <p class="cert-sign-lab">Laboratorio HV México</p>
+        <img class="cert-seal-img" src="sello-andres.png" alt="Sello oficial — Andres Fernandez, Director Fundador">
+        <p class="cert-sign-role">Andres Fernandez</p>
+        <p class="cert-sign-lab">Director Fundador</p>
       </div>
     </div>
     <div class="divider"></div>
@@ -3395,10 +3435,10 @@ function renderCert(f){
   </div>
   <div class="no-print row" style="margin-top:18px;align-items:center;">
     <button class="btn ghost small" onclick="printOnly('full')">Descargar / imprimir certificado</button>
-    <button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y holograma</button>
+    ${isAdmin ? `<button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y sello</button>` : ''}
     <button class="btn ghost small" onclick="shareCert('${escapeHtml(f.folio)}','${escapeHtml(f.modelo||'')}')">Compartir certificado</button>
   </div>
-  <p class="no-print foot-note" style="border:none;padding-top:0;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.</p>`;
+  <p class="no-print foot-note" style="border:none;padding-top:0;">En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.${!isAdmin ? ' El certificado es el único documento descargable para el cliente — la etiqueta y el sello de acrílico son de uso interno del laboratorio.' : ''}</p>`;
 }
 
 function tierForGrade(grado, estado){
@@ -3606,10 +3646,15 @@ function renderSealLabel(f){
   </div>`;
 }
 
+// Solo se llama desde botones que ya viven dentro del panel admin (con la
+// sesión ya iniciada) — el certificado público que ve el cliente NUNCA
+// muestra este botón, así que aquí ya no hace falta el aviso de "inicia
+// sesión de admin", solo saltar directo a la pestaña de etiquetas con los
+// datos de esa pieza precargados.
 function openEtiquetaFor(fJson){
   const f = JSON.parse(fJson);
   go('admin');
-  toast('Inicia sesión de admin para ver su etiqueta de impresión.');
+  adminGo('etiquetas');
   document.getElementById('e-folio').value = f.folio;
   document.getElementById('e-result').innerHTML = renderCertLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderSealLabel(f);
   applyLogos();
@@ -3653,7 +3698,7 @@ async function verifyFolio(){
     const res = await HVStorage.get('folio:'+folio, true);
     if(res && res.value){
       const f = JSON.parse(res.value);
-      box.innerHTML = renderCert(f);
+      box.innerHTML = renderCert(f, false);
       applyLogos();
       embedAllQrLogos();
     } else {
@@ -5763,7 +5808,7 @@ function updateLivePreview(){
   if(!f.folio) f.folio = 'HV-MX-2026-000';
   if(!f.modelo) f.modelo = 'Nombre del modelo';
   if(!f.fecha) f.fecha = new Date().toLocaleDateString('es-MX');
-  if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = renderCert(f);
+  if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = renderCert(f, true);
   else if(CERT_PREVIEW_MODE === 'label') mount.innerHTML = renderCertLabel(f);
   else mount.innerHTML = renderSealLabel(f);
   applyLogos();
@@ -5882,6 +5927,43 @@ function parseFechaFolio(fecha){
   const [dd, mm, yyyy] = parts.map(n => parseInt(n, 10));
   if(!mm || !yyyy) return null;
   return { mm, yyyy };
+}
+
+// Agrupa una lista larga (solicitudes, historial…) en acordeones por mes/año
+// — así el panel no se convierte en un scroll interminable a medida que se
+// acumulan meses de datos. Solo el grupo más reciente empieza abierto; el
+// resto queda colapsado pero a un clic de distancia. Los elementos sin
+// fecha reconocible caen en un grupo aparte al final.
+function renderGroupedByMonth(items, opts){
+  const { getFecha, renderItem, emptyMsg, idPrefix } = opts;
+  if(!items || !items.length) return `<p style="color:var(--sage);font-size:14px;">${emptyMsg||'Sin resultados.'}</p>`;
+  const groups = {};
+  const sinFecha = [];
+  items.forEach(it => {
+    const parsed = parseFechaFolio(getFecha(it));
+    if(!parsed){ sinFecha.push(it); return; }
+    const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
+    if(!groups[key]) groups[key] = { yyyy:parsed.yyyy, mm:parsed.mm, items: [] };
+    groups[key].items.push(it);
+  });
+  const sortedKeys = Object.keys(groups).sort().reverse();
+  let html = '';
+  sortedKeys.forEach((key, idx) => {
+    const g = groups[key];
+    html += `
+    <details class="month-group" id="${escapeHtml(idPrefix)}-${key}" ${idx===0?'open':''}>
+      <summary class="month-group-summary"><span>${MESES_ES[g.mm-1]} ${g.yyyy}</span><span class="month-group-count">${g.items.length}</span></summary>
+      <div class="month-group-body">${g.items.map(renderItem).join('')}</div>
+    </details>`;
+  });
+  if(sinFecha.length){
+    html += `
+    <details class="month-group">
+      <summary class="month-group-summary"><span>Sin fecha</span><span class="month-group-count">${sinFecha.length}</span></summary>
+      <div class="month-group-body">${sinFecha.map(renderItem).join('')}</div>
+    </details>`;
+  }
+  return html;
 }
 
 async function refreshIncomeTable(){
@@ -6042,13 +6124,27 @@ async function deleteSolicitud(id){
     await HVStorage.delete('proceso:'+id, true).catch(()=>{});
     toast('Solicitud eliminada.');
     refreshAdminLists();
+    if(document.getElementById('historial-list')) refreshHistorial();
   }catch(e){ toast('No se pudo eliminar la solicitud.'); }
 }
 
 function renderSolicitudesList(targetId, items, showFilterEmpty){
   const box = document.getElementById(targetId);
   if(!box) return;
-  box.innerHTML = items.length ? items.map(solicitudCardHtml).join('') : `<p style="color:var(--sage);font-size:14px;">${showFilterEmpty||'Sin solicitudes por ahora.'}</p>`;
+  // La lista mini de "Solicitudes pendientes" (dentro de Certificados y
+  // folios) se queda plana a propósito — es corta por diseño. La lista
+  // principal del tab "Solicitudes" sí se agrupa por mes para que no crezca
+  // sin control con el tiempo.
+  if(targetId === 'a-solicitudes'){
+    box.innerHTML = renderGroupedByMonth(items, {
+      getFecha: d => d.fecha,
+      renderItem: solicitudCardHtml,
+      emptyMsg: showFilterEmpty || 'Sin solicitudes por ahora.',
+      idPrefix: 'sol'
+    });
+  } else {
+    box.innerHTML = items.length ? items.map(solicitudCardHtml).join('') : `<p style="color:var(--sage);font-size:14px;">${showFilterEmpty||'Sin solicitudes por ahora.'}</p>`;
+  }
 }
 
 function filterSolicitudes(filter){
@@ -7538,6 +7634,136 @@ async function exportCSV(kind){
   }
 }
 
+// Convierte cualquier campo con arreglos/objetos anidados (fotos, pasos del
+// acordeón, subcalificaciones…) a texto JSON, para que cada hoja de Excel
+// se vea limpia en vez de mostrar "[object Object]" en esas celdas.
+function flattenForSheet(obj){
+  const out = {};
+  Object.keys(obj).forEach(k => {
+    const v = obj[k];
+    out[k] = (v && typeof v === 'object') ? JSON.stringify(v) : v;
+  });
+  return out;
+}
+
+// ============================================================
+// RESPALDO COMPLETO EN EXCEL — un solo archivo .xlsx con una hoja por
+// colección (Solicitudes, Folios, Ingresos por mes, Piezas en la Biblioteca)
+// para tener toda la base de datos organizada y descargable de un jalón.
+// ============================================================
+async function exportExcelCompleto(){
+  if(typeof XLSX === 'undefined'){
+    toast('La herramienta de exportación sigue cargando, intenta de nuevo en un segundo.');
+    return;
+  }
+  try{
+    toast('Preparando el Excel…');
+    const [solList, folList, piezas] = await Promise.all([
+      HVStorage.list('solicitud:', true).catch(()=>({keys:[]})),
+      HVStorage.list('folio:', true).catch(()=>({keys:[]})),
+      getPiezas().catch(()=>[])
+    ]);
+    const solicitudes = [];
+    for(const k of (solList.keys||[])){
+      try{ const r = await HVStorage.get(k, true); solicitudes.push(JSON.parse(r.value)); }catch(e){}
+    }
+    const folios = [];
+    for(const k of (folList.keys||[])){
+      try{ const r = await HVStorage.get(k, true); folios.push(JSON.parse(r.value)); }catch(e){}
+    }
+    if(!solicitudes.length && !folios.length && !piezas.length){
+      toast('Todavía no hay datos guardados para exportar.');
+      return;
+    }
+    solicitudes.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
+    folios.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
+
+    const byMonth = {};
+    folios.forEach(f => {
+      const parsed = parseFechaFolio(f.fecha) || {mm:0, yyyy:0};
+      const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
+      if(!byMonth[key]) byMonth[key] = { Mes: parsed.mm ? (MESES_ES[parsed.mm-1]+' '+parsed.yyyy) : 'Sin fecha', 'Folios emitidos':0, 'Ingresos MXN':0 };
+      byMonth[key]['Folios emitidos']++;
+      byMonth[key]['Ingresos MXN'] += (f.precioFinal ? Number(f.precioFinal) : 0) || PKG_PRICE[f.nivel] || 0;
+    });
+    const ingresosRows = Object.keys(byMonth).sort().reverse().map(k => byMonth[k]);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(solicitudes.map(flattenForSheet)), 'Solicitudes');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(folios.map(flattenForSheet)), 'Folios emitidos');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(ingresosRows), 'Ingresos por mes');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(piezas.map(flattenForSheet)), 'Piezas en Biblioteca');
+    XLSX.writeFile(wb, `laboratorio-hv-respaldo-${new Date().toISOString().slice(0,10)}.xlsx`);
+    toast('Excel descargado.');
+  }catch(e){
+    console.error('Export Excel falló:', e);
+    toast('No se pudo generar el Excel. Intenta de nuevo.');
+  }
+}
+
+// ============================================================
+// LIMPIEZA MASIVA DE DATOS ANTIGUOS — elimina solicitudes/procesos y
+// folios anteriores al mes elegido. Pensado para cuando ya se acumularon
+// varios meses de pruebas o de operación y el panel se siente pesado.
+// Siempre pide confirmación mostrando cuántos registros se van a borrar.
+// ============================================================
+async function cleanupOldData(){
+  const statusBox = document.getElementById('a-cleanup-status');
+  const cutoffInput = document.getElementById('a-cleanup-cutoff');
+  const cutoff = cutoffInput ? cutoffInput.value : '';
+  if(!cutoff){ toast('Elige primero un mes de corte.'); return; }
+  const [cy, cm] = cutoff.split('-').map(n => parseInt(n,10));
+  const cutoffKey = cy * 100 + cm;
+  if(statusBox) statusBox.textContent = 'Buscando registros anteriores a ' + MESES_ES[cm-1] + ' ' + cy + '…';
+  try{
+    const [solList, folList] = await Promise.all([
+      HVStorage.list('solicitud:', true).catch(()=>({keys:[]})),
+      HVStorage.list('folio:', true).catch(()=>({keys:[]}))
+    ]);
+    const solToDelete = [];
+    for(const k of (solList.keys||[])){
+      try{
+        const r = await HVStorage.get(k, true);
+        const d = JSON.parse(r.value);
+        const parsed = parseFechaFolio(d.fecha || d.creado);
+        if(parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) solToDelete.push(d.id);
+      }catch(e){}
+    }
+    const folToDelete = [];
+    for(const k of (folList.keys||[])){
+      try{
+        const r = await HVStorage.get(k, true);
+        const f = JSON.parse(r.value);
+        const parsed = parseFechaFolio(f.fecha);
+        if(parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) folToDelete.push(f.folio);
+      }catch(e){}
+    }
+    const total = solToDelete.length + folToDelete.length;
+    if(!total){
+      if(statusBox) statusBox.textContent = 'No hay registros anteriores a esa fecha.';
+      return;
+    }
+    if(!confirm(`Se eliminarán ${solToDelete.length} solicitud(es) y ${folToDelete.length} folio(s) anteriores a ${MESES_ES[cm-1]} ${cy}. Esta acción no se puede deshacer — ¿ya descargaste tu respaldo en Excel?`)){
+      if(statusBox) statusBox.textContent = 'Limpieza cancelada.';
+      return;
+    }
+    for(const id of solToDelete){
+      await HVStorage.delete('solicitud:'+id, true).catch(()=>{});
+      await HVStorage.delete('proceso:'+id, true).catch(()=>{});
+    }
+    for(const folio of folToDelete){
+      await HVStorage.delete('folio:'+folio, true).catch(()=>{});
+    }
+    if(statusBox) statusBox.textContent = `Listo — se eliminaron ${total} registro(s) anteriores a ${MESES_ES[cm-1]} ${cy}.`;
+    toast('Limpieza completa.');
+    refreshAdminLists();
+    refreshIncomeTable();
+    if(document.getElementById('historial-list')) refreshHistorial();
+  }catch(e){
+    if(statusBox) statusBox.textContent = 'No se pudo completar la limpieza. Intenta de nuevo.';
+  }
+}
+
 function folioCardHtml(d){
   return `
       <div style="padding:10px 0;border-bottom:1px solid var(--line);">
@@ -7547,7 +7773,7 @@ function folioCardHtml(d){
         </div>
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
         <div class="row">
-          <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y holograma</button>
+          <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y sello</button>
           ${Number(d.grado) >= 6 ? `<button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en Biblioteca</button>` : ''}
           <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteFolio('${escapeHtml(d.folio)}')">Eliminar</button>
         </div>
@@ -7561,6 +7787,7 @@ async function deleteFolio(folio){
     toast('Folio eliminado: '+folio);
     refreshAdminLists();
     refreshIncomeTable();
+    if(document.getElementById('historial-list')) refreshHistorial();
   }catch(e){ toast('No se pudo eliminar el folio.'); }
 }
 
@@ -7639,7 +7866,12 @@ function historialRowHtml(item){
         </div>
       </div>
       ${item.tipo==='proceso' && envioBadgeHtml(d) ? `<div class="row" style="margin-top:6px;">${envioBadgeHtml(d)}${d.envioPagado?' <span class="pill completado" style="font-size:11px;">Transferencia recibida</span>':''}</div>` : ''}
-      ${canPublish ? `<div class="row" style="margin-top:8px;"><button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en la Biblioteca</button></div>` : ''}
+      <div class="row" style="margin-top:8px;">
+        ${canPublish ? `<button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en la Biblioteca</button>` : ''}
+        ${item.tipo==='folio'
+          ? `<button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteFolio('${escapeHtml(d.folio)}')">Eliminar</button>`
+          : `<button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteSolicitud('${escapeHtml(d.id)}')">Eliminar</button>`}
+      </div>
     </div>`;
 }
 
@@ -7691,9 +7923,12 @@ function filterHistorial(filter){
   const listBox = document.getElementById('historial-list');
   if(!listBox) return;
   const items = filter === 'todas' ? HISTORIAL_ITEMS : HISTORIAL_ITEMS.filter(it => it.categoria === filter);
-  listBox.innerHTML = items.length
-    ? items.map(historialRowHtml).join('')
-    : '<p style="color:var(--sage);font-size:14px;">No hay piezas en esta categoría todavía.</p>';
+  listBox.innerHTML = renderGroupedByMonth(items, {
+    getFecha: it => it.tipo === 'folio' ? it.raw.fecha : it.raw.creado,
+    renderItem: historialRowHtml,
+    emptyMsg: 'No hay piezas en esta categoría todavía.',
+    idPrefix: 'hist'
+  });
 }
 
 // ============================================================
@@ -7722,7 +7957,7 @@ async function publishPiezaFromFolio(folioId){
       return;
     }
     const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6,f.foto7].filter(Boolean).map(url => ({url, caption:''}));
-    if(!fotos.length){ toast('Este folio no tiene fotos guardadas — no se puede publicar.'); return; }
+    if(!fotos.length){ toast('Este folio no tiene fotos guardadas — sube al menos una foto en "Certificados y folios" antes de publicarlo en la Biblioteca.'); return; }
     piezas.unshift({
       id: 'PZA-' + Date.now(),
       modelo: f.modelo || '',
