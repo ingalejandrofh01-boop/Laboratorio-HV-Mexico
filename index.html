@@ -274,6 +274,62 @@
     .notif-panel{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-height:70vh;border-radius:16px 16px 0 0;}
   }
 
+  /* ---- Modo de carga "skeleton" — placeholders animados mientras Firebase
+     trae los datos, en vez de mostrar vacío o brincar el contenido ---- */
+  @keyframes skelPulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+  .skel-line{display:inline-block;border-radius:6px;background:var(--panel-2);animation:skelPulse 1.3s ease-in-out infinite;vertical-align:middle;}
+  .skel-card{border-radius:10px;margin-bottom:10px;}
+  .skel-row + .skel-row{border-top:none;}
+  .skel-pieza-tile{background:none!important;}
+  .skel-pieza-tile .skel-line{width:100%;height:100%;border-radius:6px;}
+
+  /* ---- Términos y Aviso de Privacidad ---- */
+  .legal-draft-note{background:rgba(184,134,47,0.1);border:1px solid var(--brass);margin-bottom:24px;}
+  .legal-draft-note p{margin:0;font-size:13px;line-height:1.6;color:var(--ink);}
+  .legal-doc{max-width:760px;}
+  .legal-doc .legal-updated{font-size:12.5px;color:var(--sage-dim);margin:0 0 20px;font-family:'IBM Plex Mono',monospace;}
+  .legal-doc h3{font-size:16px;margin:26px 0 8px;}
+  .legal-doc h3:first-of-type{margin-top:0;}
+  .legal-doc p{color:var(--sage);font-size:14px;line-height:1.7;margin:0 0 4px;}
+
+  .wiz-recaptcha-block{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+  .wiz-recaptcha-block .g-recaptcha,
+  .wiz-recaptcha-block > div[id="s-recaptcha"]{display:inline-block;}
+  @media(max-width:340px){
+    .wiz-recaptcha-block{transform:scale(.92);transform-origin:0 0;}
+  }
+
+  /* ---- Aviso de solicitud a medias (recordatorio al volver) ---- */
+  .draft-banner{background:var(--panel-2);border-bottom:1px solid var(--line);}
+  .draft-banner-inner{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .draft-banner-icon{font-size:20px;flex:none;}
+  .draft-banner-text{flex:1;min-width:220px;font-size:13px;color:var(--ink);display:flex;flex-direction:column;gap:1px;}
+  .draft-banner-text strong{font-weight:600;}
+  .draft-banner-text span{color:var(--sage);font-size:12.5px;}
+  .draft-banner-actions{display:flex;gap:8px;flex:none;}
+  @media(max-width:520px){ .draft-banner-inner{padding:9px 12px;} }
+
+  /* ---- Buscador global del panel admin ---- */
+  .admin-global-search{position:relative;margin-bottom:16px;}
+  .ags-input-wrap{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;}
+  .ags-input-wrap:focus-within{border-color:var(--brass);}
+  .ags-input-wrap svg{width:18px;height:18px;flex:none;stroke:var(--sage-dim);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .ags-input-wrap input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--ink);font-family:inherit;font-size:14px;}
+  .ags-input-wrap input::placeholder{color:var(--sage-dim);}
+  .ags-clear{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:none;background:var(--panel);color:var(--sage);cursor:pointer;font-size:12px;padding:0;}
+  .ags-clear:hover{color:var(--ink);}
+  .ags-results{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 32px rgba(20,12,9,.28);max-height:min(60vh,440px);overflow-y:auto;z-index:55;padding:6px;}
+  .ags-group{padding:6px 6px 4px;}
+  .ags-group + .ags-group{border-top:1px solid var(--line);}
+  .ags-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--brass-dim);padding:4px 6px;font-weight:600;}
+  .ags-item{display:block;width:100%;text-align:left;padding:8px 9px;border-radius:8px;border:none;background:transparent;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .ags-item:hover,.ags-item.active{background:var(--panel-2);}
+  .ags-item-title{display:block;font-size:13.5px;font-weight:600;}
+  .ags-item-sub{display:block;font-size:12px;color:var(--sage);margin-top:1px;}
+  .ags-empty{padding:18px;color:var(--sage);font-size:13px;text-align:center;}
+  @keyframes agsFlash{0%{background:rgba(221,174,92,.4);}100%{background:transparent;}}
+  .ags-highlight{animation:agsFlash 1.8s ease;border-radius:10px;}
+
   /* ---- Menú móvil: hamburguesa + panel deslizable ---- */
   .nav-toggle{display:none;flex:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;cursor:pointer;padding:0;}
   .nav-toggle span{display:block;width:18px;height:2px;background:var(--ink);border-radius:2px;transition:transform .25s ease, opacity .2s ease;}
@@ -913,6 +969,15 @@
   .hero-inner > h1{max-width:780px;margin-bottom:.3em;}
   .hero-inner > p.lead{max-width:600px;}
   .hero.has-image .hero-inner{padding:64px 28px 60px;}
+  .hero-stat-counter{display:inline-flex;align-items:center;gap:10px;margin:16px 0 4px;padding:10px 20px;background:rgba(255,255,255,.1);border:1px solid rgba(221,174,92,.45);border-radius:999px;backdrop-filter:blur(2px);}
+  .hero-stat-icon{width:20px;height:20px;flex:none;stroke:#F3D9A6;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .hero-stat-num{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:700;color:#F3D9A6;letter-spacing:.01em;}
+  .hero-stat-lbl{font-size:13.5px;color:#FBEDE4;}
+  @media(max-width:480px){
+    .hero-stat-counter{padding:9px 16px;gap:8px;}
+    .hero-stat-num{font-size:17px;}
+    .hero-stat-lbl{font-size:12.5px;}
+  }
   .finish-divider{height:9px;background-image:repeating-linear-gradient(90deg, var(--paper) 0 9px, var(--ink) 9px 18px);opacity:.35;border-radius:2px;margin:6px 0 0;}
   .tag-notch{position:relative;}
   .tag-notch::before{content:"";position:absolute;top:-1px;left:16px;right:16px;height:1px;
@@ -1102,6 +1167,9 @@
   .footer-social a{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
   .footer-social a:hover{transform:translateY(-3px);}
   .footer-social a svg{width:19px;height:19px;fill:#fff;}
+  .footer-legal-links{color:var(--sage-dim);}
+  .footer-legal-link{background:none;border:none;cursor:pointer;color:var(--sage-dim);font-size:12px;padding:2px 6px;text-decoration:underline;text-underline-offset:2px;font-family:inherit;}
+  .footer-legal-link:hover{color:var(--ink);}
   .whatsapp-float{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:150;cursor:pointer;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease;animation:wa-pulse 2.6s ease-in-out infinite;}
   .whatsapp-float:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.4);animation:none;}
   .whatsapp-float svg{width:30px;height:30px;}
@@ -1415,6 +1483,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaApiLoad&render=explicit" async defer></script>
 </head>
 <body>
 
@@ -1570,6 +1639,20 @@
   ⚠ Firebase no está configurado — nada de lo que guardes (folios, solicitudes, fotos) se va a quedar guardado todavía. Edita <span class="mono">FIREBASE_CONFIG</span> en el código.
 </div>
 
+<div id="solicitud-draft-banner" class="draft-banner" style="display:none;">
+  <div class="draft-banner-inner">
+    <span class="draft-banner-icon" aria-hidden="true">📝</span>
+    <div class="draft-banner-text">
+      <strong>Tienes una solicitud sin terminar</strong>
+      <span>Guardada el <span id="solicitud-draft-banner-date"></span> — ¿continuamos donde te quedaste?</span>
+    </div>
+    <div class="draft-banner-actions">
+      <button type="button" class="btn small" onclick="resumeSolicitudDraft()">Continuar</button>
+      <button type="button" class="btn ghost small" onclick="discardSolicitudDraft()">Descartar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 <div id="notif-stack" class="notif-stack" aria-live="polite" aria-atomic="false"></div>
 <button class="sticky-cta" id="sticky-cta-btn" type="button" onclick="go('solicitar')">
@@ -1608,6 +1691,10 @@
       <img class="hv-logo" src="logo.png" alt="Laboratorio HV México" style="height:110px;margin:0 0 14px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
       <h1 style="margin-top:8px;">Certificación independiente de piezas vintage: Hot Wheels, CIPSA, Bólidos Lilí Ledy y Aurimat.</h1>
       <p class="lead">Somos coleccionistas certificando para coleccionistas: certificación independiente, con criterio experto y más de 25 años de experiencia — no afiliados a las marcas. Evaluamos si tu pieza es original, repintada o modificada, con criterios técnicos y trazables, y lo dejamos registrado con folio público.</p>
+      <div class="hero-stat-counter" id="hero-stat-counter" style="display:none;" aria-live="polite">
+        <svg class="hero-stat-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4a3 3 0 0 0 3 4"/><path d="M17 5h3a3 3 0 0 1-3 4"/></svg>
+        <span><span class="hero-stat-num" id="hero-stat-num">0</span> <span class="hero-stat-lbl">piezas certificadas</span></span>
+      </div>
       <div class="card tag-notch verify-card" style="max-width:480px;margin-top:16px;">
         <div class="verify-card-head">
           <span class="verify-icon">
@@ -2545,16 +2632,16 @@
           <label for="s-modelo">Modelo</label>
           <input id="s-modelo" placeholder="VW Sedán - Policía Federal" oninput="updateSolicitudProgress()">
           <label for="s-anio">Año aproximado</label>
-          <input id="s-anio" placeholder="1979">
+          <input id="s-anio" placeholder="1979" oninput="saveSolicitudDraft()">
           <p class="wiz-field-note">No necesitas certeza total — un año aproximado nos ayuda a ubicar la época y el molde correcto.</p>
           <div class="row">
             <div style="flex:1;"><label for="s-origen">Origen que crees que tiene</label>
-              <select id="s-origen"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select>
+              <select id="s-origen" onchange="saveSolicitudDraft()"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select>
             </div>
-            <div style="flex:1;"><label for="s-color">Color</label><input id="s-color" placeholder="Ej. verde bandera"></div>
+            <div style="flex:1;"><label for="s-color">Color</label><input id="s-color" placeholder="Ej. verde bandera" oninput="saveSolicitudDraft()"></div>
           </div>
           <label for="s-desc">Descripción / estado a simple vista</label>
-          <textarea id="s-desc" rows="3" placeholder="Color, si tiene caja, desgaste visible, etc."></textarea>
+          <textarea id="s-desc" rows="3" placeholder="Color, si tiene caja, desgaste visible, etc." oninput="saveSolicitudDraft()"></textarea>
           <p class="wiz-field-note">Menciona lo que se note a simple vista: caja, desgaste, óxido, piezas faltantes, repintes. Entre más detalle, mejor anticipamos el peritaje.</p>
         </div>
 
@@ -2648,6 +2735,11 @@
           <h3>Revisa tu solicitud antes de enviarla</h3>
           <p class="wiz-step-help">Verifica que todo esté correcto. Puedes volver a cualquier paso para editarlo.</p>
           <div id="s-review-body" class="wiz-review"></div>
+          <div class="wiz-recaptcha-block">
+            <label class="wiz-sr-label" id="s-recaptcha-label">Verificación anti-spam</label>
+            <div id="s-recaptcha"></div>
+            <p class="wiz-field-note" id="s-recaptcha-note">Marca la casilla para confirmar que no eres un robot antes de enviar tu solicitud.</p>
+          </div>
         </div>
 
       </div>
@@ -2731,6 +2823,15 @@
           </div>
           <button class="btn ghost small" onclick="adminLogout()">Cerrar sesión</button>
         </div>
+      </div>
+
+      <div class="admin-global-search" id="admin-global-search">
+        <div class="ags-input-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="admin-search-input" placeholder="Buscar por folio, nombre, teléfono o modelo…" autocomplete="off" oninput="handleAdminSearch(this.value)" onkeydown="handleAdminSearchKeydown(event)" aria-label="Buscador global del panel">
+          <button type="button" class="ags-clear" id="admin-search-clear" style="display:none;" onclick="clearAdminSearch()" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="ags-results" id="admin-search-results"></div>
       </div>
 
       <div class="admin-shell card" style="padding:0;overflow:hidden;">
@@ -3042,6 +3143,98 @@
   </section>
 </div>
 
+<div class="view" id="view-terminos">
+  <section>
+    <h2>Términos y condiciones</h2>
+    <div class="card legal-draft-note">
+      <p><strong>⚠️ Documento de referencia — pendiente de revisión legal.</strong> Este texto es una plantilla generada para orientar la estructura de los Términos y Condiciones del sitio. Antes de publicarlo o hacerlo vinculante, debe ser revisado y validado por un abogado especializado en comercio electrónico y protección al consumidor en México, quien deberá adaptarlo a la operación real del negocio, sus políticas específicas de precios, reembolsos y responsabilidad, y al marco legal vigente (incluyendo la Ley Federal de Protección al Consumidor y demás disposiciones aplicables).</p>
+    </div>
+
+    <div class="legal-doc">
+      <p class="legal-updated">Última actualización: 26 de agosto de 2026</p>
+
+      <h3>1. Quiénes somos</h3>
+      <p>Laboratorio HV México ("el laboratorio", "nosotros") es un laboratorio independiente de certificación y peritaje de piezas de colección vintage (Hot Wheels Vintage, CIPSA, Bólidos Lilí Ledy y Aurimat), con sede física en Ciudad de México. No estamos afiliados, patrocinados ni respaldados por Mattel, Inc., Hot Wheels® ni por ninguna de las marcas originales de las piezas que evaluamos. Nuestros dictámenes constituyen una opinión pericial e independiente sobre la autenticidad y el estado de conservación de una pieza, con base en criterios técnicos propios.</p>
+
+      <h3>2. Naturaleza del servicio</h3>
+      <p>El servicio que ofrecemos es un peritaje o validación de autenticidad y estado de conservación de piezas de colección. El resultado se entrega como un dictamen, una calificación numérica (escala 0 a 10) y, cuando aplica, un folio único verificable en línea y un certificado físico. Este dictamen <strong>no constituye un avalúo comercial, una garantía de valor de reventa, ni una tasación financiera</strong> de la pieza. El valor de mercado de una pieza coleccionable puede variar por factores ajenos a nuestro dictamen (oferta y demanda, tendencias del coleccionismo, condiciones de venta, entre otros).</p>
+
+      <h3>3. Cómo funciona el proceso de solicitud</h3>
+      <p>El cliente elige uno de los paquetes disponibles (validación en línea, peritaje físico con certificado, o peritaje premium con encapsulado) a través del formulario de solicitud del sitio. Según el paquete, el proceso puede completarse de forma totalmente en línea (mediante fotografías y video de la pieza) o de forma presencial, trayendo físicamente la pieza al laboratorio o enviándola por paquetería. Los tiempos de entrega, precios y modalidades vigentes se muestran en la sección de Paquetes del sitio y se confirman al momento de generar la solicitud; están sujetos a cambio sin previo aviso para solicitudes futuras, pero no para solicitudes ya confirmadas y pagadas.</p>
+
+      <h3>4. Custodia física de la pieza</h3>
+      <p>Cuando el cliente entrega su pieza físicamente (en persona o por paquetería), el laboratorio establece una cadena de custodia desde la recepción hasta la devolución, incluyendo registro fotográfico de entrada. El laboratorio pone cuidado razonable en el manejo de cada pieza, pero no es responsable por desgaste, daño o pérdida ocurridos por causas de fuerza mayor, caso fortuito, o durante el tránsito de paquetería contratado por el cliente o por el laboratorio a solicitud del cliente, salvo negligencia comprobada del laboratorio. Cualquier incidente durante la custodia se notificará al cliente a la brevedad y se buscará una solución proporcional al caso.</p>
+
+      <h3>5. Resultados del dictamen y calificación</h3>
+      <p>La calificación asignada a cada pieza es resultado de un proceso técnico documentado (ver la sección de Metodología del sitio) y aplicado de manera consistente. El cliente puede solicitar una aclaración sobre los criterios usados en su dictamen, pero la calificación otorgada no está sujeta a negociación por simple desacuerdo subjetivo. Si el cliente considera que existió un error material (de identificación, de datos capturados o de cálculo), puede solicitar una revisión dentro de los 15 días naturales siguientes a la entrega del dictamen.</p>
+
+      <h3>6. Pagos, cancelaciones y reembolsos</h3>
+      <p>El pago del servicio se realiza según las instrucciones compartidas al confirmar la solicitud (transferencia bancaria u otro medio que el laboratorio indique). Si una pieza es rechazada por no ser apta para certificación antes de iniciar el peritaje, el laboratorio informará las condiciones de reembolso aplicables al caso. Una vez iniciado el proceso de peritaje, el costo del servicio ya prestado (evaluación técnica) no es reembolsable, con independencia del resultado del dictamen. Los costos de envío de paquetería son adicionales al costo del servicio y no son reembolsables una vez realizado el envío.</p>
+
+      <h3>7. Publicación en la Biblioteca de piezas certificadas</h3>
+      <p>Las piezas que alcanzan la calificación mínima pueden ser publicadas, con fines de exhibición e informativos, en la Biblioteca pública del sitio (fotografías, modelo, categoría y calificación, sin datos personales del propietario). El cliente puede solicitar en cualquier momento que su pieza sea excluida de esta biblioteca pública escribiendo a los medios de contacto indicados en el Aviso de Privacidad.</p>
+
+      <h3>8. Propiedad intelectual</h3>
+      <p>El contenido del sitio (textos, diseño, metodología, sellos, logotipos y certificados) es propiedad de Laboratorio HV México o se usa bajo licencia. Las fotografías de la pieza que el cliente sube al formulario siguen siendo propiedad del cliente; al enviarlas, el cliente otorga al laboratorio una licencia no exclusiva para usarlas en la operación del servicio (incluyendo, en su caso, la publicación descrita en el punto 7).</p>
+
+      <h3>9. Limitación de responsabilidad</h3>
+      <p>En la máxima medida permitida por la ley aplicable, la responsabilidad total del laboratorio frente al cliente por cualquier reclamación derivada del servicio se limita al monto efectivamente pagado por dicho servicio. El laboratorio no es responsable por decisiones de compra, venta o inversión que el cliente tome con base en el dictamen emitido.</p>
+
+      <h3>10. Modificaciones a estos términos</h3>
+      <p>Estos términos pueden actualizarse periódicamente. Los cambios aplican a las solicitudes realizadas después de la publicación de la versión actualizada; las solicitudes ya confirmadas se rigen por los términos vigentes al momento de su confirmación.</p>
+
+      <h3>11. Legislación aplicable</h3>
+      <p>Estos términos se rigen por las leyes aplicables en los Estados Unidos Mexicanos. Para cualquier controversia, las partes se someten a los tribunales competentes de la Ciudad de México, renunciando a cualquier otro fuero que pudiera corresponderles por razón de su domicilio presente o futuro.</p>
+
+      <h3>12. Contacto</h3>
+      <p>Dudas sobre estos términos pueden dirigirse por WhatsApp o por los demás medios de contacto listados en el sitio.</p>
+    </div>
+  </section>
+</div>
+
+<div class="view" id="view-privacidad">
+  <section>
+    <h2>Aviso de privacidad</h2>
+    <div class="card legal-draft-note">
+      <p><strong>⚠️ Documento de referencia — pendiente de revisión legal.</strong> Este texto es una plantilla generada para orientar la estructura de un Aviso de Privacidad conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP). Antes de publicarlo, debe ser revisado y validado por un abogado especializado en protección de datos personales en México, quien deberá verificar que refleje con exactitud las prácticas reales de tratamiento de datos del negocio y los requisitos vigentes ante el INAI o la autoridad que corresponda.</p>
+    </div>
+
+    <div class="legal-doc">
+      <p class="legal-updated">Última actualización: 26 de agosto de 2026</p>
+
+      <h3>1. Responsable del tratamiento de tus datos</h3>
+      <p>Laboratorio HV México, con sede física en Ciudad de México, es responsable del uso y protección de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su Reglamento.</p>
+
+      <h3>2. Datos personales que recabamos</h3>
+      <p>Para prestar nuestro servicio de certificación recabamos: nombre completo, teléfono de contacto, y —cuando aplica— dirección para envío o devolución de tu pieza por paquetería. También recibimos las fotografías y, en su caso, videos que nos compartes de tu pieza como evidencia para el peritaje. No solicitamos ni almacenamos datos de tarjetas bancarias en nuestro sitio; los pagos por transferencia se coordinan directamente con los datos bancarios que te compartimos por WhatsApp, y esa comunicación queda fuera de este sitio.</p>
+
+      <h3>3. Para qué usamos tus datos (finalidades)</h3>
+      <p><strong>Finalidades primarias</strong> (necesarias para el servicio): identificarte y dar seguimiento a tu solicitud, contactarte para agendar citas o coordinar envíos, emitir tu dictamen y folio, y permitirte consultar el estatus de tu pieza en la sección "Mi historial". <strong>Finalidades secundarias</strong> (no necesarias, opcionales): enviarte promociones o novedades del laboratorio. Puedes oponerte a las finalidades secundarias en cualquier momento sin que esto afecte el servicio contratado, escribiendo a los medios de contacto del punto 8.</p>
+
+      <h3>4. Cookies y almacenamiento local del navegador</h3>
+      <p>Este sitio usa almacenamiento local del navegador (localStorage / sessionStorage) para funciones como recordar que ya viste la presentación inicial, guardar tu preferencia de tema claro/oscuro, y —si cierras el formulario de solicitud a la mitad— ofrecerte continuar donde te quedaste la próxima vez que entres desde el mismo navegador. Esta información se guarda únicamente en tu propio dispositivo, no se comparte con terceros y puedes borrarla en cualquier momento desde la configuración de tu navegador.</p>
+
+      <h3>5. Con quién compartimos tus datos (transferencias)</h3>
+      <p>Usamos proveedores de servicios que actúan como encargados del tratamiento en nuestro nombre: Google Firebase / Google Cloud (almacenamiento seguro de la información de tu solicitud y tus folios), Google reCAPTCHA (para distinguir solicitudes reales de envíos automatizados o spam) y WhatsApp/Meta (para comunicarnos contigo cuando tú inicias el contacto por ese medio). No vendemos ni rentamos tus datos personales a terceros con fines comerciales.</p>
+
+      <h3>6. Tus derechos ARCO</h3>
+      <p>Tienes derecho a Acceder a tus datos personales, Rectificarlos si son inexactos, Cancelarlos cuando consideres que no se requieren para alguna de las finalidades señaladas, y Oponerte al uso de los mismos para fines específicos (derechos ARCO). También puedes revocar el consentimiento que en su caso hayas otorgado. Para ejercer cualquiera de estos derechos, escríbenos por los medios de contacto del punto 8, indicando tu nombre, el derecho que deseas ejercer y una identificación que nos permita verificar que eres tú (o tu representante legal).</p>
+
+      <h3>7. Medidas de seguridad</h3>
+      <p>Implementamos medidas administrativas y técnicas razonables para proteger tus datos personales contra daño, pérdida, alteración, destrucción o uso, acceso o tratamiento no autorizado, incluyendo el uso de infraestructura de Google Firebase con acceso restringido únicamente al personal autorizado del laboratorio.</p>
+
+      <h3>8. Menores de edad</h3>
+      <p>Este es un servicio de pago dirigido a personas mayores de edad. Si eres menor de edad, te pedimos usar este servicio únicamente con la supervisión y el consentimiento de tu padre, madre o tutor legal.</p>
+
+      <h3>9. Cambios a este aviso de privacidad</h3>
+      <p>Podemos actualizar este aviso de privacidad periódicamente. Cualquier cambio relevante se publicará en esta misma página con su fecha de actualización.</p>
+
+      <h3>10. Contacto</h3>
+      <p>Si tienes dudas sobre este aviso de privacidad o quieres ejercer tus derechos ARCO, contáctanos por WhatsApp o por los demás medios listados en el sitio.</p>
+    </div>
+  </section>
+</div>
+
 </div>
 
 <div class="pres-stage" id="pres-stage">
@@ -3064,11 +3257,16 @@
   <div class="wrap" style="text-align:center;">
     <img class="hv-logo lg" alt="Laboratorio HV México" style="margin:0 auto 16px;">
     <div class="footer-social">
-      <a href="https://www.facebook.com/share/p/17V72Zp4iw/" target="_blank" rel="noopener" title="Facebook"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></a>
+      <a href="https://www.facebook.com/share/p/17V72Zp4iw/" target="_blank" rel="noopener" title="Facebook" style="background:#1877F2;"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></a>
       <a href="#" id="footer-whatsapp" target="_blank" rel="noopener" title="WhatsApp" style="background:#25D366;"><svg viewBox="0 0 32 32" fill="#fff"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg></a>
     </div>
     <p style="max-width:600px;margin:0 auto;text-align:center;"><img class="mx-flag sm" src="mx-flag.jpg" alt="Bandera de México"> Laboratorio HV México — laboratorio independiente de coleccionismo, con sede física en Ciudad de México. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
     <p style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--sage-dim);">Algunos elementos gráficos de este sitio (como los sellos oficiales del laboratorio) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
+    <p class="footer-legal-links" style="margin:14px 0 0;font-size:12px;">
+      <button type="button" onclick="go('terminos')" class="footer-legal-link">Términos y condiciones</button>
+      <span aria-hidden="true">·</span>
+      <button type="button" onclick="go('privacidad')" class="footer-legal-link">Aviso de privacidad</button>
+    </p>
     <button data-v="admin" onclick="go('admin')" style="background:none;border:none;cursor:pointer;color:var(--sage-dim);opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
   </div>
 </footer>
@@ -3088,6 +3286,26 @@ const FIREBASE_CONFIG = {
   appId: "1:663595953603:web:9d006e2913419464e5e176"
 };
 const FIREBASE_READY = FIREBASE_CONFIG.apiKey !== "TU_API_KEY";
+
+// ============================================================
+// reCAPTCHA v2 (casilla "No soy un robot") en el paso final del formulario
+// de solicitud. ⚠️ IMPORTANTE — ANTES DE PUBLICAR EL SITIO: la clave de
+// abajo es la clave de PRUEBA oficial de Google (documentada en
+// https://developers.google.com/recaptcha/docs/faq) — deja pasar SIEMPRE
+// a cualquiera y el widget muestra una advertencia de "solo para pruebas".
+// No filtra spam real. Para protección real:
+//   1. Crea tus propias claves en https://www.google.com/recaptcha/admin
+//      (elige reCAPTCHA v2 → "Casilla de verificación 'No soy un robot'").
+//   2. Reemplaza RECAPTCHA_SITE_KEY aquí con tu Site Key.
+//   3. Guarda tu Secret Key para validar el token del lado del servidor —
+//      este sitio es 100% cliente (sin backend propio), así que la
+//      verificación aquí solo bloquea el envío en el navegador; un bot muy
+//      sofisticado podría saltarla. Para bloquearlo también del lado del
+//      servidor, se necesitaría una Cloud Function (u otro backend) que
+//      llame a la API "siteverify" de Google con tu Secret Key antes de
+//      aceptar la solicitud — no incluida en este entregable.
+// ============================================================
+const RECAPTCHA_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
 // ============================================================
 // DATOS BANCARIOS PARA COBRO DE ENVÍOS — EDITAR AQUÍ cuando se tengan los
@@ -3172,6 +3390,42 @@ const LOGO_SRC = "logo.png";
 function applyLogos(){
   document.querySelectorAll('img.hv-logo').forEach(img => { img.src = LOGO_SRC; });
 }
+
+// ============================================================
+// CONTADOR EN VIVO DE PIEZAS CERTIFICADAS — estadística del inicio
+// calculada desde los folios reales guardados (no un número fijo).
+// ============================================================
+let HERO_STAT_LAST_COUNT = 0;
+function animateHeroStatCounter(target){
+  const el = document.getElementById('hero-stat-num');
+  if(!el) return;
+  const from = HERO_STAT_LAST_COUNT;
+  if(from === target){ el.textContent = target.toLocaleString('es-MX'); return; }
+  const dur = 900;
+  const start = performance.now();
+  function step(now){
+    const p = Math.min(1, (now - start) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = Math.round(from + (target - from) * eased);
+    el.textContent = val.toLocaleString('es-MX');
+    if(p < 1) requestAnimationFrame(step);
+    else HERO_STAT_LAST_COUNT = target;
+  }
+  requestAnimationFrame(step);
+}
+async function loadHeroStatCounter(){
+  const box = document.getElementById('hero-stat-counter');
+  if(!box || !FIREBASE_READY) return;
+  try{
+    const fol = await HVStorage.list('folio:', true);
+    const n = (fol.keys || []).length;
+    if(n <= 0) return;
+    box.style.display = 'inline-flex';
+    animateHeroStatCounter(n);
+  }catch(e){ /* si falla, el contador simplemente no se muestra */ }
+}
+document.addEventListener('DOMContentLoaded', loadHeroStatCounter);
+setInterval(loadHeroStatCounter, 5 * 60 * 1000);
 
 // ============================================================
 // PWA — instalación como app + service worker (offline básico)
@@ -4020,6 +4274,7 @@ function wizPkgSelectSpeed(pkg, tier, btnEl, evt){
   }
   // Si ya estábamos en la revisión final, refleja el nuevo costo/tiempo ahí también.
   if(wizCurrentStep === 'revision') renderWizardReview();
+  saveSolicitudDraft();
 }
 
 function wizPkgSpeedResetUI(){
@@ -4345,6 +4600,11 @@ const WIZARD_STEP_LABELS = {
 };
 let wizCurrentStep = 'paquete';
 let wizPkgChosen = false;
+// Evita que la inicialización del wizard al cargar la página (más abajo,
+// onPackageChange() + wizGoToStep('paquete')) borre por accidente un
+// borrador real guardado en una visita anterior — solo empezamos a guardar
+// borradores después de que esa inicialización ya terminó.
+let wizPageInitDone = false;
 let SOLICITUD_FOTOS_DATA = [];
 const SOLICITUD_FOTOS_MAX = 4;
 
@@ -4366,6 +4626,7 @@ function isWizardStepValid(stepId){
       const direccionOk = vuelta !== 'envio' || !!document.getElementById('s-envio-direccion').value.trim();
       return citaOk && direccionOk;
     }
+    case 'revision': return recaptchaCompleted();
     default: return true;
   }
 }
@@ -4396,6 +4657,7 @@ function wizGoToStep(stepId, direction){
   if(stepId === 'revision') renderWizardReview();
   updateWizardProgress();
   updateWizardNavButtons();
+  saveSolicitudDraft();
   const card = document.getElementById('s-wizard');
   if(card && direction) card.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -4443,6 +4705,7 @@ function updateWizardNavButtons(){
 function updateSolicitudProgress(){
   updateWizardNavButtons();
   updateWizardProgress();
+  saveSolicitudDraft();
 }
 
 function renderWizardReview(){
@@ -4576,6 +4839,177 @@ function removeSolicitudFoto(i){
   if(status) status.textContent = SOLICITUD_FOTOS_DATA.length ? `${SOLICITUD_FOTOS_DATA.length} de ${SOLICITUD_FOTOS_MAX} foto(s) lista(s).` : 'Aún no subes fotos.';
 }
 
+// ============================================================
+// RECORDATORIO DE SOLICITUD A MEDIAS — guarda el progreso del wizard en
+// el navegador del cliente (localStorage, nada se manda al laboratorio
+// todavía). Si cierra la pestaña y vuelve después, le avisamos con un
+// banner para que retome exactamente donde se quedó.
+// ============================================================
+const SOLICITUD_DRAFT_KEY = 'hv_solicitud_draft_v1';
+const SOLICITUD_DRAFT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 días
+let solicitudDraftRestoring = false;
+
+function solicitudDraftFieldIds(){
+  const wrap = document.getElementById('wiz-steps-wrap');
+  if(!wrap) return [];
+  return Array.from(wrap.querySelectorAll('input[id], select[id], textarea[id]'))
+    .filter(el => el.type !== 'file' && el.type !== 'hidden' || ['s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-fecha','s-hora'].includes(el.id))
+    .map(el => el.id);
+}
+
+function saveSolicitudDraft(){
+  if(solicitudDraftRestoring || !wizPageInitDone) return;
+  try{
+    const fields = {};
+    solicitudDraftFieldIds().forEach(id => { const el = document.getElementById(id); if(el) fields[id] = el.value; });
+    const meaningful = ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-envio-direccion']
+      .some(id => (fields[id]||'').trim());
+    if(!wizPkgChosen && !meaningful){ clearSolicitudDraft(); return; }
+    localStorage.setItem(SOLICITUD_DRAFT_KEY, JSON.stringify({
+      fields, step: wizCurrentStep, wizPkgChosen,
+      tierByPkg: WIZ_TIER_BY_PKG, ts: Date.now()
+    }));
+  }catch(e){ /* localStorage puede fallar (modo privado, cuota llena) — no es crítico */ }
+}
+
+function clearSolicitudDraft(){
+  try{ localStorage.removeItem(SOLICITUD_DRAFT_KEY); }catch(e){}
+}
+
+function getSolicitudDraft(){
+  try{
+    const raw = localStorage.getItem(SOLICITUD_DRAFT_KEY);
+    if(!raw) return null;
+    const draft = JSON.parse(raw);
+    if(!draft || !draft.ts || (Date.now() - draft.ts) > SOLICITUD_DRAFT_MAX_AGE_MS){ clearSolicitudDraft(); return null; }
+    return draft;
+  }catch(e){ return null; }
+}
+
+function solicitudDraftDateLabel(ts){
+  try{ return new Date(ts).toLocaleDateString('es-MX', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}); }
+  catch(e){ return ''; }
+}
+
+function showSolicitudDraftBanner(){
+  const draft = getSolicitudDraft();
+  const bar = document.getElementById('solicitud-draft-banner');
+  if(!draft || !bar) return;
+  const label = document.getElementById('solicitud-draft-banner-date');
+  if(label) label.textContent = solicitudDraftDateLabel(draft.ts);
+  bar.style.display = 'block';
+}
+
+function resumeSolicitudDraft(){
+  const draft = getSolicitudDraft();
+  const bar = document.getElementById('solicitud-draft-banner');
+  if(bar) bar.style.display = 'none';
+  if(!draft) return;
+  go('solicitar');
+  setTimeout(() => restoreSolicitudDraft(draft), 80);
+}
+
+function discardSolicitudDraft(){
+  clearSolicitudDraft();
+  const bar = document.getElementById('solicitud-draft-banner');
+  if(bar) bar.style.display = 'none';
+  toast('Borrador descartado.');
+}
+
+function restoreSolicitudDraft(draft){
+  solicitudDraftRestoring = true;
+  try{
+    const f = draft.fields || {};
+
+    if(draft.wizPkgChosen && f['s-nivel']) wizSelectPackage(f['s-nivel'], {skipAdvance:true});
+
+    if(f['s-modo-digital']){
+      const modoBtn = document.querySelector(`.pkg-speed-chip[data-modo="${f['s-modo-digital']}"]`);
+      if(modoBtn) wizSetModoDigital(f['s-modo-digital'], modoBtn, null);
+    }
+    if(draft.tierByPkg){
+      Object.keys(draft.tierByPkg).forEach(pkg => {
+        const tier = draft.tierByPkg[pkg];
+        const btn = document.querySelector(`.wiz-pkg-card[data-pkg="${pkg}"] .pkg-speed-chip[data-tier="${tier}"]`);
+        if(btn) wizPkgSelectSpeed(pkg, tier, btn, null);
+      });
+    }
+
+    const handled = new Set(['s-nivel','s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-fecha','s-hora']);
+    Object.keys(f).forEach(id => {
+      if(handled.has(id)) return;
+      const el = document.getElementById(id);
+      if(el) el.value = f[id];
+    });
+
+    const chipGroups = document.querySelectorAll('.entrega-chips');
+    if(f['s-entrega-ida'] && chipGroups[0]){
+      const btn = chipGroups[0].querySelector(`.entrega-chip[data-val="${f['s-entrega-ida']}"]`);
+      if(btn) wizSetEntregaIda(f['s-entrega-ida'], btn);
+    }
+    if(f['s-entrega-vuelta'] && chipGroups[1]){
+      const btn = chipGroups[1].querySelector(`.entrega-chip[data-val="${f['s-entrega-vuelta']}"]`);
+      if(btn) wizSetEntregaVuelta(f['s-entrega-vuelta'], btn);
+    }
+
+    if(f['s-fecha']){
+      const [y,m,d] = f['s-fecha'].split('-').map(Number);
+      if(y && m && d){
+        calSelectDay(y, m-1, d);
+        if(f['s-hora']) calSelectSlot(f['s-hora'], null);
+      }
+    }
+
+    updateWizardNavButtons();
+    updateWizardProgress();
+    wizGoToStep(draft.step || 'paquete');
+    toast('Continuamos donde te quedaste.');
+  }catch(e){ /* si algo falla al restaurar, mejor dejar el wizard limpio que a medias */ }
+  finally{
+    setTimeout(() => { solicitudDraftRestoring = false; }, 300);
+  }
+}
+
+// ============================================================
+// reCAPTCHA v2 — casilla "No soy un robot" en el paso final del wizard.
+// Se renderiza en modo explícito (no automático) para poder usar la misma
+// clave definida arriba en RECAPTCHA_SITE_KEY, en vez de repetirla en el
+// HTML. Ver la nota junto a RECAPTCHA_SITE_KEY sobre sus límites reales.
+// ============================================================
+let RECAPTCHA_WIDGET_ID = null;
+function onRecaptchaApiLoad(){
+  const box = document.getElementById('s-recaptcha');
+  if(!box || typeof grecaptcha === 'undefined') return;
+  try{
+    RECAPTCHA_WIDGET_ID = grecaptcha.render('s-recaptcha', {
+      sitekey: RECAPTCHA_SITE_KEY,
+      callback: onRecaptchaSuccess,
+      'expired-callback': onRecaptchaExpired
+    });
+  }catch(e){ /* si ya estaba renderizado o algo falló, no rompemos el resto del wizard */ }
+}
+function recaptchaCompleted(){
+  if(typeof grecaptcha === 'undefined' || RECAPTCHA_WIDGET_ID === null) return false;
+  try{ return !!grecaptcha.getResponse(RECAPTCHA_WIDGET_ID); }catch(e){ return false; }
+}
+function onRecaptchaSuccess(){ updateWizardNavButtons(); }
+function onRecaptchaExpired(){ updateWizardNavButtons(); toast('La verificación expiró — márcala de nuevo.'); }
+function resetRecaptcha(){
+  if(typeof grecaptcha !== 'undefined' && RECAPTCHA_WIDGET_ID !== null){
+    try{ grecaptcha.reset(RECAPTCHA_WIDGET_ID); }catch(e){}
+  }
+}
+// Si a los 6s el script de Google no cargó (bloqueador de anuncios, sin
+// internet, red que bloquea google.com), avisamos en vez de dejar el botón
+// de enviar deshabilitado sin explicación.
+setTimeout(() => {
+  const note = document.getElementById('s-recaptcha-note');
+  if(note && RECAPTCHA_WIDGET_ID === null){
+    note.textContent = 'No pudimos cargar la verificación de seguridad — revisa tu conexión o desactiva bloqueadores de anuncios para este sitio y recarga la página.';
+    note.style.color = 'var(--red)';
+  }
+}, 6000);
+
 function resetWizard(){
   document.getElementById('s-confirm').innerHTML = '';
   const wizCard = document.getElementById('s-wizard');
@@ -4598,6 +5032,7 @@ function resetWizard(){
   document.getElementById('s-envio-direccion').value = '';
   document.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
   calReset();
+  resetRecaptcha();
   onPackageChange();
   wizGoToStep('paquete');
   const view = document.getElementById('view-solicitar');
@@ -4605,6 +5040,11 @@ function resetWizard(){
 }
 
 async function submitSolicitud(){
+  if(!recaptchaCompleted()){
+    toast('Completa la verificación de seguridad antes de enviar.');
+    wizGoToStep('revision', 'back');
+    return;
+  }
   const nombre = document.getElementById('s-nombre').value.trim();
   const telefono = document.getElementById('s-telefono').value.trim();
   const modelo = document.getElementById('s-modelo').value.trim();
@@ -4743,6 +5183,8 @@ async function submitSolicitud(){
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
     ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion'].forEach(fid=>document.getElementById(fid).value='');
     SOLICITUD_FOTOS_DATA = [];
+    clearSolicitudDraft();
+    resetRecaptcha();
   }catch(e){
     toast('No se pudo enviar la solicitud, intenta de nuevo.');
   }
@@ -5303,12 +5745,13 @@ async function deletePieza(id){
 async function renderPiezasAdmin(){
   const box = document.getElementById('a-piezas-list');
   if(!box) return;
+  box.innerHTML = skeletonPiezaTilesHtml(4);
   const piezas = await getPiezas();
   box.innerHTML = piezas.length ? piezas.map(p => {
     const foto = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
     const n = (p.fotos||[]).length;
     return `
-    <div class="pieza-admin-item">
+    <div class="pieza-admin-item" data-sid="${escapeHtml(p.id)}">
       <img src="${escapeHtml(foto)}" alt="">
       <div class="cap">
         <strong>${escapeHtml(p.modelo)}</strong><br>
@@ -5326,6 +5769,8 @@ let BOOK_STATE = { mode:'index', categoria:null, allPiezas:[], piezas:[], detail
 
 async function openBook(){
   document.getElementById('hv-book').classList.add('open');
+  const indexBox = document.getElementById('hv-book-index');
+  if(indexBox) indexBox.innerHTML = skeletonBookIndexHtml(BOOK_CATEGORIES.length);
   setTimeout(async () => {
     document.getElementById('book-stage').classList.add('open');
     document.body.classList.add('book-open');
@@ -5864,6 +6309,8 @@ listenReviews();
 applyLogos();
 onPackageChange();
 wizGoToStep('paquete');
+wizPageInitDone = true;
+setTimeout(showSolicitudDraftBanner, 600);
 initDynamicUI();
 if(!FIREBASE_READY) document.getElementById('firebase-warning').style.display = 'block';
 document.getElementById('wa-float').href = waLink('Hola, quiero más información sobre la certificación de mi pieza.');
@@ -6091,6 +6538,59 @@ function parseFechaFolio(fecha){
   return { mm, yyyy };
 }
 
+// ============================================================
+// SKELETONS DE CARGA — placeholders animados que imitan la forma real de
+// cada lista mientras Firebase responde, para que el panel no se sienta
+// vacío ni el contenido "brinque" cuando por fin llegan los datos.
+// ============================================================
+function skeletonCardsHtml(n){
+  let html = '';
+  for(let i=0; i<(n||3); i++){
+    html += `
+    <div class="card skel-card" aria-hidden="true">
+      <div class="row" style="justify-content:space-between;">
+        <span class="skel-line" style="width:${44+((i*13)%20)}%;height:14px;"></span>
+        <span class="skel-line" style="width:64px;height:20px;border-radius:20px;"></span>
+      </div>
+      <span class="skel-line" style="width:60%;height:11px;margin-top:10px;"></span>
+      <span class="skel-line" style="width:32%;height:10px;margin-top:8px;"></span>
+    </div>`;
+  }
+  return html;
+}
+function skeletonRowsHtml(n){
+  let html = '';
+  for(let i=0; i<(n||3); i++){
+    html += `
+    <div class="skel-row" aria-hidden="true" style="padding:10px 0;border-bottom:1px solid var(--line);">
+      <div class="row" style="justify-content:space-between;">
+        <span class="skel-line" style="width:${100+((i*17)%40)}px;height:13px;"></span>
+        <span class="skel-line" style="width:58px;height:18px;border-radius:20px;"></span>
+      </div>
+      <span class="skel-line" style="width:50%;height:11px;margin-top:8px;"></span>
+    </div>`;
+  }
+  return html;
+}
+function skeletonPiezaTilesHtml(n){
+  let html = '';
+  for(let i=0; i<(n||6); i++){
+    html += `
+    <div class="pieza-admin-item skel-pieza-tile" aria-hidden="true">
+      <span class="skel-line" style="width:44px;height:44px;border-radius:6px;flex:none;"></span>
+      <div class="cap"><span class="skel-line" style="width:70%;height:12px;"></span><br><span class="skel-line" style="width:45%;height:10px;margin-top:6px;"></span></div>
+    </div>`;
+  }
+  return html;
+}
+function skeletonBookIndexHtml(n){
+  let html = '';
+  for(let i=0; i<(n||4); i++){
+    html += `<li aria-hidden="true"><span class="skel-line" style="width:16px;height:16px;"></span><span class="skel-line" style="width:${90+((i*11)%50)}px;height:13px;"></span></li>`;
+  }
+  return html;
+}
+
 // Agrupa una lista larga (solicitudes, historial…) en acordeones por mes/año
 // — así el panel no se convierte en un scroll interminable a medida que se
 // acumulan meses de datos. Solo el grupo más reciente empieza abierto; el
@@ -6179,10 +6679,153 @@ function adminGo(tab){
 }
 
 // ============================================================
+// BUSCADOR GLOBAL DEL ADMIN — un solo cuadro que busca a la vez en
+// solicitudes, folios/certificados y piezas de la Biblioteca, y salta
+// directo a la tarjeta encontrada (abriendo su pestaña y su acordeón de
+// mes si aplica).
+// ============================================================
+let ADMIN_SEARCH_RESULTS_FLAT = [];
+let ADMIN_SEARCH_ACTIVE_INDEX = -1;
+
+function normalizeSearchTxt(s){
+  return (s==null ? '' : String(s)).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function matchAdminSearch(fields, q){
+  return fields.some(v => normalizeSearchTxt(v).includes(q));
+}
+function matchSolicitudSearch(d, q){ return matchAdminSearch([d.modelo, d.nombre, d.telefono, d.id, d.nivel], q); }
+function matchFolioSearch(d, q){ return matchAdminSearch([d.folio, d.modelo, d.origen, d.color, d.anio], q); }
+function matchPiezaSearch(d, q){ return matchAdminSearch([d.modelo, d.categoria, d.folio, d.grado], q); }
+
+function adminSearchItemHtml(type, d, idx){
+  let title = '', sub = '', icon = '';
+  if(type === 'solicitud'){
+    title = d.modelo || 'Solicitud';
+    sub = [d.nombre, d.telefono, d.id].filter(Boolean).join(' · ');
+    icon = '📋';
+  } else if(type === 'folio'){
+    title = d.folio || 'Folio';
+    sub = [d.modelo, d.grado ? 'grado ' + d.grado : ''].filter(Boolean).join(' · ');
+    icon = '🏷️';
+  } else {
+    title = d.modelo || 'Pieza';
+    sub = [d.categoria ? categoriaLabel(d.categoria) : '', d.folio ? 'folio ' + d.folio : ''].filter(Boolean).join(' · ');
+    icon = '🚗';
+  }
+  return `<button type="button" class="ags-item" data-idx="${idx}" onmouseenter="setAdminSearchActive(${idx})" onclick="goToAdminSearchResult(${idx})">
+    <span class="ags-item-title">${icon} ${escapeHtml(title)}</span>
+    <span class="ags-item-sub">${escapeHtml(sub)}</span>
+  </button>`;
+}
+
+function handleAdminSearch(raw){
+  const box = document.getElementById('admin-search-results');
+  const clearBtn = document.getElementById('admin-search-clear');
+  if(clearBtn) clearBtn.style.display = raw ? 'flex' : 'none';
+  ADMIN_SEARCH_ACTIVE_INDEX = -1;
+  if(!box) return;
+  const q = normalizeSearchTxt(raw).trim();
+  if(q.length < 2){ box.style.display = 'none'; box.innerHTML = ''; ADMIN_SEARCH_RESULTS_FLAT = []; return; }
+
+  const groups = [
+    {label:'Solicitudes', type:'solicitud', items: CURRENT_SOLICITUDES.filter(d => matchSolicitudSearch(d, q)).slice(0,6)},
+    {label:'Folios y certificados', type:'folio', items: CURRENT_FOLIOS.filter(d => matchFolioSearch(d, q)).slice(0,6)},
+    {label:'Piezas de la Biblioteca', type:'pieza', items: (CURRENT_PIEZAS||[]).filter(d => matchPiezaSearch(d, q)).slice(0,6)}
+  ].filter(g => g.items.length);
+
+  ADMIN_SEARCH_RESULTS_FLAT = groups.flatMap(g => g.items.map(d => ({type:g.type, data:d})));
+
+  if(!ADMIN_SEARCH_RESULTS_FLAT.length){
+    box.innerHTML = `<div class="ags-empty">Sin resultados para "${escapeHtml(raw)}".</div>`;
+    box.style.display = 'block';
+    return;
+  }
+
+  let idx = 0;
+  box.innerHTML = groups.map(g => {
+    const itemsHtml = g.items.map(d => adminSearchItemHtml(g.type, d, idx++)).join('');
+    return `<div class="ags-group"><div class="ags-group-label">${g.label}</div>${itemsHtml}</div>`;
+  }).join('');
+  box.style.display = 'block';
+}
+
+function handleAdminSearchKeydown(e){
+  const box = document.getElementById('admin-search-results');
+  if(!box || box.style.display === 'none' || !ADMIN_SEARCH_RESULTS_FLAT.length) return;
+  if(e.key === 'ArrowDown'){ e.preventDefault(); setAdminSearchActive(Math.min(ADMIN_SEARCH_ACTIVE_INDEX + 1, ADMIN_SEARCH_RESULTS_FLAT.length - 1)); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); setAdminSearchActive(Math.max(ADMIN_SEARCH_ACTIVE_INDEX - 1, 0)); }
+  else if(e.key === 'Enter'){ e.preventDefault(); goToAdminSearchResult(ADMIN_SEARCH_ACTIVE_INDEX >= 0 ? ADMIN_SEARCH_ACTIVE_INDEX : 0); }
+  else if(e.key === 'Escape'){ clearAdminSearch(); }
+}
+
+function setAdminSearchActive(idx){
+  ADMIN_SEARCH_ACTIVE_INDEX = idx;
+  document.querySelectorAll('#admin-search-results .ags-item').forEach(el => {
+    el.classList.toggle('active', Number(el.dataset.idx) === idx);
+  });
+  const activeEl = document.querySelector(`#admin-search-results .ags-item[data-idx="${idx}"]`);
+  if(activeEl) activeEl.scrollIntoView({block:'nearest'});
+}
+
+function clearAdminSearch(){
+  const input = document.getElementById('admin-search-input');
+  const box = document.getElementById('admin-search-results');
+  const clearBtn = document.getElementById('admin-search-clear');
+  if(input) input.value = '';
+  if(box){ box.style.display = 'none'; box.innerHTML = ''; }
+  if(clearBtn) clearBtn.style.display = 'none';
+  ADMIN_SEARCH_RESULTS_FLAT = [];
+  ADMIN_SEARCH_ACTIVE_INDEX = -1;
+}
+
+function highlightAdminResult(containerId, sid){
+  if(sid == null || sid === '') return;
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  let target;
+  try{ target = container.querySelector(`[data-sid="${CSS.escape(String(sid))}"]`); }catch(e){ return; }
+  if(!target) return;
+  const details = target.closest('details');
+  if(details && !details.open) details.open = true;
+  target.scrollIntoView({behavior:'smooth', block:'center'});
+  target.classList.remove('ags-highlight');
+  void target.offsetWidth;
+  target.classList.add('ags-highlight');
+  setTimeout(() => target.classList.remove('ags-highlight'), 1900);
+}
+
+function goToAdminSearchResult(idx){
+  const res = ADMIN_SEARCH_RESULTS_FLAT[idx];
+  if(!res) return;
+  clearAdminSearch();
+  if(res.type === 'solicitud'){
+    adminGo('solicitudes');
+    filterSolicitudes('todas');
+    setTimeout(() => highlightAdminResult('a-solicitudes', res.data.id), 80);
+  } else if(res.type === 'folio'){
+    adminGo('certificados');
+    setTimeout(() => highlightAdminResult('a-folios', res.data.folio), 80);
+  } else if(res.type === 'pieza'){
+    adminGo('galeria');
+    renderPiezasAdmin().then(() => setTimeout(() => highlightAdminResult('a-piezas-list', res.data.id), 80));
+  }
+}
+
+document.addEventListener('click', function(e){
+  const wrap = document.getElementById('admin-global-search');
+  const box = document.getElementById('admin-search-results');
+  if(wrap && box && !wrap.contains(e.target)) box.style.display = 'none';
+});
+
+// ============================================================
 // SOLICITUDES — lista filtrable (en línea / presencial / pendientes)
 // ============================================================
 let CURRENT_SOLICITUDES = [];
 let SOLICITUDES_FILTER = 'todas';
+// Cachés para el buscador global del admin — se refrescan junto con
+// refreshAdminLists() para no golpear Firestore en cada tecla escrita.
+let CURRENT_FOLIOS = [];
+let CURRENT_PIEZAS = [];
 
 function esDigital(paquete){ return paquete === 'digital'; }
 
@@ -6258,7 +6901,7 @@ function solicitudCardHtml(d){
   const citaTxt = ((!esDigital(d.paquete) || digitalPresencial) && d.entregaIda !== 'envio' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
   const envioBadge = envioBadgeHtml(d);
   return `
-      <div class="card" style="margin-bottom:10px;">
+      <div class="card" style="margin-bottom:10px;" data-sid="${escapeHtml(d.id)}">
         <div class="row" style="justify-content:space-between;">
           <strong style="font-size:14px;">${escapeHtml(d.modelo)}</strong>
           <span class="row" style="gap:6px;">${tipo}<span class="pill ${d.estado==='completado'?'completado':'pendiente'}">${escapeHtml(enValidacion?'en validación':d.estado)}</span></span>
@@ -6716,7 +7359,7 @@ async function refreshValidacionList(){
   document.getElementById('validacion-detail').style.display = 'none';
   document.getElementById('validacion-list-wrap').style.display = 'block';
   if(!listBox) return;
-  listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
+  listBox.innerHTML = skeletonCardsHtml(3);
   try{
     const list = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
     const items = [];
@@ -7928,7 +8571,7 @@ async function cleanupOldData(){
 
 function folioCardHtml(d){
   return `
-      <div style="padding:10px 0;border-bottom:1px solid var(--line);">
+      <div style="padding:10px 0;border-bottom:1px solid var(--line);" data-sid="${escapeHtml(d.folio)}">
         <div class="row" style="justify-content:space-between;">
           <span class="mono" style="font-size:13px;color:var(--brass);">${escapeHtml(d.folio)}</span>
           <span class="pill ${pillClass(d.estado)}">${escapeHtml(d.estado)}</span>
@@ -8041,7 +8684,7 @@ async function refreshHistorial(){
   const listBox = document.getElementById('historial-list');
   const statsBox = document.getElementById('historial-stats');
   if(!listBox) return;
-  listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
+  listBox.innerHTML = skeletonRowsHtml(4);
   try{
     const items = [];
     const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
@@ -8143,9 +8786,9 @@ async function refreshAdminLists(){
   const dashBox = document.getElementById('dash-actividad');
   const citasBox = document.getElementById('dash-citas');
   if(!solBox) return;
-  solBox.innerHTML = 'Cargando…';
-  if(solMiniBox) solMiniBox.innerHTML = 'Cargando…';
-  folBox.innerHTML = 'Cargando…';
+  solBox.innerHTML = skeletonCardsHtml(3);
+  if(solMiniBox) solMiniBox.innerHTML = skeletonCardsHtml(2);
+  folBox.innerHTML = skeletonRowsHtml(3);
 
   let solItems = [];
   try{
@@ -8168,8 +8811,11 @@ async function refreshAdminLists(){
       try{ const r = await HVStorage.get(k, true); folItems.push(JSON.parse(r.value)); }catch(e){}
     }
     folItems.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
+    CURRENT_FOLIOS = folItems;
     folBox.innerHTML = folItems.length ? folItems.map(folioCardHtml).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
   }catch(e){ folBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar los folios.</p>'; }
+
+  try{ CURRENT_PIEZAS = await getPiezas(); }catch(e){ CURRENT_PIEZAS = []; }
 
   if(dashBox){
     const actividad = [
