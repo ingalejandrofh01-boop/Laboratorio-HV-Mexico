@@ -96,9 +96,10 @@
   img.hv-logo.xl{height:110px;}
   header{position:sticky;top:0;background:var(--paper);z-index:50;border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease;}
   .navbar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px 24px;max-width:1080px;margin:0 auto;text-align:center;}
-  .brand{display:flex;align-items:center;gap:14px;cursor:pointer;}
-  .brand .brand-name{font-family:'Fraunces',serif;font-size:22px;letter-spacing:.01em;color:var(--ink);line-height:1.15;}
-  .brand .tagline{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.07em;color:var(--sage);text-transform:uppercase;margin-top:3px;}
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand .hv-logo{cursor:pointer;}
+  .brand .brand-name{font-family:'Fraunces',serif;font-size:22px;letter-spacing:.01em;color:var(--ink);line-height:1.15;cursor:pointer;}
+  .brand .tagline{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.07em;color:var(--sage);text-transform:uppercase;margin-top:3px;cursor:default;}
   #main-nav{display:flex;align-items:center;justify-content:center;gap:4px;background:var(--panel-2);border-radius:14px;padding:6px;flex-wrap:wrap;}
   #main-nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 16px;border-radius:9px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;}
   #main-nav button:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
@@ -534,6 +535,14 @@
   .admin-tab.active{display:block;}
   .admin-tab h3{font-family:'Fraunces',serif;font-weight:500;}
   .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:20px;}
+  .dash-charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px;}
+  .dash-chart-card{display:flex;flex-direction:column;}
+  .dash-chart-wrap{position:relative;height:220px;margin-top:8px;flex:1;}
+  .dash-chart-wrap-donut{height:200px;}
+  .dash-chart-empty{color:var(--sage);font-size:13px;text-align:center;padding:40px 10px;margin:0;}
+  .dash-chart-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
+  .dash-chart-center-label .pct{display:block;font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--ink);}
+  .dash-chart-center-label .txt{display:block;font-size:10.5px;color:var(--sage-dim);text-transform:uppercase;letter-spacing:.04em;}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 16px;text-align:center;min-width:0;transition:box-shadow .15s ease,border-color .15s ease;}
   .kpi:hover{box-shadow:0 4px 14px rgba(36,21,18,0.06);border-color:rgba(210,4,45,0.25);}
   .kpi .num{font-family:'IBM Plex Mono',monospace;font-size:26px;color:var(--red);margin:0;line-height:1;}
@@ -1484,6 +1493,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaApiLoad&render=explicit" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" defer></script>
 </head>
 <body>
 
@@ -1604,7 +1614,7 @@
 
 <header>
   <div class="navbar">
-    <div class="brand" onclick="go('inicio')">
+    <div class="brand" onclick="if(!event.target.closest('.tagline')) go('inicio');">
       <img class="hv-logo" src="logo.png" alt="Laboratorio HV México">
       <div>
         <span class="brand-name">Laboratorio HV México</span>
@@ -2623,6 +2633,9 @@
           <label for="s-telefono">Teléfono (lo usarás para consultar tu historial)</label>
           <input id="s-telefono" placeholder="55 0000 0000" oninput="updateSolicitudProgress()">
           <p class="wiz-field-note">Te contactamos por aquí y por WhatsApp. También lo vas a usar en "Mi historial" para consultar el estatus de tus folios — anótalo bien.</p>
+          <label for="s-ref-codigo">¿Alguien te recomendó Laboratorio HV? Código de referido (opcional)</label>
+          <input id="s-ref-codigo" placeholder="Ej. HV-A3F9K2" style="text-transform:uppercase;" oninput="saveSolicitudDraft()">
+          <p class="wiz-field-note" id="s-ref-codigo-note">Si un cliente te compartió su código, escríbelo aquí — así le damos las gracias con un descuento en su próxima certificación.</p>
         </div>
 
         <div class="wiz-step" data-step="pieza">
@@ -2871,6 +2884,38 @@
               <div class="kpi"><p class="num" id="stat-folios">—</p><p class="lbl">Folios emitidos</p></div>
               <div class="kpi"><p class="num" id="stat-ingresos">—</p><p class="lbl">Ingresos estimados</p></div>
             </div>
+            <div class="dash-charts-grid">
+              <div class="card dash-chart-card">
+                <h3 style="font-size:16px;">Ingresos por mes</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Últimos meses con folios emitidos.</p>
+                <div class="dash-chart-wrap"><canvas id="chart-ingresos"></canvas></div>
+                <p class="dash-chart-empty" id="chart-ingresos-empty" style="display:none;"></p>
+              </div>
+              <div class="card dash-chart-card">
+                <h3 style="font-size:16px;">Piezas por categoría</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Folios emitidos según su origen.</p>
+                <div class="dash-chart-wrap dash-chart-wrap-donut"><canvas id="chart-categorias"></canvas></div>
+                <p class="dash-chart-empty" id="chart-categorias-empty" style="display:none;"></p>
+              </div>
+              <div class="card dash-chart-card">
+                <h3 style="font-size:16px;">Tasa de aprobación</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas certificadas vs. no aprobadas.</p>
+                <div class="dash-chart-wrap dash-chart-wrap-donut">
+                  <canvas id="chart-aprobacion"></canvas>
+                  <div class="dash-chart-center-label" id="chart-aprobacion-label"></div>
+                </div>
+                <p class="dash-chart-empty" id="chart-aprobacion-empty" style="display:none;"></p>
+              </div>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;">Programa de referidos</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Cada cliente recibe un código para compartir. Si un amigo certifica su pieza usando ese código, quien lo compartió gana 10% de descuento en su próxima certificación — el sistema lo aplica solo cuando ya hay saldo disponible.</p>
+              <div class="kpi-grid" style="margin-bottom:0;">
+                <div class="kpi"><p class="num" id="stat-ref-codigos">—</p><p class="lbl">Códigos generados</p></div>
+                <div class="kpi"><p class="num" id="stat-ref-exitosos">—</p><p class="lbl">Referidos exitosos</p></div>
+                <div class="kpi"><p class="num" id="stat-ref-saldo">—</p><p class="lbl">Descuentos por usar</p></div>
+              </div>
+            </div>
             <div class="card">
               <h3 style="font-size:16px;">Próximas citas</h3>
               <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas presenciales agendadas — así sabes a quién esperar y cuándo.</p>
@@ -2920,6 +2965,7 @@
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
                 <input type="hidden" id="a-precio-final" value="">
+                <div id="a-ref-reward-note" style="display:none;border:none;background:rgba(221,174,92,0.12);border-left:3px solid var(--brass);padding:8px 10px;border-radius:6px;margin:0 0 12px;color:var(--ink);font-size:12.5px;"></div>
                 <label>Folio</label>
                 <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
                 <button type="button" class="btn ghost small" style="margin-top:8px;" onclick="suggestNextFolio()">Sugerir siguiente</button>
@@ -3350,7 +3396,7 @@ try{
 // avísame y activamos Storage (sigue siendo $0 dentro de su cuota gratis
 // de Blaze, solo se necesita vincular una tarjeta).
 
-const HV_COLLECTION_MAP = { solicitud: "solicitudes", folio: "folios", site: "site", proceso: "procesos" };
+const HV_COLLECTION_MAP = { solicitud: "solicitudes", folio: "folios", site: "site", proceso: "procesos", referido: "referidos" };
 function hvDocRef(key){
   const i = key.indexOf(":");
   const prefix = i > -1 ? key.slice(0, i) : key;
@@ -3413,9 +3459,27 @@ function animateHeroStatCounter(target){
   }
   requestAnimationFrame(step);
 }
+// El contador lee de "site:stats" (un solo documento pequeño) en vez de
+// listar toda la colección de folios: si tus reglas de seguridad de
+// Firestore no permiten "list"/consultas de la colección completa a
+// visitantes anónimos (solo lectura de un documento puntual, como al
+// verificar un folio individual), listar fallaría en silencio y el
+// contador nunca se mostraría. "site:stats" se mantiene sincronizado solo
+// desde el panel de administrador (ver refreshAdminLists), que sí tiene
+// permiso de listar folios por estar autenticado.
 async function loadHeroStatCounter(){
   const box = document.getElementById('hero-stat-counter');
   if(!box || !FIREBASE_READY) return;
+  try{
+    const stats = await HVStorage.get('site:stats', true);
+    const n = stats && stats.value ? (JSON.parse(stats.value).piezasCertificadas || 0) : 0;
+    if(n > 0){ box.style.display = 'inline-flex'; animateHeroStatCounter(n); return; }
+  }catch(e){ /* "site:stats" puede no existir todavía — seguimos con el respaldo de abajo */ }
+  // Respaldo: mientras ningún administrador ha entrado al panel desde esta
+  // actualización, "site:stats" no existe todavía. Intentamos listar los
+  // folios directamente — funciona si tus reglas de Firestore permiten
+  // lectura pública de la colección; si no, el contador simplemente
+  // aparecerá en cuanto un administrador abra el panel una vez.
   try{
     const fol = await HVStorage.list('folio:', true);
     const n = (fol.keys || []).length;
@@ -3482,6 +3546,7 @@ function applyTheme(theme){
 function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');
+  if(typeof refreshDashChartsTheme === 'function') setTimeout(refreshDashChartsTheme, 30);
 }
 
 // ============================================================
@@ -5039,6 +5104,112 @@ function resetWizard(){
   if(view) window.scrollTo({top: view.offsetTop - 90, behavior:'smooth'});
 }
 
+// ============================================================
+// PROGRAMA DE REFERIDOS
+// Cada cliente que manda una solicitud recibe un código propio para
+// compartir. Si un nuevo cliente escribe ese código en su solicitud y su
+// pieza llega a certificarse, quien compartió el código gana un crédito de
+// 10% de descuento — que se aplica automáticamente (sin que el admin haga
+// nada) la próxima vez que a ESE cliente se le emita un folio con precio.
+//
+// Todo esto vive en Firestore bajo el prefijo "referido:" (colección
+// "referidos", agregada a HV_COLLECTION_MAP arriba). Si el sitio ya tiene
+// reglas de seguridad de Firestore restringiendo qué colecciones puede
+// leer/escribir un visitante anónimo, es necesario agregar esta colección
+// nueva a esas reglas (igual que "solicitudes" y "folios") para que el
+// programa funcione — si no, estas funciones fallan en silencio (try/catch)
+// y el sitio sigue operando normal, solo sin el descuento automático.
+// ============================================================
+const REF_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // sin 0/O/1/I/L para evitar confusiones al compartirlo de palabra
+function normalizeTelReferido(tel){ return (tel||'').replace(/\D/g,''); }
+function normalizeCodigoReferido(code){ return (code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/^HV/,''); }
+function genCodigoReferido(){
+  let c = '';
+  for(let i=0;i<6;i++) c += REF_CODE_CHARS[Math.floor(Math.random()*REF_CODE_CHARS.length)];
+  return c;
+}
+async function bumpReferralStats(deltas){
+  try{
+    const st = await HVStorage.get('referido:stats', true).catch(()=>null);
+    const s = (st && st.value) ? JSON.parse(st.value) : { codigosGenerados:0, referidosExitosos:0, saldoDisponibleTotal:0 };
+    Object.keys(deltas).forEach(k => { s[k] = (s[k]||0) + deltas[k]; });
+    await HVStorage.set('referido:stats', JSON.stringify(s), true);
+  }catch(e){}
+}
+// Devuelve el código del cliente (lo crea la primera vez que lo pedimos).
+async function getOrCreateReferralCode(telefono, nombre){
+  const telNorm = normalizeTelReferido(telefono);
+  if(!telNorm) return null;
+  try{
+    const existing = await HVStorage.get('referido:code:'+telNorm, true).catch(()=>null);
+    if(existing && existing.value){ return JSON.parse(existing.value).code; }
+    const code = genCodigoReferido();
+    await HVStorage.set('referido:code:'+telNorm, JSON.stringify({ telefono: telNorm, nombre, code, creado: new Date().toISOString() }), true);
+    await HVStorage.set('referido:lookup:'+code, JSON.stringify({ telefono: telNorm, nombre }), true);
+    bumpReferralStats({ codigosGenerados: 1 });
+    return code;
+  }catch(e){ return null; }
+}
+// Busca a quién pertenece un código escrito por un nuevo cliente.
+async function resolveReferralCode(rawCode){
+  const code = normalizeCodigoReferido(rawCode);
+  if(!code) return null;
+  try{
+    const r = await HVStorage.get('referido:lookup:'+code, true).catch(()=>null);
+    if(!r || !r.value) return null;
+    const info = JSON.parse(r.value);
+    return { code, telefono: info.telefono, nombre: info.nombre };
+  }catch(e){ return null; }
+}
+// Se llama cuando el folio de un cliente referido queda certificado — le da
+// 1 crédito de 10% de descuento a quien lo refirió.
+async function creditReferralReward(telNormReferidor, detalle){
+  if(!telNormReferidor) return;
+  try{
+    const r = await HVStorage.get('referido:reward:'+telNormReferidor, true).catch(()=>null);
+    const reward = (r && r.value) ? JSON.parse(r.value) : { disponibles:0, historial:[] };
+    reward.disponibles = (reward.disponibles||0) + 1;
+    reward.historial = [{ ts: Date.now(), tipo:'ganado', ...detalle }, ...(reward.historial||[])].slice(0,20);
+    await HVStorage.set('referido:reward:'+telNormReferidor, JSON.stringify(reward), true);
+    bumpReferralStats({ referidosExitosos: 1, saldoDisponibleTotal: 1 });
+  }catch(e){}
+}
+// Muestra un aviso en el formulario de folio cuando el cliente que se va a
+// certificar ya tiene un descuento de referidos disponible — para que el
+// admin lo sepa desde antes de guardar (el descuento en sí se aplica solo,
+// dentro de createFolio()).
+async function checkReferralRewardNote(telefono){
+  const box = document.getElementById('a-ref-reward-note');
+  if(!box) return;
+  box.style.display = 'none';
+  const telNorm = normalizeTelReferido(telefono);
+  if(!telNorm) return;
+  try{
+    const r = await HVStorage.get('referido:reward:'+telNorm, true).catch(()=>null);
+    const reward = (r && r.value) ? JSON.parse(r.value) : null;
+    if(reward && reward.disponibles > 0){
+      box.textContent = `🎁 Este cliente tiene ${reward.disponibles} descuento(s) de 10% por referidos disponibles — se aplicará uno automáticamente al guardar este folio (si tiene un precio final).`;
+      box.style.display = 'block';
+    }
+  }catch(e){}
+}
+// Se llama al emitir un folio con precio: si el cliente tiene saldo, consume
+// 1 crédito y devuelve true (el 10% se aplica en createFolio()).
+async function consumeReferralRewardIfAvailable(telNorm, detalle){
+  if(!telNorm) return false;
+  try{
+    const r = await HVStorage.get('referido:reward:'+telNorm, true).catch(()=>null);
+    if(!r || !r.value) return false;
+    const reward = JSON.parse(r.value);
+    if(!(reward.disponibles > 0)) return false;
+    reward.disponibles -= 1;
+    reward.historial = [{ ts: Date.now(), tipo:'usado', ...detalle }, ...(reward.historial||[])].slice(0,20);
+    await HVStorage.set('referido:reward:'+telNorm, JSON.stringify(reward), true);
+    bumpReferralStats({ saldoDisponibleTotal: -1 });
+    return true;
+  }catch(e){ return false; }
+}
+
 async function submitSolicitud(){
   if(!recaptchaCompleted()){
     toast('Completa la verificación de seguridad antes de enviar.');
@@ -5072,6 +5243,18 @@ async function submitSolicitud(){
     return;
   }
   const citaTs = (requiresLogistica && fechaEntrega && citaHora) ? new Date(`${fechaEntrega}T${citaHora}:00`).getTime() : null;
+  // Programa de referidos: si escribió un código, buscamos a quién
+  // pertenece (para acreditarle el descuento más adelante). Un código
+  // inválido o el propio código del cliente simplemente se ignora — nunca
+  // bloquea el envío de la solicitud.
+  const telNormSubmitter = normalizeTelReferido(telefono);
+  const refCodeInputRaw = document.getElementById('s-ref-codigo').value.trim();
+  let referralResolved = null, referralInvalid = false;
+  if(refCodeInputRaw){
+    referralResolved = await resolveReferralCode(refCodeInputRaw);
+    if(referralResolved && referralResolved.telefono === telNormSubmitter) referralResolved = null;
+    if(!referralResolved) referralInvalid = true;
+  }
   const id = 'SOL-' + Date.now();
   const pkgLabels = {
     digital: modoDigital === 'presencial' ? 'Validación (presencial) — $150' : 'Validación (en línea) — $150',
@@ -5106,7 +5289,11 @@ async function submitSolicitud(){
     precioFinal: pricing.precio,
     estado: 'pendiente',
     fecha: new Date().toLocaleDateString('es-MX'),
-    fotos: SOLICITUD_FOTOS_DATA.slice()
+    fotos: SOLICITUD_FOTOS_DATA.slice(),
+    referidoPor: referralResolved ? referralResolved.telefono : null,
+    referidoPorNombre: referralResolved ? referralResolved.nombre : null,
+    referidoCode: referralResolved ? referralResolved.code : null,
+    referidoAcreditado: false
   };
   // Firestore limita cada documento a ~1 MiB: si las fotos pesan mucho, las
   // quitamos del documento y avisamos al cliente que las mande por WhatsApp.
@@ -5116,6 +5303,7 @@ async function submitSolicitud(){
   }
   try{
     await HVStorage.set('solicitud:'+id, JSON.stringify(data), true);
+    const miCodigoReferido = await getOrCreateReferralCode(telefono, nombre);
     const wizCard = document.getElementById('s-wizard');
     if(wizCard) wizCard.style.display = 'none';
 
@@ -5133,6 +5321,21 @@ async function submitSolicitud(){
       confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--warn);">Tus fotos pesaban demasiado para enviarse junto con la solicitud — mándalas por WhatsApp con tu folio, por favor.</p>`;
     } else if(SOLICITUD_FOTOS_DATA.length){
       confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--sage);">Recibimos ${SOLICITUD_FOTOS_DATA.length} foto(s) de tu pieza junto con tu solicitud.</p>`;
+    }
+    if(referralResolved){
+      confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--ok);">Usamos el código de ${escapeHtml(referralResolved.nombre||'quien te recomendó')} — en cuanto tu pieza se certifique, esa persona gana 10% de descuento en su próxima certificación. ¡Gracias por avisarnos!</p>`;
+    } else if(referralInvalid){
+      confirmHtml += `<p style="margin-top:10px;font-size:12.5px;color:var(--sage);">No encontramos el código de referido que escribiste, así que tu solicitud se registró normal — revisa que esté bien escrito si querías usarlo.</p>`;
+    }
+    if(miCodigoReferido){
+      confirmHtml += `<div class="card" style="margin-top:12px;border-left:3px solid var(--brass);">
+        <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:var(--ink);">Tu código para referir amigos</p>
+        <p style="margin:0 0 8px;font-size:12.5px;color:var(--sage);">Compártelo con quien quieras — si certifica su pieza con tu código, tú ganas 10% de descuento en tu próxima certificación.</p>
+        <div class="code-copy-row">
+          <span class="mono code-copy-value">HV-${miCodigoReferido}</span>
+          ${copyBtnHtml('HV-'+miCodigoReferido)}
+        </div>
+      </div>`;
     }
     let waMsg, waLabel, nextStepsText;
     if(pkg === 'digital' && modoDigital !== 'presencial'){
@@ -5181,7 +5384,7 @@ async function submitSolicitud(){
 
     document.getElementById('s-confirm').innerHTML = confirmHtml;
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
-    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion'].forEach(fid=>document.getElementById(fid).value='');
+    ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion','s-ref-codigo'].forEach(fid=>document.getElementById(fid).value='');
     SOLICITUD_FOTOS_DATA = [];
     clearSolicitudDraft();
     resetRecaptcha();
@@ -5215,11 +5418,23 @@ async function lookupCliente(){
         if(d.telefono === tel) rows.push({tipo:'Folio', ref:d.folio, modelo:d.modelo, estado:'completado', fecha:d.fecha});
       }catch(e){}
     }
+    let refCodeHtml = '';
+    try{
+      const rc = await HVStorage.get('referido:code:'+normalizeTelReferido(tel), true).catch(()=>null);
+      if(rc && rc.value){
+        const code = JSON.parse(rc.value).code;
+        refCodeHtml = `<div class="card" style="margin-bottom:14px;border-left:3px solid var(--brass);">
+          <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:var(--ink);">Tu código de referido</p>
+          <p style="margin:0 0 8px;font-size:12.5px;color:var(--sage);">Compártelo — si alguien certifica su pieza con tu código, ganas 10% de descuento en tu próxima certificación.</p>
+          <div class="code-copy-row"><span class="mono code-copy-value">HV-${code}</span>${copyBtnHtml('HV-'+code)}</div>
+        </div>`;
+      }
+    }catch(e){}
     if(rows.length===0){
-      box.innerHTML = '<div class="empty">No encontramos registros con ese teléfono todavía.</div>';
+      box.innerHTML = refCodeHtml + '<div class="empty">No encontramos registros con ese teléfono todavía.</div>';
       return;
     }
-    box.innerHTML = `<div class="table-scroll"><table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
+    box.innerHTML = refCodeHtml + `<div class="table-scroll"><table><tr><th>Tipo</th><th>Referencia</th><th>Modelo</th><th>Estatus</th><th>Fecha</th></tr>${
       rows.map(r=>`<tr>
         <td>${r.tipo}</td>
         <td class="mono">${r.tipo==='Solicitud'
@@ -6327,6 +6542,7 @@ function prefillFolioFromSolicitud(dJson){
   if(d.nivel) document.getElementById('a-nivel').value = d.nivel;
   document.getElementById('a-obs').value = d.desc || '';
   document.getElementById('a-linked-solicitud').value = d.id || '';
+  checkReferralRewardNote(d.telefono);
   adminGo('certificados');
   toast('Datos de la solicitud cargados en el formulario de folio. Solo falta el peritaje y el folio.');
   document.getElementById('a-folio').scrollIntoView({behavior:'smooth', block:'center'});
@@ -6501,6 +6717,25 @@ async function createFolio(){
   try{
     const existing = await HVStorage.get('folio:'+folio, true).catch(()=>null);
     if(existing){ toast('Ese folio ya existe, usa otro.'); return; }
+    // Programa de referidos, lado "descuento": si este cliente (por
+    // teléfono) tiene un crédito de 10% disponible — ganado antes por haber
+    // referido a alguien — se aplica solo, sin que el admin tenga que hacer
+    // nada. Solo aplica si hay un precio final numérico que descontar.
+    let referidoDescuentoTxt = '';
+    const telNormFolio = normalizeTelReferido(data.telefono);
+    const precioNumFolio = (data.precioFinal !== '' && data.precioFinal != null) ? Number(data.precioFinal) : NaN;
+    if(telNormFolio && !isNaN(precioNumFolio) && precioNumFolio > 0){
+      try{
+        const usedReward = await consumeReferralRewardIfAvailable(telNormFolio, { folio, telefono: telNormFolio });
+        if(usedReward){
+          const nuevoPrecio = Math.round(precioNumFolio * 0.9);
+          data.precioFinalAntesDescuento = precioNumFolio;
+          data.precioFinal = nuevoPrecio;
+          data.descuentoReferido = true;
+          referidoDescuentoTxt = ` Se aplicó su 10% de descuento por referidos ($${precioNumFolio.toLocaleString('es-MX')} → $${nuevoPrecio.toLocaleString('es-MX')} MXN).`;
+        }
+      }catch(e){}
+    }
     await HVStorage.set('folio:'+folio, JSON.stringify(data), true);
     await advanceFolioCounterIfNeeded(folio);
     if(linkedSolicitud){
@@ -6510,12 +6745,23 @@ async function createFolio(){
         sd.estado = 'completado';
         sd.folio = folio;
         sd.progreso = { fase:'completado', pct:100, folio, actualizadoTs: Date.now() };
+        // Programa de referidos, lado "crédito": si esta solicitud llegó con
+        // un código de alguien más y todavía no se le había acreditado, es
+        // justo ahora — al certificarse el folio — cuando esa persona gana
+        // su 10% de descuento para su propia próxima certificación.
+        const shouldCreditReferral = !!(sd.referidoPor && !sd.referidoAcreditado);
+        if(shouldCreditReferral) sd.referidoAcreditado = true;
         await HVStorage.set('solicitud:'+linkedSolicitud, JSON.stringify(sd), true);
         await HVStorage.delete('proceso:'+linkedSolicitud, true).catch(()=>{});
+        if(shouldCreditReferral){
+          await creditReferralReward(normalizeTelReferido(sd.referidoPor), { solicitud: linkedSolicitud, nombreReferido: sd.nombre }).catch(()=>{});
+        }
       }catch(e){}
     }
-    toast('Folio guardado: '+folio);
+    toast('Folio guardado: '+folio+referidoDescuentoTxt);
     document.querySelectorAll('#admin-tab-certificados input, #admin-tab-certificados textarea').forEach(i=>{ i.value=''; });
+    const refNote = document.getElementById('a-ref-reward-note');
+    if(refNote) refNote.style.display = 'none';
     resetAllPhotoUploads();
     updateLivePreview();
     document.getElementById('a-linked-solicitud').value = '';
@@ -6626,6 +6872,134 @@ function renderGroupedByMonth(items, opts){
     </details>`;
   }
   return html;
+}
+
+// ============================================================
+// DASHBOARD — gráficas dinámicas (ingresos por mes, piezas por categoría
+// y tasa de aprobación). Usa Chart.js cargado desde cdnjs; si el script no
+// cargó (bloqueador, sin internet) cada gráfica muestra un aviso en vez de
+// romper el resto del panel. Los colores se leen de las variables CSS del
+// tema activo, así que se ven bien en modo claro y oscuro.
+// ============================================================
+let DASH_CHARTS = {};
+function destroyDashChart(id){
+  if(DASH_CHARTS[id]){ try{ DASH_CHARTS[id].destroy(); }catch(e){} delete DASH_CHARTS[id]; }
+}
+function dashChartColor(varName){
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+const DASH_PALETTE = ['#D2042D', '#DDAE5C', '#2F7A4F', '#3B6EA5', '#8B5CF6', '#B45309'];
+
+function showDashChartEmpty(chartKey, msg){
+  destroyDashChart(chartKey);
+  const canvas = document.getElementById('chart-'+chartKey);
+  const empty = document.getElementById('chart-'+chartKey+'-empty');
+  if(canvas) canvas.style.display = 'none';
+  if(empty){ empty.textContent = msg; empty.style.display = 'block'; }
+  const label = document.getElementById('chart-'+chartKey+'-label');
+  if(label) label.textContent = '';
+}
+function showDashChartCanvas(chartKey){
+  const canvas = document.getElementById('chart-'+chartKey);
+  const empty = document.getElementById('chart-'+chartKey+'-empty');
+  if(canvas) canvas.style.display = 'block';
+  if(empty) empty.style.display = 'none';
+}
+
+async function loadDashboardCharts(folItems){
+  if(typeof Chart === 'undefined'){
+    showDashChartEmpty('ingresos', 'No se pudo cargar la librería de gráficas — revisa tu conexión.');
+    showDashChartEmpty('categorias', 'No se pudo cargar la librería de gráficas — revisa tu conexión.');
+    showDashChartEmpty('aprobacion', 'No se pudo cargar la librería de gráficas — revisa tu conexión.');
+    return;
+  }
+  renderIngresosChart(folItems);
+  renderCategoriasChart(folItems);
+  await renderAprobacionChart(folItems);
+}
+
+function renderIngresosChart(folItems){
+  if(!folItems.length){ showDashChartEmpty('ingresos', 'Todavía no hay folios emitidos para graficar ingresos.'); return; }
+  const byMonth = {};
+  folItems.forEach(f => {
+    const parsed = parseFechaFolio(f.fecha) || {mm: new Date().getMonth()+1, yyyy: new Date().getFullYear()};
+    const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
+    if(!byMonth[key]) byMonth[key] = { yyyy:parsed.yyyy, mm:parsed.mm, total:0 };
+    byMonth[key].total += (f.precioFinal ? Number(f.precioFinal) : 0) || PKG_PRICE[f.nivel] || 0;
+  });
+  const keys = Object.keys(byMonth).sort().slice(-6);
+  const labels = keys.map(k => `${MESES_ES[byMonth[k].mm-1].slice(0,3)} ${String(byMonth[k].yyyy).slice(2)}`);
+  const data = keys.map(k => byMonth[k].total);
+  showDashChartCanvas('ingresos');
+  destroyDashChart('ingresos');
+  const ctx = document.getElementById('chart-ingresos').getContext('2d');
+  DASH_CHARTS.ingresos = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Ingresos', data, backgroundColor: dashChartColor('--brass'), borderRadius: 5, maxBarThickness: 46 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => '$' + c.parsed.y.toLocaleString('es-MX') + ' MXN' } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: dashChartColor('--line') }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 }, callback: (v) => '$' + v.toLocaleString('es-MX') } }
+      }
+    }
+  });
+}
+
+function renderCategoriasChart(folItems){
+  if(!folItems.length){ showDashChartEmpty('categorias', 'Todavía no hay folios emitidos para graficar categorías.'); return; }
+  const byOrigen = {};
+  folItems.forEach(f => { const key = f.origen || 'Otro'; byOrigen[key] = (byOrigen[key]||0) + 1; });
+  const labels = Object.keys(byOrigen);
+  const data = Object.values(byOrigen);
+  showDashChartCanvas('categorias');
+  destroyDashChart('categorias');
+  const ctx = document.getElementById('chart-categorias').getContext('2d');
+  DASH_CHARTS.categorias = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: labels.map((_,i) => DASH_PALETTE[i % DASH_PALETTE.length]), borderColor: dashChartColor('--panel'), borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: { legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } } }
+    }
+  });
+}
+
+async function renderAprobacionChart(folItems){
+  let rechazadas = 0;
+  try{
+    const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
+    for(const k of (proc.keys||[])){
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado === 'rechazada') rechazadas++; }catch(e){}
+    }
+  }catch(e){}
+  const aprobadas = folItems.length;
+  const total = aprobadas + rechazadas;
+  const label = document.getElementById('chart-aprobacion-label');
+  if(!total){ showDashChartEmpty('aprobacion', 'Todavía no hay piezas dictaminadas para calcular la tasa.'); return; }
+  const pct = Math.round((aprobadas/total)*100);
+  showDashChartCanvas('aprobacion');
+  destroyDashChart('aprobacion');
+  const ctx = document.getElementById('chart-aprobacion').getContext('2d');
+  DASH_CHARTS.aprobacion = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels: ['Certificadas', 'No aprobadas'], datasets: [{ data: [aprobadas, rechazadas], backgroundColor: [dashChartColor('--ok'), dashChartColor('--red')], borderColor: dashChartColor('--panel'), borderWidth: 2 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: { legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } } }
+    }
+  });
+  if(label) label.innerHTML = `<span class="pct">${pct}%</span><span class="txt">Aprobación</span>`;
+}
+
+// Si el admin cambia el tema mientras ve el dashboard, las gráficas ya
+// dibujadas se quedarían con los colores del tema anterior — las
+// volvemos a pintar con los colores correctos.
+function refreshDashChartsTheme(){
+  if(!document.getElementById('admin-tab-dashboard') || !document.getElementById('admin-tab-dashboard').classList.contains('active')) return;
+  if(!DASH_CHARTS.ingresos && !DASH_CHARTS.categorias && !DASH_CHARTS.aprobacion) return;
+  if(Array.isArray(CURRENT_FOLIOS)) loadDashboardCharts(CURRENT_FOLIOS);
 }
 
 async function refreshIncomeTable(){
@@ -8321,6 +8695,7 @@ async function finalizeProceso(id){
   // exige procesoAprueba === true), así que precioFinal ya es el del paquete
   // completo — lo pasamos al folio para que el historial y los ingresos lo reflejen.
   document.getElementById('a-precio-final').value = p.precioFinal != null ? p.precioFinal : '';
+  checkReferralRewardNote(p.telefono);
 
   const condStep = p.pasos.find(s=>s.key==='condicion');
   if(condStep && condStep.zigzag){
@@ -8403,6 +8778,18 @@ async function updateAdminStats(){
     if(badgeSol){ badgeSol.style.display = pendientes>0 ? 'inline-block' : 'none'; badgeSol.textContent = pendientes; }
     const badgeVal = document.getElementById('badge-validacion');
     if(badgeVal){ badgeVal.style.display = enProceso>0 ? 'inline-block' : 'none'; badgeVal.textContent = enProceso; }
+  }catch(e){}
+  // Programa de referidos: un solo documento agregado ("referido:stats") que
+  // se actualiza en el momento en que ocurre cada evento (código generado,
+  // referido acreditado, descuento aplicado) — así el dashboard no necesita
+  // listar ni sumar todos los documentos de referidos cada vez que se abre.
+  try{
+    const st = await HVStorage.get('referido:stats', true).catch(()=>null);
+    const s = st && st.value ? JSON.parse(st.value) : {};
+    const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+    setText('stat-ref-codigos', s.codigosGenerados || 0);
+    setText('stat-ref-exitosos', s.referidosExitosos || 0);
+    setText('stat-ref-saldo', s.saldoDisponibleTotal || 0);
   }catch(e){}
 }
 
@@ -8813,7 +9200,20 @@ async function refreshAdminLists(){
     folItems.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
     CURRENT_FOLIOS = folItems;
     folBox.innerHTML = folItems.length ? folItems.map(folioCardHtml).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
+    // Sincroniza el contador público en vivo del inicio ("+N piezas
+    // certificadas") con el total real — solo el admin, ya autenticado,
+    // puede listar todos los folios, así que aprovechamos esta carga para
+    // guardar el número en un documento pequeño que sí puede leer
+    // cualquier visitante. Ver loadHeroStatCounter().
+    HVStorage.set('site:stats', JSON.stringify({ piezasCertificadas: folItems.length }), true).catch(()=>{});
   }catch(e){ folBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se pudieron cargar los folios.</p>'; }
+
+  // Solo recalcula las gráficas si la pestaña Dashboard está realmente
+  // visible: si el admin está en Solicitudes u otra pestaña, renderizar
+  // Chart.js sobre un canvas oculto (display:none) es trabajo desperdiciado
+  // y puede dejar las gráficas con tamaño incorrecto al volver a mostrarlas.
+  const dashTabEl = document.getElementById('admin-tab-dashboard');
+  if(dashTabEl && dashTabEl.classList.contains('active')) loadDashboardCharts(folItems);
 
   try{ CURRENT_PIEZAS = await getPiezas(); }catch(e){ CURRENT_PIEZAS = []; }
 
