@@ -1871,7 +1871,7 @@
   <div class="finish-divider"></div>
 
   <section class="salon-scope">
-    <div class="salon-hero reveal">
+    <div class="salon-hero reveal in-view">
       <p class="salon-kicker" data-i18n="inicio.salonBanner.kicker">Salón Privado HV</p>
       <h2 data-i18n="inicio.salonBanner.h2">Una membresía que se gana certificando con nosotros</h2>
       <p class="salon-lead" data-i18n="inicio.salonBanner.lead">Certifica 5 piezas y vuélvete socio preferente: prioridad de agenda, obsequios de cortesía, una galería exclusiva y mucho más. Si prefieres, también puedes adquirir tu membresía directamente.</p>
@@ -4471,7 +4471,7 @@ function refreshDynamicI18nContent(){
   // está abierta) — mismo principio que el resto de esta función, cada uno
   // aislado en su propio try/catch.
   try{ if(document.getElementById('salon-tiers-teaser')) renderSalonTiersTeaser(); }catch(e){}
-  try{ if(SALON_SESSION_TEL && document.getElementById('salon-lobby') && document.getElementById('salon-lobby').style.display !== 'none'){ getSalonMember(SALON_SESSION_TEL).then(m => { if(m) enterSalonLobby(m); }); } }catch(e){}
+  try{ if(SALON_SESSION_TEL && document.getElementById('salon-lobby') && document.getElementById('salon-lobby').style.display !== 'none'){ salonResolveSessionMember().then(m => { if(m) enterSalonLobby(m); }); } }catch(e){}
   try{
     if(document.getElementById('salon-hv-book') && document.getElementById('salon-hv-book').classList.contains('open') && typeof SALON_BOOK_STATE !== 'undefined' && SALON_BOOK_STATE.mode){
       if(SALON_BOOK_STATE.mode === 'index') renderSalonBookIndex();
@@ -4715,7 +4715,7 @@ function go(view){
   if(view==='quienes' && typeof renderPresStrip === 'function') renderPresStrip();
   if(view==='salon' && typeof renderSalonTiersTeaser === 'function'){
     renderSalonTiersTeaser();
-    if(SALON_SESSION_TEL){ getSalonMember(SALON_SESSION_TEL).then(m => { if(m) enterSalonLobby(m); }); }
+    if(SALON_SESSION_TEL){ salonResolveSessionMember().then(m => { if(m) enterSalonLobby(m); }); }
   }
   window.HV_CURRENT_VIEW = view;
   if(typeof updateStickyCta === 'function') updateStickyCta();
@@ -6836,6 +6836,26 @@ async function renderSalonPiezasAdmin(){
 // ============================================================
 let SALON_SESSION_TEL = null; // no se persiste — se revalida cada vez, igual que "Mi historial"
 let SALON_PREVIEW_ADMIN = false; // true cuando el admin entró al lobby vía "Ver como socio" desde Miembros
+// Sentinel (no es un teléfono real) para el bypass genérico de admin
+// (goToSalonLobbyAdmin). openSalonBook()/openSalonVipCalendar() solo piden
+// que SALON_SESSION_TEL exista (verdadero) para dejar ver la Galería y el
+// Calendario VIP — no necesitan un socio real para eso. submitSalonBooking()
+// sí intenta cargar el socio real con getSalonMember(), que con este
+// sentinel no encuentra nada y avisa "No pudimos verificar tu membresía",
+// evitando así una reservación falsa sin tener que bloquear la vista antes.
+const SALON_ADMIN_PREVIEW_TEL = '__admin_preview__';
+function salonAdminPreviewMember(){
+  return { telefono: '', nombre: 'Administrador', code: 'ADMIN', estado: 'activo', nivelActual: 3, piezasCertificadas: 999, vitalicio: true };
+}
+// Resuelve a quién le pertenece el lobby actualmente abierto — un socio real
+// o la identidad sintética del bypass de admin — para que tanto go() como
+// el refresco de idioma puedan re-renderizar el lobby correctamente en
+// cualquiera de los dos casos.
+async function salonResolveSessionMember(){
+  if(!SALON_SESSION_TEL) return null;
+  if(SALON_SESSION_TEL === SALON_ADMIN_PREVIEW_TEL) return salonAdminPreviewMember();
+  return await getSalonMember(SALON_SESSION_TEL);
+}
 
 // El admin necesita poder ver el lobby/tarjeta de un socio directamente
 // desde su ficha, sin tener que loguearse por la puerta pública con
@@ -6859,17 +6879,13 @@ async function previewSalonMemberAsSocio(telNorm){
 // necesitas probar una reservación real).
 async function goToSalonLobbyAdmin(){
   SALON_PREVIEW_ADMIN = true;
-  SALON_SESSION_TEL = null;
+  SALON_SESSION_TEL = SALON_ADMIN_PREVIEW_TEL;
   go('salon');
   const gate = document.getElementById('salon-gate-card');
   const interes = document.getElementById('salon-interes-card');
   if(gate) gate.style.display = 'none';
   if(interes) interes.style.display = 'none';
-  const adminMember = {
-    telefono: '', nombre: 'Administrador', code: 'ADMIN',
-    estado: 'activo', nivelActual: 3, piezasCertificadas: 999, vitalicio: true
-  };
-  await enterSalonLobby(adminMember);
+  await enterSalonLobby(salonAdminPreviewMember());
 }
 function exitSalonPreview(){
   SALON_PREVIEW_ADMIN = false;
