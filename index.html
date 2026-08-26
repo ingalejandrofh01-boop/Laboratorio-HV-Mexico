@@ -1870,6 +1870,15 @@
   </section>
   <div class="finish-divider"></div>
 
+  <section class="salon-scope">
+    <div class="salon-hero reveal">
+      <p class="salon-kicker" data-i18n="inicio.salonBanner.kicker">Salón Privado HV</p>
+      <h2 data-i18n="inicio.salonBanner.h2">Una membresía que se gana certificando con nosotros</h2>
+      <p class="salon-lead" data-i18n="inicio.salonBanner.lead">Certifica 5 piezas y vuélvete socio preferente: prioridad de agenda, obsequios de cortesía, una galería exclusiva y mucho más. Si prefieres, también puedes adquirir tu membresía directamente.</p>
+      <button class="btn salon-btn-gold" style="margin-top:8px;" onclick="go('salon')" data-i18n="inicio.salonBanner.btn">Conocer el Salón Privado →</button>
+    </div>
+  </section>
+
   <section>
     <h2 data-i18n="inicio.cert.h2">Así luce tu certificado</h2>
     <p style="color:var(--sage);max-width:640px;" data-i18n="inicio.cert.p">Pasa el cursor encima (o tócalo en tu celular) para verlo por ambos lados, como si tuvieras la pieza encapsulada en tus manos.</p>
@@ -2965,10 +2974,11 @@
 
       <div class="card salon-card" id="salon-interes-card">
         <h3 data-i18n="salon.interes.h3">¿Todavía no eres socio?</h3>
-        <p class="foot-note salon-foot-note" data-i18n="salon.interes.p">Certifica y encapsula piezas con nosotros — al llegar a 5, te avisaremos que ya eres elegible. Si prefieres que te contactemos antes, déjanos tus datos.</p>
+        <p class="foot-note salon-foot-note" data-i18n="salon.interes.p">Puedes ganarte tu membresía certificando piezas con nosotros, o adquirirla directamente — cuéntanos qué prefieres.</p>
         <input id="salon-interes-nombre" data-i18n-placeholder="salon.interes.nombrePlaceholder" placeholder="Tu nombre" style="margin-bottom:8px;">
         <input id="salon-interes-tel" data-i18n-placeholder="salon.interes.telPlaceholder" placeholder="55 0000 0000" style="margin-bottom:12px;">
-        <button class="btn ghost salon-btn-ghost" onclick="submitSalonInteres()" data-i18n="salon.interes.btn">Quiero más información</button>
+        <button class="btn salon-btn-gold" style="width:100%;margin-bottom:8px;" onclick="submitSalonCompraDirecta()" data-i18n="salon.interes.btnCompra">Quiero mi membresía ya</button>
+        <button class="btn ghost salon-btn-ghost" style="width:100%;" onclick="submitSalonPaquete5()" data-i18n="salon.interes.btnPaquete">Certificar mi paquete de 5 piezas</button>
       </div>
     </div>
 
@@ -4381,10 +4391,16 @@ const I18N_EN = {
   'placeholder:salon.gate.codePlaceholder': 'HVS-ABC123',
   'salon.gate.btn': 'Enter the Salón',
   'salon.interes.h3': 'Not a member yet?',
-  'salon.interes.p': 'Certify and encapsulate pieces with us — once you reach 5, we\'ll let you know you\'re eligible. If you\'d rather we reach out first, leave us your details.',
+  'salon.interes.p': 'You can earn your membership by certifying pieces with us, or get it directly — tell us which you\'d prefer.',
   'placeholder:salon.interes.nombrePlaceholder': 'Your name',
   'placeholder:salon.interes.telPlaceholder': '55 0000 0000',
   'salon.interes.btn': 'I want more information',
+  'salon.interes.btnCompra': 'I want my membership now',
+  'salon.interes.btnPaquete': 'Certify my 5-piece package',
+  'inicio.salonBanner.kicker': 'Salón Privado HV',
+  'inicio.salonBanner.h2': 'A membership you earn by certifying with us',
+  'inicio.salonBanner.lead': 'Certify 5 pieces and become a preferred member: priority booking, courtesy gifts, an exclusive gallery, and much more. You can also get your membership directly if you prefer.',
+  'inicio.salonBanner.btn': 'Discover the Salón Privado →',
   'salon.book.porCategoria': 'By category',
   'salon.book.porSocio': 'By member',
   'salon.book.indexHeading': 'Exclusive Gallery',
@@ -6507,7 +6523,10 @@ async function openSalonMemberDetail(telNorm){
   if(!m){ wrap.innerHTML = '<p>No se encontró ese socio.</p>'; return; }
   const status = computeMembershipStatus(m);
   const nextT = nextSalonThreshold(m.piezasCertificadas||0);
-  let html = `<button class="btn ghost small" onclick="document.getElementById('salon-member-detail-wrap').style.display='none';">✕ Cerrar</button>
+  let html = `<div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <button class="btn ghost small" onclick="document.getElementById('salon-member-detail-wrap').style.display='none';">✕ Cerrar</button>
+      ${m.code ? `<button class="btn small" onclick="previewSalonMemberAsSocio('${escapeHtml(telNorm)}')">👁 Ver como socio</button>` : ''}
+    </div>
     <h3 style="font-size:16px;">${escapeHtml(m.nombre||'(sin nombre)')} <span class="pill ${SALON_STATUS_PILL_CLASS[status]||'neutral'}">${SALON_STATUS_LABEL[status]||status}</span></h3>
     <p class="foot-note" style="border:none;padding-top:0;">Tel. ${escapeHtml(m.telefono)} · Código HVS-${escapeHtml(m.code||'—')} · Nivel actual: ${m.nivelActual||0}${m.vitalicio?' (vitalicio)':''}</p>
     <p style="font-size:13.5px;">Piezas certificadas: <strong>${m.piezasCertificadas||0}</strong>${nextT ? ` — faltan ${nextT - m.piezasCertificadas} para el siguiente nivel (${nextT} piezas)` : ' — nivel máximo alcanzado'}</p>`;
@@ -6811,6 +6830,35 @@ async function renderSalonPiezasAdmin(){
 // accesos a la Galería Exclusiva y al Calendario VIP).
 // ============================================================
 let SALON_SESSION_TEL = null; // no se persiste — se revalida cada vez, igual que "Mi historial"
+let SALON_PREVIEW_ADMIN = false; // true cuando el admin entró al lobby vía "Ver como socio" desde Miembros
+
+// El admin necesita poder ver el lobby/tarjeta de un socio directamente
+// desde su ficha, sin tener que loguearse por la puerta pública con
+// teléfono+código. go('salon') ya sabe reabrir el lobby cuando
+// SALON_SESSION_TEL está definido (ver go()), así que solo hace falta
+// fijarlo antes de cambiar de vista.
+async function previewSalonMemberAsSocio(telNorm){
+  const m = await getSalonMember(telNorm);
+  if(!m || !m.code){ toast('Este socio todavía no tiene código — actívalo o espera a que llegue a 5 piezas.'); return; }
+  SALON_PREVIEW_ADMIN = true;
+  SALON_SESSION_TEL = telNorm;
+  go('salon');
+}
+function exitSalonPreview(){
+  SALON_PREVIEW_ADMIN = false;
+  SALON_SESSION_TEL = null;
+  const lobby = document.getElementById('salon-lobby');
+  if(lobby){ lobby.style.display = 'none'; lobby.innerHTML = ''; }
+  const gate = document.getElementById('salon-gate-card');
+  const interes = document.getElementById('salon-interes-card');
+  if(gate) gate.style.display = '';
+  if(interes) interes.style.display = '';
+  go('admin');
+  salonAdminGo('miembros');
+}
+function salonLobbyExitClick(){
+  if(SALON_PREVIEW_ADMIN) exitSalonPreview(); else exitSalonLobby();
+}
 
 async function renderSalonTiersTeaser(){
   const box = document.getElementById('salon-tiers-teaser');
@@ -6895,6 +6943,10 @@ async function enterSalonLobby(m){
     : tt('Alcanzaste el nivel máximo — membresía vitalicia.','You\'ve reached the top tier — lifetime membership.');
   const pct = nextT ? Math.max(4, Math.min(100, Math.round((m.piezasCertificadas / nextT) * 100))) : 100;
   lobby.innerHTML = `
+    ${SALON_PREVIEW_ADMIN ? `<div class="card salon-card" style="border-color:var(--salon-gold);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <span style="font-size:13px;">🔍 <strong>Vista previa de administrador</strong> — así ve este socio su Salón.</span>
+      <button class="btn ghost salon-btn-ghost small" type="button" onclick="exitSalonPreview()">Volver al admin</button>
+    </div>` : ''}
     <div class="salon-card-wrap reveal in-view">
       <div class="salon-member-card salon-tier-n${m.nivelActual||1}" id="salon-member-card">
         <div class="smc-shine"></div>
@@ -6945,7 +6997,7 @@ async function enterSalonLobby(m){
       <button class="btn salon-btn-gold" style="margin-top:14px;" onclick="submitSalonBooking()">${tt('Confirmar cita VIP','Confirm VIP appointment')}</button>
     </div>
 
-    <button class="btn ghost salon-btn-ghost" style="margin-top:14px;" onclick="exitSalonLobby()">${tt('Salir','Exit')}</button>
+    <button class="btn ghost salon-btn-ghost" style="margin-top:14px;" onclick="salonLobbyExitClick()">${tt('Salir','Exit')}</button>
   `;
   initSalonCardTilt();
 }
@@ -7021,6 +7073,43 @@ async function submitSalonInteres(){
     `Nombre: ${nombre}`,
     `Teléfono: ${tel}`,
     'Quiero más información sobre la membresía del Salón Privado.'
+  ]);
+  window.open(waLink(msg), '_blank');
+  toast(tt('Te llevamos a WhatsApp para continuar.','Taking you to WhatsApp to continue.'));
+}
+
+// Compra directa de la membresía — para quien no quiere esperar a certificar
+// piezas orgánicamente y prefiere adquirirla ya. Como el resto del sitio, no
+// hay cobro en línea: esto solo abre WhatsApp para que el admin negocie
+// costo/plan y active la membresía manualmente desde el panel.
+async function submitSalonCompraDirecta(){
+  const nombreEl = document.getElementById('salon-interes-nombre');
+  const telEl = document.getElementById('salon-interes-tel');
+  const nombre = nombreEl ? nombreEl.value.trim() : '';
+  const tel = telEl ? telEl.value.trim() : '';
+  if(!nombre || !tel){ toast(tt('Escribe tu nombre y tu teléfono.','Enter your name and phone number.')); return; }
+  // Plantilla de WhatsApp siempre en español, igual que el resto del sitio.
+  const msg = waTemplate('💎', 'Quiero mi membresía del Salón Privado HV', [
+    `Nombre: ${nombre}`,
+    `Teléfono: ${tel}`,
+    'Quiero adquirir mi membresía del Salón Privado directamente, sin esperar a certificar piezas.'
+  ]);
+  window.open(waLink(msg), '_blank');
+  toast(tt('Te llevamos a WhatsApp para continuar.','Taking you to WhatsApp to continue.'));
+}
+
+// Paquete de 5 piezas — puerta de entrada para quien todavía no es cliente
+// y quiere certificar de una vez el mínimo para volverse elegible.
+async function submitSalonPaquete5(){
+  const nombreEl = document.getElementById('salon-interes-nombre');
+  const telEl = document.getElementById('salon-interes-tel');
+  const nombre = nombreEl ? nombreEl.value.trim() : '';
+  const tel = telEl ? telEl.value.trim() : '';
+  if(!nombre || !tel){ toast(tt('Escribe tu nombre y tu teléfono.','Enter your name and phone number.')); return; }
+  const msg = waTemplate('💎', 'Quiero certificar mi paquete de 5 piezas', [
+    `Nombre: ${nombre}`,
+    `Teléfono: ${tel}`,
+    'Quiero certificar un paquete de 5 piezas para volverme elegible del Salón Privado HV.'
   ]);
   window.open(waLink(msg), '_blank');
   toast(tt('Te llevamos a WhatsApp para continuar.','Taking you to WhatsApp to continue.'));
