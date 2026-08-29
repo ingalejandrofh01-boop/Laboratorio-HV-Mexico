@@ -83,6 +83,18 @@ grandes, en orden aproximado en que aparecen:
   manejados por el admin, galería exclusiva y calendario VIP propios.
 - **"Librero"/Book** — el visor de galería pública de piezas certificadas
   (y su versión paralela para el Salón).
+- **Compartir a redes sociales** — botón "✨ Compartir" en el detalle de
+  cualquier pieza (biblioteca pública y Galería Exclusiva del Salón) y en la
+  tarjeta de socio. Genera una imagen vertical 1080×1920 tipo "Historia"
+  dibujada directo en `<canvas>` (`buildPieceStoryCanvas`/
+  `buildSocioStoryCanvas`, sin librerías nuevas) y abre una hoja de
+  compartir propia (`openShareSheet`) con Web Share API nativo + botones de
+  WhatsApp/Facebook/Instagram-TikTok(descarga)/copiar enlace/descargar. Una
+  pieza del Salón solo genera una liga pública visitable
+  (`?pieza=<id>&s=salon`, atendida por `handleIncomingPiezaLink()`) si tiene
+  `consentimientoLibroPublico:true`; si no, comparte solo la imagen, sin
+  liga. Las piezas de la biblioteca pública siempre tienen liga
+  (`?pieza=<id>`), porque ya son públicas de por sí.
 - **Calendario** — agendado de citas (y su versión paralela VIP).
 - **Sistema de i18n** — `SITE_LANG`, `data-i18n`/`data-i18n-placeholder`/
   `data-i18n-aria`, `I18N_EN` (diccionario a inglés), `t()`/`tt()`,

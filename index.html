@@ -1634,6 +1634,36 @@
     .salon-hero{padding:30px 22px;}
     .salon-member-card{max-width:100%;}
   }
+
+  /* ============================================================
+     COMPARTIR — hoja para compartir a redes sociales (piezas de la
+     biblioteca pública, piezas del Salón y tarjeta de socio). Un solo
+     componente reutilizado en las tres superficies, con tema propio fijo
+     (obsidiana + dorado) independiente de dónde se abra y del claro/oscuro
+     del sitio — funciona como la "firma visual" de compartir en todo el
+     laboratorio, igual principio de aislamiento que .salon-scope.
+     ============================================================ */
+  .share-sheet-overlay{position:fixed;inset:0;background:rgba(4,3,2,.72);backdrop-filter:blur(3px);z-index:900;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;}
+  .share-sheet-overlay.open{opacity:1;visibility:visible;}
+  .share-sheet{width:100%;max-width:400px;max-height:92vh;overflow-y:auto;background:linear-gradient(165deg,#17120D,#1D1712 55%,#0B0906);border:1px solid rgba(232,196,104,.28);border-radius:20px;padding:22px 22px 26px;box-shadow:0 30px 70px -20px rgba(0,0,0,.65),0 0 40px rgba(232,196,104,.08);transform:translateY(18px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1);}
+  .share-sheet-overlay.open .share-sheet{transform:translateY(0) scale(1);}
+  .share-sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .share-sheet-kicker{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#E8C468;margin:0;}
+  .share-sheet-close{background:rgba(255,255,255,.06);border:none;color:#F3ECDF;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;line-height:1;flex:none;}
+  .share-sheet-preview{width:100%;aspect-ratio:9/16;max-height:320px;border-radius:14px;overflow:hidden;background:#0B0906;border:1px solid rgba(232,196,104,.22);margin-bottom:16px;display:flex;align-items:center;justify-content:center;}
+  .share-sheet-preview img{width:100%;height:100%;object-fit:contain;display:block;}
+  .share-sheet-preview .ssp-loading{color:#C9B9A8;font-size:12.5px;font-family:'IBM Plex Mono',monospace;text-align:center;padding:0 20px;}
+  .share-sheet-title{font-family:'Fraunces',serif;font-size:16.5px;color:#F3ECDF;margin:0 0 4px;}
+  .share-sheet-note{font-size:12px;color:#C9B9A8;line-height:1.5;margin:0 0 16px;}
+  .share-sheet-note.private{color:#E8C468;}
+  .share-sheet-primary{width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(120deg,#A67C2E,#E8C468 55%,#A67C2E);color:#241512;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:14px;box-shadow:0 6px 20px rgba(232,196,104,.28);}
+  .share-sheet-primary:disabled{opacity:.5;cursor:not-allowed;}
+  .share-sheet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .share-sheet-btn{display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid rgba(232,196,104,.18);color:#F3ECDF;font-size:12.5px;cursor:pointer;text-align:left;transition:background .18s ease,border-color .18s ease;font-family:inherit;}
+  .share-sheet-btn:hover{background:rgba(232,196,104,.1);border-color:rgba(232,196,104,.4);}
+  .share-sheet-btn .ssb-icon{font-size:17px;flex:none;}
+  .share-sheet-btn:disabled{opacity:.35;cursor:not-allowed;}
+  @media(max-width:420px){.share-sheet-grid{grid-template-columns:1fr;}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -1817,6 +1847,9 @@
 
 <div id="toast" class="toast"></div>
 <div id="notif-stack" class="notif-stack" aria-live="polite" aria-atomic="false"></div>
+<div class="share-sheet-overlay" id="share-sheet-overlay" onclick="if(event.target===this) closeShareSheet();">
+  <div class="share-sheet" id="share-sheet" role="dialog" aria-modal="true" aria-labelledby="share-sheet-title-el"></div>
+</div>
 <button class="sticky-cta" id="sticky-cta-btn" type="button" onclick="go('solicitar')">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M12 10l-5 5M12 10l5 5"/><path d="M4 20h16"/></svg>
   <span data-i18n="sticky-cta">Solicitar validación</span>
@@ -2695,6 +2728,10 @@
     </div>
     <div id="v-result" style="margin-top:28px;"></div>
   </section>
+</div>
+
+<div class="view" id="view-pieza">
+  <section id="pieza-publica-content"></section>
 </div>
 
 <div class="view" id="view-solicitar">
@@ -4462,6 +4499,7 @@ function refreshDynamicI18nContent(){
   try{ if(typeof CLIENTE_TRACK_UNSUB !== 'undefined' && document.getElementById('c-codigo') && document.getElementById('c-codigo').value.trim()) trackByCodigo(); }catch(e){}
   try{ if(document.getElementById('c-telefono') && document.getElementById('c-telefono').value.trim() && document.getElementById('c-result') && document.getElementById('c-result').innerHTML.trim()) lookupCliente(); }catch(e){}
   try{ if(document.getElementById('v-folio') && document.getElementById('v-folio').value.trim() && document.getElementById('v-result') && document.getElementById('v-result').innerHTML.trim()) verifyFolio(); }catch(e){}
+  try{ if(window.HV_CURRENT_VIEW === 'pieza' && window.__PUBLIC_PIEZA_CURRENT) renderPublicPiezaView(window.__PUBLIC_PIEZA_CURRENT, document.getElementById('pieza-publica-content').className === 'salon-scope'); }catch(e){}
   try{
     const presStrip = document.getElementById('pres-strip');
     if(presStrip && presStrip.dataset.rendered){ presStrip.dataset.rendered = ''; renderPresStrip(); }
@@ -6842,6 +6880,7 @@ async function renderSalonPiezasAdmin(){
 // ============================================================
 let SALON_SESSION_TEL = null; // no se persiste — se revalida cada vez, igual que "Mi historial"
 let SALON_PREVIEW_ADMIN = false; // true cuando el admin entró al lobby vía "Ver como socio" desde Miembros
+let SALON_CURRENT_MEMBER = null; // último socio (real o preview) mostrado en el lobby — lo usa shareMembershipCard()
 // Sentinel (no es un teléfono real) para el bypass genérico de admin
 // (goToSalonLobbyAdmin). openSalonBook()/openSalonVipCalendar() solo piden
 // que SALON_SESSION_TEL exista (verdadero) para dejar ver la Galería y el
@@ -6975,6 +7014,7 @@ function exitSalonLobby(){
 }
 
 async function enterSalonLobby(m){
+  SALON_CURRENT_MEMBER = m;
   const gate = document.getElementById('salon-gate-card');
   const interes = document.getElementById('salon-interes-card');
   const lobby = document.getElementById('salon-lobby');
@@ -7074,38 +7114,377 @@ function initSalonCardTilt(){
   card.addEventListener('mouseleave', onLeave);
 }
 
-// Reutiliza html2canvas (ya cargado vía CDN para exportLabelImage()) para
-// capturar la tarjeta de socio tal cual se ve — gradientes, brillo y todo —
-// en vez de redibujarla a mano en un <canvas>. Comparte el archivo por Web
-// Share API cuando el navegador lo soporta; si no, cae a la descarga PNG
-// directa, igual que exportLabelImage().
-async function shareMembershipCard(){
-  if(typeof html2canvas === 'undefined'){
-    toast(tt('La herramienta para compartir sigue cargando, intenta de nuevo en un segundo.','The sharing tool is still loading, try again in a second.'));
-    return;
-  }
-  const el = document.getElementById('salon-member-card');
-  if(!el){ toast(tt('No se encontró la tarjeta.','Card not found.')); return; }
+// ============================================================
+// COMPARTIR A REDES SOCIALES — motor único reutilizado desde tres lugares:
+// piezas de la biblioteca pública (sharePublicPiece), piezas del Salón
+// Exclusivo (shareSalonPiece) y la tarjeta de socio (shareMembershipCard).
+// Genera una imagen vertical 1080×1920 ("Historia" de Instagram/TikTok/
+// Facebook) dibujada directo en <canvas> — no con html2canvas — para que
+// las proporciones y la tipografía sean siempre exactas sin depender de
+// cómo se vea el elemento en pantalla en ese momento. La hoja de compartir
+// (openShareSheet) ofrece Web Share API nativo (que en móvil ya es el
+// selector real de redes sociales instaladas) más botones directos de
+// WhatsApp/Facebook/descarga, igual que shareCert()/shareMembershipCard()
+// hacían antes con menos opciones.
+// ============================================================
+const SHARE_STORY_W = 1080, SHARE_STORY_H = 1920;
+
+function shareLoadImage(src){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+// Pide que las fuentes de marca estén listas antes de dibujar texto en el
+// canvas — si por lo que sea no cargan (sin internet, CDN caído), el canvas
+// simplemente cae a la fuente genérica del sistema y sigue siendo legible.
+async function shareEnsureFonts(){
   try{
-    const canvas = await html2canvas(el, {scale:2, backgroundColor:null, useCORS:true, logging:false});
-    canvas.toBlob(async (blob) => {
-      if(!blob){ toast(tt('No se pudo generar la imagen.','Could not generate the image.')); return; }
-      const file = new File([blob], 'salon-hv-tarjeta.png', {type:'image/png'});
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        try{
-          await navigator.share({files:[file], title: tt('Mi tarjeta — Salón Privado HV','My card — Salón Privado HV')});
-          return;
-        }catch(e){ /* el usuario canceló el share nativo — caemos a descarga */ }
-      }
-      const link = document.createElement('a');
-      link.download = 'salon-hv-tarjeta.png';
-      link.href = URL.createObjectURL(blob);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    }, 'image/png');
+    if(document.fonts && document.fonts.load){
+      await Promise.all([
+        document.fonts.load('600 62px Fraunces'),
+        document.fonts.load('500 30px "IBM Plex Sans"'),
+        document.fonts.load('600 26px "IBM Plex Mono"'),
+        document.fonts.load('500 26px "IBM Plex Mono"')
+      ]);
+    }
+  }catch(e){ /* seguimos con la fuente del sistema */ }
+}
+// Envuelve texto en varias líneas dentro de maxWidth, recorta con "…" si se
+// pasa de maxLines — utilidad mínima de canvas, no depende de ninguna
+// librería nueva.
+function shareWrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+  const words = (text||'').toString().split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = '', wi = 0;
+  while(wi < words.length){
+    const test = line ? line + ' ' + words[wi] : words[wi];
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = '';
+      if(lines.length === maxLines) break;
+    } else {
+      line = test;
+      wi++;
+    }
+  }
+  if(line && lines.length < maxLines){ lines.push(line); wi = words.length; }
+  if(wi < words.length && lines.length){
+    let last = lines[lines.length-1];
+    while(ctx.measureText(last+'…').width > maxWidth && last.length > 1) last = last.slice(0, -1);
+    lines[lines.length-1] = last + '…';
+  }
+  lines.forEach((l,i) => ctx.fillText(l, x, y + i*lineHeight));
+  return lines.length;
+}
+
+// Historia vertical de una pieza certificada (biblioteca pública o Salón):
+// foto de la pieza a sangre completa + velo degradado + marco dorado +
+// modelo/categoría/folio + liga pública (si existe) o solo el dominio.
+async function buildPieceStoryCanvas(p, opts){
+  opts = opts || {};
+  await shareEnsureFonts();
+  const W = SHARE_STORY_W, H = SHARE_STORY_H;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const gold='#E8C468', goldDim='#A67C2E', obsidian='#0B0906', obsidian2='#17120D', ink='#F3ECDF', sage='#C9B9A8';
+  const bgGrad = ctx.createLinearGradient(0,0,0,H);
+  bgGrad.addColorStop(0, obsidian2); bgGrad.addColorStop(1, obsidian);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+  const fotoUrl = p.fotos && p.fotos[0] ? p.fotos[0].url : '';
+  if(fotoUrl){
+    try{
+      const img = await shareLoadImage(fotoUrl);
+      const scale = Math.max(W/img.width, H/img.height);
+      const dw = img.width*scale, dh = img.height*scale;
+      ctx.drawImage(img, (W-dw)/2, (H-dh)/2, dw, dh);
+    }catch(e){ /* si la foto no carga (dataURL corrupta, etc.), se queda el fondo obsidiana */ }
+  }
+  const veil = ctx.createLinearGradient(0,0,0,H);
+  veil.addColorStop(0,'rgba(11,9,6,.75)'); veil.addColorStop(0.24,'rgba(11,9,6,.08)');
+  veil.addColorStop(0.6,'rgba(11,9,6,.05)'); veil.addColorStop(0.8,'rgba(11,9,6,.85)'); veil.addColorStop(1,'rgba(11,9,6,.97)');
+  ctx.fillStyle = veil;
+  ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(232,196,104,.55)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3,3,W-6,H-6);
+  try{
+    const logo = await shareLoadImage(LOGO_SRC);
+    ctx.drawImage(logo, 64, 68, 72, 72);
+  }catch(e){}
+  ctx.fillStyle = gold;
+  ctx.font = '600 26px "IBM Plex Mono", monospace';
+  ctx.fillText('LABORATORIO HV MÉXICO', 152, 98);
+  ctx.fillStyle = sage;
+  ctx.font = '500 22px "IBM Plex Mono", monospace';
+  ctx.fillText(opts.isSalon ? tt('SALÓN PRIVADO · PIEZA CERTIFICADA','SALÓN PRIVADO · CERTIFIED PIECE') : tt('PIEZA CERTIFICADA','CERTIFIED PIECE'), 152, 128);
+  let y = H - 300;
+  ctx.fillStyle = gold;
+  ctx.font = '600 24px "IBM Plex Mono", monospace';
+  ctx.fillText('✦ ' + (opts.isSalon ? tt('SALÓN PRIVADO HV','SALÓN PRIVADO HV') : tt('CERTIFICADO','CERTIFIED')), 64, y);
+  y += 56;
+  ctx.fillStyle = ink;
+  ctx.font = '600 62px Fraunces, serif';
+  const titleLines = shareWrapText(ctx, p.modelo||'', 64, y, W-128, 70, 2);
+  y += titleLines*70 + 16;
+  ctx.fillStyle = sage;
+  ctx.font = '500 30px "IBM Plex Sans", sans-serif';
+  ctx.fillText(categoriaLabel(p.categoria) + (p.grado ? ' · '+tt('Grado','Grade')+' '+p.grado : ''), 64, y);
+  y += 46;
+  if(p.folio){
+    ctx.fillStyle = goldDim;
+    ctx.font = '500 26px "IBM Plex Mono", monospace';
+    ctx.fillText('Folio ' + p.folio, 64, y);
+    y += 40;
+  }
+  ctx.strokeStyle = 'rgba(232,196,104,.4)';
+  ctx.beginPath(); ctx.moveTo(64, y+14); ctx.lineTo(W-64, y+14); ctx.stroke();
+  y += 56;
+  ctx.fillStyle = ink;
+  ctx.font = '500 26px "IBM Plex Mono", monospace';
+  ctx.fillText(opts.publicUrl ? tt('Visítala en línea:','Visit it online:') : tt('Autenticado por Laboratorio HV México','Authenticated by Laboratorio HV México'), 64, y);
+  y += 38;
+  ctx.fillStyle = gold;
+  ctx.font = '600 28px "IBM Plex Mono", monospace';
+  ctx.fillText((opts.publicUrl || SITE_DOMAIN).replace(/^https?:\/\//,''), 64, y);
+  return canvas;
+}
+
+// Historia vertical de la tarjeta de socio — no captura el DOM (evita
+// depender de cómo se vea la tarjeta en pantalla en ese momento): redibuja
+// los mismos datos del socio directo en canvas, en formato "carnet" dentro
+// de la Historia, con el mismo lenguaje visual obsidiana + dorado.
+async function buildSocioStoryCanvas(m, tierInfo){
+  await shareEnsureFonts();
+  const W = SHARE_STORY_W, H = SHARE_STORY_H;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const gold='#E8C468', goldDim='#A67C2E', obsidian='#0B0906', obsidian2='#17120D', panel='#1D1712', ink='#F3ECDF', sage='#C9B9A8', platinum='#E9E3D6';
+  const bgGrad = ctx.createLinearGradient(0,0,W,H);
+  bgGrad.addColorStop(0, obsidian); bgGrad.addColorStop(0.55, panel); bgGrad.addColorStop(1, obsidian2);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+  const aura = ctx.createRadialGradient(W*0.82,H*0.16,10,W*0.82,H*0.16,520);
+  aura.addColorStop(0,'rgba(232,196,104,.26)'); aura.addColorStop(1,'rgba(232,196,104,0)');
+  ctx.fillStyle = aura; ctx.fillRect(0,0,W,H);
+  const aura2 = ctx.createRadialGradient(W*0.14,H*0.88,10,W*0.14,H*0.88,460);
+  aura2.addColorStop(0,'rgba(232,196,104,.14)'); aura2.addColorStop(1,'rgba(232,196,104,0)');
+  ctx.fillStyle = aura2; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = 'rgba(232,196,104,.55)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(3,3,W-6,H-6);
+  try{
+    const logo = await shareLoadImage(LOGO_SRC);
+    ctx.drawImage(logo, W/2-40, 96, 80, 80);
+  }catch(e){}
+  ctx.textAlign = 'center';
+  ctx.fillStyle = gold;
+  ctx.font = '600 26px "IBM Plex Mono", monospace';
+  ctx.fillText('SALÓN PRIVADO HV', W/2, 218);
+  const cardX = 90, cardY = 620, cardW = W-180, cardH = 560;
+  roundRectPath(ctx, cardX, cardY, cardW, cardH, 28);
+  const cardGrad = ctx.createLinearGradient(cardX,cardY,cardX+cardW,cardY+cardH);
+  cardGrad.addColorStop(0, obsidian2); cardGrad.addColorStop(1, panel);
+  ctx.fillStyle = cardGrad;
+  ctx.fill();
+  ctx.strokeStyle = (m.nivelActual||1) >= 3 ? 'rgba(233,227,214,.65)' : 'rgba(232,196,104,.4)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.textAlign = 'left';
+  const pad = 56;
+  ctx.fillStyle = gold;
+  ctx.font = '600 22px "IBM Plex Mono", monospace';
+  ctx.fillText(tt('TARJETA DE SOCIO','MEMBER CARD'), cardX+pad, cardY+70);
+  ctx.fillStyle = ink;
+  ctx.font = '600 58px Fraunces, serif';
+  shareWrapText(ctx, m.nombre || tt('Socio HV','HV Member'), cardX+pad, cardY+150, cardW-pad*2, 62, 2);
+  const nombreNivel = tierInfo ? (SITE_LANG==='en' ? (tierInfo.nombreEn||tierInfo.nombre) : tierInfo.nombre) : ('Nivel '+(m.nivelActual||1));
+  ctx.fillStyle = (m.nivelActual||1) >= 3 ? platinum : gold;
+  ctx.font = '500 32px "IBM Plex Mono", monospace';
+  ctx.fillText((nombreNivel||'') + (m.vitalicio ? ' · '+tt('VITALICIO','LIFETIME') : ''), cardX+pad, cardY+230);
+  ctx.fillStyle = sage;
+  ctx.font = '500 28px "IBM Plex Sans", sans-serif';
+  ctx.fillText(`${m.piezasCertificadas||0} ${tt('piezas certificadas','certified pieces')}`, cardX+pad, cardY+280);
+  ctx.strokeStyle = 'rgba(232,196,104,.35)';
+  ctx.beginPath(); ctx.moveTo(cardX+pad, cardY+330); ctx.lineTo(cardX+cardW-pad, cardY+330); ctx.stroke();
+  ctx.fillStyle = goldDim;
+  ctx.font = '500 26px "IBM Plex Mono", monospace';
+  ctx.fillText('HVS-' + (m.code||'—'), cardX+pad, cardY+380);
+  ctx.fillStyle = sage;
+  ctx.font = '500 24px "IBM Plex Sans", sans-serif';
+  ctx.fillText(tt('Miembro del Salón Privado HV','Salón Privado HV member'), cardX+pad, cardY+420);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = ink;
+  ctx.font = '500 28px "IBM Plex Mono", monospace';
+  ctx.fillText(tt('Membresía por piezas certificadas','Membership earned through certified pieces'), W/2, H-140);
+  ctx.fillStyle = gold;
+  ctx.font = '600 30px "IBM Plex Mono", monospace';
+  ctx.fillText(SITE_DOMAIN.replace(/^https?:\/\//,''), W/2, H-96);
+  return canvas;
+}
+
+// ---- Hoja de compartir: UI reutilizable + acciones por red ----
+let SHARE_SHEET_STATE = null;
+async function openShareSheet(cfg){
+  const overlay = document.getElementById('share-sheet-overlay');
+  const sheet = document.getElementById('share-sheet');
+  if(!overlay || !sheet) return;
+  SHARE_SHEET_STATE = { file:null, blobUrl:null, cfg };
+  sheet.innerHTML = `
+    <div class="share-sheet-head">
+      <p class="share-sheet-kicker" id="share-sheet-title-el">${tt('Compartir','Share')}</p>
+      <button class="share-sheet-close" type="button" onclick="closeShareSheet()" aria-label="${tt('Cerrar','Close')}">✕</button>
+    </div>
+    <div class="share-sheet-preview" id="share-sheet-preview"><span class="ssp-loading">${tt('Generando imagen…','Generating image…')}</span></div>
+    <h3 class="share-sheet-title">${escapeHtml(cfg.title||'')}</h3>
+    ${cfg.privacyNote ? `<p class="share-sheet-note private">🔒 ${cfg.privacyNote}</p>` : `<p class="share-sheet-note">${tt('Comparte esta imagen en tus redes — formato listo para Historias.','Share this image on your socials — ready for Stories.')}</p>`}
+    <button class="share-sheet-primary" id="share-sheet-native-btn" type="button" onclick="shareSheetDoNative()" disabled>${tt('Preparando…','Preparing…')}</button>
+    <div class="share-sheet-grid" id="share-sheet-grid"></div>
+  `;
+  overlay.classList.add('open');
+  document.body.classList.add('book-open');
+  try{
+    const canvas = await cfg.buildCanvas();
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png', 0.95));
+    if(!blob) throw new Error('sin blob');
+    if(!SHARE_SHEET_STATE) return; // se cerró la hoja mientras se generaba la imagen
+    const file = new File([blob], (cfg.fileName||'laboratorio-hv-share')+'.png', {type:'image/png'});
+    SHARE_SHEET_STATE.file = file;
+    SHARE_SHEET_STATE.blobUrl = URL.createObjectURL(blob);
+    const preview = document.getElementById('share-sheet-preview');
+    if(preview) preview.innerHTML = `<img src="${SHARE_SHEET_STATE.blobUrl}" alt="${escapeHtml(cfg.title||'')}">`;
+    renderShareSheetButtons(cfg, file);
   }catch(err){
-    console.error('No se pudo exportar la tarjeta:', err);
+    console.error('No se pudo generar la imagen para compartir:', err);
+    const preview = document.getElementById('share-sheet-preview');
+    if(preview) preview.innerHTML = `<span class="ssp-loading">${tt('No se pudo generar la imagen.','Could not generate the image.')}</span>`;
+    const nativeBtn = document.getElementById('share-sheet-native-btn');
+    if(nativeBtn){ nativeBtn.disabled = true; nativeBtn.textContent = tt('No disponible','Not available'); }
+  }
+}
+function renderShareSheetButtons(cfg, file){
+  const grid = document.getElementById('share-sheet-grid');
+  const nativeBtn = document.getElementById('share-sheet-native-btn');
+  const canNative = !!(navigator.canShare && navigator.canShare({files:[file]}));
+  if(nativeBtn){
+    if(canNative){
+      nativeBtn.disabled = false;
+      nativeBtn.textContent = '📤 ' + tt('Compartir desde tu dispositivo','Share from your device');
+    } else {
+      nativeBtn.style.display = 'none';
+    }
+  }
+  if(!grid) return;
+  const items = [{icon:'💬', label:'WhatsApp', action:'shareSheetDoWhatsApp()'}];
+  if(cfg.shareUrl) items.push({icon:'📘', label:'Facebook', action:'shareSheetDoFacebook()'});
+  items.push({icon:'🎬', label: tt('Instagram / TikTok','Instagram / TikTok'), action:'shareSheetDoStoryDownload()'});
+  if(cfg.shareUrl) items.push({icon:'🔗', label: tt('Copiar enlace','Copy link'), action:'shareSheetDoCopyLink()'});
+  items.push({icon:'⬇️', label: tt('Descargar imagen','Download image'), action:'shareSheetDoDownload()'});
+  grid.innerHTML = items.map(it => `<button type="button" class="share-sheet-btn" onclick="${it.action}"><span class="ssb-icon">${it.icon}</span>${escapeHtml(it.label)}</button>`).join('');
+}
+function closeShareSheet(){
+  const overlay = document.getElementById('share-sheet-overlay');
+  if(overlay) overlay.classList.remove('open');
+  document.body.classList.remove('book-open');
+  if(SHARE_SHEET_STATE && SHARE_SHEET_STATE.blobUrl) URL.revokeObjectURL(SHARE_SHEET_STATE.blobUrl);
+  SHARE_SHEET_STATE = null;
+}
+async function shareSheetDoNative(){
+  if(!SHARE_SHEET_STATE || !SHARE_SHEET_STATE.file) return;
+  const cfg = SHARE_SHEET_STATE.cfg;
+  try{
+    await navigator.share({files:[SHARE_SHEET_STATE.file], title: cfg.shareTitle||'', text: cfg.shareText||'', url: cfg.shareUrl||undefined});
+    closeShareSheet();
+  }catch(e){ /* el usuario canceló el share nativo — se queda en la hoja */ }
+}
+function shareSheetDoWhatsApp(){
+  if(!SHARE_SHEET_STATE) return;
+  const cfg = SHARE_SHEET_STATE.cfg;
+  const msg = `${cfg.shareText||cfg.shareTitle||''}${cfg.shareUrl ? '\n'+cfg.shareUrl : ''}`;
+  window.open(waLink(msg), '_blank', 'noopener');
+}
+function shareSheetDoFacebook(){
+  if(!SHARE_SHEET_STATE || !SHARE_SHEET_STATE.cfg.shareUrl) return;
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_SHEET_STATE.cfg.shareUrl)}`, '_blank', 'noopener');
+}
+function shareSheetDoStoryDownload(){
+  if(!SHARE_SHEET_STATE) return;
+  shareSheetDoDownload();
+  toast(tt('Imagen descargada — ábrela en Instagram o TikTok y publícala como Historia.','Image downloaded — open it in Instagram or TikTok and post it as a Story.'));
+}
+async function shareSheetDoCopyLink(){
+  if(!SHARE_SHEET_STATE || !SHARE_SHEET_STATE.cfg.shareUrl) return;
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(SHARE_SHEET_STATE.cfg.shareUrl);
+      toast(tt('Enlace copiado.','Link copied.'));
+    }
+  }catch(e){ toast(tt('No se pudo copiar el enlace.','Could not copy the link.')); }
+}
+function shareSheetDoDownload(){
+  if(!SHARE_SHEET_STATE || !SHARE_SHEET_STATE.blobUrl) return;
+  const link = document.createElement('a');
+  link.download = (SHARE_SHEET_STATE.file && SHARE_SHEET_STATE.file.name) || 'laboratorio-hv-share.png';
+  link.href = SHARE_SHEET_STATE.blobUrl;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+// ---- Puntos de entrada por superficie ----
+function sharePublicPiece(id){
+  const p = (BOOK_STATE.piezas||[]).find(x => x.id === id) || (BOOK_STATE.allPiezas||[]).find(x => x.id === id);
+  if(!p) return;
+  const publicUrl = `${SITE_DOMAIN}/?pieza=${encodeURIComponent(id)}`;
+  openShareSheet({
+    title: p.modelo,
+    fileName: filenameSlug(['HV', p.modelo, 'historia']),
+    shareTitle: tt('Mi pieza certificada — Laboratorio HV México','My certified piece — Laboratorio HV México'),
+    shareText: tt(`${p.modelo} — certificada por Laboratorio HV México.`, `${p.modelo} — certified by Laboratorio HV México.`),
+    shareUrl: publicUrl,
+    buildCanvas: () => buildPieceStoryCanvas(p, {publicUrl, isSalon:false})
+  });
+}
+function shareSalonPiece(id){
+  const p = (SALON_BOOK_STATE.piezas||[]).find(x => x.id === id) || (SALON_BOOK_STATE.allPiezas||[]).find(x => x.id === id);
+  if(!p) return;
+  const hasConsent = !!p.consentimientoLibroPublico;
+  const publicUrl = hasConsent ? `${SITE_DOMAIN}/?pieza=${encodeURIComponent(id)}&s=salon` : null;
+  openShareSheet({
+    title: p.modelo,
+    fileName: filenameSlug(['HV-Salon', p.modelo, 'historia']),
+    shareTitle: tt('Mi pieza del Salón Privado HV','My Salón Privado HV piece'),
+    shareText: tt(`${p.modelo} — Salón Privado HV, Laboratorio HV México.`,`${p.modelo} — Salón Privado HV, Laboratorio HV México.`),
+    shareUrl: publicUrl,
+    privacyNote: hasConsent ? null : tt('Esta pieza es privada del Salón — se comparte solo como imagen, sin liga pública para verla en línea.','This Salón piece is private — it only shares as an image, with no public link to view it online.'),
+    buildCanvas: () => buildPieceStoryCanvas(p, {publicUrl, isSalon:true})
+  });
+}
+// Reemplaza la versión anterior (html2canvas del DOM) por la Historia
+// dibujada en canvas — mismo botón "Compartir tarjeta" del lobby, ahora
+// abre la hoja de compartir en vez de ir directo a Web Share/descarga.
+async function shareMembershipCard(){
+  const m = SALON_CURRENT_MEMBER;
+  if(!m){ toast(tt('No se encontró tu tarjeta.','Card not found.')); return; }
+  try{
+    const tiers = await getSalonTiers();
+    const tierInfo = (tiers && tiers.niveles && tiers.niveles[m.nivelActual]) || {};
+    openShareSheet({
+      title: tt('Mi tarjeta — Salón Privado HV','My card — Salón Privado HV'),
+      fileName: 'salon-hv-tarjeta-historia',
+      shareTitle: tt('Mi tarjeta — Salón Privado HV','My card — Salón Privado HV'),
+      shareText: tt('Soy socio del Salón Privado HV — Laboratorio HV México.','I\'m a Salón Privado HV member — Laboratorio HV México.'),
+      shareUrl: null,
+      buildCanvas: () => buildSocioStoryCanvas(m, tierInfo)
+    });
+  }catch(err){
+    console.error('No se pudo preparar la tarjeta para compartir:', err);
     toast(tt('No se pudo generar la imagen de tu tarjeta.','We couldn\'t generate your card image.'));
   }
 }
@@ -7512,6 +7891,7 @@ function renderSalonPieceDetail(p, photoIndex){
           ${p.grado?`<span class="pill original">${tt('Grado','Grade')} ${escapeHtml(p.grado)}</span>`:''}
         </div>
         ${p.folio ? `<button class="btn ghost small" style="margin-top:14px;" onclick="goVerifyFolio('${escapeHtml(p.folio)}')">${tt(`Ver certificado — ${escapeHtml(p.folio)} →`,`View certificate — ${escapeHtml(p.folio)} →`)}</button>` : ''}
+        <button class="btn salon-btn-gold small" style="margin-top:10px;" onclick="shareSalonPiece('${p.id}')">✨ ${tt('Compartir','Share')}</button>
       </div>
     </div>
   `;
@@ -8528,6 +8908,7 @@ function renderPieceDetail(p, photoIndex){
           ${p.grado?`<span class="pill original">${tt('Grado','Grade')} ${escapeHtml(p.grado)}</span>`:''}
         </div>
         ${p.folio ? `<button class="btn ghost small" style="margin-top:14px;" onclick="goVerifyFolio('${escapeHtml(p.folio)}')">${tt(`Ver certificado — ${escapeHtml(p.folio)} →`,`View certificate — ${escapeHtml(p.folio)} →`)}</button>` : ''}
+        <button class="btn small" style="margin-top:10px;" onclick="sharePublicPiece('${p.id}')">✨ ${tt('Compartir','Share')}</button>
       </div>
     </div>
   `;
@@ -8927,6 +9308,75 @@ function handleIncomingFolioLink(){
   }catch(e){}
 }
 handleIncomingFolioLink();
+
+// Página pública de una sola pieza (?pieza=<id>) — el destino de las ligas
+// que genera "Compartir" en la biblioteca pública y en el Salón. Para
+// piezas públicas (site:piezas) siempre existe; para piezas del Salón solo
+// existe si esa pieza tiene consentimientoLibroPublico=true — si no, la
+// liga simplemente no revela nada (ni error, ni pista de que la pieza
+// existe) y el visitante se queda en el inicio, igual de silencioso que un
+// folio inválido en handleIncomingFolioLink().
+async function handleIncomingPiezaLink(){
+  try{
+    const params = new URLSearchParams(window.location.search);
+    const piezaId = (params.get('pieza') || '').trim();
+    if(!piezaId) return;
+    let p = null, isSalon = false;
+    try{
+      const piezas = await getPiezas();
+      p = piezas.find(x => x.id === piezaId) || null;
+    }catch(e){}
+    if(!p){
+      try{
+        const salonPiezas = await getSalonPiezas();
+        const sp = salonPiezas.find(x => x.id === piezaId);
+        if(sp && sp.consentimientoLibroPublico){ p = sp; isSalon = true; }
+      }catch(e){}
+    }
+    if(!p) return;
+    renderPublicPiezaView(p, isSalon);
+    go('pieza');
+  }catch(e){}
+}
+handleIncomingPiezaLink();
+
+function renderPublicPiezaView(p, isSalon){
+  const wrap = document.getElementById('pieza-publica-content');
+  if(!wrap) return;
+  wrap.className = isSalon ? 'salon-scope' : '';
+  window.__PUBLIC_PIEZA_CURRENT = p;
+  const fotos = (p.fotos && p.fotos.length) ? p.fotos : [{url:'',caption:''}];
+  const kicker = isSalon ? tt('SALÓN PRIVADO HV · PIEZA CERTIFICADA','SALÓN PRIVADO HV · CERTIFIED PIECE') : tt('LABORATORIO HV MÉXICO · PIEZA CERTIFICADA','LABORATORIO HV MÉXICO · CERTIFIED PIECE');
+  wrap.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <p class="${isSalon?'salon-kicker':''}" style="${isSalon?'':"font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);"}margin:0;">${kicker}</p>
+      <button class="btn ${isSalon?'salon-btn-ghost':'ghost'} small" onclick="go('inicio')">${tt('Ir al inicio','Go home')}</button>
+    </div>
+    <div class="piece-detail">
+      <div>
+        <div class="piece-detail-main"><img src="${escapeHtml(fotos[0].url)}" alt="${escapeHtml(p.modelo)}" id="pieza-publica-img"></div>
+        ${fotos.length>1 ? `<div class="piece-detail-thumbs">${fotos.map((f,i)=>`<button type="button" class="pdt ${i===0?'active':''}" onclick="setPublicPiezaPhoto(${i})"><img src="${escapeHtml(f.url)}" alt=""></button>`).join('')}</div>` : ''}
+      </div>
+      <div class="piece-detail-info">
+        <h3 style="${isSalon?'color:var(--salon-ink);':''}">${escapeHtml(p.modelo)}</h3>
+        <div class="piece-detail-tags">
+          <span class="pill neutral">${categoriaLabel(p.categoria)}</span>
+          ${p.grado?`<span class="pill original">${tt('Grado','Grade')} ${escapeHtml(p.grado)}</span>`:''}
+        </div>
+        ${p.folio ? `<button class="btn ${isSalon?'salon-btn-gold':''} small" style="margin-top:14px;" onclick="goVerifyFolio('${escapeHtml(p.folio)}')">${tt('Ver certificado →','View certificate →')}</button>` : ''}
+        <p style="font-size:12.5px;color:${isSalon?'var(--salon-sage)':'var(--sage)'};margin-top:18px;line-height:1.6;">${tt('Esta pieza fue autenticada y certificada por Laboratorio HV México.','This piece was authenticated and certified by Laboratorio HV México.')}</p>
+        <button class="btn ghost small" onclick="go('inicio')" style="margin-top:6px;">${tt('Conoce el laboratorio','Learn about the lab')}</button>
+      </div>
+    </div>
+  `;
+}
+function setPublicPiezaPhoto(i){
+  const p = window.__PUBLIC_PIEZA_CURRENT;
+  if(!p || !p.fotos || !p.fotos[i]) return;
+  const img = document.getElementById('pieza-publica-img');
+  if(img) img.src = p.fotos[i].url;
+  document.querySelectorAll('#pieza-publica-content .piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
+}
 
 function prefillFolioFromSolicitud(dJson){
   const d = JSON.parse(dJson);
