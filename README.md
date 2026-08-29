@@ -89,12 +89,47 @@ grandes, en orden aproximado en que aparecen:
   dibujada directo en `<canvas>` (`buildPieceStoryCanvas`/
   `buildSocioStoryCanvas`, sin librerías nuevas) y abre una hoja de
   compartir propia (`openShareSheet`) con Web Share API nativo + botones de
-  WhatsApp/Facebook/Instagram-TikTok(descarga)/copiar enlace/descargar. Una
+  WhatsApp/Facebook/Instagram-TikTok(descarga)/copiar enlace/descargar, con
+  íconos de marca en SVG inline (`shareBrandIcon()`); como Instagram/TikTok
+  no soportan compartir directo desde el navegador, ese botón está
+  etiquetado explícitamente como descarga ("Descargar imagen — Historia de
+  Instagram"). Una
   pieza del Salón solo genera una liga pública visitable
   (`?pieza=<id>&s=salon`, atendida por `handleIncomingPiezaLink()`) si tiene
   `consentimientoLibroPublico:true`; si no, comparte solo la imagen, sin
   liga. Las piezas de la biblioteca pública siempre tienen liga
   (`?pieza=<id>`), porque ya son públicas de por sí.
+- **"Piezas falsas"** (`site:piezasFalsas`) — pestaña de navegación y
+  almanaque público paralelo al "Librero", donde el admin publica piezas
+  detectadas como falsas/alteradas durante los peritajes (modelo, categoría,
+  motivo y fotos). No toca el flujo de certificación/folios — es solo un
+  registro público de advertencia para la comunidad de coleccionistas.
+  Módulo completo (`getPiezasFalsas`/`setPiezasFalsas`/
+  `renderPiezasFalsasAdmin`/`renderPiezasFalsasView`/etc.) justo después del
+  módulo de piezas del admin. El "Dictamen de autenticidad" en Metodología
+  también tiene una tarjeta nueva "Falso/Alterado" (⚠️) a lado de "Réplica".
+- **Nombres de paquetes**: "Peritaje + dictamen" (antes "Peritaje físico +
+  certificado") y "Premium + certificación + encapsulado" (antes "Premium +
+  encapsulado"/"Peritaje premium + encapsulado", que ya estaban
+  inconsistentes entre sí). El nombre del paquete se usa también como llave
+  literal en `PKG_PRICE`/`DEADLINE_DAYS` y se guarda tal cual en el campo
+  `nivel` de `solicitud:`/`folio:` en Firestore — por eso ambos diccionarios
+  conservan las llaves viejas como respaldo (comentario en el código, junto
+  a `PKG_PRICE`), para que folios/solicitudes ya emitidos con el nombre
+  anterior sigan resolviendo su precio y plazo correctamente.
+- **Aviso Express/Super Express**: ambos tiempos de entrega ahora aclaran
+  (en la tabla de precios y en el wizard) que cuentan a partir de que la
+  pieza está físicamente en el laboratorio, no desde que se solicita o se
+  envía.
+- **Verificar folio**: se quitó el "ejemplo de folio" mostrado en los
+  campos de folio (portada y vista "Verificar folio") — el placeholder
+  ahora es un texto genérico ("Folio o código del certificado"), para no
+  enseñar el patrón de los folios reales. El texto de la vista también se
+  simplificó a un mensaje genérico de "verifica el folio de tu pieza
+  certificada o el código QR de tu certificado". La verificación en sí
+  sigue siendo pública a propósito (decisión confirmada con el cliente): es
+  lo que le permite a un comprador de segunda mano validar que una pieza es
+  auténtica.
 - **Calendario** — agendado de citas (y su versión paralela VIP).
 - **Sistema de i18n** — `SITE_LANG`, `data-i18n`/`data-i18n-placeholder`/
   `data-i18n-aria`, `I18N_EN` (diccionario a inglés), `t()`/`tt()`,

@@ -925,6 +925,18 @@
     .piece-detail{grid-template-columns:1fr;}
   }
 
+  /* ---- Piezas falsas — registro público de advertencia, mismo grid que la
+     biblioteca pero con acento rojo/warning en vez del tono editorial ---- */
+  .fake-piece-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+  .fake-piece-card{display:flex;flex-direction:column;background:var(--panel-2);border:1px solid var(--line);border-top:3px solid var(--bad);border-radius:8px;overflow:hidden;cursor:pointer;padding:0;text-align:left;font-family:inherit;transition:transform .18s ease, box-shadow .18s ease;}
+  .fake-piece-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(163,38,56,.16);}
+  .fake-piece-photo{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:var(--panel);}
+  .fake-piece-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .fake-piece-badge{position:absolute;top:8px;left:8px;background:var(--bad);color:#fff;font-size:10px;padding:3px 9px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:.03em;}
+  .fake-piece-info{padding:10px 12px 12px;}
+  .fake-piece-model{display:block;font-family:'Fraunces',serif;font-size:14px;color:var(--ink);line-height:1.3;}
+  .fake-piece-motivo{display:block;margin-top:4px;font-size:11.5px;color:var(--sage);line-height:1.4;}
+
   /* ---- Vista previa de fotos al agregar una pieza (admin) ---- */
   .pieza-photos-preview{display:flex;flex-wrap:wrap;gap:8px;}
   .pieza-photo-thumb{position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;background:var(--panel);border:1px solid var(--line);}
@@ -1168,7 +1180,7 @@
      derecha) — por eso necesita un fondo 100% opaco. Antes usaba el mismo
      rojo translúcido que el resto de la fila (rgba con 9% de opacidad), así
      que al deslizar, los precios de las columnas de atrás se alcanzaban a
-     ver encimados debajo de "Peritaje físico + certificado". color-mix()
+     ver encimados debajo de "Peritaje + dictamen". color-mix()
      mezcla el rojo con el color de fondo real del tema (claro u oscuro)
      para lograr el mismo tono, pero totalmente opaco. */
   .pricing-table tr.pkg-row-featured td:first-child{background:color-mix(in srgb, var(--red) 9%, var(--panel));}
@@ -1819,6 +1831,7 @@
       <button data-v="metodologia" onclick="go('metodologia')" data-i18n="nav.metodologia">Metodología</button>
       <button data-v="paquetes" onclick="go('paquetes')" data-i18n="nav.paquetes">Paquetes</button>
       <button data-v="verificar" onclick="go('verificar')" data-i18n="nav.verificar">Verificar folio</button>
+      <button data-v="piezasfalsas" onclick="go('piezasfalsas')" data-i18n="nav.piezasFalsas">Piezas falsas</button>
       <button data-v="solicitar" onclick="go('solicitar')" data-i18n="nav.solicitar">Solicitar validación</button>
       <button data-v="cliente" onclick="go('cliente')" data-i18n="nav.cliente">Mi historial</button>
       <button data-v="salon" onclick="go('salon')" class="nav-salon" data-i18n="nav.salon">Salón Privado HV</button>
@@ -1898,7 +1911,7 @@
           <label for="quick-folio" data-i18n="inicio.hero.verifyLabel">Verificar un folio ahora</label>
         </div>
         <div class="verify-input-group">
-          <input id="quick-folio" placeholder="HV-MX-2026-001">
+          <input id="quick-folio" placeholder="Folio o código del certificado" data-i18n-placeholder="inicio.hero.verifyPh">
           <button class="btn" onclick="quickVerify()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;vertical-align:-2px;margin-right:5px;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span data-i18n="inicio.hero.buscar">Buscar</span>
           </button>
@@ -2485,7 +2498,7 @@
       <div class="scale-row"><div class="grade-medal tier-gold">9.0–9.9</div><div data-i18n="metodologia.escala.g9"><strong style="color:var(--ink);">Mint</strong> — Casi perfecta. Micro detalles imperceptibles a simple vista, solo visibles con aumento. Conservación excepcional.</div></div>
       <div class="scale-row"><div class="grade-medal tier-silver">8.0–8.9</div><div data-i18n="metodologia.escala.g8"><strong style="color:var(--ink);">Near Mint-Mint</strong> — Excelente. Desgaste mínimo congruente con manipulación. Bordes y filos bien conservados.</div></div>
       <div class="scale-row"><div class="grade-medal tier-silver">7.0–7.9</div><div data-i18n="metodologia.escala.g7"><strong style="color:var(--ink);">Excellent</strong> — Muy buena. Desgaste ligero visible en filos, llantas con uso ligero. Pieza muy coleccionable.</div></div>
-      <div class="scale-row"><div class="grade-medal tier-silver">≤6.0</div><div data-i18n="metodologia.escala.g6"><strong style="color:var(--ink);">Buena a Regular</strong> — Desgaste evidente, pérdida de pintura, cromo opaco o llantas gastadas. Auténtica pero con historia de juego.</div></div>
+      <div class="scale-row"><div class="grade-medal tier-silver">≤6.0</div><div data-i18n="metodologia.escala.g6"><strong style="color:var(--ink);">Good to Fair</strong> — Desgaste evidente, pérdida de pintura, cromo opaco o llantas gastadas. Auténtica pero con historia de juego.</div></div>
     </div>
 
     <h3 style="font-size:16px;margin-top:30px;"><span data-i18n="metodologia.escala.dictamenH3">Dictamen de autenticidad</span> <span style="color:var(--sage);font-weight:400;font-size:13px;" data-i18n="metodologia.escala.dictamenH3Note">(independiente a la calificación)</span></h3>
@@ -2520,6 +2533,12 @@
         <h4 data-i18n="metodologia.escala.d5.h4">Réplica</h4>
         <p data-i18n="metodologia.escala.d5.p">No es una pieza original. No se emite certificado de autenticidad; se informa el hallazgo al cliente.</p>
         <span class="pill replica" data-i18n="metodologia.escala.d5.h4">Réplica</span>
+      </div>
+      <div class="dictamen-card tier-bad">
+        <span class="dictamen-icon">⚠️</span>
+        <h4 data-i18n="metodologia.escala.d6.h4">Falso / Alterado</h4>
+        <p data-i18n="metodologia.escala.d6.p">Pieza manipulada para aparentar autenticidad u originalidad que no tiene. No se emite certificado; el hallazgo se publica en Piezas falsas para alertar a otros coleccionistas.</p>
+        <span class="pill replica" data-i18n="metodologia.escala.d6.h4">Falso / Alterado</span>
       </div>
     </div>
     <p class="foot-note" style="margin-top:18px;" data-i18n="metodologia.escala.footNote">Además del dictamen, cada folio publica su calificación numérica exacta (por ejemplo, 8.5), no solo el rango.</p>
@@ -2563,7 +2582,7 @@
       <div class="card tag-notch pkg-card pkg-featured" data-pkg="fisico">
         <span class="pkg-card-badge mono" data-i18n="paquetes.fisico.badge">Más completo</span>
         <span class="pkg-card-icon">🧪</span>
-        <h3 class="pkg-card-name" data-i18n="paquetes.fisico.name">Peritaje físico + certificado</h3>
+        <h3 class="pkg-card-name" data-i18n="paquetes.fisico.name">Peritaje + dictamen</h3>
         <p class="pkg-card-price" id="pkg-price-fisico"><span class="mono">$400</span> <small>MXN</small></p>
         <span class="pkg-card-time" id="pkg-time-fisico" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
         <ul class="pkg-list">
@@ -2579,6 +2598,7 @@
             <button type="button" class="pkg-speed-chip" data-tier="express" onclick="pkgSelectSpeed('fisico','express',this)" data-i18n="paquetes.tier.express">Express · 72h</button>
             <button type="button" class="pkg-speed-chip" data-tier="super" onclick="pkgSelectSpeed('fisico','super',this)" data-i18n="paquetes.tier.super">Super Express · 24–48h</button>
           </div>
+          <p class="foot-note" style="border:none;padding:6px 0 0;margin:0;font-size:11px;" data-i18n="paquetes.expressNotaCorta2">Express y Super Express cuentan una vez que tu pieza está en el laboratorio.</p>
         </div>
         <details class="pkg-detail">
           <summary data-i18n="paquetes.verProtocolo">Ver protocolo completo</summary>
@@ -2597,7 +2617,7 @@
       <div class="card tag-notch pkg-card" data-pkg="premium">
         <span class="pkg-card-badge mono" data-i18n="paquetes.premium.badge">Máxima protección</span>
         <span class="pkg-card-icon">🛡️</span>
-        <h3 class="pkg-card-name" data-i18n="paquetes.premium.name">Premium + encapsulado</h3>
+        <h3 class="pkg-card-name" data-i18n="paquetes.premium.name">Premium + certificación + encapsulado</h3>
         <p class="pkg-card-price" id="pkg-price-premium"><span class="mono">$800</span> <small>MXN</small></p>
         <span class="pkg-card-time" id="pkg-time-premium" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
         <ul class="pkg-list">
@@ -2613,6 +2633,7 @@
             <button type="button" class="pkg-speed-chip" data-tier="express" onclick="pkgSelectSpeed('premium','express',this)" data-i18n="paquetes.tier.express">Express · 72h</button>
             <button type="button" class="pkg-speed-chip" data-tier="super" onclick="pkgSelectSpeed('premium','super',this)" data-i18n="paquetes.tier.super">Super Express · 24–48h</button>
           </div>
+          <p class="foot-note" style="border:none;padding:6px 0 0;margin:0;font-size:11px;" data-i18n="paquetes.expressNotaCorta2">Express y Super Express cuentan una vez que tu pieza está en el laboratorio.</p>
         </div>
         <details class="pkg-detail">
           <summary data-i18n="paquetes.verProtocolo">Ver protocolo completo</summary>
@@ -2636,7 +2657,7 @@
 
   <section>
     <h2 data-i18n="paquetes.tabla.h2">Tabla oficial de tiempos y costos</h2>
-    <p style="color:var(--sage);max-width:640px;" data-i18n="paquetes.tabla.p">Protocolo Zigzag C-Z — mientras más rápido necesites tu dictamen, mayor es el costo del servicio. La fila resaltada corresponde a nuestro paquete recomendado, Peritaje físico + certificado.</p>
+    <p style="color:var(--sage);max-width:640px;" data-i18n="paquetes.tabla.p">Protocolo Zigzag C-Z — mientras más rápido necesites tu dictamen, mayor es el costo del servicio. La fila resaltada corresponde a nuestro paquete recomendado, Peritaje + dictamen.</p>
     <p class="table-scroll-hint" data-i18n="paquetes.tabla.scrollHint">Desliza para ver más ➜</p>
     <div class="table-scroll-wrap">
     <div class="table-scroll">
@@ -2646,8 +2667,8 @@
           <th data-i18n="paquetes.tabla.thServicio">Servicio</th>
           <th>🗓️ <span data-i18n="paquetes.tabla.thEstandar">Estándar</span><br><span class="mono" data-i18n="paquetes.tabla.thEstandarDias">10 días</span></th>
           <th>⚡ <span data-i18n="paquetes.tabla.thPrioritario">Prioritario</span><br><span class="mono" data-i18n="paquetes.tabla.thPrioritarioDias">5 días (+30%)</span></th>
-          <th>🚚 <span data-i18n="paquetes.tabla.thExpress">Express</span><br><span class="mono">72h (+60%)</span></th>
-          <th>🚀 <span data-i18n="paquetes.tabla.thSuper">Super Express</span><br><span class="mono">24–48h (×2)</span></th>
+          <th>🚚 <span data-i18n="paquetes.tabla.thExpress">Express</span><br><span class="mono">72h (+60%)</span><br><span class="foot-note" style="border:none;padding:0;margin:0;font-size:10px;" data-i18n="paquetes.expressNotaCorta">una vez en laboratorio</span></th>
+          <th>🚀 <span data-i18n="paquetes.tabla.thSuper">Super Express</span><br><span class="mono">24–48h (×2)</span><br><span class="foot-note" style="border:none;padding:0;margin:0;font-size:10px;" data-i18n="paquetes.expressNotaCorta">una vez en laboratorio</span></th>
         </tr>
         </thead>
         <tbody>
@@ -2659,14 +2680,14 @@
           <td class="muted-cell" data-i18n="paquetes.tabla.noAplica">No aplica</td>
         </tr>
         <tr id="pricing-row-fisico" class="pkg-row-featured">
-          <td><strong data-i18n="paquetes.fisico.name">Peritaje físico + certificado</strong><br><span class="foot-note" style="border:none;padding:0;margin:0;">$400 MXN</span></td>
+          <td><strong data-i18n="paquetes.fisico.name">Peritaje + dictamen</strong><br><span class="foot-note" style="border:none;padding:0;margin:0;">$400 MXN</span></td>
           <td class="mono">$400</td>
           <td class="mono">$520</td>
           <td class="mono">$640</td>
           <td class="mono">$800</td>
         </tr>
         <tr id="pricing-row-premium">
-          <td><strong data-i18n="paquetes.premium.name">Premium + encapsulado</strong><br><span class="foot-note" style="border:none;padding:0;margin:0;">$800 MXN</span></td>
+          <td><strong data-i18n="paquetes.premium.name">Premium + certificación + encapsulado</strong><br><span class="foot-note" style="border:none;padding:0;margin:0;">$800 MXN</span></td>
           <td class="mono">$800</td>
           <td class="mono">$1,040</td>
           <td class="mono">$1,280</td>
@@ -2676,6 +2697,7 @@
       </table>
     </div>
     </div>
+    <p class="foot-note" style="border:none;padding-top:8px;" data-i18n="paquetes.expressNota">⚠️ Los tiempos Express y Super Express cuentan a partir de que tu pieza está físicamente en el laboratorio, no desde que solicitas o envías tu pieza.</p>
   </section>
 
   <section>
@@ -2721,9 +2743,9 @@
 <div class="view" id="view-verificar">
   <section>
     <h2 data-i18n="verificar.h2">Verificación pública de folio</h2>
-    <p style="color:var(--sage);" data-i18n="verificar.p">Cualquier persona puede verificar la autenticidad de un dictamen ingresando el folio impreso en el certificado o leyendo el código QR.</p>
+    <p style="color:var(--sage);" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
     <div class="row" style="max-width:460px;">
-      <input id="v-folio" placeholder="HV-MX-2026-001" style="flex:1;">
+      <input id="v-folio" placeholder="Folio o código del certificado" data-i18n-placeholder="verificar.folioPh" style="flex:1;">
       <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
     </div>
     <div id="v-result" style="margin-top:28px;"></div>
@@ -2732,6 +2754,14 @@
 
 <div class="view" id="view-pieza">
   <section id="pieza-publica-content"></section>
+</div>
+
+<div class="view" id="view-piezasfalsas">
+  <section>
+    <h2 data-i18n="piezasfalsas.h2">⚠️ Piezas falsas</h2>
+    <p style="color:var(--sage);max-width:640px;" data-i18n="piezasfalsas.p">Registro público de piezas que hemos detectado como falsas o alteradas durante nuestros peritajes, para alertar a la comunidad de coleccionistas. No sustituye una certificación propia — si tienes dudas sobre una pieza específica, solicita tu validación.</p>
+    <div id="piezasfalsas-content" style="margin-top:20px;"></div>
+  </section>
 </div>
 
 <div class="view" id="view-solicitar">
@@ -2773,7 +2803,7 @@
             <div class="wiz-pkg-card featured" data-pkg="fisico" role="button" tabindex="0" onclick="wizSelectPackage('fisico')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('fisico');}">
               <span class="wiz-pkg-card-badge mono" data-i18n="wiz.badge.complete">Más completo</span>
               <span class="wiz-pkg-card-icon">🧪</span>
-              <span class="wiz-pkg-card-name" data-i18n="wiz.pkg.fisico.name">Peritaje físico + certificado</span>
+              <span class="wiz-pkg-card-name" data-i18n="wiz.pkg.fisico.name">Peritaje + dictamen</span>
               <span class="wiz-pkg-card-price" id="wiz-pkg-price-fisico">$400 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li data-i18n="wiz.pkg.fisico.b1">Peritaje presencial en laboratorio</li>
@@ -2788,13 +2818,14 @@
                   <button type="button" class="pkg-speed-chip" data-tier="express" onclick="wizPkgSelectSpeed('fisico','express',this,event)" data-i18n="wiz.speed.express">Express · 72h</button>
                   <button type="button" class="pkg-speed-chip" data-tier="super" onclick="wizPkgSelectSpeed('fisico','super',this,event)" data-i18n="wiz.speed.super">Super Express · 24–48h</button>
                 </div>
+                <p class="foot-note" style="border:none;padding:6px 0 0;margin:0;font-size:11px;" data-i18n="paquetes.expressNotaCorta2">Express y Super Express cuentan una vez que tu pieza está en el laboratorio.</p>
               </div>
               <span class="wiz-pkg-card-time" id="wiz-pkg-time-fisico" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
             </div>
             <div class="wiz-pkg-card" data-pkg="premium" role="button" tabindex="0" onclick="wizSelectPackage('premium')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();wizSelectPackage('premium');}">
               <span class="wiz-pkg-card-badge mono" data-i18n="wiz.badge.maxProtection">Máxima protección</span>
               <span class="wiz-pkg-card-icon">🛡️</span>
-              <span class="wiz-pkg-card-name" data-i18n="wiz.pkg.premium.name">Premium + encapsulado</span>
+              <span class="wiz-pkg-card-name" data-i18n="wiz.pkg.premium.name">Premium + certificación + encapsulado</span>
               <span class="wiz-pkg-card-price" id="wiz-pkg-price-premium">$800 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li data-i18n="wiz.pkg.premium.b1">Todo lo del peritaje físico</li>
@@ -2809,14 +2840,15 @@
                   <button type="button" class="pkg-speed-chip" data-tier="express" onclick="wizPkgSelectSpeed('premium','express',this,event)" data-i18n="wiz.speed.express">Express · 72h</button>
                   <button type="button" class="pkg-speed-chip" data-tier="super" onclick="wizPkgSelectSpeed('premium','super',this,event)" data-i18n="wiz.speed.super">Super Express · 24–48h</button>
                 </div>
+                <p class="foot-note" style="border:none;padding:6px 0 0;margin:0;font-size:11px;" data-i18n="paquetes.expressNotaCorta2">Express y Super Express cuentan una vez que tu pieza está en el laboratorio.</p>
               </div>
               <span class="wiz-pkg-card-time" id="wiz-pkg-time-premium" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
             </div>
           </div>
           <select id="s-nivel" class="wiz-sr-label" onchange="onPackageChange()" tabindex="-1" aria-hidden="true">
             <option value="digital">1. Validación — $150 MXN</option>
-            <option value="fisico">2. Peritaje físico + certificado — $400 MXN</option>
-            <option value="premium">3. Peritaje premium + encapsulado — $800 MXN</option>
+            <option value="fisico">2. Peritaje + dictamen — $400 MXN</option>
+            <option value="premium">3. Premium + certificación + encapsulado — $800 MXN</option>
           </select>
           <input type="hidden" id="s-modo-digital" value="en_linea">
         </div>
@@ -3276,7 +3308,7 @@
                 <label>Observaciones</label>
                 <textarea id="a-obs" rows="2" oninput="updateLivePreview()"></textarea>
                 <label>Nivel de servicio</label>
-                <select id="a-nivel" onchange="updateLivePreview()"><option>Validación digital</option><option>Peritaje físico + certificado</option><option>Peritaje premium + encapsulado</option></select>
+                <select id="a-nivel" onchange="updateLivePreview()"><option>Validación digital</option><option>Peritaje + dictamen</option><option>Premium + certificación + encapsulado</option></select>
                 <label>Idioma del certificado</label>
                 <select id="a-cert-lang" onchange="updateLivePreview()">
                   <option value="es" selected>Español (predeterminado)</option>
@@ -3493,6 +3525,28 @@
               </div>
               <label style="margin-top:20px;">Piezas en la biblioteca</label>
               <div id="a-piezas-list" style="margin-top:10px;"></div>
+            </div>
+
+            <div class="card" style="margin-top:16px;border-color:var(--red);">
+              <h3 style="font-size:16px;">⚠️ Piezas falsas / alteradas</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Registro público de piezas detectadas como falsas o alteradas durante el peritaje — sirve para alertar a otros coleccionistas. No está ligado al folio del cliente; solo sube lo que sea necesario para advertir del hallazgo (modelo y motivo), sin exponer datos personales.</p>
+              <div class="card" style="background:var(--panel-2);padding:16px;margin-top:6px;">
+                <input id="a-piezafalsa-modelo" placeholder="Modelo (ej. VW Sedán — Policía Federal)" style="margin-bottom:8px;">
+                <select id="a-piezafalsa-categoria" style="margin-bottom:8px;">
+                  <option value="cipsa">CIPSA</option>
+                  <option value="bolidos">Bólidos Lilí Ledy</option>
+                  <option value="aurimat">Aurimat</option>
+                  <option value="otro">Otras piezas</option>
+                </select>
+                <textarea id="a-piezafalsa-motivo" rows="2" placeholder="Motivo del hallazgo (ej. molde incorrecto, peso fuera de rango, remaches no originales)" style="margin-bottom:8px;"></textarea>
+                <label style="font-size:12.5px;">Fotos de evidencia (la primera será la foto principal)</label>
+                <input type="file" accept="image/*" multiple id="a-piezafalsa-files" onchange="handlePiezaFalsaFilesSelect(this)" style="margin:6px 0 10px;">
+                <div id="a-piezafalsa-photos-preview" class="pieza-photos-preview"></div>
+                <button class="btn small" style="margin-top:10px;" onclick="addPiezaFalsa()">Agregar a Piezas falsas</button>
+                <p id="a-piezafalsa-status" class="foot-note" style="border:none;padding-top:8px;margin:0;"></p>
+              </div>
+              <label style="margin-top:20px;">Piezas falsas publicadas</label>
+              <div id="a-piezasfalsas-list" style="margin-top:10px;"></div>
             </div>
           </div>
 
@@ -3947,6 +4001,9 @@ const I18N_EN = {
   'nav.metodologia': 'Methodology',
   'nav.paquetes': 'Packages',
   'nav.verificar': 'Verify a folio',
+  'nav.piezasFalsas': 'Fake pieces',
+  'piezasfalsas.h2': '⚠️ Fake pieces',
+  'piezasfalsas.p': 'Public record of pieces we\'ve identified as fake or altered during our appraisals, to warn the collector community. It doesn\'t replace your own certification — if you have doubts about a specific piece, request your own validation.',
   'nav.solicitar': 'Request certification',
   'nav.cliente': 'My history',
   'nav.salon': 'Salón Privado HV',
@@ -3964,6 +4021,7 @@ const I18N_EN = {
   'inicio.hero.lead': 'We are collectors certifying for collectors: independent certification, expert judgment and over 25 years of experience — not affiliated with the brands. We assess whether your piece is original, repainted or modified, using traceable technical criteria, and record it with a public folio.',
   'inicio.hero.statLbl': 'pieces certified',
   'inicio.hero.verifyLabel': 'Verify a folio now',
+  'placeholder:inicio.hero.verifyPh': 'Folio or certificate code',
   'inicio.hero.buscar': 'Search',
   'inicio.cert.h2': 'What your certificate looks like',
   'inicio.cert.p': 'Hover over it (or tap it on your phone) to see both sides, as if you had the encapsulated piece in your hands.',
@@ -4176,6 +4234,8 @@ const I18N_EN = {
   'metodologia.escala.d4.p': 'Original piece with minor repairs — axles, tires or rivets. Certified with the corresponding note.',
   'metodologia.escala.d5.h4': 'Replica',
   'metodologia.escala.d5.p': 'Not an original piece. No authenticity certificate is issued; the finding is reported to the client.',
+  'metodologia.escala.d6.h4': 'Fake / Altered',
+  'metodologia.escala.d6.p': 'A piece altered to look authentic or original when it is not. No certificate is issued; the finding is published on Fake Pieces to warn other collectors.',
   'metodologia.escala.footNote': 'Besides the assessment, every folio publishes its exact numerical rating (for example, 8.5), not just the range.',
 
   // Paquetes (public pricing page)
@@ -4192,7 +4252,7 @@ const I18N_EN = {
   'paquetes.digital.det2': 'Preliminary assessment: appears to be original / does not appear to be original, with a 0–10 rating',
   'paquetes.digital.det3': 'Informal document (PDF) with model, rating and result — no official folio or lab logo',
   'paquetes.fisico.badge': 'Most complete',
-  'paquetes.fisico.name': 'Physical appraisal + certificate',
+  'paquetes.fisico.name': 'Appraisal + assessment',
   'paquetes.fisico.li1': 'In-person appraisal at the lab',
   'paquetes.fisico.li2': 'Folio and physical certificate',
   'paquetes.fisico.li3': 'Official preservation grade',
@@ -4201,7 +4261,7 @@ const I18N_EN = {
   'paquetes.fisico.det3': 'Certificate with official HV folio + QR',
   'paquetes.fisico.chipsAria': 'Choose delivery time for physical appraisal',
   'paquetes.premium.badge': 'Maximum protection',
-  'paquetes.premium.name': 'Premium + encapsulation',
+  'paquetes.premium.name': 'Premium + certification + encapsulation',
   'paquetes.premium.li1': 'Everything in the physical appraisal',
   'paquetes.premium.li2': 'Sealed protective encapsulation',
   'paquetes.premium.li3': 'Priority in the lab queue',
@@ -4217,9 +4277,12 @@ const I18N_EN = {
   'paquetes.tier.prioritario': 'Priority · 5 days',
   'paquetes.tier.express': 'Express · 72h',
   'paquetes.tier.super': 'Super Express · 24–48h',
+  'paquetes.expressNotaCorta': 'once at the lab',
+  'paquetes.expressNotaCorta2': 'Express and Super Express count once your piece is at the lab.',
   'paquetes.footNote': 'All three packages can be sped up with our timing protocol — use the chips above to simulate the cost, or check the full official table below.',
   'paquetes.tabla.h2': 'Official timing and pricing table',
-  'paquetes.tabla.p': 'Zigzag C-Z Protocol — the faster you need your assessment, the higher the service cost. The highlighted row is our recommended package, Physical appraisal + certificate.',
+  'paquetes.tabla.p': 'Zigzag C-Z Protocol — the faster you need your assessment, the higher the service cost. The highlighted row is our recommended package, Appraisal + assessment.',
+  'paquetes.expressNota': '⚠️ Express and Super Express times count from when your piece is physically at the lab, not from when you request or ship it.',
   'paquetes.tabla.scrollHint': 'Swipe to see more ➜',
   'paquetes.tabla.thServicio': 'Service',
   'paquetes.tabla.thEstandar': 'Standard',
@@ -4304,7 +4367,8 @@ const I18N_EN = {
 
   // Verificar folio (public verification page)
   'verificar.h2': 'Public folio verification',
-  'verificar.p': 'Anyone can verify the authenticity of a report by entering the folio number printed on the certificate, or by scanning the QR code.',
+  'verificar.p': 'Verify your certified piece\'s folio or the QR code on your certificate.',
+  'placeholder:verificar.folioPh': 'Folio or certificate code',
   'verificar.btn': 'Verify',
 
   // Mi historial (client tracking page)
@@ -4337,7 +4401,7 @@ const I18N_EN = {
   'wiz.pkg.digital.modeInPerson': 'In person · more precise',
   'wiz.time.digital.default': '⏱ Delivery in 24–48 h',
   'wiz.time.estandar10': '⏱ Delivery in 10 days (Standard)',
-  'wiz.pkg.fisico.name': 'Physical appraisal + certificate',
+  'wiz.pkg.fisico.name': 'Appraisal + assessment',
   'wiz.pkg.fisico.b1': 'In-person appraisal at the lab',
   'wiz.pkg.fisico.b2': 'Folio and physical certificate',
   'wiz.pkg.fisico.b3': 'Official condition grade',
@@ -4348,7 +4412,7 @@ const I18N_EN = {
   'wiz.speed.prioritario': 'Priority · 5 days',
   'wiz.speed.express': 'Express · 72h',
   'wiz.speed.super': 'Super Express · 24–48h',
-  'wiz.pkg.premium.name': 'Premium + encapsulation',
+  'wiz.pkg.premium.name': 'Premium + certification + encapsulation',
   'wiz.pkg.premium.b1': 'Everything in the physical appraisal',
   'wiz.pkg.premium.b2': 'Sealed protective encapsulation',
   'wiz.pkg.premium.b3': 'Priority in the lab queue',
@@ -4500,6 +4564,12 @@ function refreshDynamicI18nContent(){
   try{ if(document.getElementById('c-telefono') && document.getElementById('c-telefono').value.trim() && document.getElementById('c-result') && document.getElementById('c-result').innerHTML.trim()) lookupCliente(); }catch(e){}
   try{ if(document.getElementById('v-folio') && document.getElementById('v-folio').value.trim() && document.getElementById('v-result') && document.getElementById('v-result').innerHTML.trim()) verifyFolio(); }catch(e){}
   try{ if(window.HV_CURRENT_VIEW === 'pieza' && window.__PUBLIC_PIEZA_CURRENT) renderPublicPiezaView(window.__PUBLIC_PIEZA_CURRENT, document.getElementById('pieza-publica-content').className === 'salon-scope'); }catch(e){}
+  try{
+    if(window.HV_CURRENT_VIEW === 'piezasfalsas'){
+      if(PIEZAS_FALSAS_STATE.mode === 'detail') renderFakePieceDetail();
+      else renderPiezasFalsasGrid();
+    }
+  }catch(e){}
   try{
     const presStrip = document.getElementById('pres-strip');
     if(presStrip && presStrip.dataset.rendered){ presStrip.dataset.rendered = ''; renderPresStrip(); }
@@ -4757,6 +4827,7 @@ function go(view){
   window.scrollTo({top:0, behavior:'smooth'});
   if(view==='admin') refreshAdminLists();
   if(view==='quienes' && typeof renderPresStrip === 'function') renderPresStrip();
+  if(view==='piezasfalsas' && typeof renderPiezasFalsasView === 'function') renderPiezasFalsasView();
   if(view==='salon' && typeof renderSalonTiersTeaser === 'function'){
     renderSalonTiersTeaser();
     if(SALON_SESSION_TEL){ salonResolveSessionMember().then(m => { if(m) enterSalonLobby(m); }); }
@@ -5831,8 +5902,8 @@ function updateSolicitudProgress(){
 }
 
 function wizPkgReviewLabel(pkg){
-  if(SITE_LANG === 'en') return { digital:'Validation', fisico:'Physical appraisal + certificate', premium:'Premium + encapsulation' }[pkg] || pkg;
-  return { digital:'Validación', fisico:'Peritaje físico + certificado', premium:'Premium + encapsulado' }[pkg] || pkg;
+  if(SITE_LANG === 'en') return { digital:'Validation', fisico:'Appraisal + assessment', premium:'Premium + certification + encapsulation' }[pkg] || pkg;
+  return { digital:'Validación', fisico:'Peritaje + dictamen', premium:'Premium + certificación + encapsulado' }[pkg] || pkg;
 }
 function renderWizardReview(){
   const box = document.getElementById('s-review-body');
@@ -7368,6 +7439,23 @@ async function openShareSheet(cfg){
     if(nativeBtn){ nativeBtn.disabled = true; nativeBtn.textContent = tt('No disponible','Not available'); }
   }
 }
+// Iconos de marca en SVG inline (en vez de emoji) para WhatsApp/Facebook/
+// Instagram — más profesional y reconocible que los emoji genéricos. Cada
+// llamada genera un id de gradiente único (Instagram) para poder abrir la
+// hoja de compartir varias veces sin que los ids choquen entre sí.
+function shareBrandIcon(kind){
+  const uid = 'sig' + Math.random().toString(36).slice(2,9);
+  if(kind === 'whatsapp'){
+    return `<svg class="ssb-icon" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#25D366"/><path d="M12 5.3a6.7 6.7 0 00-5.7 10.2L5.4 18.7l3.4-.9A6.7 6.7 0 1012 5.3z" fill="#fff"/><path d="M9.7 8.7c-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s.9 2.4 1 2.6c.1.2 1.8 2.8 4.4 3.8 2.2.8 2.6.7 3.1.6.4-.1 1.3-.5 1.5-1.1.2-.5.2-.9.1-1-.1-.1-.2-.2-.5-.3l-1.7-.8c-.2-.1-.4-.1-.6.1l-.7.8c-.1.1-.3.2-.5.1-.4-.2-1.3-.5-2.4-1.4-.8-.8-1.4-1.7-1.5-2-.1-.2 0-.4.1-.5l.4-.5c.1-.2.2-.3.1-.5z" fill="#25D366"/></svg>`;
+  }
+  if(kind === 'facebook'){
+    return `<svg class="ssb-icon" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path d="M13.6 21v-7.2h2.4l.4-2.8h-2.8V9.2c0-.8.2-1.4 1.4-1.4h1.5V5.3c-.3 0-1.2-.1-2.2-.1-2.2 0-3.6 1.3-3.6 3.7v2.1H8.3v2.8h2.4V21h2.9z" fill="#fff"/></svg>`;
+  }
+  if(kind === 'instagram'){
+    return `<svg class="ssb-icon" width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="${uid}" x1="0" y1="24" x2="24" y2="0"><stop offset="0" stop-color="#FEDA75"/><stop offset=".3" stop-color="#FA7E1E"/><stop offset=".6" stop-color="#D62976"/><stop offset="1" stop-color="#962FBF"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="6.5" fill="url(#${uid})"/><rect x="6.5" y="6.5" width="11" height="11" rx="3.5" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="16.6" cy="7.4" r="1.1" fill="#fff"/></svg>`;
+  }
+  return '';
+}
 function renderShareSheetButtons(cfg, file){
   const grid = document.getElementById('share-sheet-grid');
   const nativeBtn = document.getElementById('share-sheet-native-btn');
@@ -7381,12 +7469,15 @@ function renderShareSheetButtons(cfg, file){
     }
   }
   if(!grid) return;
-  const items = [{icon:'💬', label:'WhatsApp', action:'shareSheetDoWhatsApp()'}];
-  if(cfg.shareUrl) items.push({icon:'📘', label:'Facebook', action:'shareSheetDoFacebook()'});
-  items.push({icon:'🎬', label: tt('Instagram / TikTok','Instagram / TikTok'), action:'shareSheetDoStoryDownload()'});
-  if(cfg.shareUrl) items.push({icon:'🔗', label: tt('Copiar enlace','Copy link'), action:'shareSheetDoCopyLink()'});
-  items.push({icon:'⬇️', label: tt('Descargar imagen','Download image'), action:'shareSheetDoDownload()'});
-  grid.innerHTML = items.map(it => `<button type="button" class="share-sheet-btn" onclick="${it.action}"><span class="ssb-icon">${it.icon}</span>${escapeHtml(it.label)}</button>`).join('');
+  // Instagram (y TikTok) no tienen una URL de "compartir con contenido
+  // prellenado" como wa.me — la única opción real desde la web es descargar
+  // la imagen ya lista en formato Historia para subirla a mano.
+  const items = [{iconHtml: shareBrandIcon('whatsapp'), label:'WhatsApp', action:'shareSheetDoWhatsApp()'}];
+  if(cfg.shareUrl) items.push({iconHtml: shareBrandIcon('facebook'), label:'Facebook', action:'shareSheetDoFacebook()'});
+  items.push({iconHtml: shareBrandIcon('instagram'), label: tt('Descargar imagen — Historia de Instagram','Download image — Instagram Story'), action:'shareSheetDoStoryDownload()'});
+  if(cfg.shareUrl) items.push({iconHtml:'<span class="ssb-icon">🔗</span>', label: tt('Copiar enlace','Copy link'), action:'shareSheetDoCopyLink()'});
+  items.push({iconHtml:'<span class="ssb-icon">⬇️</span>', label: tt('Descargar imagen','Download image'), action:'shareSheetDoDownload()'});
+  grid.innerHTML = items.map(it => `<button type="button" class="share-sheet-btn" onclick="${it.action}">${it.iconHtml}${escapeHtml(it.label)}</button>`).join('');
 }
 function closeShareSheet(){
   const overlay = document.getElementById('share-sheet-overlay');
@@ -7695,7 +7786,7 @@ async function submitSalonBooking(){
       desc: 'Cita agendada desde el Calendario VIP del Salón Privado.',
       fechaEntrega: fecha, citaHora: hora, citaTs,
       entregaIda: 'presencial', entregaVuelta: 'presencial', envioDireccion:'', envioCosto:0,
-      nivel: 'Peritaje físico + certificado — $400',
+      nivel: 'Peritaje + dictamen — $400',
       estado: 'pendiente', fecha: new Date().toLocaleDateString('es-MX'),
       fotos: [],
       referidoPor:null, referidoPorNombre:null, referidoCode:null, referidoAcreditado:false,
@@ -7986,7 +8077,7 @@ async function submitSolicitud(){
   const id = 'SOL-' + Date.now();
   const pkgLabels = {
     digital: modoDigital === 'presencial' ? 'Validación (presencial) — $150' : 'Validación (en línea) — $150',
-    fisico:'Peritaje físico + certificado — $400', premium:'Peritaje premium + encapsulado — $800'
+    fisico:'Peritaje + dictamen — $400', premium:'Premium + certificación + encapsulado — $800'
   };
   // El nivel (paquete base) se guarda tal cual siempre lo ha hecho — de ahí
   // depende el dropdown de certificados y los reportes de ingresos. El
@@ -8432,6 +8523,7 @@ if(fbAuth){
       panel.style.display = 'block';
       refreshAdminLists();
       renderPiezasAdmin();
+      renderPiezasFalsasAdmin();
       startSolicitudesListener();
     } else {
       if(user){
@@ -8729,6 +8821,197 @@ async function renderPiezasAdmin(){
       <button class="btn ghost small" onclick="deletePieza('${p.id}')">Quitar</button>
     </div>`;
   }).join('') : '<p style="color:var(--sage);font-size:13px;">Todavía no hay piezas en la biblioteca.</p>';
+}
+
+// ============================================================
+// PIEZAS FALSAS — registro público de piezas detectadas como falsas o
+// alteradas durante el peritaje, independiente del folio del cliente
+// (solo modelo, categoría y motivo del hallazgo, sin datos personales).
+// Mismo patrón de almacenamiento que la biblioteca pública (getPiezas/
+// setPiezas de arriba), en su propia clave 'site:piezasFalsas'.
+// ============================================================
+async function getPiezasFalsas(){
+  try{
+    const res = await HVStorage.get('site:piezasFalsas', true);
+    if(res && res.value) return JSON.parse(res.value);
+  }catch(e){}
+  return [];
+}
+async function setPiezasFalsas(items){
+  await HVStorage.set('site:piezasFalsas', JSON.stringify(items), true);
+}
+let PIEZAFALSA_PHOTOS_DATA = [];
+function handlePiezaFalsaFilesSelect(input){
+  const files = Array.from((input && input.files) || []);
+  if(!files.length) return;
+  const status = document.getElementById('a-piezafalsa-status');
+  if(status) status.textContent = 'Procesando imágenes…';
+  let pending = files.length;
+  files.forEach(file => {
+    if(!file.type || !file.type.startsWith('image/')){ pending--; return; }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const img = new Image();
+      img.onload = function(){
+        const maxW = 1100;
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        PIEZAFALSA_PHOTOS_DATA.push(canvas.toDataURL('image/jpeg', 0.72));
+        pending--;
+        renderPiezaFalsaPhotosPreview();
+        if(pending<=0 && status) status.textContent = `${PIEZAFALSA_PHOTOS_DATA.length} foto(s) lista(s). La primera es la foto principal.`;
+      };
+      img.onerror = function(){ pending--; };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ pending--; };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+function renderPiezaFalsaPhotosPreview(){
+  const box = document.getElementById('a-piezafalsa-photos-preview');
+  if(!box) return;
+  box.innerHTML = PIEZAFALSA_PHOTOS_DATA.map((src,i) => `
+    <div class="pieza-photo-thumb ${i===0?'main':''}">
+      <img src="${src}" alt="">
+      ${i===0 ? '<span class="pieza-photo-main-tag">Principal</span>' : ''}
+      <button type="button" onclick="removePiezaFalsaPhoto(${i})" aria-label="Quitar foto">✕</button>
+    </div>`).join('');
+}
+function removePiezaFalsaPhoto(i){
+  PIEZAFALSA_PHOTOS_DATA.splice(i,1);
+  renderPiezaFalsaPhotosPreview();
+}
+async function addPiezaFalsa(){
+  const status = document.getElementById('a-piezafalsa-status');
+  const modelo = document.getElementById('a-piezafalsa-modelo').value.trim();
+  const categoria = document.getElementById('a-piezafalsa-categoria').value;
+  const motivo = document.getElementById('a-piezafalsa-motivo').value.trim();
+  if(!modelo){ toast('Escribe el modelo de la pieza.'); return; }
+  if(!PIEZAFALSA_PHOTOS_DATA.length){ toast('Agrega al menos una foto de evidencia.'); return; }
+  try{
+    const piezas = await getPiezasFalsas();
+    piezas.unshift({
+      id: 'FAKE-' + Date.now(),
+      modelo, categoria, motivo,
+      fecha: new Date().toLocaleDateString('es-MX'),
+      fotos: PIEZAFALSA_PHOTOS_DATA.map(url => ({url, caption:''}))
+    });
+    await setPiezasFalsas(piezas);
+    document.getElementById('a-piezafalsa-modelo').value = '';
+    document.getElementById('a-piezafalsa-motivo').value = '';
+    PIEZAFALSA_PHOTOS_DATA = [];
+    renderPiezaFalsaPhotosPreview();
+    if(status) status.textContent = 'Pieza agregada a Piezas falsas.';
+    toast('Pieza agregada a Piezas falsas.');
+    renderPiezasFalsasAdmin();
+  }catch(e){ if(status) status.textContent = 'No se pudo guardar (puede que las fotos pesen mucho).'; }
+}
+async function deletePiezaFalsa(id){
+  if(!confirm('¿Quitar esta pieza del registro de Piezas falsas? Esta acción no se puede deshacer.')) return;
+  try{
+    const piezas = (await getPiezasFalsas()).filter(p => p.id !== id);
+    await setPiezasFalsas(piezas);
+    renderPiezasFalsasAdmin();
+    toast('Pieza eliminada.');
+  }catch(e){ toast('No se pudo eliminar la pieza.'); }
+}
+async function renderPiezasFalsasAdmin(){
+  const box = document.getElementById('a-piezasfalsas-list');
+  if(!box) return;
+  box.innerHTML = skeletonPiezaTilesHtml(4);
+  const piezas = await getPiezasFalsas();
+  box.innerHTML = piezas.length ? piezas.map(p => {
+    const foto = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
+    const n = (p.fotos||[]).length;
+    return `
+    <div class="pieza-admin-item" data-sid="${escapeHtml(p.id)}">
+      <img src="${escapeHtml(foto)}" alt="">
+      <div class="cap">
+        <strong>${escapeHtml(p.modelo)}</strong><br>
+        <span class="mono" style="font-size:11px;color:var(--sage-dim);">${categoriaLabel(p.categoria)} · ${n} foto${n===1?'':'s'}</span><br>
+        <span style="font-size:11px;color:var(--bad);">${escapeHtml((p.motivo||'').slice(0,70))}${(p.motivo||'').length>70?'…':''}</span>
+      </div>
+      <button class="btn ghost small" onclick="deletePiezaFalsa('${p.id}')">Quitar</button>
+    </div>`;
+  }).join('') : '<p style="color:var(--sage);font-size:13px;">Todavía no hay piezas falsas registradas.</p>';
+}
+
+// ---- Vista pública "Piezas falsas" (galería + detalle, sin libro/vuelta de
+// página — es un registro de advertencia, no una vitrina de coleccionismo) ----
+let PIEZAS_FALSAS_STATE = { mode:'grid', items:[], detail:null, detailPhotoIndex:0 };
+async function renderPiezasFalsasView(){
+  const box = document.getElementById('piezasfalsas-content');
+  if(!box) return;
+  box.innerHTML = `<p style="color:var(--sage);">${tt('Cargando…','Loading…')}</p>`;
+  PIEZAS_FALSAS_STATE.items = await getPiezasFalsas();
+  PIEZAS_FALSAS_STATE.mode = 'grid';
+  renderPiezasFalsasGrid();
+}
+function renderPiezasFalsasGrid(){
+  const box = document.getElementById('piezasfalsas-content');
+  if(!box) return;
+  const items = PIEZAS_FALSAS_STATE.items || [];
+  box.innerHTML = items.length
+    ? `<div class="fake-piece-grid reveal in-view">${items.map(renderFakePieceCard).join('')}</div>`
+    : `<div class="empty">${tt('Por ahora no hay piezas falsas registradas.','No fake pieces are on record right now.')}</div>`;
+}
+function renderFakePieceCard(p){
+  const main = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
+  const motivoTxt = (p.motivo||'');
+  const motivoShort = motivoTxt.length > 80 ? motivoTxt.slice(0,80)+'…' : motivoTxt;
+  return `
+    <button type="button" class="fake-piece-card" onclick="openFakePieceDetail('${p.id}')">
+      <span class="fake-piece-photo"><img src="${escapeHtml(main)}" alt="${escapeHtml(p.modelo)}" loading="lazy"><span class="fake-piece-badge">⚠️ ${tt('FALSO','FAKE')}</span></span>
+      <span class="fake-piece-info">
+        <span class="fake-piece-model">${escapeHtml(p.modelo)}</span>
+        ${motivoShort ? `<span class="fake-piece-motivo">${escapeHtml(motivoShort)}</span>` : ''}
+      </span>
+    </button>`;
+}
+function openFakePieceDetail(id){
+  const p = (PIEZAS_FALSAS_STATE.items||[]).find(x => x.id === id);
+  if(!p) return;
+  PIEZAS_FALSAS_STATE.mode = 'detail';
+  PIEZAS_FALSAS_STATE.detail = p;
+  PIEZAS_FALSAS_STATE.detailPhotoIndex = 0;
+  renderFakePieceDetail();
+}
+function renderFakePieceDetail(){
+  const box = document.getElementById('piezasfalsas-content');
+  if(!box) return;
+  const p = PIEZAS_FALSAS_STATE.detail;
+  const fotos = (p.fotos && p.fotos.length) ? p.fotos : [{url:'',caption:''}];
+  const idx = Math.max(0, Math.min(PIEZAS_FALSAS_STATE.detailPhotoIndex, fotos.length-1));
+  box.innerHTML = `
+    <button class="btn ghost small" type="button" onclick="backToFakePiecesGrid()" style="margin-bottom:14px;">← ${tt('Volver','Back')}</button>
+    <div class="piece-detail">
+      <div>
+        <div class="piece-detail-main"><img src="${escapeHtml(fotos[idx].url)}" alt="${escapeHtml(p.modelo)}" id="fake-piece-detail-img"></div>
+        ${fotos.length>1 ? `<div class="piece-detail-thumbs">${fotos.map((f,i)=>`<button type="button" class="pdt ${i===idx?'active':''}" onclick="setFakePieceDetailPhoto(${i})"><img src="${escapeHtml(f.url)}" alt=""></button>`).join('')}</div>` : ''}
+      </div>
+      <div class="piece-detail-info">
+        <span class="pill replica">⚠️ ${tt('Falso / Alterado','Fake / Altered')}</span>
+        <h3 style="margin-top:10px;">${escapeHtml(p.modelo)}</h3>
+        ${p.categoria ? `<div class="piece-detail-tags"><span class="pill neutral">${categoriaLabel(p.categoria)}</span></div>` : ''}
+        <p style="font-size:13px;color:var(--sage);line-height:1.6;margin-top:14px;"><strong style="color:var(--ink);">${tt('Motivo del hallazgo:','Reason for the finding:')}</strong> ${escapeHtml(p.motivo||'—')}</p>
+      </div>
+    </div>
+  `;
+}
+function backToFakePiecesGrid(){ PIEZAS_FALSAS_STATE.mode = 'grid'; renderPiezasFalsasGrid(); }
+function setFakePieceDetailPhoto(i){
+  PIEZAS_FALSAS_STATE.detailPhotoIndex = i;
+  const p = PIEZAS_FALSAS_STATE.detail;
+  if(!p || !p.fotos || !p.fotos[i]) return;
+  const img = document.getElementById('fake-piece-detail-img');
+  if(img) img.src = p.fotos[i].url;
+  document.querySelectorAll('#piezasfalsas-content .piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
 }
 
 // ============================================================
@@ -9634,7 +9917,16 @@ async function createFolio(){
   }
 }
 
-const PKG_PRICE = {'Validación digital':150, 'Peritaje físico + certificado':400, 'Premium + encapsulado':800, 'Peritaje premium + encapsulado':800};
+// Los nombres de paquete de abajo son los "nuevos" (ver README) — se
+// conservan las claves viejas ('Peritaje físico + certificado', 'Premium +
+// encapsulado', 'Peritaje premium + encapsulado') como respaldo para que
+// folios/solicitudes ya existentes en Firestore con el nombre anterior
+// sigan resolviendo su precio correctamente.
+const PKG_PRICE = {
+  'Validación digital':150,
+  'Peritaje + dictamen':400, 'Peritaje físico + certificado':400,
+  'Premium + certificación + encapsulado':800, 'Premium + encapsulado':800, 'Peritaje premium + encapsulado':800
+};
 
 const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function parseFechaFolio(fecha){
@@ -10429,7 +10721,12 @@ function zzInstrumentSummary(zz, instrumentKeys){
 // cliente eligió en el wizard (procesos antiguos, o pieza digital). Cuando
 // sí lo trae (p.velocidadDias — ver wizPkgPricing / startValidacion), ese es
 // el que manda: es el que de verdad se le prometió y cobró al cliente.
-const DEADLINE_DAYS = {'Validación digital':2, 'Peritaje físico + certificado':5, 'Peritaje premium + encapsulado':8, 'Premium + encapsulado':8};
+// Mismo respaldo de nombres viejos que PKG_PRICE — ver el comentario ahí.
+const DEADLINE_DAYS = {
+  'Validación digital':2,
+  'Peritaje + dictamen':5, 'Peritaje físico + certificado':5,
+  'Premium + certificación + encapsulado':8, 'Premium + encapsulado':8, 'Peritaje premium + encapsulado':8
+};
 function getDeadlineDays(p){
   if(p && p.velocidadDias) return p.velocidadDias;
   return DEADLINE_DAYS[p && p.nivel] || 5;
