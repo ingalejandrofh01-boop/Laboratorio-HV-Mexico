@@ -1,0 +1,9 @@
+# Laboratorio HV México — robots.txt
+# Todo el sitio es público y se puede indexar libremente.
+# IMPORTANTE: si cambias el dominio, actualiza la línea Sitemap de abajo
+# para que coincida con SITE_DOMAIN dentro de index.html.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://labhvmexico.com/sitemap.xml

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Laboratorio HV México — sitemap.xml
+
+  El sitio es una sola página (SPA): "Quiénes somos", "Metodología",
+  "Paquetes", etc. son secciones que se muestran/ocultan con JavaScript
+  dentro del mismo index.html, no URLs distintas que Google pueda indexar
+  por separado. Por eso este sitemap solo lista la portada.
+
+  IMPORTANTE: si cambias el dominio, actualiza la URL de abajo para que
+  coincida con SITE_DOMAIN dentro de index.html.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://labhvmexico.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
