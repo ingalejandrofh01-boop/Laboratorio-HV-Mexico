@@ -78,9 +78,35 @@ grandes, en orden aproximado en que aparecen:
   Referidos, Reseñas, y configuración del sitio.
 - **Programa de referidos** (`referido:*`) — créditos automáticos por
   recomendar clientes.
-- **Salón Privado HV** (`salon:*`) — membresía de socios preferentes por
-  piezas certificadas acumuladas (5/10/20+), con activación y plan de pagos
-  manejados por el admin, galería exclusiva y calendario VIP propios.
+- **Salón Privado HV** (`salon:*`) — membresía de socios preferentes,
+  reposicionada como una vitrina curada de colección: los niveles (5/10/20+
+  piezas certificadas) siguen existiendo como **reconocimiento** dentro del
+  salón, pero el ingreso ya no depende de acumular piezas ni de un plan de
+  abonos — es una **membresía anual fija de $1,000 MXN** (`SALON_ANNUAL_FEE`),
+  pensada como un espacio exclusivo donde solo se publican las piezas más
+  raras/extraordinarias de la colección de socios, vistas y reconocidas por
+  otros coleccionistas. El admin (vía `ADMIN_ALLOWED_EMAILS`) siempre tiene
+  acceso ilimitado sin pagar (`salonAdminPreviewMember()`/
+  `goToSalonLobbyAdmin()`, sin cambios respecto a antes). El alta de un socio
+  nuevo la hace el admin desde el panel — ya sea presencial (cuando trae sus
+  piezas) o registrando el pago de un cliente de confianza por el método que
+  el admin decida (transferencia, efectivo, etc. — el sitio no cobra en
+  línea, es un registro manual del admin, igual que el resto de los cobros
+  del sitio). `computeMembershipStatus()` ahora deriva también un estado
+  **"vencida"** cuando pasó la fecha de renovación (`fechaRenovacion`) sin
+  registrar el siguiente pago. Galería exclusiva y calendario VIP propios,
+  sin cambios en su mecánica.
+- **Folio/QR — público vs. Salón**: verificar un folio (`verifyFolio()`,
+  incluyendo el que viene de escanear un QR) sigue siendo público para
+  cualquier pieza de la **biblioteca pública** — así un comprador de segunda
+  mano puede validar autenticidad sin restricciones, y desde ahí hay un
+  botón directo a la Galería pública. Pero si el folio pertenece a una
+  **pieza del Salón**, el resultado ya no se muestra directo: se pide
+  teléfono + código de socio (mismo patrón que el acceso al Salón) y, una
+  vez validado, se muestra **solo una vista de lectura** de esa pieza (sin
+  dar acceso a nada más del Salón si no se tiene membresía activa). Esto
+  cierra un hueco real que existía antes, donde cualquiera con el folio de
+  una pieza del Salón podía verla sin ser socio.
 - **"Librero"/Book** — el visor de galería pública de piezas certificadas
   (y su versión paralela para el Salón).
 - **Compartir a redes sociales** — botón "✨ Compartir" en el detalle de
@@ -127,15 +153,70 @@ grandes, en orden aproximado en que aparecen:
   enseñar el patrón de los folios reales. El texto de la vista también se
   simplificó a un mensaje genérico de "verifica el folio de tu pieza
   certificada o el código QR de tu certificado". La verificación en sí
-  sigue siendo pública a propósito (decisión confirmada con el cliente): es
-  lo que le permite a un comprador de segunda mano validar que una pieza es
-  auténtica.
+  sigue siendo pública a propósito para piezas de la biblioteca pública
+  (decisión confirmada con el cliente); ver arriba la nota de "Folio/QR —
+  público vs. Salón" para el caso de piezas del Salón.
+- **"Piezas falsas" como libro del abismo**: la vista pública de piezas
+  falsas/alteradas ahora usa la misma mecánica de "libro" que el Librero
+  público y la Galería del Salón (`.hv-book-*`/`.book-stage`), con una
+  portada temática propia (`abyss-hv-book`) — una calavera con pulso sutil
+  sobre un fondo oscuro tipo abismo, para diferenciarla visualmente de las
+  otras dos galerías y dejar clara la advertencia antes de abrirla. Sigue
+  siendo el mismo registro público informativo de antes (modelo, categoría,
+  motivo, fotos) — solo cambió la presentación, no la lógica de datos
+  (`getPiezasFalsas`/`setPiezasFalsas` sin cambios).
+- **Teléfonos con lada/país**: los campos de teléfono del sitio (wizard,
+  Salón, acceso a pieza del Salón, etc.) ahora tienen un selector de lada
+  al lado del número, para clientes internacionales. Mientras el teléfono
+  guardado sea de México, el comportamiento de búsqueda/coincidencia no
+  cambia (México se guarda sin prefijo por compatibilidad con los datos ya
+  existentes); otras ladas sí se antep​onen al número.
+- **Notificaciones de WhatsApp al cliente**: se corrigió un bug real donde
+  varios botones de "notificar al cliente" del admin (rechazo, dictamen,
+  proceso completado, aviso de recolección, solicitud de datos de envío,
+  etc.) abrían WhatsApp hacia el **número del laboratorio** en vez del
+  número del cliente. Ahora usan `waLinkTo(telefono, mensaje)`, que arma el
+  link con el teléfono guardado de esa solicitud. De paso se corrigió el
+  botón "Compartir por WhatsApp" de una pieza/tarjeta de socio, que por el
+  mismo motivo forzaba un chat con el laboratorio en vez de dejar elegir a
+  quién compartir.
+- **Paso 6 de metodología (zigzag) y llantas**: se eliminó un salto de
+  scroll incómodo que ocurría al marcar "No agregado"/calificar una zona —
+  antes se re-renderizaba y re-centraba todo el paso en cada clic; ahora
+  solo se actualiza el bloque afectado, y únicamente se hace un scroll
+  suave (y solo cuando se marca "No agregado" por primera vez) hacia la
+  **siguiente** zona a evaluar. Además, la zona "llantas" ahora captura una
+  calificación **individual por cada una de las 4 llantas** (delantera
+  izq./der., trasera izq./der.) y el promedio de las 4 es lo que se usa
+  como calificación de esa zona en el resto del dictamen.
+- **Confirmación de paquete + tiempo de entrega en el wizard**: al elegir
+  un paquete ya no se avanza automáticamente al siguiente paso — se muestra
+  un resumen de confirmación ("Elegiste: [paquete] — [tiempo] — [precio].
+  Pulsa Continuar para confirmar y seguir.") que se actualiza en vivo si se
+  cambia el tiempo de entrega (Estándar/Prioritario/Express/Super Express),
+  y el cliente pasa al siguiente paso solo cuando pulsa "Continuar".
+- **Menú y cambio de tema en móvil**: se corrigió que en pantallas de
+  celular (iPhone y Android) el botón de menú (☰) y el de cambiar tema
+  claro/oscuro quedaban invisibles o cortados por el encabezado —
+  verificado con pruebas automatizadas en viewports de iPhone y Android.
+  También se afinó la transición de color al cambiar de tema (antes tardaba
+  y algunos textos se veían mal mientras cambiaba); ahora la transición es
+  más corta y cubre también títulos, párrafos y demás texto, no solo el
+  fondo.
 - **Calendario** — agendado de citas (y su versión paralela VIP).
 - **Sistema de i18n** — `SITE_LANG`, `data-i18n`/`data-i18n-placeholder`/
   `data-i18n-aria`, `I18N_EN` (diccionario a inglés), `t()`/`tt()`,
   `applyI18n()`. El contenido público es bilingüe (ES/EN); el panel admin y
   las plantillas de WhatsApp son **siempre en español**, sin importar el
   idioma del sitio — es una decisión de producto, no un olvido.
+- **Términos y condiciones**: se reforzó que todo dictamen se emite bajo
+  criterio de peritaje independiente, y se agregó una cláusula explícita
+  sobre piezas falsas/alteradas: al aceptar el proceso de certificación, el
+  cliente acepta que si el resultado indica pieza falsa/alterada, esa pieza
+  será publicada en el registro público de "Piezas falsas" bajo esa
+  condición. También se dejó explícito por escrito que nunca se publican
+  datos del dueño (nombre, teléfono, etc.) — únicamente la pieza, sus fotos
+  y su condición.
 
 ## Cómo desplegar una actualización
 

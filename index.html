@@ -78,7 +78,16 @@
   html[data-theme="dark"] .site-watermark .wm-img{opacity:.09;filter:saturate(1) contrast(0.85) brightness(.85);}
   html[data-theme="dark"] body::before{background-image:repeating-linear-gradient(115deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 5px);}
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;transition:background-color .25s ease, color .25s ease;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;position:relative;transition:background-color .18s ease, color .18s ease;}
+  /* Cambio de tema claro/oscuro más parejo y rápido: antes, cada elemento
+     tenía su propia duración de transición (o ninguna) para color/fondo —
+     algunos cambiaban de inmediato y otros tardaban hasta .28s, lo que se
+     sentía lento/con errores (texto y fondo desincronizados un instante).
+     Esta regla base sincroniza a .18s los elementos de texto más comunes
+     que no tenían su propia transición ya declarada; cualquier regla más
+     específica de más abajo en la hoja de estilos sigue ganando, así que
+     esto no rompe animaciones ya afinadas (botones, flip del libro, etc.). */
+  h1,h2,h3,h4,h5,h6,p,span,li,label,a,td,th{transition:background-color .18s ease, color .18s ease, border-color .18s ease;}
   html{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
   body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
     background-image:repeating-linear-gradient(115deg, rgba(36,21,18,0.02) 0 2px, transparent 2px 5px);}
@@ -108,7 +117,7 @@
   img.hv-logo{display:block;height:60px;width:auto;object-fit:contain;}
   img.hv-logo.lg{height:70px;}
   img.hv-logo.xl{height:110px;}
-  header{position:sticky;top:0;background:var(--paper);z-index:50;border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease;}
+  header{position:sticky;top:0;background:var(--paper);z-index:50;border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease;overflow-x:hidden;}
   .navbar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px 24px;max-width:1080px;margin:0 auto;text-align:center;}
   .brand{display:flex;align-items:center;gap:14px;}
   .brand .hv-logo{cursor:pointer;}
@@ -367,10 +376,19 @@
     .grid-3,.grid-2{grid-template-columns:1fr;}
     .hero h1{font-size:30px;}
     body.nav-open{overflow:hidden;}
-    .navbar{flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;text-align:left;padding:14px 18px;gap:10px;}
-    .brand{gap:10px;}
-    .brand .brand-name{font-size:17px;}
-    .brand .tagline{font-size:9px;}
+    .navbar{flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:space-between;text-align:left;padding:14px 18px;gap:8px;}
+    /* El logo+nombre+leyenda ("brand") no tenía límite de ancho ni podía
+       encogerse — en pantallas angostas eso empujaba fuera de la vista (sin
+       aviso de scroll) los botones de idioma/tema/menú que van después en
+       la misma fila, y por eso "desaparecían" tanto en iPhone como Android.
+       Aquí se deja que el brand se encoja y se recorte, y los tres botones
+       quedan con flex-shrink:0 para que SIEMPRE se vean completos. */
+    .brand{gap:8px;min-width:0;flex:1 1 auto;overflow:hidden;}
+    .brand .hv-logo{height:34px;flex:none;}
+    .brand > div{min-width:0;overflow:hidden;}
+    .brand .brand-name{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:100%;}
+    .brand .tagline{display:none;}
+    .lang-toggle,.theme-toggle,.nav-toggle{flex:none;}
     .nav-toggle{display:flex;width:36px;height:36px;}
     .nav-backdrop{opacity:0;pointer-events:none;}
     body.nav-open .nav-backdrop{display:block;opacity:1;pointer-events:auto;}
@@ -457,6 +475,10 @@
   .faq-item p{margin:0 0 16px;color:var(--sage);font-size:13.5px;line-height:1.6;padding-right:20px;}
   @media(prefers-reduced-motion:reduce){.faq-item summary::after{transition:none;}}
   .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .wiz-pkg-confirm-box{margin-top:16px;padding:14px 16px;border:1.5px solid var(--brass);border-radius:10px;background:var(--panel-2);font-size:13px;color:var(--ink);}
+  .tel-with-lada{display:flex;gap:6px;}
+  .tel-with-lada .lada-select{flex:0 0 auto;width:auto;max-width:120px;padding-left:6px;padding-right:6px;}
+  .tel-with-lada input{flex:1;min-width:0;}
   table{width:100%;border-collapse:collapse;font-size:14px;}
   table th{text-align:left;color:var(--sage);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line);padding:8px 6px;}
   table td{padding:9px 6px;border-bottom:1px solid var(--line);}
@@ -662,6 +684,10 @@
   .zz-toggle:hover{border-color:var(--brass);color:var(--ink);}
   .zz-toggle.active{background:var(--red);border-color:var(--red);color:#fff;}
   .zz-scale-group{display:flex;gap:6px;}
+  .zz-llantas-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;}
+  .zz-llanta-sub{display:flex;flex-direction:column;gap:6px;}
+  .zz-llanta-sub-label{font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--sage);}
+  @media(max-width:480px){.zz-llantas-grid{grid-template-columns:1fr;}}
   .zz-scale-btn{width:34px;height:34px;border-radius:6px;border:1.5px solid var(--line);background:var(--panel);color:var(--sage);font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,color .15s ease;}
   .zz-scale-btn:hover{border-color:var(--brass);color:var(--ink);}
   .zz-scale-btn.active{background:var(--brass);border-color:var(--brass);color:#fff;}
@@ -1622,6 +1648,27 @@
   .book-stage.salon-book .piece-card-model{color:var(--salon-ink);}
   .book-stage.salon-book .piece-detail-info h3{color:var(--salon-ink);}
   .book-stage.salon-book .book-stage-close{background:var(--salon-panel);border-color:rgba(232,196,104,.35);color:var(--salon-gold);}
+
+  /* ===== "Piezas falsas" — libro con tema abismo (deliberadamente NO
+     comparte la paleta dorada/roja del Librero ni del Salón: esto es un
+     registro de advertencia, no una vitrina de prestigio) ===== */
+  .abyss-book-wrap{padding-top:20px;}
+  .abyss-book .hv-book-spine{background:linear-gradient(90deg,#000,#1a1622 40%,#000);}
+  .abyss-book .hv-book-cover{background:radial-gradient(120% 140% at 30% 20%,#241a30,#0a0810 70%);box-shadow:0 22px 44px rgba(0,0,0,.5),inset 0 0 0 1px rgba(139,92,193,.25),inset 0 0 50px rgba(0,0,0,.4);}
+  .abyss-book .hv-book-cover::before{border-color:rgba(139,92,193,.3);}
+  .abyss-cover-skull{font-size:34px;filter:drop-shadow(0 0 10px rgba(139,92,193,.55));animation:abyssSkullPulse 3.4s ease-in-out infinite;}
+  @keyframes abyssSkullPulse{0%,100%{opacity:.82;transform:scale(1);}50%{opacity:1;transform:scale(1.06);}}
+  .book-stage.abyss-book .book-stage-backdrop{background:rgba(0,0,0,.88);}
+  .book-stage.abyss-book .hv-book-pages-spread{background:linear-gradient(175deg,#0c0a10,#050408);border:1px solid rgba(139,92,193,.22);box-shadow:0 30px 70px -20px rgba(0,0,0,.85), 0 0 50px rgba(139,92,193,.07);}
+  .book-stage.abyss-book .hv-book-page-heading{color:#c9a9e8;border-bottom-color:rgba(139,92,193,.28);}
+  .book-stage.abyss-book .hv-book-toc li{color:#e8e3e0;border-bottom-color:rgba(139,92,193,.14);}
+  .book-stage.abyss-book .hv-book-toc li:hover,.book-stage.abyss-book .hv-book-toc li.active{color:#e0455a;}
+  .book-stage.abyss-book .toc-leader{border-bottom-color:rgba(139,92,193,.25);}
+  .book-stage.abyss-book .hv-book-spine-line{background:linear-gradient(rgba(139,92,193,0),rgba(139,92,193,.28) 15%,rgba(139,92,193,.28) 85%,rgba(139,92,193,0));}
+  .book-stage.abyss-book .hv-book-placeholder{color:#8d8794;}
+  .book-stage.abyss-book .piece-detail-info h3{color:#e8e3e0;}
+  .book-stage.abyss-book .piece-detail-info p{color:#a79fc2;}
+  .book-stage.abyss-book .book-stage-close{background:#100e16;border-color:rgba(139,92,193,.35);color:#c9a9e8;}
   .salon-book-vista-switch{gap:8px;margin-bottom:14px;}
   .salon-book-vista-switch .btn.active{background:linear-gradient(120deg,var(--salon-gold-dim),var(--salon-gold));color:#241512!important;border-color:transparent!important;}
   #salon-book-page-right{flex:1;transform-origin:left center;backface-visibility:hidden;}
@@ -2760,7 +2807,40 @@
   <section>
     <h2 data-i18n="piezasfalsas.h2">⚠️ Piezas falsas</h2>
     <p style="color:var(--sage);max-width:640px;" data-i18n="piezasfalsas.p">Registro público de piezas que hemos detectado como falsas o alteradas durante nuestros peritajes, para alertar a la comunidad de coleccionistas. No sustituye una certificación propia — si tienes dudas sobre una pieza específica, solicita tu validación.</p>
-    <div id="piezasfalsas-content" style="margin-top:20px;"></div>
+    <div class="hv-book-wrap abyss-book-wrap">
+      <div class="hv-book abyss-book" id="abyss-hv-book">
+        <div class="hv-book-spine"></div>
+        <div class="hv-book-pages"></div>
+        <div class="hv-book-cover" id="abyss-hv-book-cover" onclick="openAbyssBook()">
+          <div class="abyss-cover-skull">💀</div>
+          <h3 data-i18n="piezasfalsas.coverH3">Registro de<br>piezas falsas</h3>
+          <p data-i18n="piezasfalsas.coverP">Toca para abrir</p>
+        </div>
+      </div>
+    </div>
+    <div class="book-stage abyss-book" id="abyss-book-stage">
+      <div class="book-stage-backdrop" onclick="closeAbyssBook()"></div>
+      <div class="book-stage-inner">
+        <button class="book-stage-close" type="button" onclick="closeAbyssBook()" data-i18n-aria="piezasfalsas.closeAria" aria-label="Cerrar registro">✕</button>
+        <div class="hv-book-pages-spread" id="abyss-book-spread">
+          <div class="hv-book-page hv-book-page-left">
+            <p class="hv-book-page-heading" data-i18n="piezasfalsas.indexHeading">Índice del abismo</p>
+            <ul id="abyss-hv-book-index" class="hv-book-toc"></ul>
+            <p class="hv-book-page-num">— I —</p>
+          </div>
+          <div class="hv-book-spine-line"></div>
+          <div class="hv-book-page hv-book-page-right">
+            <div id="abyss-book-page-right">
+              <div class="hv-book-placeholder">
+                <div class="hv-book-placeholder-icon">💀</div>
+                <p data-i18n="piezasfalsas.placeholder">Elige una pieza del índice para ver el hallazgo</p>
+              </div>
+            </div>
+            <p class="hv-book-page-num">— II —</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -2845,6 +2925,7 @@
               <span class="wiz-pkg-card-time" id="wiz-pkg-time-premium" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
             </div>
           </div>
+          <div id="wiz-pkg-confirm" class="wiz-pkg-confirm-box" style="display:none;"></div>
           <select id="s-nivel" class="wiz-sr-label" onchange="onPackageChange()" tabindex="-1" aria-hidden="true">
             <option value="digital">1. Validación — $150 MXN</option>
             <option value="fisico">2. Peritaje + dictamen — $400 MXN</option>
@@ -2861,7 +2942,14 @@
           <input id="s-nombre" placeholder="Nombre y apellido" oninput="updateSolicitudProgress()" data-i18n-placeholder="wiz.contacto.nombrePh">
           <p class="wiz-field-note" data-i18n="wiz.contacto.nombreNote">Así identificamos tu solicitud. Este nombre aparecerá en tu certificado si tu pieza resulta original.</p>
           <label for="s-telefono" data-i18n="wiz.contacto.telLabel">Teléfono (lo usarás para consultar tu historial)</label>
-          <input id="s-telefono" placeholder="55 0000 0000" oninput="updateSolicitudProgress()">
+          <div class="tel-with-lada">
+            <select id="s-telefono-lada" class="lada-select" aria-label="Código de país">
+              <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+              <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+              <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+            </select>
+            <input id="s-telefono" placeholder="55 0000 0000" oninput="updateSolicitudProgress()">
+          </div>
           <p class="wiz-field-note" data-i18n="wiz.contacto.telNote">Te contactamos por aquí y por WhatsApp. También lo vas a usar en "Mi historial" para consultar el estatus de tus folios — anótalo bien.</p>
           <label for="s-ref-codigo" data-i18n="wiz.contacto.refLabel">¿Alguien te recomendó Laboratorio HV? Código de referido (opcional)</label>
           <input id="s-ref-codigo" placeholder="Ej. HV-A3F9K2" style="text-transform:uppercase;" oninput="saveSolicitudDraft()">
@@ -3015,7 +3103,14 @@
     <details class="track-phone-toggle">
       <summary data-i18n="cliente.sinCodigo">¿No tienes tu código? Consulta por teléfono</summary>
       <div class="row" style="max-width:460px;margin-top:14px;">
-        <input id="c-telefono" data-i18n-placeholder="cliente.telPlaceholder" placeholder="55 0000 0000" style="flex:1;">
+        <div class="tel-with-lada" style="flex:1;">
+          <select id="c-telefono-lada" class="lada-select" aria-label="Código de país">
+            <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+            <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+          </select>
+          <input id="c-telefono" data-i18n-placeholder="cliente.telPlaceholder" placeholder="55 0000 0000">
+        </div>
         <button class="btn ghost" onclick="lookupCliente()" data-i18n="cliente.consultar">Consultar</button>
       </div>
       <div id="c-result" style="margin-top:20px;"></div>
@@ -3028,8 +3123,8 @@
   <section>
     <div class="salon-hero reveal">
       <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
-      <h2 data-i18n="salon.h2">Una membresía que se gana, no se compra por mes</h2>
-      <p class="salon-lead" data-i18n="salon.lead">No es una suscripción mensual ni anual — se gana certificando y encapsulando piezas con nosotros. Al llegar a 5 piezas te vuelves elegible para el Salón Privado: prioridad de agenda, obsequios de cortesía, una galería exclusiva y mucho más.</p>
+      <h2 data-i18n="salon.h2">El círculo más exclusivo del coleccionismo</h2>
+      <p class="salon-lead" data-i18n="salon.lead">Membresía de $1,000 MXN al año — pero no es para cualquier pieza: aquí el laboratorio cura y publica solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio.</p>
     </div>
 
     <div class="salon-tiers-teaser" id="salon-tiers-teaser">
@@ -3040,7 +3135,14 @@
       <div class="card salon-card salon-gate-card" id="salon-gate-card">
         <h3 data-i18n="salon.gate.h3">Acceso de socios</h3>
         <p class="foot-note salon-foot-note" data-i18n="salon.gate.p">Ingresa tu teléfono y tu código de socio (te lo damos al volverte elegible) para entrar al Salón.</p>
-        <input id="salon-gate-tel" data-i18n-placeholder="salon.gate.telPlaceholder" placeholder="55 0000 0000" style="margin-bottom:8px;">
+        <div class="tel-with-lada" style="margin-bottom:8px;">
+          <select id="salon-gate-tel-lada" class="lada-select" aria-label="Código de país">
+            <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+            <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+          </select>
+          <input id="salon-gate-tel" data-i18n-placeholder="salon.gate.telPlaceholder" placeholder="55 0000 0000">
+        </div>
         <input id="salon-gate-code" class="mono" data-i18n-placeholder="salon.gate.codePlaceholder" placeholder="HVS-ABC123" style="text-transform:uppercase;margin-bottom:12px;" onkeydown="if(event.key==='Enter')submitSalonGate();">
         <button class="btn salon-btn-gold" onclick="submitSalonGate()" data-i18n="salon.gate.btn">Entrar al Salón</button>
         <div id="salon-gate-result" style="margin-top:14px;"></div>
@@ -3048,9 +3150,16 @@
 
       <div class="card salon-card" id="salon-interes-card">
         <h3 data-i18n="salon.interes.h3">¿Todavía no eres socio?</h3>
-        <p class="foot-note salon-foot-note" data-i18n="salon.interes.p">Puedes ganarte tu membresía certificando piezas con nosotros, o adquirirla directamente — cuéntanos qué prefieres.</p>
+        <p class="foot-note salon-foot-note" data-i18n="salon.interes.p">Membresía de $1,000 MXN al año. Puedes ganarte tu entrada certificando piezas con nosotros, o adquirirla directamente si ya nos conoces — cuéntanos qué prefieres. La activación siempre es a través del laboratorio: presencial al traer tu primera pieza, o por transferencia si ya eres cliente de confianza.</p>
         <input id="salon-interes-nombre" data-i18n-placeholder="salon.interes.nombrePlaceholder" placeholder="Tu nombre" style="margin-bottom:8px;">
-        <input id="salon-interes-tel" data-i18n-placeholder="salon.interes.telPlaceholder" placeholder="55 0000 0000" style="margin-bottom:12px;">
+        <div class="tel-with-lada" style="margin-bottom:12px;">
+          <select id="salon-interes-tel-lada" class="lada-select" aria-label="Código de país">
+            <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+            <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+          </select>
+          <input id="salon-interes-tel" data-i18n-placeholder="salon.interes.telPlaceholder" placeholder="55 0000 0000">
+        </div>
         <button class="btn salon-btn-gold" style="width:100%;margin-bottom:8px;" onclick="submitSalonCompraDirecta()" data-i18n="salon.interes.btnCompra">Quiero mi membresía ya</button>
         <button class="btn ghost salon-btn-ghost" style="width:100%;" onclick="submitSalonPaquete5()" data-i18n="salon.interes.btnPaquete">Certificar mi paquete de 5 piezas</button>
       </div>
@@ -3316,7 +3425,14 @@
                 </select>
                 <p class="foot-note" style="border:none;padding:2px 0 10px;margin:0;font-size:12px;">El certificado se genera siempre en español salvo que el cliente pida que sea en inglés.</p>
                 <label>Teléfono del dueño (uso interno, no se publica)</label>
-                <input id="a-telefono">
+                <div class="tel-with-lada">
+                  <select id="a-telefono-lada" class="lada-select" aria-label="Código de país">
+                    <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+                    <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+                    <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+                  </select>
+                  <input id="a-telefono">
+                </div>
                 <label>Fotos (opcional — adjunta cada imagen)</label>
                 <div class="photo-grid">
                   <div class="photo-drop" id="a-foto1-drop" onclick="document.getElementById('a-foto1-file').click()">
@@ -3476,7 +3592,14 @@
                     <div style="flex:1;"><input id="a-salonpieza-grado" placeholder="Grado (opcional, ej. 9.4/10)" style="margin-bottom:8px;"></div>
                   </div>
                   <input id="a-salonpieza-folio" placeholder="Folio relacionado (opcional)" style="margin-bottom:8px;">
-                  <input id="a-salonpieza-tel" placeholder="Teléfono del socio dueño (opcional)" style="margin-bottom:8px;">
+                  <div class="tel-with-lada" style="margin-bottom:8px;">
+                    <select id="a-salonpieza-tel-lada" class="lada-select" aria-label="Código de país">
+                      <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+                      <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+                      <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+                    </select>
+                    <input id="a-salonpieza-tel" placeholder="Teléfono del socio dueño (opcional)">
+                  </div>
                   <label style="font-size:12.5px;">Fotos de la pieza (la primera será la foto principal)</label>
                   <input type="file" accept="image/*" multiple id="a-salonpieza-files" onchange="handleSalonPiezaFilesSelect(this)" style="margin:6px 0 10px;">
                   <div id="a-salonpieza-photos-preview" class="pieza-photos-preview"></div>
@@ -3612,7 +3735,7 @@
       <p data-i18n="terminos.s1.p">Laboratorio HV México ("el laboratorio", "nosotros") es un laboratorio independiente de certificación y peritaje de piezas de colección vintage (Hot Wheels Vintage, CIPSA, Bólidos Lilí Ledy y Aurimat), con sede física en Ciudad de México. No estamos afiliados, patrocinados ni respaldados por Mattel, Inc., Hot Wheels® ni por ninguna de las marcas originales de las piezas que evaluamos. Nuestros dictámenes constituyen una opinión pericial e independiente sobre la autenticidad y el estado de conservación de una pieza, con base en criterios técnicos propios.</p>
 
       <h3 data-i18n="terminos.s2.h3">2. Naturaleza del servicio</h3>
-      <p data-i18n="terminos.s2.p">El servicio que ofrecemos es un peritaje o validación de autenticidad y estado de conservación de piezas de colección. El resultado se entrega como un dictamen, una calificación numérica (escala 0 a 10) y, cuando aplica, un folio único verificable en línea y un certificado físico. Este dictamen <strong>no constituye un avalúo comercial, una garantía de valor de reventa, ni una tasación financiera</strong> de la pieza. El valor de mercado de una pieza coleccionable puede variar por factores ajenos a nuestro dictamen (oferta y demanda, tendencias del coleccionismo, condiciones de venta, entre otros).</p>
+      <p data-i18n="terminos.s2.p">El servicio que ofrecemos es un peritaje o validación de autenticidad y estado de conservación de piezas de colección. El resultado se entrega como un dictamen, una calificación numérica (escala 0 a 10) y, cuando aplica, un folio único verificable en línea y un certificado físico. Este dictamen <strong>no constituye un avalúo comercial, una garantía de valor de reventa, ni una tasación financiera</strong> de la pieza. El valor de mercado de una pieza coleccionable puede variar por factores ajenos a nuestro dictamen (oferta y demanda, tendencias del coleccionismo, condiciones de venta, entre otros). Todo dictamen se emite bajo el criterio de experiencia profesional e independiente del laboratorio y sus peritos, aplicado conforme a la metodología publicada en el sitio — es la mejor determinación técnica posible con las herramientas y el conocimiento disponibles, no una verdad absoluta e infalible.</p>
 
       <h3 data-i18n="terminos.s3.h3">3. Cómo funciona el proceso de solicitud</h3>
       <p data-i18n="terminos.s3.p">El cliente elige uno de los paquetes disponibles (validación en línea, peritaje físico con certificado, o peritaje premium con encapsulado) a través del formulario de solicitud del sitio. Según el paquete, el proceso puede completarse de forma totalmente en línea (mediante fotografías y video de la pieza) o de forma presencial, trayendo físicamente la pieza al laboratorio o enviándola por paquetería. Los tiempos de entrega, precios y modalidades vigentes se muestran en la sección de Paquetes del sitio y se confirman al momento de generar la solicitud; están sujetos a cambio sin previo aviso para solicitudes futuras, pero no para solicitudes ya confirmadas y pagadas.</p>
@@ -3626,8 +3749,9 @@
       <h3 data-i18n="terminos.s6.h3">6. Pagos, cancelaciones y reembolsos</h3>
       <p data-i18n="terminos.s6.p">El pago del servicio se realiza según las instrucciones compartidas al confirmar la solicitud (transferencia bancaria u otro medio que el laboratorio indique). Si una pieza es rechazada por no ser apta para certificación antes de iniciar el peritaje, el laboratorio informará las condiciones de reembolso aplicables al caso. Una vez iniciado el proceso de peritaje, el costo del servicio ya prestado (evaluación técnica) no es reembolsable, con independencia del resultado del dictamen. Los costos de envío de paquetería son adicionales al costo del servicio y no son reembolsables una vez realizado el envío.</p>
 
-      <h3 data-i18n="terminos.s7.h3">7. Publicación en la Biblioteca de piezas certificadas</h3>
+      <h3 data-i18n="terminos.s7.h3">7. Publicación en la Biblioteca de piezas certificadas y en el registro de Piezas falsas</h3>
       <p data-i18n="terminos.s7.p">Las piezas que alcanzan la calificación mínima pueden ser publicadas, con fines de exhibición e informativos, en la Biblioteca pública del sitio (fotografías, modelo, categoría y calificación, sin datos personales del propietario). El cliente puede solicitar en cualquier momento que su pieza sea excluida de esta biblioteca pública escribiendo a los medios de contacto indicados en el Aviso de Privacidad.</p>
+      <p data-i18n="terminos.s7b.p">Al solicitar la certificación de una pieza, el cliente acepta que, si el dictamen determina que la pieza es falsa o alterada, ese hallazgo podrá publicarse en el registro público de Piezas falsas del sitio, con el único fin de alertar a la comunidad de coleccionistas — esta publicación es parte del servicio de peritaje que se contrata y no requiere una autorización adicional posterior. En ningún caso —ni en la Biblioteca de piezas certificadas, ni en la Galería Exclusiva del Salón Privado, ni en el registro de Piezas falsas— se publican el nombre, teléfono ni ningún otro dato personal del propietario de la pieza; únicamente se publican fotografías, modelo, categoría, calificación y, cuando aplica, el motivo del hallazgo.</p>
 
       <h3 data-i18n="terminos.s8.h3">8. Propiedad intelectual</h3>
       <p data-i18n="terminos.s8.p">El contenido del sitio (textos, diseño, metodología, sellos, logotipos y certificados) es propiedad de Laboratorio HV México o se usa bajo licencia. Las fotografías de la pieza que el cliente sube al formulario siguen siendo propiedad del cliente; al enviarlas, el cliente otorga al laboratorio una licencia no exclusiva para usarlas en la operación del servicio (incluyendo, en su caso, la publicación descrita en el punto 7).</p>
@@ -4004,6 +4128,11 @@ const I18N_EN = {
   'nav.piezasFalsas': 'Fake pieces',
   'piezasfalsas.h2': '⚠️ Fake pieces',
   'piezasfalsas.p': 'Public record of pieces we\'ve identified as fake or altered during our appraisals, to warn the collector community. It doesn\'t replace your own certification — if you have doubts about a specific piece, request your own validation.',
+  'piezasfalsas.coverH3': 'Fake pieces<br>registry',
+  'piezasfalsas.coverP': 'Tap to open',
+  'piezasfalsas.closeAria': 'Close registry',
+  'piezasfalsas.indexHeading': 'Index of the abyss',
+  'piezasfalsas.placeholder': 'Choose a piece from the index to see the finding',
   'nav.solicitar': 'Request certification',
   'nav.cliente': 'My history',
   'nav.salon': 'Salón Privado HV',
@@ -4318,7 +4447,7 @@ const I18N_EN = {
   'terminos.s1.h3': '1. Who we are',
   'terminos.s1.p': 'Laboratorio HV México ("the lab", "we") is an independent certification and appraisal lab for vintage collectible die-cast pieces (Vintage Hot Wheels, CIPSA, Bólidos Lilí Ledy and Aurimat), physically based in Mexico City. We are not affiliated with, sponsored by, or endorsed by Mattel, Inc., Hot Wheels®, or any of the original brands of the pieces we evaluate. Our assessments constitute an independent expert opinion on the authenticity and condition of a piece, based on our own technical criteria.',
   'terminos.s2.h3': '2. Nature of the service',
-  'terminos.s2.p': 'The service we offer is an appraisal or validation of the authenticity and condition of collectible pieces. The result is delivered as an assessment, a numerical rating (0 to 10 scale) and, when applicable, a unique folio verifiable online and a physical certificate. This assessment <strong>does not constitute a commercial appraisal, a guarantee of resale value, or a financial valuation</strong> of the piece. The market value of a collectible piece can vary due to factors beyond our assessment (supply and demand, collecting trends, sale conditions, among others).',
+  'terminos.s2.p': 'The service we offer is an appraisal or validation of the authenticity and condition of collectible pieces. The result is delivered as an assessment, a numerical rating (0 to 10 scale) and, when applicable, a unique folio verifiable online and a physical certificate. This assessment <strong>does not constitute a commercial appraisal, a guarantee of resale value, or a financial valuation</strong> of the piece. The market value of a collectible piece can vary due to factors beyond our assessment (supply and demand, collecting trends, sale conditions, among others). Every assessment is issued under the lab\'s and its experts\' independent professional judgment, applied per the methodology published on the site — it is the best technical determination possible with the tools and knowledge available, not an infallible absolute truth.',
   'terminos.s3.h3': '3. How the request process works',
   'terminos.s3.p': 'The client chooses one of the available packages (online validation, physical appraisal with certificate, or premium appraisal with encapsulation) through the site\'s request form. Depending on the package, the process can be completed entirely online (via photographs and video of the piece) or in person, physically bringing the piece to the lab or shipping it by courier. Current delivery times, prices and modes are shown in the site\'s Packages section and are confirmed when the request is generated; they are subject to change without notice for future requests, but not for requests already confirmed and paid.',
   'terminos.s4.h3': '4. Physical custody of the piece',
@@ -4327,8 +4456,9 @@ const I18N_EN = {
   'terminos.s5.p': 'The rating assigned to each piece results from a documented technical process (see the site\'s Methodology section) applied consistently. The client may request clarification about the criteria used in their assessment, but the rating given is not subject to negotiation based on simple subjective disagreement. If the client believes there was a material error (in identification, captured data, or calculation), they may request a review within 15 calendar days following delivery of the assessment.',
   'terminos.s6.h3': '6. Payments, cancellations and refunds',
   'terminos.s6.p': 'Payment for the service is made according to the instructions shared when confirming the request (bank transfer or another method indicated by the lab). If a piece is rejected as unfit for certification before the appraisal begins, the lab will inform the applicable refund conditions for that case. Once the appraisal process has begun, the cost of the service already rendered (technical evaluation) is non-refundable, regardless of the assessment\'s outcome. Courier shipping costs are additional to the service cost and are non-refundable once shipping has occurred.',
-  'terminos.s7.h3': '7. Publication in the Library of certified pieces',
+  'terminos.s7.h3': '7. Publication in the Library of certified pieces and in the Fake Pieces registry',
   'terminos.s7.p': 'Pieces that reach the minimum rating may be published, for exhibition and informational purposes, in the site\'s public Library (photographs, model, category and rating, without the owner\'s personal data). The client may request at any time that their piece be excluded from this public library by writing to the contact channels listed in the Privacy Notice.',
+  'terminos.s7b.p': 'By requesting certification of a piece, the client accepts that, if the assessment determines the piece is fake or altered, that finding may be published in the site\'s public Fake Pieces registry, solely to alert the collector community — this publication is part of the appraisal service being contracted and does not require any further authorization. Under no circumstance — not in the Library of certified pieces, not in the Salón Privado\'s Exclusive Gallery, nor in the Fake Pieces registry — is the piece owner\'s name, phone number, or any other personal data published; only photographs, model, category, rating and, when applicable, the reason for the finding are published.',
   'terminos.s8.h3': '8. Intellectual property',
   'terminos.s8.p': 'The site\'s content (text, design, methodology, seals, logos and certificates) is the property of Laboratorio HV México or is used under license. Photographs of the piece that the client uploads to the form remain the client\'s property; by submitting them, the client grants the lab a non-exclusive license to use them in operating the service (including, where applicable, the publication described in point 7).',
   'terminos.s9.h3': '9. Limitation of liability',
@@ -4490,8 +4620,8 @@ const I18N_EN = {
 
   // Salón Privado HV — membership program
   'salon.kicker': 'Salón Privado HV',
-  'salon.h2': 'A membership you earn, not one you subscribe to',
-  'salon.lead': 'It\'s not a monthly or annual subscription — you earn it by certifying and encapsulating pieces with us. Once you reach 5 pieces you become eligible for the Salón Privado: priority booking, courtesy gifts, an exclusive gallery, and much more.',
+  'salon.h2': 'The most exclusive circle in collecting',
+  'salon.lead': 'A $1,000 MXN/year membership — but it\'s not for just any piece: here, the lab curates and publishes only the rarest, most extraordinary pieces we\'ve certified, so serious collectors can discover them, recognize them, and reach out about them. Earn your way in by certifying 5+ pieces with us, or acquire it directly if you already trust the lab.',
   'salon.tiers.loading': 'Loading the Salón\'s tiers…',
   'salon.tiers.threshold5': 'Unlocks at 5 certified pieces',
   'salon.tiers.threshold10': 'Unlocks at 10 certified pieces',
@@ -4502,7 +4632,7 @@ const I18N_EN = {
   'placeholder:salon.gate.codePlaceholder': 'HVS-ABC123',
   'salon.gate.btn': 'Enter the Salón',
   'salon.interes.h3': 'Not a member yet?',
-  'salon.interes.p': 'You can earn your membership by certifying pieces with us, or get it directly — tell us which you\'d prefer.',
+  'salon.interes.p': 'A $1,000 MXN/year membership. You can earn your way in by certifying pieces with us, or get it directly if you already know us — tell us which you\'d prefer. Activation is always handled through the lab: in person when you bring your first piece, or by bank transfer if you\'re already a trusted client.',
   'placeholder:salon.interes.nombrePlaceholder': 'Your name',
   'placeholder:salon.interes.telPlaceholder': '55 0000 0000',
   'salon.interes.btn': 'I want more information',
@@ -4565,9 +4695,9 @@ function refreshDynamicI18nContent(){
   try{ if(document.getElementById('v-folio') && document.getElementById('v-folio').value.trim() && document.getElementById('v-result') && document.getElementById('v-result').innerHTML.trim()) verifyFolio(); }catch(e){}
   try{ if(window.HV_CURRENT_VIEW === 'pieza' && window.__PUBLIC_PIEZA_CURRENT) renderPublicPiezaView(window.__PUBLIC_PIEZA_CURRENT, document.getElementById('pieza-publica-content').className === 'salon-scope'); }catch(e){}
   try{
-    if(window.HV_CURRENT_VIEW === 'piezasfalsas'){
-      if(PIEZAS_FALSAS_STATE.mode === 'detail') renderFakePieceDetail();
-      else renderPiezasFalsasGrid();
+    if(window.HV_CURRENT_VIEW === 'piezasfalsas' && document.getElementById('abyss-hv-book') && document.getElementById('abyss-hv-book').classList.contains('open')){
+      if(ABYSS_BOOK_STATE.mode === 'detail' && ABYSS_BOOK_STATE.detailPieza) document.getElementById('abyss-book-page-right').innerHTML = abyssPieceDetailHtml(ABYSS_BOOK_STATE.detailPieza, ABYSS_BOOK_STATE.detailPhotoIndex||0);
+      renderAbyssBookIndex();
     }
   }catch(e){}
   try{
@@ -5272,16 +5402,118 @@ async function quickVerify(){
   await verifyFolio();
 }
 
+// Busca si un folio corresponde a una pieza de la biblioteca PÚBLICA
+// (site:piezas) — para poder ofrecer un botón directo a su ficha de galería
+// cuando sí lo es.
+async function findPublicPiezaByFolio(folio){
+  try{
+    const piezas = await getPiezas();
+    return piezas.find(p => p.folio && p.folio.trim().toUpperCase() === folio.trim().toUpperCase()) || null;
+  }catch(e){ return null; }
+}
+async function verFolioEnGaleriaPublica(piezaId){
+  try{
+    const piezas = await getPiezas();
+    const p = piezas.find(x=>x.id===piezaId);
+    if(!p){ toast(tt('Ya no está disponible en la galería pública.','No longer available in the public gallery.')); return; }
+    renderPublicPiezaView(p, false);
+    go('pieza');
+  }catch(e){}
+}
+// Compuerta que se muestra cuando el folio verificado pertenece a una pieza
+// del Salón Privado: a diferencia de la biblioteca pública (siempre
+// abierta), una pieza del Salón solo se puede VER (no se entra al resto del
+// área de socios) si quien pregunta demuestra tener membresía vigente.
+function salonFolioGateHtml(piezaId){
+  return `
+    <div class="card salon-scope" style="max-width:480px;">
+      <p style="margin:0 0 10px;font-weight:700;">🔒 ${tt('Esta pieza pertenece al Salón Privado HV','This piece belongs to the Salón Privado HV')}</p>
+      <p class="foot-note" style="border:none;padding:0;margin:0 0 14px;">${tt('Es parte de la galería exclusiva de socios — solo se puede ver con un código de socio vigente. Sin membresía, no se puede acceder a ella.','It\'s part of the members-only exclusive gallery — it can only be viewed with a valid member code. Without membership, it can\'t be accessed.')}</p>
+      <input id="v-folio-salon-code" class="mono" placeholder="${tt('Código de socio','Member code')}" style="text-transform:uppercase;margin-bottom:10px;" onkeydown="if(event.key==='Enter')unlockSalonPieceByCode('${escapeHtml(piezaId)}')">
+      <button class="btn salon-btn-gold" onclick="unlockSalonPieceByCode('${escapeHtml(piezaId)}')">${tt('Ver la pieza','View piece')}</button>
+      <div id="v-folio-salon-result" style="margin-top:14px;"></div>
+    </div>`;
+}
+async function unlockSalonPieceByCode(piezaId){
+  const codeEl = document.getElementById('v-folio-salon-code');
+  const box = document.getElementById('v-folio-salon-result');
+  if(!codeEl || !box) return;
+  const code = normalizeCodigoSalon(codeEl.value.trim());
+  if(!code){ box.innerHTML = `<div class="empty">${tt('Escribe tu código de socio.','Enter your member code.')}</div>`; return; }
+  box.innerHTML = `<div class="scan-loading"><span class="scan-radar"></span>${tt('Verificando…','Verifying…')}</div>`;
+  try{
+    // Cualquier código de socio ACTIVO (no solo el dueño de esta pieza en
+    // particular) desbloquea la vista — el Salón es una galería que todos
+    // los socios pueden recorrer entre sí, esto solo confirma membresía.
+    const miembros = await getAllSalonMembers();
+    const valido = miembros.some(m => m.code && normalizeCodigoSalon(m.code) === code && m.estado && m.estado !== 'prospecto' && m.estado !== 'inactivo');
+    if(!valido){
+      box.innerHTML = `<div class="empty">${tt('Código de socio inválido o inactivo.','Invalid or inactive member code.')}</div>`;
+      return;
+    }
+    const piezas = await getSalonPiezas();
+    const p = piezas.find(x=>x.id===piezaId);
+    if(!p){ box.innerHTML = `<div class="empty">${tt('Esta pieza ya no está disponible.','This piece is no longer available.')}</div>`; return; }
+    box.innerHTML = renderSalonPieceReadOnlyCard(p);
+  }catch(e){
+    box.innerHTML = `<div class="empty">${tt('No se pudo verificar tu código, intenta de nuevo.','We couldn\'t verify your code, try again.')}</div>`;
+  }
+}
+// Ficha de solo lectura de una pieza del Salón — deliberadamente NO muestra
+// nombre ni teléfono del dueño (nunca se publica esa información), solo la
+// pieza, sus fotos y un botón para contactar al laboratorio si a alguien le
+// interesa (el laboratorio hace de intermediario, nunca se revela el dueño).
+function renderSalonPieceReadOnlyCard(p){
+  const fotos = (p.fotos||[]).slice(0,6).map(f=>`<img src="${f.url}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;" alt="">`).join('');
+  return `
+    <div>
+      <h4 style="margin:0 0 6px;font-family:'Fraunces',serif;">${escapeHtml(p.modelo||'')}</h4>
+      <p class="foot-note" style="border:none;padding:0;margin:0 0 10px;">${p.grado ? `${tt('Grado','Grade')} ${escapeHtml(String(p.grado))}` : ''}</p>
+      ${fotos ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;">${fotos}</div>` : ''}
+      <button class="btn salon-btn-gold" onclick="contactarInteresPiezaSalon('${escapeHtml(p.id)}')">${tt('💎 Interesado en esta pieza','💎 Interested in this piece')}</button>
+    </div>`;
+}
+// El "contactar" SIEMPRE va al laboratorio (nunca al dueño directo) — el
+// laboratorio hace de intermediario y así nunca se expone el teléfono/
+// nombre del socio dueño de la pieza.
+async function contactarInteresPiezaSalon(piezaId){
+  try{
+    const piezas = await getSalonPiezas();
+    const p = piezas.find(x=>x.id===piezaId);
+    const msg = waTemplate('💎', 'Interés en una pieza del Salón Privado', [
+      `Código de pieza: ${piezaId}`,
+      p ? `Pieza: ${p.modelo||''}` : '',
+      'Vi esta pieza en el Salón Privado HV y me interesa saber más / contactar al dueño.'
+    ]);
+    window.open(waLink(msg), '_blank');
+  }catch(e){}
+}
 async function verifyFolio(){
   const folio = document.getElementById('v-folio').value.trim();
   const box = document.getElementById('v-result');
   if(!folio){ box.innerHTML=''; return; }
   box.innerHTML = `<div class="scan-loading"><span class="scan-radar"></span>${tt('Verificando folio…','Verifying folio…')}</div>`;
   try{
+    // Antes de mostrar nada: si este folio es de una pieza del Salón
+    // Privado, es privada por diseño — se pide código de socio en vez de
+    // enseñar el certificado directo (a diferencia de una pieza pública).
+    const salonPiezas = await getSalonPiezas().catch(()=>[]);
+    const salonMatch = salonPiezas.find(sp => sp.folio && sp.folio.trim().toUpperCase() === folio.toUpperCase());
+    if(salonMatch){
+      // Si ya entró al Salón en esta sesión (SALON_SESSION_TEL), no le
+      // volvemos a pedir el código — ya demostró ser socio al entrar por la
+      // puerta principal.
+      box.innerHTML = typeof SALON_SESSION_TEL !== 'undefined' && SALON_SESSION_TEL
+        ? renderSalonPieceReadOnlyCard(salonMatch)
+        : salonFolioGateHtml(salonMatch.id);
+      return;
+    }
     const res = await HVStorage.get('folio:'+folio, true);
     if(res && res.value){
       const f = JSON.parse(res.value);
-      box.innerHTML = renderCert(f, false);
+      const publicMatch = await findPublicPiezaByFolio(folio);
+      const galeriaBtn = publicMatch ? `<div style="margin-top:14px;"><button class="btn ghost" onclick="verFolioEnGaleriaPublica('${escapeHtml(publicMatch.id)}')">${tt('Ver esta pieza en la galería pública →','View this piece in the public gallery →')}</button></div>` : '';
+      box.innerHTML = renderCert(f, false) + galeriaBtn;
       applyLogos();
       embedAllQrLogos();
     } else {
@@ -5297,6 +5529,17 @@ const SITE_DOMAIN = "https://labhvmexico.com"; // TODO: reemplaza cuando tengas 
 
 function waLink(message){
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+// A diferencia de waLink() (que SIEMPRE apunta al número del laboratorio),
+// esta función arma el link de WhatsApp hacia el número del CLIENTE — para
+// las notificaciones que el laboratorio le envía a él sobre su pieza/
+// proceso. Normaliza el teléfono guardado (que puede o no traer lada) y le
+// antepone "52" (México) solo si no parece ya traer un código de país.
+function waLinkTo(telefono, message){
+  let digits = String(telefono||'').replace(/\D/g,'');
+  if(!digits) return waLink(message); // respaldo: si no hay teléfono guardado, no truena — abre el chat del laboratorio
+  if(digits.length <= 10) digits = '52' + digits; // números viejos de 10 dígitos = México sin lada guardada
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 // Plantilla estándar para TODOS los mensajes automáticos de WhatsApp del
 // sitio — mismo look en cualquier mensaje: encabezado con marca, cuerpo en
@@ -5452,6 +5695,7 @@ function wizPkgSelectSpeed(pkg, tier, btnEl, evt){
   }
   // Si ya estábamos en la revisión final, refleja el nuevo costo/tiempo ahí también.
   if(wizCurrentStep === 'revision') renderWizardReview();
+  if(wizPkgChosen) updateWizPkgConfirmBox(document.getElementById('s-nivel').value);
   saveSolicitudDraft();
 }
 
@@ -5827,8 +6071,26 @@ function wizSelectPackage(pkg, opts){
   onPackageChange();
   document.querySelectorAll('.wiz-pkg-card').forEach(c => c.classList.toggle('selected', c.dataset.pkg === pkg));
   updateWizardNavButtons();
-  if(opts && opts.skipAdvance) return;
-  setTimeout(() => { if(wizCurrentStep === 'paquete') wizNextStep(); }, 200);
+  // Ya NO avanza solo: primero se confirma paquete + tiempo de entrega con
+  // el resumen de abajo (updateWizPkgConfirmBox) — el cliente pulsa
+  // "Continuar" cuando de verdad ya eligió las dos cosas, en vez de que el
+  // wizard lo empuje a la siguiente pantalla 200ms después de tocar la
+  // tarjeta, sin darle chance de fijarse en el tiempo de entrega.
+  updateWizPkgConfirmBox(pkg);
+}
+// Resumen de confirmación de "paquete + tiempo de entrega" — se muestra
+// dentro del mismo paso 1 en cuanto se elige un paquete, y se refresca cada
+// vez que se cambia el tiempo de entrega (chips Estándar/Prioritario/
+// Express/Super Express), para que el cliente vea con claridad qué está a
+// punto de confirmar antes de pulsar "Continuar".
+function updateWizPkgConfirmBox(pkg){
+  const box = document.getElementById('wiz-pkg-confirm');
+  if(!box) return;
+  if(!pkg){ box.style.display = 'none'; box.innerHTML = ''; return; }
+  const pricing = wizPkgPricing(pkg);
+  const pkgLabel = wizPkgReviewLabel(pkg);
+  box.style.display = 'block';
+  box.innerHTML = `<p style="margin:0;">✓ ${tt('Elegiste','You chose')}: <strong>${escapeHtml(pkgLabel)}</strong> — ${escapeHtml(pricing.tiempoTxt||'')} — <span class="mono">$${Number(pricing.precio||0).toLocaleString('es-MX')} MXN</span>. ${tt('Pulsa "Continuar" para confirmar y seguir.','Tap "Continue" to confirm and move on.')}</p>`;
 }
 
 function wizGoToStep(stepId, direction){
@@ -5913,7 +6175,7 @@ function renderWizardReview(){
   const pkgLabel = wizPkgReviewLabel(pkg);
   const pricing = wizPkgPricing(pkg);
   const nombre = document.getElementById('s-nombre').value.trim();
-  const telefono = document.getElementById('s-telefono').value.trim();
+  const telefono = telConLada('s-telefono');
   const modelo = document.getElementById('s-modelo').value.trim();
   const anio = document.getElementById('s-anio').value.trim();
   const origen = document.getElementById('s-origen').value;
@@ -6252,6 +6514,44 @@ function resetWizard(){
 // programa funcione — si no, estas funciones fallan en silencio (try/catch)
 // y el sitio sigue operando normal, solo sin el descuento automático.
 // ============================================================
+// ===== Lada (código de país) para campos de teléfono =====
+// México se deja SIN prefijo (solo los 10 dígitos) a propósito: así los
+// números ya guardados antes de agregar este selector (referidos, socios
+// del Salón, clientes) siguen encontrándose exactamente igual que antes —
+// nadie con lada México pierde acceso a su historial por este cambio.
+// Cualquier otra lada sí se antepone a los dígitos, así nunca puede
+// confundirse con un número mexicano de 10 dígitos.
+const LADA_OPTIONS = [
+  {c:'52', f:'🇲🇽', n:'México'}, {c:'1', f:'🇺🇸', n:'EE. UU. / Canadá'},
+  {c:'34', f:'🇪🇸', n:'España'}, {c:'502', f:'🇬🇹', n:'Guatemala'},
+  {c:'57', f:'🇨🇴', n:'Colombia'}, {c:'54', f:'🇦🇷', n:'Argentina'},
+  {c:'56', f:'🇨🇱', n:'Chile'}, {c:'51', f:'🇵🇪', n:'Perú'},
+  {c:'593', f:'🇪🇨', n:'Ecuador'}, {c:'58', f:'🇻🇪', n:'Venezuela'}
+];
+function ladaSelectHtml(id){
+  return `<select id="${id}" class="lada-select" aria-label="Código de país">${LADA_OPTIONS.map(l=>`<option value="${l.c}">${l.f} +${l.c}</option>`).join('')}</select>`;
+}
+// Combina el <select> de lada + el <input> de teléfono en un solo valor
+// canónico de dígitos, listo para guardar/buscar. Ver nota arriba sobre por
+// qué México no lleva prefijo.
+function telConLada(inputId){
+  const inp = document.getElementById(inputId);
+  const sel = document.getElementById(inputId+'-lada');
+  const digits = ((inp && inp.value) || '').replace(/\D/g,'');
+  if(!digits) return '';
+  const lada = sel ? sel.value : '52';
+  return lada === '52' ? digits : (lada + digits);
+}
+// Igual que telConLada() pero formateado con "+" para mostrarlo en texto
+// (plantillas de WhatsApp), no para usarlo como llave de búsqueda.
+function telConLadaDisplay(inputId){
+  const inp = document.getElementById(inputId);
+  const sel = document.getElementById(inputId+'-lada');
+  const digits = ((inp && inp.value) || '').replace(/\D/g,'');
+  if(!digits) return '';
+  const lada = sel ? sel.value : '52';
+  return `+${lada} ${digits}`;
+}
 const REF_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // sin 0/O/1/I/L para evitar confusiones al compartirlo de palabra
 function normalizeTelReferido(tel){ return (tel||'').replace(/\D/g,''); }
 function normalizeCodigoReferido(code){ return (code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/^HV/,''); }
@@ -6362,7 +6662,13 @@ async function consumeReferralRewardIfAvailable(telNorm, detalle){
 // programa funcione — si no, estas funciones fallan en silencio (try/catch)
 // y el resto del sitio sigue operando normal.
 // ============================================================
-const SALON_TIER_THRESHOLDS = { 1:5, 2:10, 3:20 }; // fijo — solo costo/beneficios de cada nivel son editables
+const SALON_TIER_THRESHOLDS = { 1:5, 2:10, 3:20 }; // fijo — solo beneficios de cada nivel son editables
+// La membresía del Salón es una cuota FIJA anual, igual para todos los
+// socios sin importar su nivel — los niveles (Plata/Oro/Platino, por piezas
+// certificadas) son de RECONOCIMIENTO y beneficios, ya no determinan cuánto
+// se paga. El admin siempre tiene acceso ilimitado sin pagar esta cuota
+// (ver goToSalonLobbyAdmin/previewSalonMemberAsSocio).
+const SALON_ANNUAL_FEE = 1000; // MXN
 function normalizeTelSalon(tel){ return normalizeTelReferido(tel); }
 function normalizeCodigoSalon(code){ return (code||'').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/^HVS/,''); }
 function genCodigoSalon(){
@@ -6404,12 +6710,12 @@ const SALON_TIERS_DEFAULT = {
     ]},
     3: { nombre:'Nivel Platino', nombreEn:'Platinum Tier', costo:0, moneda:'MXN', colorTema:'platino', beneficios:[
       'Todos los beneficios del Nivel Oro',
-      'Membresía vitalicia — sin vencimiento ni renovación',
+      'Reconocimiento vitalicio — una vez Platino, nunca se pierde el nivel',
       'Máxima prioridad de agenda y atención personalizada',
       'Beneficios exclusivos con cada nueva certificación'
     ], beneficiosEn:[
       'Everything in the Gold Tier',
-      'Lifetime membership — never expires, never needs renewal',
+      'Lifetime recognition — once Platinum, the tier is never lost',
       'Highest scheduling priority and personalized attention',
       'Exclusive perks with every new certification'
     ]}
@@ -6472,19 +6778,20 @@ function computeMembershipStatus(m){
   if(m.estado === 'inactivo') return 'inactivo';
   if(m.estado === 'activo'){
     const cuotas = (m.planPago && m.planPago.cuotas) || [];
-    if(cuotas.length){
-      const hoy = new Date().toISOString().slice(0,10);
-      const hayVencida = cuotas.some(c => c.estado === 'pendiente' && c.fechaLimite && c.fechaLimite < hoy);
-      if(hayVencida) return 'pendiente_pago';
-      const todasPagadas = cuotas.every(c => c.estado === 'pagado');
-      if(todasPagadas) return 'liquidado';
-    }
+    const hoy = new Date().toISOString().slice(0,10);
+    const hayVencida = cuotas.some(c => c.estado === 'pendiente' && c.fechaLimite && c.fechaLimite < hoy);
+    if(hayVencida) return 'pendiente_pago';
+    // "Vencida" = ya pasó la fecha de renovación anual y no se ha
+    // registrado el pago del siguiente año — distinto de una cuota
+    // individual atrasada dentro del mismo periodo (pendiente_pago).
+    if(m.fechaRenovacion && m.fechaRenovacion < hoy) return 'vencida';
+    if(cuotas.length && cuotas.every(c => c.estado === 'pagado')) return 'liquidado';
     return 'activo';
   }
   return 'prospecto';
 }
-const SALON_STATUS_LABEL = { prospecto:'Prospecto', elegible:'Elegible sin activar', activo:'Activo', pendiente_pago:'Pendiente de pago', liquidado:'Liquidado', inactivo:'Inactivo', ninguno:'—' };
-const SALON_STATUS_LABEL_EN = { prospecto:'Prospect', elegible:'Eligible, not activated', activo:'Active', pendiente_pago:'Payment due', liquidado:'Paid in full', inactivo:'Inactive', ninguno:'—' };
+const SALON_STATUS_LABEL = { prospecto:'Prospecto', elegible:'Elegible sin activar', activo:'Activo', pendiente_pago:'Pendiente de pago', vencida:'Membresía vencida', liquidado:'Liquidado', inactivo:'Inactivo', ninguno:'—' };
+const SALON_STATUS_LABEL_EN = { prospecto:'Prospect', elegible:'Eligible, not activated', activo:'Active', pendiente_pago:'Payment due', vencida:'Membership expired', liquidado:'Paid in full', inactivo:'Inactive', ninguno:'—' };
 function salonMemberStatusLabel(status){ return tt(SALON_STATUS_LABEL[status]||status, SALON_STATUS_LABEL_EN[status]||status); }
 
 // El corazón del programa: se llama desde createFolio() cada vez que se
@@ -6506,7 +6813,7 @@ async function bumpSalonProgress(telefonoRaw, nombreOpt, detalle){
       piezasCertificadas: 0, piezasFolios: [],
       estado: 'prospecto', nivelActual: 0, vitalicio: false, nivelMaximoAlcanzado: 0,
       fechaElegibilidadTs: null, activadoTs: null, activadoPor: '',
-      upgradePendientePago: false,
+      upgradePendientePago: false, fechaRenovacion: null,
       planPago: { costoTotal: 0, moneda: 'MXN', cuotas: [] },
       historialNiveles: [],
       creado: new Date().toISOString()
@@ -6528,8 +6835,10 @@ async function bumpSalonProgress(telefonoRaw, nombreOpt, detalle){
     becameEligible = true;
     bumpSalonStats({ miembrosElegibles: 1 });
   } else if(m.estado === 'activo' && nivelDerivado > (m.nivelActual||0)){
+    // La cuota es fija ($SALON_ANNUAL_FEE/año) sin importar el nivel, así
+    // que subir de nivel es puro reconocimiento — no hay costo nuevo que
+    // definir ni que bloquee nada; el nivel sube de inmediato.
     m.nivelActual = nivelDerivado;
-    m.upgradePendientePago = true;
     if(nivelDerivado >= 3) m.vitalicio = true;
     leveledUp = true;
   }
@@ -6557,18 +6866,17 @@ async function renderSalonTiersAdmin(){
   box.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
   const tiers = await getSalonTiers();
   const nombres = {1:'Nivel 1 · se activa a las 5 piezas', 2:'Nivel 2 · se activa a las 10 piezas', 3:'Nivel 3 · se activa a las 20+ piezas (vitalicio)'};
-  box.innerHTML = [1,2,3].map(n => {
-    const t = tiers.niveles[n] || {nombre:'', nombreEn:'', costo:0, moneda:'MXN', beneficios:[], beneficiosEn:[]};
+  box.innerHTML = `<div class="card" style="background:var(--panel-2);border-left:3px solid var(--salon-gold, var(--brass));margin-bottom:14px;">
+      <strong>Cuota de membresía: $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año</strong>
+      <p class="foot-note" style="border:none;padding:0;margin-top:4px;">Es una sola cuota fija, igual para los 3 niveles — los niveles ya no tienen costo propio, solo nombre y beneficios (reconocimiento por piezas certificadas). Para cambiar el monto de la cuota, pide que se actualice la constante SALON_ANNUAL_FEE en el código.</p>
+    </div>` + [1,2,3].map(n => {
+    const t = tiers.niveles[n] || {nombre:'', nombreEn:'', beneficios:[], beneficiosEn:[]};
     return `
     <div class="card" style="background:var(--panel-2);margin-bottom:14px;">
       <h4 style="margin:0 0 4px;font-size:14.5px;">${nombres[n]}</h4>
       <div class="row">
         <div style="flex:1;"><label style="font-size:12px;">Nombre del nivel (ES)</label><input id="st-nombre-${n}" value="${escapeHtml(t.nombre||'')}" style="margin-bottom:8px;"></div>
         <div style="flex:1;"><label style="font-size:12px;">Nombre del nivel (EN)</label><input id="st-nombre-en-${n}" value="${escapeHtml(t.nombreEn||'')}" style="margin-bottom:8px;"></div>
-      </div>
-      <div class="row">
-        <div style="flex:1;"><label style="font-size:12px;">Costo</label><input id="st-costo-${n}" type="number" min="0" value="${Number(t.costo)||0}" style="margin-bottom:8px;"></div>
-        <div style="flex:1;"><label style="font-size:12px;">Moneda</label><input id="st-moneda-${n}" value="${escapeHtml(t.moneda||'MXN')}" style="margin-bottom:8px;"></div>
       </div>
       <label style="font-size:12px;">Beneficios en español (uno por línea) — se muestran en el sitio público</label>
       <textarea id="st-beneficios-${n}" rows="4" style="margin-bottom:8px;">${escapeHtml((t.beneficios||[]).join('\n'))}</textarea>
@@ -6583,8 +6891,7 @@ async function saveSalonTiers(){
     tiers.niveles[n] = {
       nombre: (document.getElementById('st-nombre-'+n).value||'').trim(),
       nombreEn: (document.getElementById('st-nombre-en-'+n).value||'').trim(),
-      costo: Number(document.getElementById('st-costo-'+n).value)||0,
-      moneda: (document.getElementById('st-moneda-'+n).value||'MXN').trim(),
+      costo: 0, moneda: 'MXN', // ya sin uso — la cuota es fija (SALON_ANNUAL_FEE), no por nivel
       colorTema: n==1?'plata':(n==2?'oro':'platino'),
       beneficios: (document.getElementById('st-beneficios-'+n).value||'').split('\n').map(s=>s.trim()).filter(Boolean),
       beneficiosEn: (document.getElementById('st-beneficios-en-'+n).value||'').split('\n').map(s=>s.trim()).filter(Boolean)
@@ -6601,7 +6908,7 @@ async function saveSalonTiers(){
 // ---- Miembros (lista, filtros, detalle, ledger de pagos) ----
 let SALON_MEMBERS_CACHE = [];
 let SALON_MEMBER_FILTER = 'todos';
-const SALON_STATUS_PILL_CLASS = { prospecto:'neutral', elegible:'original', activo:'completado', pendiente_pago:'pendiente', liquidado:'completado', inactivo:'neutral' };
+const SALON_STATUS_PILL_CLASS = { prospecto:'neutral', elegible:'original', activo:'completado', pendiente_pago:'pendiente', vencida:'replica', liquidado:'completado', inactivo:'neutral' };
 async function renderSalonMembersAdmin(){
   const box = document.getElementById('salon-members-list');
   if(!box) return;
@@ -6651,15 +6958,20 @@ async function openSalonMemberDetail(telNorm){
     <p class="foot-note" style="border:none;padding-top:0;">Tel. ${escapeHtml(m.telefono)} · Código HVS-${escapeHtml(m.code||'—')} · Nivel actual: ${m.nivelActual||0}${m.vitalicio?' (vitalicio)':''}</p>
     <p style="font-size:13.5px;">Piezas certificadas: <strong>${m.piezasCertificadas||0}</strong>${nextT ? ` — faltan ${nextT - m.piezasCertificadas} para el siguiente nivel (${nextT} piezas)` : ' — nivel máximo alcanzado'}</p>`;
   if(m.upgradePendientePago){
-    html += `<div class="card" style="background:var(--panel-2);border-left:3px solid var(--brass);"><strong>⚠️ Este socio ya subió a Nivel ${m.nivelActual}</strong> — falta definir el costo y plan de pagos de este nivel.
-      <br><button class="btn small" style="margin-top:8px;" onclick="openSalonPlanForm('${escapeHtml(telNorm)}','upgrade',${m.nivelActual})">Definir plan del Nivel ${m.nivelActual}</button></div>`;
+    // Campo heredado de antes de pasar a cuota fija anual — ya no bloquea
+    // nada, pero si algún socio viejo lo trae marcado, se resuelve con un
+    // clic (ya no pide definir costo, solo reconoce el nivel).
+    html += `<div class="card" style="background:var(--panel-2);border-left:3px solid var(--brass);"><strong>Este socio subió a Nivel ${m.nivelActual}</strong> — falta reconocerlo.
+      <br><button class="btn small" style="margin-top:8px;" onclick="openSalonPlanForm('${escapeHtml(telNorm)}','upgrade',${m.nivelActual})">Confirmar Nivel ${m.nivelActual}</button></div>`;
   }
   if(status === 'elegible'){
-    html += `<button class="btn small" onclick="openSalonPlanForm('${escapeHtml(telNorm)}','activar',1)">Activar membresía — Nivel 1</button>`;
+    html += `<button class="btn small" onclick="openSalonPlanForm('${escapeHtml(telNorm)}','activar',1)">Activar membresía — $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año</button>`;
   }
   if(m.estado === 'activo'){
     const cuotas = (m.planPago && m.planPago.cuotas) || [];
-    html += `<h4 style="font-size:14px;margin-top:16px;">Plan de pagos — total ${m.planPago.moneda||'MXN'} $${(Number(m.planPago.costoTotal)||0).toLocaleString('es-MX')}</h4>`;
+    html += `<h4 style="font-size:14px;margin-top:16px;">Historial de pagos — $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año</h4>`;
+    html += `<p style="font-size:13.5px;">Renovación: ${m.fechaRenovacion ? `<strong>${escapeHtml(m.fechaRenovacion)}</strong>${status==='vencida'?' — <span style="color:var(--bad);">vencida</span>':''}` : '<em>sin registrar</em>'}</p>`;
+    html += `<button class="btn ${status==='vencida'?'':'ghost'} small" style="margin-bottom:10px;" onclick="openSalonPlanForm('${escapeHtml(telNorm)}','renovar',${m.nivelActual||1})">Registrar renovación (+1 año)</button>`;
     if(cuotas.length){
       html += '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">';
       html += '<tr style="text-align:left;color:var(--sage-dim);"><th>#</th><th>Monto</th><th>Fecha límite</th><th>Estatus</th><th></th></tr>';
@@ -6726,38 +7038,52 @@ async function reactivateSalonMembership(telNorm){
   renderSalonMembersAdmin();
 }
 
-// Formulario de activación/upgrade: costo total + calendario de abonos con
-// fechas programadas (número de cuotas libre, montos y fechas a mano).
-let SALON_PLAN_CUOTAS_DATA = [];
-let SALON_PLAN_TARGET = null; // { telNorm, mode:'activar'|'upgrade', nivel }
+// Formulario de activación/renovación: la cuota es fija ($SALON_ANNUAL_FEE
+// MXN/año, igual para cualquier nivel) — el admin solo registra CÓMO y
+// CUÁNDO se pagó (presencial al traer sus piezas, o transferencia si ya es
+// cliente de confianza). No hay pasarela de pago en línea todavía: esto es
+// intencional (ver README, "Qué falta para producción") — el admin siempre
+// activa/renueva a mano, nunca se piden datos de tarjeta en el sitio.
+let SALON_PLAN_TARGET = null; // { telNorm, mode:'activar'|'renovar'|'upgrade', nivel }
 function openSalonPlanForm(telNorm, mode, nivel){
   SALON_PLAN_TARGET = { telNorm, mode, nivel };
-  SALON_PLAN_CUOTAS_DATA = [{ monto:0, fechaLimite:'' }];
   renderSalonPlanForm();
 }
-function addSalonCuotaRow(){ SALON_PLAN_CUOTAS_DATA.push({ monto:0, fechaLimite:'' }); renderSalonPlanForm(); }
-function removeSalonCuotaRow(i){ SALON_PLAN_CUOTAS_DATA.splice(i,1); renderSalonPlanForm(); }
-function updateSalonCuotaField(i, field, val){ if(SALON_PLAN_CUOTAS_DATA[i]) SALON_PLAN_CUOTAS_DATA[i][field] = val; }
 function renderSalonPlanForm(){
   const mount = document.getElementById('salon-plan-form-mount');
   if(!mount || !SALON_PLAN_TARGET) return;
-  const titulo = SALON_PLAN_TARGET.mode === 'upgrade' ? `Definir plan del Nivel ${SALON_PLAN_TARGET.nivel}` : `Activar membresía — Nivel ${SALON_PLAN_TARGET.nivel}`;
+  const { mode, nivel } = SALON_PLAN_TARGET;
+  if(mode === 'upgrade'){
+    // Subir de nivel por piezas certificadas ya NO implica un costo nuevo
+    // que definir — la cuota es la misma sin importar el nivel. Esto solo
+    // confirma/reconoce el nuevo nivel del socio.
+    mount.innerHTML = `
+      <div class="card" style="background:var(--panel-2);margin-top:12px;">
+        <h4 style="margin-top:0;font-size:14px;">Reconocer Nivel ${nivel}</h4>
+        <p class="foot-note" style="border:none;padding:0;">La membresía cuesta lo mismo ($${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año) en cualquier nivel — esto solo confirma el nuevo reconocimiento del socio, no pide un pago aparte.</p>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn small" onclick="confirmSalonPlan()">Confirmar Nivel ${nivel}</button>
+          <button class="btn ghost small" onclick="SALON_PLAN_TARGET=null;document.getElementById('salon-plan-form-mount').innerHTML='';">Cancelar</button>
+        </div>
+      </div>`;
+    return;
+  }
+  const hoy = new Date().toISOString().slice(0,10);
+  const titulo = mode === 'renovar' ? `Registrar renovación — $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN` : `Activar membresía — $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año`;
   mount.innerHTML = `
     <div class="card" style="background:var(--panel-2);margin-top:12px;">
       <h4 style="margin-top:0;font-size:14px;">${titulo}</h4>
-      <label style="font-size:12px;">Costo total</label>
-      <input id="spf-costo-total" type="number" min="0" style="margin-bottom:10px;">
-      <label style="font-size:12px;">Calendario de abonos</label>
-      <div id="spf-cuotas-list">${SALON_PLAN_CUOTAS_DATA.map((c,i) => `
-        <div class="row" style="margin-bottom:6px;align-items:center;">
-          <span style="width:22px;color:var(--sage-dim);font-size:12px;">#${i+1}</span>
-          <input type="number" min="0" placeholder="Monto" value="${c.monto||''}" oninput="updateSalonCuotaField(${i},'monto',this.value)" style="flex:1;">
-          <input type="date" value="${c.fechaLimite||''}" oninput="updateSalonCuotaField(${i},'fechaLimite',this.value)" style="flex:1;">
-          <button type="button" class="btn ghost small" onclick="removeSalonCuotaRow(${i})" aria-label="Quitar abono ${i+1}">✕</button>
-        </div>`).join('')}</div>
-      <button class="btn ghost small" onclick="addSalonCuotaRow()">+ Agregar abono</button>
-      <div class="row" style="margin-top:12px;">
-        <button class="btn small" onclick="confirmSalonPlan()">Guardar plan</button>
+      <label style="font-size:12px;">Fecha de pago</label>
+      <input id="spf-fecha-pago" type="date" value="${hoy}" style="margin-bottom:10px;">
+      <label style="font-size:12px;">Método</label>
+      <select id="spf-metodo" style="margin-bottom:10px;">
+        <option value="presencial">Presencial (efectivo/tarjeta en el laboratorio)</option>
+        <option value="transferencia">Transferencia bancaria</option>
+        <option value="otro">Otro</option>
+      </select>
+      <p class="foot-note" style="border:none;padding:0;">La membresía se renueva un año a partir de esta fecha de pago.</p>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn small" onclick="confirmSalonPlan()">${mode === 'renovar' ? 'Registrar renovación' : 'Activar por 1 año'}</button>
         <button class="btn ghost small" onclick="SALON_PLAN_TARGET=null;document.getElementById('salon-plan-form-mount').innerHTML='';">Cancelar</button>
       </div>
     </div>`;
@@ -6765,8 +7091,6 @@ function renderSalonPlanForm(){
 async function confirmSalonPlan(){
   if(!SALON_PLAN_TARGET) return;
   const { telNorm, mode, nivel } = SALON_PLAN_TARGET;
-  const costoTotal = Number(document.getElementById('spf-costo-total').value)||0;
-  const cuotas = SALON_PLAN_CUOTAS_DATA.map((c,i) => ({ n:i+1, monto:Number(c.monto)||0, fechaLimite:c.fechaLimite||'', estado:'pendiente', fechaPago:null, metodo:'' }));
   try{
     const m = await getSalonMember(telNorm);
     if(!m) return;
@@ -6774,18 +7098,31 @@ async function confirmSalonPlan(){
     m.nivelActual = nivel;
     m.upgradePendientePago = false;
     if(nivel >= 3) m.vitalicio = true;
-    if(!m.activadoTs) m.activadoTs = Date.now();
-    m.activadoPor = (typeof fbAuth !== 'undefined' && fbAuth.currentUser && fbAuth.currentUser.email) || 'admin';
-    m.planPago = { costoTotal, moneda:'MXN', cuotas };
-    m.historialNiveles = [...(m.historialNiveles||[]), { nivel, ts:Date.now(), costoTotal, cuotasSnapshot: cuotas, motivo: mode==='upgrade'?'upgrade':'activacion' }];
+    let costoTotal = 0;
+    if(mode !== 'upgrade'){
+      const fechaPago = (document.getElementById('spf-fecha-pago')||{}).value || new Date().toISOString().slice(0,10);
+      const metodo = (document.getElementById('spf-metodo')||{}).value || 'presencial';
+      costoTotal = SALON_ANNUAL_FEE;
+      const cuotaPrevia = ((m.planPago && m.planPago.cuotas) || []);
+      const cuota = { n: cuotaPrevia.length+1, monto: SALON_ANNUAL_FEE, fechaLimite: fechaPago, estado:'pagado', fechaPago, metodo };
+      m.planPago = { costoTotal: SALON_ANNUAL_FEE, moneda:'MXN', cuotas:[...cuotaPrevia, cuota] };
+      // Renovación un año después de la fecha de pago registrada (no
+      // necesariamente "hoy", por si el admin captura el pago días después).
+      const d = new Date(fechaPago+'T00:00:00');
+      d.setFullYear(d.getFullYear()+1);
+      m.fechaRenovacion = d.toISOString().slice(0,10);
+      if(!m.activadoTs) m.activadoTs = Date.now();
+      m.activadoPor = (typeof fbAuth !== 'undefined' && fbAuth.currentUser && fbAuth.currentUser.email) || 'admin';
+    }
+    m.historialNiveles = [...(m.historialNiveles||[]), { nivel, ts:Date.now(), costoTotal, motivo: mode==='upgrade'?'upgrade':(mode==='renovar'?'renovacion':'activacion') }];
     await setSalonMember(telNorm, m);
-    if(mode !== 'upgrade') bumpSalonStats({ miembrosElegibles: -1, miembrosActivos: 1, ['miembrosNivel'+nivel]: 1 });
+    if(mode === 'activar') bumpSalonStats({ miembrosElegibles: -1, miembrosActivos: 1, ['miembrosNivel'+nivel]: 1 });
     SALON_PLAN_TARGET = null;
-    toast('Plan de membresía guardado.');
+    toast('Membresía actualizada.');
     openSalonMemberDetail(telNorm);
     renderSalonMembersAdmin();
     updateAdminStats();
-  }catch(e){ toast('No se pudo guardar el plan.'); }
+  }catch(e){ toast('No se pudo guardar.'); }
 }
 
 // ---- Galería VIP (piezas exclusivas del Salón) ----
@@ -6849,7 +7186,7 @@ async function addSalonPieza(){
   const categoria = document.getElementById('a-salonpieza-categoria').value;
   const grado = document.getElementById('a-salonpieza-grado').value.trim();
   const folio = document.getElementById('a-salonpieza-folio').value.trim();
-  const telNorm = normalizeTelSalon(document.getElementById('a-salonpieza-tel').value.trim());
+  const telNorm = normalizeTelSalon(telConLada('a-salonpieza-tel'));
   if(!modelo){ toast('Escribe el modelo de la pieza.'); return; }
   if(!SALON_PIEZA_PHOTOS_DATA.length){ toast('Agrega al menos una foto.'); return; }
   try{
@@ -6865,6 +7202,7 @@ async function addSalonPieza(){
     document.getElementById('a-salonpieza-grado').value = '';
     document.getElementById('a-salonpieza-folio').value = '';
     document.getElementById('a-salonpieza-tel').value = '';
+    if(document.getElementById('a-salonpieza-tel-lada')) document.getElementById('a-salonpieza-tel-lada').value = '52';
     SALON_PIEZA_PHOTOS_DATA = [];
     renderSalonPiezaPhotosPreview();
     if(status) status.textContent = 'Pieza agregada a la Galería VIP.';
@@ -7032,7 +7370,9 @@ async function renderSalonTiersTeaser(){
     const tier = tiers.niveles[n] || {};
     const nombre = tt(tier.nombre||('Nivel '+n), tier.nombreEn||tier.nombre||('Tier '+n));
     const beneficios = (SITE_LANG==='en' && tier.beneficiosEn && tier.beneficiosEn.length) ? tier.beneficiosEn : (tier.beneficios||[]);
-    const costoTxt = Number(tier.costo) > 0 ? `${escapeHtml(tier.moneda||'MXN')} $${Number(tier.costo).toLocaleString('es-MX')}` : tt('Costo a definir contigo','Cost defined together with you');
+    // La cuota es fija e igual en los 3 niveles (SALON_ANNUAL_FEE) — los
+    // niveles ya solo distinguen reconocimiento y beneficios, no costo.
+    const costoTxt = `$${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN ${tt('al año','per year')}`;
     return `
     <div class="card salon-tier-card salon-tier-n${n}">
       <p class="salon-tier-eyebrow">${thresholdTxt[n]}</p>
@@ -7048,7 +7388,7 @@ async function submitSalonGate(){
   const codeEl = document.getElementById('salon-gate-code');
   const box = document.getElementById('salon-gate-result');
   if(!telEl || !codeEl || !box) return;
-  const tel = telEl.value.trim();
+  const tel = telConLada('salon-gate-tel');
   const codeRaw = codeEl.value.trim();
   if(!tel || !codeRaw){ box.innerHTML = `<div class="empty">${tt('Escribe tu teléfono y tu código de socio.','Enter your phone number and your member code.')}</div>`; return; }
   box.innerHTML = `<div class="scan-loading"><span class="scan-radar"></span>${tt('Verificando…','Verifying…')}</div>`;
@@ -7080,8 +7420,10 @@ function exitSalonLobby(){
   if(interes) interes.style.display = '';
   const telEl = document.getElementById('salon-gate-tel');
   const codeEl = document.getElementById('salon-gate-code');
+  const ladaEl = document.getElementById('salon-gate-tel-lada');
   if(telEl) telEl.value = '';
   if(codeEl) codeEl.value = '';
+  if(ladaEl) ladaEl.value = '52';
 }
 
 async function enterSalonLobby(m){
@@ -7100,8 +7442,13 @@ async function enterSalonLobby(m){
   const nextT = nextSalonThreshold(m.piezasCertificadas||0);
   const progresoTxt = nextT
     ? tt(`Te faltan ${nextT - m.piezasCertificadas} pieza(s) para tu siguiente nivel (${nextT} piezas).`, `${nextT - m.piezasCertificadas} more piece(s) to your next tier (${nextT} pieces).`)
-    : tt('Alcanzaste el nivel máximo — membresía vitalicia.','You\'ve reached the top tier — lifetime membership.');
+    : tt('Alcanzaste el nivel máximo — reconocimiento vitalicio.','You\'ve reached the top tier — lifetime recognition.');
   const pct = nextT ? Math.max(4, Math.min(100, Math.round((m.piezasCertificadas / nextT) * 100))) : 100;
+  // El reconocimiento de nivel puede ser vitalicio, pero el ACCESO sigue
+  // dependiendo de la cuota anual — se le avisa aquí su próxima renovación.
+  const renovacionTxt = m.fechaRenovacion
+    ? tt(`Tu membresía (${'$'}${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año) se renueva el ${m.fechaRenovacion}.`, `Your membership (${'$'}${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/year) renews on ${m.fechaRenovacion}.`)
+    : '';
   lobby.innerHTML = `
     ${SALON_PREVIEW_ADMIN ? `<div class="card salon-card" style="border-color:var(--salon-gold);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <span style="font-size:13px;">🔍 <strong>Vista previa de administrador</strong> — así ve este socio su Salón.</span>
@@ -7119,6 +7466,7 @@ async function enterSalonLobby(m){
         </div>
         <div class="smc-progress"><div class="smc-progress-fill" style="width:${pct}%;"></div></div>
         <p class="smc-progress-txt">${progresoTxt}</p>
+        ${renovacionTxt ? `<p class="smc-progress-txt">${renovacionTxt}</p>` : ''}
       </div>
       <button class="btn ghost salon-btn-ghost" onclick="shareMembershipCard()">${tt('Compartir tarjeta','Share card')}</button>
     </div>
@@ -7498,7 +7846,10 @@ function shareSheetDoWhatsApp(){
   if(!SHARE_SHEET_STATE) return;
   const cfg = SHARE_SHEET_STATE.cfg;
   const msg = `${cfg.shareText||cfg.shareTitle||''}${cfg.shareUrl ? '\n'+cfg.shareUrl : ''}`;
-  window.open(waLink(msg), '_blank', 'noopener');
+  // Sin número fijo a propósito: esto es "compartir con quien yo quiera"
+  // (un amigo, un grupo), no un mensaje al laboratorio — wa.me sin número
+  // abre el selector de contactos de WhatsApp con el texto precargado.
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
 }
 function shareSheetDoFacebook(){
   if(!SHARE_SHEET_STATE || !SHARE_SHEET_STATE.cfg.shareUrl) return;
@@ -7584,7 +7935,7 @@ async function submitSalonInteres(){
   const nombreEl = document.getElementById('salon-interes-nombre');
   const telEl = document.getElementById('salon-interes-tel');
   const nombre = nombreEl ? nombreEl.value.trim() : '';
-  const tel = telEl ? telEl.value.trim() : '';
+  const tel = telEl ? telConLadaDisplay('salon-interes-tel') : '';
   if(!nombre || !tel){ toast(tt('Escribe tu nombre y tu teléfono.','Enter your name and phone number.')); return; }
   // Las plantillas de WhatsApp siempre van en español, sin importar el
   // idioma del sitio — igual convención que el resto de mensajes de wa.me.
@@ -7605,13 +7956,13 @@ async function submitSalonCompraDirecta(){
   const nombreEl = document.getElementById('salon-interes-nombre');
   const telEl = document.getElementById('salon-interes-tel');
   const nombre = nombreEl ? nombreEl.value.trim() : '';
-  const tel = telEl ? telEl.value.trim() : '';
+  const tel = telEl ? telConLadaDisplay('salon-interes-tel') : '';
   if(!nombre || !tel){ toast(tt('Escribe tu nombre y tu teléfono.','Enter your name and phone number.')); return; }
   // Plantilla de WhatsApp siempre en español, igual que el resto del sitio.
   const msg = waTemplate('💎', 'Quiero mi membresía del Salón Privado HV', [
     `Nombre: ${nombre}`,
     `Teléfono: ${tel}`,
-    'Quiero adquirir mi membresía del Salón Privado directamente, sin esperar a certificar piezas.'
+    `Quiero adquirir directamente mi membresía del Salón Privado ($${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año), sin esperar a certificar piezas.`
   ]);
   window.open(waLink(msg), '_blank');
   toast(tt('Te llevamos a WhatsApp para continuar.','Taking you to WhatsApp to continue.'));
@@ -7623,7 +7974,7 @@ async function submitSalonPaquete5(){
   const nombreEl = document.getElementById('salon-interes-nombre');
   const telEl = document.getElementById('salon-interes-tel');
   const nombre = nombreEl ? nombreEl.value.trim() : '';
-  const tel = telEl ? telEl.value.trim() : '';
+  const tel = telEl ? telConLadaDisplay('salon-interes-tel') : '';
   if(!nombre || !tel){ toast(tt('Escribe tu nombre y tu teléfono.','Enter your name and phone number.')); return; }
   const msg = waTemplate('💎', 'Quiero certificar mi paquete de 5 piezas', [
     `Nombre: ${nombre}`,
@@ -7982,7 +8333,8 @@ function renderSalonPieceDetail(p, photoIndex){
           ${p.grado?`<span class="pill original">${tt('Grado','Grade')} ${escapeHtml(p.grado)}</span>`:''}
         </div>
         ${p.folio ? `<button class="btn ghost small" style="margin-top:14px;" onclick="goVerifyFolio('${escapeHtml(p.folio)}')">${tt(`Ver certificado — ${escapeHtml(p.folio)} →`,`View certificate — ${escapeHtml(p.folio)} →`)}</button>` : ''}
-        <button class="btn salon-btn-gold small" style="margin-top:10px;" onclick="shareSalonPiece('${p.id}')">✨ ${tt('Compartir','Share')}</button>
+        <button class="btn salon-btn-gold small" style="margin-top:10px;" onclick="contactarInteresPiezaSalon('${escapeHtml(p.id)}')">💎 ${tt('Interesado en esta pieza','Interested in this piece')}</button>
+        <button class="btn ghost small" style="margin-top:8px;" onclick="shareSalonPiece('${p.id}')">✨ ${tt('Compartir','Share')}</button>
       </div>
     </div>
   `;
@@ -8036,7 +8388,7 @@ async function submitSolicitud(){
     return;
   }
   const nombre = document.getElementById('s-nombre').value.trim();
-  const telefono = document.getElementById('s-telefono').value.trim();
+  const telefono = telConLada('s-telefono');
   const modelo = document.getElementById('s-modelo').value.trim();
   const pkg = document.getElementById('s-nivel').value;
   if(!nombre || !telefono || !modelo){
@@ -8204,6 +8556,7 @@ async function submitSolicitud(){
     document.getElementById('s-confirm').innerHTML = confirmHtml;
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
     ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion','s-ref-codigo'].forEach(fid=>document.getElementById(fid).value='');
+    if(document.getElementById('s-telefono-lada')) document.getElementById('s-telefono-lada').value = '52';
     SOLICITUD_FOTOS_DATA = [];
     clearSolicitudDraft();
     resetRecaptcha();
@@ -8213,7 +8566,7 @@ async function submitSolicitud(){
 }
 
 async function lookupCliente(){
-  const tel = document.getElementById('c-telefono').value.trim();
+  const tel = telConLada('c-telefono');
   const box = document.getElementById('c-result');
   if(!tel) return;
   box.innerHTML = `<div class="scan-loading"><span class="scan-radar"></span>${tt('Buscando tu historial…','Searching your history…')}</div>`;
@@ -8944,74 +9297,93 @@ async function renderPiezasFalsasAdmin(){
 
 // ---- Vista pública "Piezas falsas" (galería + detalle, sin libro/vuelta de
 // página — es un registro de advertencia, no una vitrina de coleccionismo) ----
-let PIEZAS_FALSAS_STATE = { mode:'grid', items:[], detail:null, detailPhotoIndex:0 };
-async function renderPiezasFalsasView(){
-  const box = document.getElementById('piezasfalsas-content');
-  if(!box) return;
-  box.innerHTML = `<p style="color:var(--sage);">${tt('Cargando…','Loading…')}</p>`;
-  PIEZAS_FALSAS_STATE.items = await getPiezasFalsas();
-  PIEZAS_FALSAS_STATE.mode = 'grid';
-  renderPiezasFalsasGrid();
+// ===== Libro de "Piezas falsas" — mismo mecanismo de libro/vuelta de
+// página que el Librero público y la Galería Exclusiva del Salón
+// (duplicado y renombrado con prefijo abyss-, ver el comentario que
+// explica ese mismo patrón junto a SALON_BOOK_STATE), pero con un tema
+// visual propio "abismo" (ver CSS .book-stage.abyss-book): esto es
+// deliberadamente un registro de advertencia, no una vitrina de prestigio
+// como el Librero o el Salón, así que nunca comparte su paleta dorada/roja.
+let ABYSS_BOOK_STATE = { mode:'index', items:[], detailPieza:null, detailPhotoIndex:0 };
+// Compatibilidad con el nombre anterior (por si algo externo aún lo llama) —
+// simplemente abre el libro en vez de dibujar la cuadrícula plana de antes.
+function renderPiezasFalsasView(){ /* noop: el libro se abre bajo demanda con openAbyssBook() */ }
+async function openAbyssBook(){
+  const stage = document.getElementById('abyss-book-stage');
+  const book = document.getElementById('abyss-hv-book');
+  if(!stage || !book) return;
+  stage.classList.add('open');
+  book.classList.add('open');
+  document.body.classList.add('book-open');
+  ABYSS_BOOK_STATE.items = await getPiezasFalsas();
+  ABYSS_BOOK_STATE.mode = 'index';
+  renderAbyssBookIndex();
 }
-function renderPiezasFalsasGrid(){
-  const box = document.getElementById('piezasfalsas-content');
+function closeAbyssBook(){
+  const stage = document.getElementById('abyss-book-stage');
+  const book = document.getElementById('abyss-hv-book');
+  if(stage) stage.classList.remove('open');
+  if(book) book.classList.remove('open');
+  document.body.classList.remove('book-open');
+}
+function renderAbyssBookIndex(){
+  const box = document.getElementById('abyss-hv-book-index');
+  const right = document.getElementById('abyss-book-page-right');
   if(!box) return;
-  const items = PIEZAS_FALSAS_STATE.items || [];
+  const items = ABYSS_BOOK_STATE.items || [];
   box.innerHTML = items.length
-    ? `<div class="fake-piece-grid reveal in-view">${items.map(renderFakePieceCard).join('')}</div>`
-    : `<div class="empty">${tt('Por ahora no hay piezas falsas registradas.','No fake pieces are on record right now.')}</div>`;
+    ? items.map(p => `<li data-id="${escapeHtml(p.id)}" onclick="openAbyssPieceDetail('${escapeHtml(p.id)}')"><span class="toc-icon">💀</span><span class="toc-title">${escapeHtml(p.modelo)}</span><span class="toc-leader"></span></li>`).join('')
+    : `<li style="cursor:default;">${tt('Sin piezas registradas todavía.','No pieces on record yet.')}</li>`;
+  if(right && ABYSS_BOOK_STATE.mode !== 'detail'){
+    right.innerHTML = `<div class="hv-book-placeholder"><div class="hv-book-placeholder-icon">💀</div><p>${tt('Elige una pieza del índice para ver el hallazgo','Choose a piece from the index to see the finding')}</p></div>`;
+  }
 }
-function renderFakePieceCard(p){
-  const main = (p.fotos && p.fotos[0]) ? p.fotos[0].url : '';
-  const motivoTxt = (p.motivo||'');
-  const motivoShort = motivoTxt.length > 80 ? motivoTxt.slice(0,80)+'…' : motivoTxt;
-  return `
-    <button type="button" class="fake-piece-card" onclick="openFakePieceDetail('${p.id}')">
-      <span class="fake-piece-photo"><img src="${escapeHtml(main)}" alt="${escapeHtml(p.modelo)}" loading="lazy"><span class="fake-piece-badge">⚠️ ${tt('FALSO','FAKE')}</span></span>
-      <span class="fake-piece-info">
-        <span class="fake-piece-model">${escapeHtml(p.modelo)}</span>
-        ${motivoShort ? `<span class="fake-piece-motivo">${escapeHtml(motivoShort)}</span>` : ''}
-      </span>
-    </button>`;
-}
-function openFakePieceDetail(id){
-  const p = (PIEZAS_FALSAS_STATE.items||[]).find(x => x.id === id);
+function openAbyssPieceDetail(id){
+  const p = (ABYSS_BOOK_STATE.items||[]).find(x => x.id === id);
   if(!p) return;
-  PIEZAS_FALSAS_STATE.mode = 'detail';
-  PIEZAS_FALSAS_STATE.detail = p;
-  PIEZAS_FALSAS_STATE.detailPhotoIndex = 0;
-  renderFakePieceDetail();
+  ABYSS_BOOK_STATE.mode = 'detail';
+  ABYSS_BOOK_STATE.detailPieza = p;
+  ABYSS_BOOK_STATE.detailPhotoIndex = 0;
+  document.querySelectorAll('#abyss-hv-book-index li').forEach(li => li.classList.toggle('active', li.dataset.id === id));
+  flipAbyssRightPage(() => abyssPieceDetailHtml(p, 0));
 }
-function renderFakePieceDetail(){
-  const box = document.getElementById('piezasfalsas-content');
-  if(!box) return;
-  const p = PIEZAS_FALSAS_STATE.detail;
+function abyssPieceDetailHtml(p, photoIndex){
   const fotos = (p.fotos && p.fotos.length) ? p.fotos : [{url:'',caption:''}];
-  const idx = Math.max(0, Math.min(PIEZAS_FALSAS_STATE.detailPhotoIndex, fotos.length-1));
-  box.innerHTML = `
-    <button class="btn ghost small" type="button" onclick="backToFakePiecesGrid()" style="margin-bottom:14px;">← ${tt('Volver','Back')}</button>
+  const idx = Math.max(0, Math.min(photoIndex, fotos.length-1));
+  return `
     <div class="piece-detail">
       <div>
-        <div class="piece-detail-main"><img src="${escapeHtml(fotos[idx].url)}" alt="${escapeHtml(p.modelo)}" id="fake-piece-detail-img"></div>
-        ${fotos.length>1 ? `<div class="piece-detail-thumbs">${fotos.map((f,i)=>`<button type="button" class="pdt ${i===idx?'active':''}" onclick="setFakePieceDetailPhoto(${i})"><img src="${escapeHtml(f.url)}" alt=""></button>`).join('')}</div>` : ''}
+        <div class="piece-detail-main"><img src="${escapeHtml(fotos[idx].url)}" alt="${escapeHtml(p.modelo)}" id="abyss-piece-detail-img"></div>
+        ${fotos.length>1 ? `<div class="piece-detail-thumbs">${fotos.map((f,i)=>`<button type="button" class="pdt ${i===idx?'active':''}" onclick="setAbyssPieceDetailPhoto(${i})"><img src="${escapeHtml(f.url)}" alt=""></button>`).join('')}</div>` : ''}
       </div>
       <div class="piece-detail-info">
-        <span class="pill replica">⚠️ ${tt('Falso / Alterado','Fake / Altered')}</span>
+        <span class="pill replica">💀 ${tt('Falso / Alterado','Fake / Altered')}</span>
         <h3 style="margin-top:10px;">${escapeHtml(p.modelo)}</h3>
         ${p.categoria ? `<div class="piece-detail-tags"><span class="pill neutral">${categoriaLabel(p.categoria)}</span></div>` : ''}
-        <p style="font-size:13px;color:var(--sage);line-height:1.6;margin-top:14px;"><strong style="color:var(--ink);">${tt('Motivo del hallazgo:','Reason for the finding:')}</strong> ${escapeHtml(p.motivo||'—')}</p>
+        <p style="font-size:13px;line-height:1.6;margin-top:14px;"><strong>${tt('Motivo del hallazgo:','Reason for the finding:')}</strong> ${escapeHtml(p.motivo||'—')}</p>
       </div>
-    </div>
-  `;
+    </div>`;
 }
-function backToFakePiecesGrid(){ PIEZAS_FALSAS_STATE.mode = 'grid'; renderPiezasFalsasGrid(); }
-function setFakePieceDetailPhoto(i){
-  PIEZAS_FALSAS_STATE.detailPhotoIndex = i;
-  const p = PIEZAS_FALSAS_STATE.detail;
+function setAbyssPieceDetailPhoto(i){
+  ABYSS_BOOK_STATE.detailPhotoIndex = i;
+  const p = ABYSS_BOOK_STATE.detailPieza;
   if(!p || !p.fotos || !p.fotos[i]) return;
-  const img = document.getElementById('fake-piece-detail-img');
+  const img = document.getElementById('abyss-piece-detail-img');
   if(img) img.src = p.fotos[i].url;
-  document.querySelectorAll('#piezasfalsas-content .piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
+  document.querySelectorAll('#abyss-book-page-right .piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
+}
+function flipAbyssRightPage(buildHtmlFn){
+  const right = document.getElementById('abyss-book-page-right');
+  if(!right) return;
+  right.classList.remove('flipping-in');
+  right.classList.add('flipping-out');
+  setTimeout(() => {
+    right.innerHTML = buildHtmlFn();
+    right.scrollTop = 0;
+    right.classList.remove('flipping-out');
+    right.classList.add('flipping-in');
+    setTimeout(() => right.classList.remove('flipping-in'), 430);
+  }, 220);
 }
 
 // ============================================================
@@ -9738,7 +10110,7 @@ function collectLiveFormData(){
     grado: g('a-grado'), estado: g('a-estado'),
     sgPintura: g('a-sg-pintura'), sgDesgaste: g('a-sg-desgaste'), sgEnsamble: g('a-sg-ensamble'), sgAutenticidad: g('a-sg-autenticidad'),
     uv: g('a-uv'), micro: g('a-micro'), remaches: g('a-remaches'), color: g('a-color'), obs: g('a-obs'),
-    nivel: g('a-nivel'), telefono: g('a-telefono'),
+    nivel: g('a-nivel'), telefono: telConLada('a-telefono'),
     // Idioma del documento certificado — SIEMPRE predeterminado a español;
     // solo cambia a 'en' si el admin lo elige explícitamente en el selector.
     certLang: (g('a-cert-lang') === 'en') ? 'en' : 'es',
@@ -10412,7 +10784,7 @@ async function notifyEnvioDatos(id){
     '',
     ...bankLines
   ], 'Gracias por tu paciencia.');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
 }
 async function toggleEnvioPagado(id){
   const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
@@ -10673,19 +11045,41 @@ const ZZ_ZONAS_DEF = [
 ];
 let CURRENT_PROCESO = null;
 
+// Las llantas son la única zona con 4 sub-evaluaciones (una por llanta) en
+// vez de una sola calificación — por eso critPC arranca como objeto
+// {di,dd,ti,td} únicamente para 'llantas', y como número (o null) para
+// todas las demás zonas.
+function zzInitialCritPC(zonaKey){
+  return zonaKey === 'llantas' ? {di:null, dd:null, ti:null, td:null} : null;
+}
 function ensureZigzag(step){
   if(!step.zigzag){
     step.zigzag = {
       medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlantaTrasera:'', diametroLlantaDelantera:'', ok:false},
-      zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:null, instrumentos:[], nota:''})),
+      zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:''})),
       escalaFinal: '',
       origenTexto: ''
     };
+  }
+  // Procesos ya existentes migrados desde antes de este cambio pueden traer
+  // la zona 'llantas' con critPC numérico (evaluación única antigua) — se
+  // convierte una sola vez al nuevo formato de 4 sub-evaluaciones, sin
+  // perder la calificación ya asignada.
+  const llantas = step.zigzag.zonas.find(z=>z.key==='llantas');
+  if(llantas && (llantas.critPC==null || typeof llantas.critPC !== 'object')){
+    const prev = llantas.critPC;
+    llantas.critPC = {di:prev, dd:prev, ti:prev, td:prev};
   }
   return step.zigzag;
 }
 
 function zzZoneScore(zona){
+  if(zona.key === 'llantas'){
+    const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
+    const vals = ['di','dd','ti','td'].map(k => (cp[k]!=null && cp[k]!=='') ? Number(cp[k]) : null).filter(v=>v!=null);
+    if(!vals.length) return null;
+    return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10;
+  }
   const pc = (zona.critPC!=null && zona.critPC!=='') ? Number(zona.critPC) : null;
   const zg = (zona.tampo!=='no' && zona.critZigzag!=null && zona.critZigzag!=='') ? Number(zona.critZigzag) : null;
   if(zona.tampoAplica){
@@ -11350,42 +11744,74 @@ function renderDictamenStepBody(p, step){
 
 // ===== Paso 6 — "Evaluación y calificación de condición" (fase Dictamen y
 // calificación) — Sistema Zigzag C-Z, por zonas. =====
-function renderCondicionStepBody(p, step){
-  const zz = ensureZigzag(step);
-  const overall = zzOverallAvg(zz);
-  const m = zz.medidas;
-  const zonasHtml = zz.zonas.map((zona, idx) => {
-    const score = zzZoneScore(zona);
-    const tampoBlock = zona.tampoAplica ? `
+// Genera solo el bloque de tampo (toggle Sí/No + su calificación
+// condicional) de una zona — extraído aparte para poder reemplazar ÚNICAMENTE
+// este pedazo del DOM cuando cambia (ver zzSetTampo), en vez de reconstruir
+// todo el paso 6 y perder la posición de scroll del admin.
+function zzTampoBlockHtml(pid, stepKey, zona){
+  if(!zona.tampoAplica) return `<p class="zz-na">No aplica tampo / pegatina en esta zona.</p>`;
+  return `
       <div class="zz-field">
         <label>Tampo original o agregado (pegatina)</label>
         <div class="zz-toggle-group">
-          <button type="button" class="zz-toggle ${zona.tampo==='si'?'active':''}" onclick="zzSetTampo('${escapeHtml(p.id)}','${step.key}','${zona.key}','si',this)">Sí — original</button>
-          <button type="button" class="zz-toggle ${zona.tampo==='no'?'active':''}" onclick="zzSetTampo('${escapeHtml(p.id)}','${step.key}','${zona.key}','no',this)">No — agregado</button>
+          <button type="button" class="zz-toggle ${zona.tampo==='si'?'active':''}" onclick="zzSetTampo('${escapeHtml(pid)}','${stepKey}','${zona.key}','si',this)">Sí — original</button>
+          <button type="button" class="zz-toggle ${zona.tampo==='no'?'active':''}" onclick="zzSetTampo('${escapeHtml(pid)}','${stepKey}','${zona.key}','no',this)">No — agregado</button>
         </div>
       </div>
       ${zona.tampo==='no' ? `<p class="zz-na">Tampo no original — no aplica calificar Criterio Zigzag C-Z de tampo en esta zona.</p>` : `
       <div class="zz-field">
         <label>Criterio Zigzag C-Z — Tampo <span class="mono">(10–6)</span></label>
         <div class="zz-scale-group">
-          ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critZigzag==n?'active':''}" onclick="zzSetScore('${escapeHtml(p.id)}','${step.key}','${zona.key}','critZigzag',${n},this)">${n}</button>`).join('')}
+          ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critZigzag==n?'active':''}" onclick="zzSetScore('${escapeHtml(pid)}','${stepKey}','${zona.key}','critZigzag',${n},this)">${n}</button>`).join('')}
         </div>
-      </div>`}` : `<p class="zz-na">No aplica tampo / pegatina en esta zona.</p>`;
+      </div>`}`;
+}
+// Genera el bloque "Criterio P/C". Para casi todas las zonas es una sola
+// escala 10–6; para 'llantas' son 4 escalas independientes (una por
+// llanta: delantera izq/der, trasera izq/der) que luego se promedian
+// automáticamente en zzZoneScore().
+function zzCritPCBlockHtml(pid, stepKey, zona){
+  if(zona.key === 'llantas'){
+    const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
+    const subs = [['di','Delantera izquierda'],['dd','Delantera derecha'],['ti','Trasera izquierda'],['td','Trasera derecha']];
     return `
-      <div class="zz-zone">
+      <div class="zz-field">
+        <label>Criterio P/C — Llantas <span class="mono">(evaluación individual, 10–6 c/u — se promedian)</span></label>
+        <div class="zz-llantas-grid">
+          ${subs.map(([sub,label])=>`
+            <div class="zz-llanta-sub">
+              <span class="zz-llanta-sub-label">${label}</span>
+              <div class="zz-scale-group">
+                ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${cp[sub]==n?'active':''}" onclick="zzSetLlantaScore('${escapeHtml(pid)}','${stepKey}','${sub}',${n},this)">${n}</button>`).join('')}
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+  return `
+      <div class="zz-field">
+        <label>Criterio P/C — Vehículo <span class="mono">(10–6)</span></label>
+        <div class="zz-scale-group">
+          ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critPC==n?'active':''}" onclick="zzSetScore('${escapeHtml(pid)}','${stepKey}','${zona.key}','critPC',${n},this)">${n}</button>`).join('')}
+        </div>
+      </div>`;
+}
+function renderCondicionStepBody(p, step){
+  const zz = ensureZigzag(step);
+  const overall = zzOverallAvg(zz);
+  const m = zz.medidas;
+  const zonasHtml = zz.zonas.map((zona, idx) => {
+    const score = zzZoneScore(zona);
+    return `
+      <div class="zz-zone" id="zz-zone-${zona.key}">
         <div class="zz-zone-head">
           <span class="zz-zone-num">${idx+1}</span>
           <h5>${escapeHtml(zona.label)}</h5>
           <span class="zz-zone-score" id="zz-score-${zona.key}">${score!=null?score.toFixed(1):'—'}</span>
         </div>
         <div class="zz-zone-body">
-          ${tampoBlock}
-          <div class="zz-field">
-            <label>Criterio P/C — Vehículo <span class="mono">(10–6)</span></label>
-            <div class="zz-scale-group">
-              ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${zona.critPC==n?'active':''}" onclick="zzSetScore('${escapeHtml(p.id)}','${step.key}','${zona.key}','critPC',${n},this)">${n}</button>`).join('')}
-            </div>
-          </div>
+          <div id="zz-tampo-wrap-${zona.key}">${zzTampoBlockHtml(p.id, step.key, zona)}</div>
+          ${zzCritPCBlockHtml(p.id, step.key, zona)}
           <div class="zz-field">
             <label>Instrumentos utilizados</label>
             <div class="zz-instr-group">
@@ -11509,14 +11935,33 @@ function zzUpdateOverall(zz){
 async function zzSetTampo(pid, stepKey, zonaKey, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  const eraNo = zona.tampo === 'no';
   zona.tampo = (zona.tampo === val) ? null : val;
   // Si el tampo no es original, no tiene sentido conservar una calificación
   // de Criterio Zigzag C-Z de tampo previamente asignada — se descarta.
   if(zona.tampo === 'no') zona.critZigzag = null;
   await zzPersist();
-  // Se vuelve a renderizar todo el detalle: el bloque de calificación de
-  // tampo aparece u oculta según el nuevo valor de zona.tampo.
-  renderProcesoDetail(p);
+  // Reemplazamos SOLO el bloque de tampo de esta zona (no todo el paso 6):
+  // evita el brinco de scroll que pasaba antes al re-dibujar y re-centrar
+  // todo el detalle del proceso con cada clic.
+  const wrap = document.getElementById('zz-tampo-wrap-'+zonaKey);
+  if(wrap) wrap.innerHTML = zzTampoBlockHtml(pid, stepKey, zona);
+  zzUpdateZoneScore(zona);
+  const step = p.pasos.find(s=>s.key===stepKey);
+  zzUpdateOverall(step.zigzag);
+  // "No agregado" significa que esta zona ya no tiene más que calificar —
+  // llevamos la vista, con un scroll suave y puntual, a la siguiente zona
+  // de la lista (no a recentrar todo el paso).
+  if(zona.tampo === 'no' && !eraNo){
+    const idx = step.zigzag.zonas.findIndex(z=>z.key===zonaKey);
+    const next = step.zigzag.zonas[idx+1];
+    if(next){
+      requestAnimationFrame(()=>{
+        const nextEl = document.getElementById('zz-zone-'+next.key);
+        if(nextEl) nextEl.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+    }
+  }
 }
 async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
@@ -11525,6 +11970,19 @@ async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   const group = btnEl.closest('.zz-scale-group');
   if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
   if(zona[field] == val) btnEl.classList.add('active');
+  zzUpdateZoneScore(zona);
+  const step = p.pasos.find(s=>s.key===stepKey);
+  zzUpdateOverall(step.zigzag);
+  await zzPersist();
+}
+async function zzSetLlantaScore(pid, stepKey, sub, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, 'llantas'); if(!zona) return;
+  if(!zona.critPC || typeof zona.critPC !== 'object') zona.critPC = {di:null,dd:null,ti:null,td:null};
+  zona.critPC[sub] = (zona.critPC[sub] == val) ? null : val;
+  const group = btnEl.closest('.zz-scale-group');
+  if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
+  if(zona.critPC[sub] == val) btnEl.classList.add('active');
   zzUpdateZoneScore(zona);
   const step = p.pasos.find(s=>s.key===stepKey);
   zzUpdateOverall(step.zigzag);
@@ -11678,7 +12136,7 @@ async function notifyRechazo(id){
     `• *Costo final:* $${(p.precioFinal!=null?p.precioFinal:150).toLocaleString('es-MX')} MXN${envioTxt} (solo validación base)`,
     entregaTxt
   ], 'Gracias por confiar en Laboratorio HV México.');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
 }
 
 // Notifica que el dictamen SÍ resultó original (o con intervención pero
@@ -11700,7 +12158,7 @@ async function notifyDictamenOriginal(id){
     '',
     `Puedes seguir el avance cuando quieras desde *"Mi historial"* en nuestra página, con tu código.`
   ], '¡Seguimos trabajando en tu certificación!');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
 }
 
 // Acción única del botón de confirmar dictamen: completa el paso (lo que
@@ -11787,7 +12245,7 @@ async function finalizeDigitalProceso(pid){
     '',
     `• *Costo:* $150 MXN`
   ], 'Gracias por confiar en Laboratorio HV México.');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
   toast('Validación cerrada y cliente notificado.');
 }
 
@@ -11825,7 +12283,7 @@ async function notifyProcesoStep(id, key){
     '',
     `• *${step.label}*${step.nota ? '\n' + step.nota : ''}`
   ], 'Seguimos trabajando en tu peritaje — te avisamos en cada etapa.');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
 }
 
 async function notifyPickupReady(id){
@@ -11837,7 +12295,7 @@ async function notifyPickupReady(id){
     '',
     'Puedes pasar a recogerla en el laboratorio, o coordinamos el envío contigo — avísanos qué prefieres.'
   ], '¡Gracias por tu confianza!');
-  window.open(waLink(msg), '_blank', 'noopener');
+  window.open(waLinkTo(p.telefono, msg), '_blank', 'noopener');
 }
 
 async function finalizeProceso(id){
