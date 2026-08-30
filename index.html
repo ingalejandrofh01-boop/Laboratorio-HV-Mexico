@@ -1589,14 +1589,32 @@
   .salon-hero h2{color:var(--salon-ink);font-size:clamp(24px,4vw,32px);max-width:640px;margin:0 0 14px;}
   .salon-lead{color:var(--salon-sage);font-size:15px;max-width:640px;line-height:1.65;margin:0;}
 
-  .salon-tiers-teaser{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:26px;}
-  @media(max-width:820px){.salon-tiers-teaser{grid-template-columns:1fr;}}
+  .salon-tiers-teaser{margin-bottom:26px;}
+
+  /* ---- Insignia de membresía única: el precio se muestra UNA sola vez
+     aquí (nunca repetido por nivel, que era lo que hacía ver el Salón como
+     si tuviera 3 precios distintos), seguida de una "ruta" con los 3
+     niveles conectados por flechas, dejando claro que son etapas de
+     reconocimiento de una misma membresía, no productos separados. ---- */
+  .salon-membership-badge{text-align:center;margin-bottom:22px;background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:16px;padding:30px 24px;}
+  .salon-membership-price{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:700;color:var(--salon-gold);background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:40px;padding:10px 26px;box-shadow:0 8px 24px rgba(0,0,0,.35);}
+  .salon-membership-price small{font-size:13px;font-weight:500;color:var(--salon-sage);}
+  .salon-membership-note{max-width:520px;margin:12px auto 0;font-size:13.5px;color:var(--salon-sage);line-height:1.6;}
+  .salon-ladder-path{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:18px;}
+  .salon-ladder-node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--salon-silver);background:rgba(255,255,255,.04);border:1px solid var(--salon-line);border-radius:20px;padding:6px 14px;}
+  .salon-ladder-node.salon-tier-n2{color:var(--salon-gold);border-color:rgba(232,196,104,.35);}
+  .salon-ladder-node.salon-tier-n3{color:var(--salon-platinum);border-color:rgba(232,196,104,.5);box-shadow:0 0 14px rgba(232,196,104,.18);}
+  .salon-ladder-arrow{color:var(--salon-gold-dim);font-size:16px;}
+
+  .salon-tiers-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  @media(max-width:820px){.salon-tiers-grid{grid-template-columns:1fr;}}
   .salon-tier-card{background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:14px;padding:24px 22px;position:relative;overflow:hidden;transition:transform .25s ease, box-shadow .25s ease;}
   .salon-tier-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.4);}
   .salon-tier-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--salon-gold),transparent);}
   .salon-tier-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--salon-gold-dim);margin:0 0 10px;}
   .salon-tier-name{font-family:'Fraunces',serif;font-size:20px;color:var(--salon-ink);margin:0 0 6px;}
-  .salon-tier-cost{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--salon-gold);margin:0 0 14px;}
+  .salon-tier-cost{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 10px;}
+  .salon-tier-includes{font-size:12px;font-style:italic;color:var(--salon-sage);margin:0 0 10px;}
   .salon-tier-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;}
   .salon-tier-benefits li{font-size:12.5px;color:var(--salon-sage);line-height:1.5;padding-left:18px;position:relative;}
   .salon-tier-benefits li::before{content:"✦";position:absolute;left:0;top:0;color:var(--salon-gold);font-size:11px;}
@@ -3141,7 +3159,7 @@
     <div class="salon-hero reveal">
       <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
       <h2 data-i18n="salon.h2">El círculo más exclusivo del coleccionismo</h2>
-      <p class="salon-lead" data-i18n="salon.lead">Membresía de $1,000 MXN al año — pero no es para cualquier pieza: aquí el laboratorio cura y publica solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio.</p>
+      <p class="salon-lead" data-i18n="salon.lead">Una sola membresía, $1,000 MXN al año — pero no es para cualquier pieza: el laboratorio selecciona y publica aquí solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio. Y mientras más certificas y más subes de nivel dentro del Salón, más crecen tus beneficios: descuentos, promociones y regalos por tu lealtad.</p>
     </div>
 
     <div class="salon-tiers-teaser" id="salon-tiers-teaser">
@@ -4639,7 +4657,7 @@ const I18N_EN = {
   // Salón Privado HV — membership program
   'salon.kicker': 'Salón Privado HV',
   'salon.h2': 'The most exclusive circle in collecting',
-  'salon.lead': 'A $1,000 MXN/year membership — but it\'s not for just any piece: here, the lab curates and publishes only the rarest, most extraordinary pieces we\'ve certified, so serious collectors can discover them, recognize them, and reach out about them. Earn your way in by certifying 5+ pieces with us, or acquire it directly if you already trust the lab.',
+  'salon.lead': 'A single membership, $1,000 MXN/year — but it\'s not for just any piece: the lab curates and publishes here only the rarest, most extraordinary pieces we\'ve certified, so serious collectors can discover them, recognize them, and reach out about them. Earn your way in by certifying 5+ pieces with us, or acquire it directly if you already trust the lab. And the more you certify and level up within the Salón, the more your benefits grow: discounts, promotions and gifts for your loyalty.',
   'salon.tiers.loading': 'Loading the Salón\'s tiers…',
   'salon.tiers.threshold5': 'Unlocks at 5 certified pieces',
   'salon.tiers.threshold10': 'Unlocks at 10 certified pieces',
@@ -6705,37 +6723,37 @@ function deriveSalonTier(piezas){
 const SALON_TIERS_DEFAULT = {
   niveles: {
     1: { nombre:'Nivel Plata', nombreEn:'Silver Tier', costo:0, moneda:'MXN', colorTema:'plata', beneficios:[
-      'Reservas con prioridad en el calendario del laboratorio',
       'Acceso automático a la Galería Exclusiva del Salón Privado',
-      'Obsequio de cortesía de bienvenida',
+      'Reservas con prioridad en el calendario del laboratorio',
+      'Descuento de bienvenida en tu próxima certificación',
       'Recomendación directa del laboratorio'
     ], beneficiosEn:[
-      'Priority booking on the lab\'s calendar',
       'Automatic access to the Salón Privado\'s Exclusive Gallery',
-      'A welcome courtesy gift',
+      'Priority booking on the lab\'s calendar',
+      'A welcome discount on your next certification',
       'Direct recommendation from the lab'
     ]},
     2: { nombre:'Nivel Oro', nombreEn:'Gold Tier', costo:0, moneda:'MXN', colorTema:'oro', beneficios:[
-      'Todos los beneficios del Nivel Plata',
       'Calendario VIP exclusivo para socios',
-      'Obsequios de cortesía periódicos',
+      'Mayores descuentos en certificaciones y servicios',
+      'Promociones y obsequios de cortesía periódicos',
       'Tus piezas usadas como marketing en las plataformas que elijas, por tiempo limitado'
     ], beneficiosEn:[
-      'Everything in the Silver Tier',
       'A VIP calendar exclusive to members',
-      'Periodic courtesy gifts',
+      'Bigger discounts on certifications and services',
+      'Periodic promotions and courtesy gifts',
       'Your pieces featured as marketing on the platforms of your choice, for a limited time'
     ]},
     3: { nombre:'Nivel Platino', nombreEn:'Platinum Tier', costo:0, moneda:'MXN', colorTema:'platino', beneficios:[
-      'Todos los beneficios del Nivel Oro',
       'Reconocimiento vitalicio — una vez Platino, nunca se pierde el nivel',
-      'Máxima prioridad de agenda y atención personalizada',
-      'Beneficios exclusivos con cada nueva certificación'
+      'El descuento más alto disponible para socios del laboratorio',
+      'Regalos y promociones exclusivas con cada nueva certificación',
+      'Máxima prioridad de agenda y atención personalizada'
     ], beneficiosEn:[
-      'Everything in the Gold Tier',
       'Lifetime recognition — once Platinum, the tier is never lost',
-      'Highest scheduling priority and personalized attention',
-      'Exclusive perks with every new certification'
+      'The highest discount available to lab members',
+      'Exclusive gifts and promotions with every new certification',
+      'Highest scheduling priority and personalized attention'
     ]}
   }
 };
@@ -7384,21 +7402,45 @@ async function renderSalonTiersTeaser(){
     2: tt('Se desbloquea a las 10 piezas certificadas','Unlocks at 10 certified pieces'),
     3: tt('Se desbloquea a las 20+ piezas · vitalicio','Unlocks at 20+ pieces · lifetime')
   };
-  box.innerHTML = [1,2,3].map(n => {
+  const nombreDe = n => {
     const tier = tiers.niveles[n] || {};
-    const nombre = tt(tier.nombre||('Nivel '+n), tier.nombreEn||tier.nombre||('Tier '+n));
+    return tt(tier.nombre||('Nivel '+n), tier.nombreEn||tier.nombre||('Tier '+n));
+  };
+  // Es UNA sola membresía ($SALON_ANNUAL_FEE/año) — los 3 "niveles" no son
+  // productos distintos que se cobran aparte, son etapas de reconocimiento
+  // dentro de esa misma membresía. Por eso el precio se muestra UNA vez en
+  // la insignia de arriba (nunca repetido por tarjeta, que era lo que se
+  // veía como si hubiera 3 precios distintos) y las tarjetas de nivel
+  // llevan en su lugar "Nivel N de 3" + un texto "incluye todo lo
+  // anterior, más:" para que quede claro que los beneficios se acumulan.
+  const pathHtml = [1,2,3].map((n,i) => `
+    <span class="salon-ladder-node salon-tier-n${n}">${escapeHtml(nombreDe(n))}</span>
+    ${i<2 ? '<span class="salon-ladder-arrow" aria-hidden="true">›</span>' : ''}
+  `).join('');
+  const cardsHtml = [1,2,3].map(n => {
+    const tier = tiers.niveles[n] || {};
+    const nombre = nombreDe(n);
     const beneficios = (SITE_LANG==='en' && tier.beneficiosEn && tier.beneficiosEn.length) ? tier.beneficiosEn : (tier.beneficios||[]);
-    // La cuota es fija e igual en los 3 niveles (SALON_ANNUAL_FEE) — los
-    // niveles ya solo distinguen reconocimiento y beneficios, no costo.
-    const costoTxt = `$${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN ${tt('al año','per year')}`;
+    const includesTxt = n===2 ? tt(`Incluye todo lo de ${nombreDe(1)}, más:`,`Includes everything in ${nombreDe(1)}, plus:`)
+                       : n===3 ? tt(`Incluye todo lo de ${nombreDe(2)}, más:`,`Includes everything in ${nombreDe(2)}, plus:`)
+                       : '';
     return `
     <div class="card salon-tier-card salon-tier-n${n}">
       <p class="salon-tier-eyebrow">${thresholdTxt[n]}</p>
       <h3 class="salon-tier-name">${escapeHtml(nombre)}</h3>
-      <p class="salon-tier-cost">${costoTxt}</p>
+      <p class="salon-tier-cost">${tt(`Nivel ${n} de 3`,`Tier ${n} of 3`)}</p>
+      ${includesTxt ? `<p class="salon-tier-includes">${includesTxt}</p>` : ''}
       <ul class="salon-tier-benefits">${beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('') || `<li>${tt('Beneficios por definir','Benefits to be defined')}</li>`}</ul>
     </div>`;
   }).join('');
+  box.innerHTML = `
+    <div class="salon-membership-badge">
+      <span class="salon-membership-price">$${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN <small>${tt('/ año','/ year')}</small></span>
+      <p class="salon-membership-note">${tt('Una sola membresía — así crecen tus beneficios mientras más certificas y más confías en nosotros.','A single membership — this is how your benefits grow the more you certify and the more you trust us.')}</p>
+      <div class="salon-ladder-path">${pathHtml}</div>
+    </div>
+    <div class="salon-tiers-grid">${cardsHtml}</div>
+  `;
 }
 
 async function submitSalonGate(){

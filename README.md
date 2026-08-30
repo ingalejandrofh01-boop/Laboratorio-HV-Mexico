@@ -96,6 +96,26 @@ grandes, en orden aproximado en que aparecen:
   **"vencida"** cuando pasó la fecha de renovación (`fechaRenovacion`) sin
   registrar el siguiente pago. Galería exclusiva y calendario VIP propios,
   sin cambios en su mecánica.
+  - **Vitrina pública (`renderSalonTiersTeaser`)**: se corrigió que los 3
+    niveles (Plata/Oro/Platino) se veían como si fueran 3 membresías con
+    precio propio (los 3 repetían "$1,000 MXN al año"). Ahora el precio se
+    muestra **una sola vez**, en una insignia fija arriba de los 3 niveles
+    (`.salon-membership-badge`), seguida de una "ruta" con los 3 nombres de
+    nivel conectados por flechas (`.salon-ladder-path`) para dejar claro
+    que es una sola membresía con niveles de reconocimiento que se
+    acumulan, no productos distintos. Cada tarjeta de nivel ya no repite el
+    precio — muestra "Nivel N de 3" y, a partir del nivel 2, una línea
+    "Incluye todo lo de [nivel anterior], más:" antes de sus beneficios
+    propios (los beneficios ya no repiten en texto los del nivel anterior,
+    como sí pasaba antes). Los beneficios semilla (`SALON_TIERS_DEFAULT`,
+    editables desde el admin en Niveles) ahora mencionan explícitamente
+    descuentos, promociones y regalos crecientes por nivel, como
+    reconocimiento a la lealtad — antes eran más genéricos (prioridad de
+    agenda, marketing, etc. sin mencionar descuentos). También se
+    reemplazó "el laboratorio cura y publica" por "el laboratorio
+    selecciona y publica" en el texto introductorio en español — "cura"
+    ahí generaba confusión (se lee como el sustantivo "cura", no como el
+    verbo curar/curar-editorial).
 - **Folio/QR — público vs. Salón**: verificar un folio (`verifyFolio()`,
   incluyendo el que viene de escanear un QR) sigue siendo público para
   cualquier pieza de la **biblioteca pública** — así un comprador de segunda
