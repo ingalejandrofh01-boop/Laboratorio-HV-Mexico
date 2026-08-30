@@ -228,6 +228,38 @@ grandes, en orden aproximado en que aparecen:
   calificación **individual por cada una de las 4 llantas** (delantera
   izq./der., trasera izq./der.) y el promedio de las 4 es lo que se usa
   como calificación de esa zona en el resto del dictamen.
+  - **Nuevas zonas evaluables**: se agregaron 6 zonas más al protocolo
+    Zigzag C-Z, todas con el mismo patrón de "evaluación individual por
+    sub-parte y promedio automático" que ya tenía llantas: **Cristales**
+    (parabrisas, medallón, cristal izquierdo, cristal derecho — 4
+    sub-partes), **Defensas** (frontal, trasera), **Ejes** (delantero,
+    trasero), **Salpicadera delantera** (izquierda, derecha) y
+    **Salpicadera trasera** (izquierda, derecha) — estas dos sí llevan
+    criterio de tampo/pegatina, igual que el resto de las zonas de
+    carrocería pintada, y **Volante (si aplica)**, que es una zona de
+    calificación única (no promediada) y sin tampo, para vehículos que no
+    lo traigan de fábrica o no aplique evaluarlo. La zona "Parte trasera"
+    (cajuela) que se mencionó en la retroalimentación del cliente ya
+    existía desde antes en el protocolo — no se duplicó.
+    Internamente, el mecanismo de "llantas" (antes una excepción
+    hardcodeada en el código) se generalizó a un mapa de configuración
+    único (`ZZ_MULTI_PART`) que define, por zona, cuántas sub-partes tiene
+    y cómo se llaman — así cualquier zona futura con el mismo patrón
+    (evaluación individual + promedio) se agrega solo con una entrada en
+    ese mapa, sin repetir lógica. Los dictámenes ya guardados en Firestore
+    antes de este cambio se migran automáticamente y sin pérdida de datos
+    la primera vez que se abren: las zonas nuevas se agregan vacías al
+    objeto ya existente, respetando lo que el perito ya había calificado
+    en las zonas anteriores. La calificación general del vehículo pintado
+    (usada para autollenar el certificado) ahora también promedia las dos
+    nuevas zonas de salpicadera, junto con las zonas de carrocería que ya
+    contaba antes.
+  - **Nueva pregunta frecuente (Paquetes)**: se agregó "¿Qué sucede si el
+    dictamen determina que la pieza es falsa o alterada?", con la
+    respuesta de que la pieza queda registrada en el almanaque público de
+    advertencia "Piezas falsas", visible para toda la comunidad — sin
+    publicar nunca los datos del dueño (consistente con la cláusula ya
+    existente en Términos y condiciones).
 - **Confirmación de paquete + tiempo de entrega en el wizard**: al elegir
   un paquete ya no se avanza automáticamente al siguiente paso — se muestra
   un resumen de confirmación ("Elegiste: [paquete] — [tiempo] — [precio].

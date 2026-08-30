@@ -695,10 +695,10 @@
   .zz-toggle:hover{border-color:var(--brass);color:var(--ink);}
   .zz-toggle.active{background:var(--red);border-color:var(--red);color:#fff;}
   .zz-scale-group{display:flex;gap:6px;}
-  .zz-llantas-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;}
-  .zz-llanta-sub{display:flex;flex-direction:column;gap:6px;}
-  .zz-llanta-sub-label{font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--sage);}
-  @media(max-width:480px){.zz-llantas-grid{grid-template-columns:1fr;}}
+  .zz-multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;}
+  .zz-multi-sub{display:flex;flex-direction:column;gap:6px;}
+  .zz-multi-sub-label{font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--sage);}
+  @media(max-width:480px){.zz-multi-grid{grid-template-columns:1fr;}}
   .zz-scale-btn{width:34px;height:34px;border-radius:6px;border:1.5px solid var(--line);background:var(--panel);color:var(--sage);font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,color .15s ease;}
   .zz-scale-btn:hover{border-color:var(--brass);color:var(--ink);}
   .zz-scale-btn.active{background:var(--brass);border-color:var(--brass);color:#fff;}
@@ -2846,6 +2846,10 @@
         <summary data-i18n="paquetes.faq.q6">¿Qué significan Original, Repintado, Restaurado, Reparado y Réplica?</summary>
         <p data-i18n="paquetes.faq.a6">Es el dictamen categórico de autenticidad: Original (sin intervención), Repintado/Restaurado/Reparado (pieza original con algún tipo de intervención detectada) o Réplica (no corresponde a producción original de fábrica).</p>
       </details>
+      <details class="faq-item">
+        <summary data-i18n="paquetes.faq.q7">¿Qué sucede si el dictamen determina que la pieza es falsa o alterada?</summary>
+        <p data-i18n="paquetes.faq.a7">La pieza queda registrada en nuestro almanaque público de advertencia ⚠️ "Piezas falsas", visible para toda la comunidad de coleccionistas — nunca se publican datos del dueño, solo la pieza, sus fotos y el motivo del dictamen. Al solicitar la certificación, el cliente acepta esta condición (ver Términos y condiciones).</p>
+      </details>
     </div>
   </section>
 
@@ -4557,6 +4561,8 @@ const I18N_EN = {
   'paquetes.faq.a5': 'Yes. Every folio is published with its QR code — anyone can scan it or type the folio into the "Verify folio" section of this site to see the full assessment.',
   'paquetes.faq.q6': 'What do Original, Repainted, Restored, Repaired and Replica mean?',
   'paquetes.faq.a6': 'It\'s the categorical authenticity assessment: Original (no intervention), Repainted/Restored/Repaired (original piece with some detected intervention) or Replica (does not correspond to original factory production).',
+  'paquetes.faq.q7': 'What happens if the assessment finds the piece is fake or altered?',
+  'paquetes.faq.a7': 'The piece is recorded in our public ⚠️ "Fake pieces" warning almanac, visible to the whole collector community — we never publish the owner\'s information, only the piece, its photos and the reason for the finding. By requesting certification, the client accepts this condition (see Terms & Conditions).',
 
   // Términos y condiciones
   'terminos.h2': 'Terms and conditions',
@@ -11188,20 +11194,39 @@ const ZZ_ZONAS_DEF = [
   {key:'cofre', label:'Cofre', tampoAplica:true},
   {key:'lat_izq', label:'Lateral izquierdo', tampoAplica:true},
   {key:'lat_der', label:'Lateral derecho', tampoAplica:true},
+  {key:'salpicadera_del', label:'Salpicadera delantera', tampoAplica:true},
+  {key:'salpicadera_tras', label:'Salpicadera trasera', tampoAplica:true},
   {key:'interiores', label:'Interiores', tampoAplica:false},
   {key:'motor', label:'Motor (trasero o delantero)', tampoAplica:false},
   {key:'base', label:'Base', tampoAplica:false},
   {key:'llantas', label:'Llantas', tampoAplica:false},
-  {key:'remache', label:'Remache', tampoAplica:false}
+  {key:'remache', label:'Remache', tampoAplica:false},
+  {key:'cristales', label:'Cristales', tampoAplica:false},
+  {key:'defensas', label:'Defensas', tampoAplica:false},
+  {key:'ejes', label:'Ejes', tampoAplica:false},
+  {key:'volante', label:'Volante (si aplica)', tampoAplica:false}
 ];
 let CURRENT_PROCESO = null;
 
-// Las llantas son la única zona con 4 sub-evaluaciones (una por llanta) en
-// vez de una sola calificación — por eso critPC arranca como objeto
-// {di,dd,ti,td} únicamente para 'llantas', y como número (o null) para
-// todas las demás zonas.
+// Algunas zonas no se califican con una sola escala, sino con varias
+// sub-evaluaciones independientes que luego se promedian automáticamente
+// en zzZoneScore() — este mapa central define cuáles y con qué
+// etiquetas, para no tener que hardcodear cada zona por separado (como
+// pasaba antes solo con 'llantas').
+const ZZ_MULTI_PART = {
+  llantas: [ ['di','Delantera izquierda'], ['dd','Delantera derecha'], ['ti','Trasera izquierda'], ['td','Trasera derecha'] ],
+  cristales: [ ['parabrisas','Parabrisas'], ['medallon','Medallón'], ['izq','Cristal izquierdo'], ['der','Cristal derecho'] ],
+  defensas: [ ['frontal','Frontal'], ['trasera','Trasera'] ],
+  ejes: [ ['delantero','Delantero'], ['trasero','Trasero'] ],
+  salpicadera_del: [ ['izq','Izquierda'], ['der','Derecha'] ],
+  salpicadera_tras: [ ['izq','Izquierda'], ['der','Derecha'] ]
+};
 function zzInitialCritPC(zonaKey){
-  return zonaKey === 'llantas' ? {di:null, dd:null, ti:null, td:null} : null;
+  const partes = ZZ_MULTI_PART[zonaKey];
+  if(!partes) return null;
+  const obj = {};
+  partes.forEach(([sub]) => obj[sub] = null);
+  return obj;
 }
 function ensureZigzag(step){
   if(!step.zigzag){
@@ -11221,13 +11246,24 @@ function ensureZigzag(step){
     const prev = llantas.critPC;
     llantas.critPC = {di:prev, dd:prev, ti:prev, td:prev};
   }
+  // Procesos abiertos ANTES de agregar cristales/defensas/ejes/salpicaderas/
+  // volante ya tienen su objeto zigzag armado con las zonas viejas nada
+  // más — aquí se completan con las zonas nuevas que falten, sin tocar ni
+  // perder la calificación ya capturada en las zonas existentes.
+  const zonasActuales = new Set(step.zigzag.zonas.map(z=>z.key));
+  ZZ_ZONAS_DEF.forEach(z => {
+    if(!zonasActuales.has(z.key)){
+      step.zigzag.zonas.push({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:''});
+    }
+  });
   return step.zigzag;
 }
 
 function zzZoneScore(zona){
-  if(zona.key === 'llantas'){
+  const partes = ZZ_MULTI_PART[zona.key];
+  if(partes){
     const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
-    const vals = ['di','dd','ti','td'].map(k => (cp[k]!=null && cp[k]!=='') ? Number(cp[k]) : null).filter(v=>v!=null);
+    const vals = partes.map(([sub]) => (cp[sub]!=null && cp[sub]!=='') ? Number(cp[sub]) : null).filter(v=>v!=null);
     if(!vals.length) return null;
     return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10;
   }
@@ -11918,22 +11954,23 @@ function zzTampoBlockHtml(pid, stepKey, zona){
       </div>`}`;
 }
 // Genera el bloque "Criterio P/C". Para casi todas las zonas es una sola
-// escala 10–6; para 'llantas' son 4 escalas independientes (una por
-// llanta: delantera izq/der, trasera izq/der) que luego se promedian
+// escala 10–6; para las zonas listadas en ZZ_MULTI_PART (llantas,
+// cristales, defensas, ejes, salpicadera delantera/trasera) son varias
+// escalas independientes (una por sub-parte) que luego se promedian
 // automáticamente en zzZoneScore().
 function zzCritPCBlockHtml(pid, stepKey, zona){
-  if(zona.key === 'llantas'){
+  const partes = ZZ_MULTI_PART[zona.key];
+  if(partes){
     const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
-    const subs = [['di','Delantera izquierda'],['dd','Delantera derecha'],['ti','Trasera izquierda'],['td','Trasera derecha']];
     return `
       <div class="zz-field">
-        <label>Criterio P/C — Llantas <span class="mono">(evaluación individual, 10–6 c/u — se promedian)</span></label>
-        <div class="zz-llantas-grid">
-          ${subs.map(([sub,label])=>`
-            <div class="zz-llanta-sub">
-              <span class="zz-llanta-sub-label">${label}</span>
+        <label>Criterio P/C — ${escapeHtml(zona.label)} <span class="mono">(evaluación individual, 10–6 c/u — se promedian)</span></label>
+        <div class="zz-multi-grid">
+          ${partes.map(([sub,label])=>`
+            <div class="zz-multi-sub">
+              <span class="zz-multi-sub-label">${label}</span>
               <div class="zz-scale-group">
-                ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${cp[sub]==n?'active':''}" onclick="zzSetLlantaScore('${escapeHtml(pid)}','${stepKey}','${sub}',${n},this)">${n}</button>`).join('')}
+                ${[10,9,8,7,6].map(n=>`<button type="button" class="zz-scale-btn ${cp[sub]==n?'active':''}" onclick="zzSetMultiScore('${escapeHtml(pid)}','${stepKey}','${zona.key}','${sub}',${n},this)">${n}</button>`).join('')}
               </div>
             </div>`).join('')}
         </div>
@@ -12126,10 +12163,10 @@ async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   zzUpdateOverall(step.zigzag);
   await zzPersist();
 }
-async function zzSetLlantaScore(pid, stepKey, sub, val, btnEl){
+async function zzSetMultiScore(pid, stepKey, zonaKey, sub, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
-  const zona = zzGetZona(p, stepKey, 'llantas'); if(!zona) return;
-  if(!zona.critPC || typeof zona.critPC !== 'object') zona.critPC = {di:null,dd:null,ti:null,td:null};
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  if(!zona.critPC || typeof zona.critPC !== 'object') zona.critPC = zzInitialCritPC(zonaKey);
   zona.critPC[sub] = (zona.critPC[sub] == val) ? null : val;
   const group = btnEl.closest('.zz-scale-group');
   if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
@@ -12477,7 +12514,7 @@ async function finalizeProceso(id){
     const finalGrade = zz.escalaFinal || zzOverallAvg(zz);
     if(finalGrade!=null && finalGrade!=='') document.getElementById('a-grado').value = finalGrade;
 
-    const paintScores = ['trasera','toldo','cofre','lat_izq','lat_der'].map(zonaByKey).filter(Boolean).map(zzZoneScore).filter(v=>v!=null);
+    const paintScores = ['trasera','toldo','cofre','lat_izq','lat_der','salpicadera_del','salpicadera_tras'].map(zonaByKey).filter(Boolean).map(zzZoneScore).filter(v=>v!=null);
     if(paintScores.length) document.getElementById('a-sg-pintura').value = (Math.round((paintScores.reduce((a,b)=>a+b,0)/paintScores.length)*10)/10).toFixed(1);
 
     const llantasScore = zzZoneScore(zonaByKey('llantas'));
