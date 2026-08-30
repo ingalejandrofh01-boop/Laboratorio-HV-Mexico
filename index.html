@@ -123,8 +123,19 @@
   .brand .hv-logo{cursor:pointer;}
   .brand .brand-name{font-family:'Fraunces',serif;font-size:22px;letter-spacing:.01em;color:var(--ink);line-height:1.15;cursor:pointer;}
   .brand .tagline{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.07em;color:var(--sage);text-transform:uppercase;margin-top:3px;cursor:default;}
-  #main-nav{display:flex;align-items:center;justify-content:center;gap:4px;background:var(--panel-2);border-radius:14px;padding:6px;flex-wrap:wrap;}
-  #main-nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 16px;border-radius:9px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;}
+  /* El menú principal (desktop) va SIEMPRE en una sola línea: en vez de
+     dejar que las 9 pestañas se partan en 2 renglones cuando no caben
+     (se veía desordenado), el contenedor no rompe línea y, si la ventana
+     es angosta, se desliza horizontalmente (arrastrando o con el trackpad)
+     dentro de la misma píldora — sin barra de scroll visible, para que se
+     sienta como parte del diseño y no como un menú roto. */
+  #main-nav{display:flex;align-items:center;justify-content:flex-start;gap:2px;background:var(--panel-2);border-radius:14px;padding:6px;flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;}
+  #main-nav::-webkit-scrollbar{display:none;}
+  #main-nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;flex:none;}
+  @media(min-width:761px) and (max-width:1180px){
+    #main-nav{gap:0;}
+    #main-nav button{font-size:12px;padding:8px 10px;}
+  }
   #main-nav button:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
   #main-nav button.active{background:var(--red);color:#fff;}
   .admin-link{font-size:12px!important;color:var(--sage-dim)!important;opacity:.75;margin-left:6px;padding-left:14px!important;border-left:1px solid var(--line);border-radius:0!important;}
@@ -1056,17 +1067,20 @@
     background-size:14px 6px;background-position:0 -3px;background-repeat:repeat-x;}
   .google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;border:1.5px solid #dadce0;color:#3c4043;padding:11px 16px;border-radius:6px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:box-shadow .15s ease, background .15s ease;}
   .google-btn:hover{background:#f8f9fa;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
-  .verify-card{position:relative;overflow:hidden;text-align:left;padding-top:22px;}
-  .verify-card::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--red), var(--brass));}
-  .verify-card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-  .verify-icon{width:30px;height:30px;border-radius:50%;background:rgba(210,4,45,0.08);display:flex;align-items:center;justify-content:center;color:var(--red);flex:none;}
-  .verify-icon svg{width:16px;height:16px;}
-  .verify-card label{margin:0;font-size:12.5px;letter-spacing:.05em;}
-  .verify-input-group{display:flex;gap:0;border:1.5px solid var(--line);border-radius:6px;overflow:hidden;}
-  .verify-input-group input{border:none;border-radius:0;flex:1;background:var(--panel);}
+  .verify-card{position:relative;overflow:hidden;text-align:left;padding:26px 26px 24px;border-radius:14px;border-color:rgba(36,21,18,.08);box-shadow:0 18px 44px rgba(20,8,6,.28), 0 2px 10px rgba(20,8,6,.1);}
+  .verify-card::after{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg, var(--red), var(--brass) 55%, var(--red));}
+  .verify-card-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .verify-icon{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg, var(--red), #8C0323);display:flex;align-items:center;justify-content:center;color:#fff;flex:none;box-shadow:0 6px 14px rgba(210,4,45,.35);}
+  .verify-icon svg{width:18px;height:18px;}
+  .verify-card-head-text{display:flex;flex-direction:column;gap:2px;}
+  .verify-card label{margin:0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);}
+  .verify-card-sub{font-size:12px;color:var(--sage);}
+  .verify-input-group{display:flex;gap:0;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);transition:border-color .15s ease, box-shadow .15s ease;}
+  .verify-input-group:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(210,4,45,.14);}
+  .verify-input-group input{border:none;border-radius:0;flex:1;min-width:0;background:transparent;padding:14px 16px;font-size:14.5px;}
   .verify-input-group input:focus{outline:none;}
-  .verify-input-group button.btn{border-radius:0;box-shadow:none;padding:12px 20px;}
-  .verify-input-group button.btn:hover{transform:none;}
+  .verify-input-group button.btn{border-radius:0;box-shadow:none;padding:14px 24px;font-weight:700;letter-spacing:.02em;}
+  .verify-input-group button.btn:hover{transform:none;filter:brightness(1.06);}
   .method-steps{display:flex;flex-direction:column;position:relative;margin-left:17px;margin-top:24px;padding-left:0;}
   .method-steps::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--line);}
   .method-steps::after{content:'';position:absolute;left:0;top:0;width:2px;height:var(--mprog,0%);background:linear-gradient(var(--red-dim),var(--red));box-shadow:0 0 8px rgba(210,4,45,.55);transition:height .12s linear;}
@@ -1955,10 +1969,13 @@
           <span class="verify-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </span>
-          <label for="quick-folio" data-i18n="inicio.hero.verifyLabel">Verificar un folio ahora</label>
+          <div class="verify-card-head-text">
+            <label for="quick-folio" data-i18n="inicio.hero.verifyLabel">Verificar un folio ahora</label>
+            <span class="verify-card-sub" data-i18n="inicio.hero.verifySub">Consulta pública e instantánea</span>
+          </div>
         </div>
         <div class="verify-input-group">
-          <input id="quick-folio" placeholder="Folio o código del certificado" data-i18n-placeholder="inicio.hero.verifyPh">
+          <input id="quick-folio" placeholder="Folio" data-i18n-placeholder="inicio.hero.verifyPh">
           <button class="btn" onclick="quickVerify()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;vertical-align:-2px;margin-right:5px;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span data-i18n="inicio.hero.buscar">Buscar</span>
           </button>
@@ -2792,7 +2809,7 @@
     <h2 data-i18n="verificar.h2">Verificación pública de folio</h2>
     <p style="color:var(--sage);" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
     <div class="row" style="max-width:460px;">
-      <input id="v-folio" placeholder="Folio o código del certificado" data-i18n-placeholder="verificar.folioPh" style="flex:1;">
+      <input id="v-folio" placeholder="Folio" data-i18n-placeholder="verificar.folioPh" style="flex:1;">
       <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
     </div>
     <div id="v-result" style="margin-top:28px;"></div>
@@ -4150,7 +4167,8 @@ const I18N_EN = {
   'inicio.hero.lead': 'We are collectors certifying for collectors: independent certification, expert judgment and over 25 years of experience — not affiliated with the brands. We assess whether your piece is original, repainted or modified, using traceable technical criteria, and record it with a public folio.',
   'inicio.hero.statLbl': 'pieces certified',
   'inicio.hero.verifyLabel': 'Verify a folio now',
-  'placeholder:inicio.hero.verifyPh': 'Folio or certificate code',
+  'inicio.hero.verifySub': 'Public, instant lookup',
+  'placeholder:inicio.hero.verifyPh': 'Folio',
   'inicio.hero.buscar': 'Search',
   'inicio.cert.h2': 'What your certificate looks like',
   'inicio.cert.p': 'Hover over it (or tap it on your phone) to see both sides, as if you had the encapsulated piece in your hands.',
@@ -4498,7 +4516,7 @@ const I18N_EN = {
   // Verificar folio (public verification page)
   'verificar.h2': 'Public folio verification',
   'verificar.p': 'Verify your certified piece\'s folio or the QR code on your certificate.',
-  'placeholder:verificar.folioPh': 'Folio or certificate code',
+  'placeholder:verificar.folioPh': 'Folio',
   'verificar.btn': 'Verify',
 
   // Mi historial (client tracking page)

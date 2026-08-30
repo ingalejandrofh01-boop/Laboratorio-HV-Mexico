@@ -203,6 +203,24 @@ grandes, en orden aproximado en que aparecen:
   y algunos textos se veían mal mientras cambiaba); ahora la transición es
   más corta y cubre también títulos, párrafos y demás texto, no solo el
   fondo.
+- **Menú principal (escritorio) en una sola línea**: antes, cuando la
+  ventana no era lo bastante ancha para las 9 pestañas del menú, "Salón
+  Privado HV" se caía a un segundo renglón y se veía desordenado. Ahora el
+  menú nunca rompe línea: en ventanas normales de escritorio cabe completo
+  en una sola fila (se redujo un poco el tamaño/padding de las pestañas en
+  anchos intermedios, vía `@media(min-width:761px) and (max-width:1180px)`
+  sobre `#main-nav`), y si la ventana es muy angosta, la píldora del menú se
+  desliza horizontalmente (arrastrando o con el trackpad) sin mostrar barra
+  de scroll, en vez de partirse en dos líneas.
+- **Tarjeta "Verificar un folio ahora" (portada)**: se rediseñó para verse
+  más profesional, ya que es la primera interacción del sitio — ícono en
+  una placa con degradado y sombra, etiqueta en mayúsculas más marcada,
+  nuevo subtítulo ("Consulta pública e instantánea"), campo con esquinas
+  redondeadas y un anillo de enfoque visible al hacer clic, y una sombra más
+  presente para que la tarjeta resalte sobre el fondo. El placeholder del
+  campo (aquí y en la vista completa "Verificar folio") se simplificó de
+  "Folio o código del certificado" a solo **"Folio"**, para que siempre se
+  vea completo sin cortarse.
 - **Calendario** — agendado de citas (y su versión paralela VIP).
 - **Sistema de i18n** — `SITE_LANG`, `data-i18n`/`data-i18n-placeholder`/
   `data-i18n-aria`, `I18N_EN` (diccionario a inglés), `t()`/`tt()`,
