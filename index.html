@@ -1081,6 +1081,32 @@
   .verify-input-group input:focus{outline:none;}
   .verify-input-group button.btn{border-radius:0;box-shadow:none;padding:14px 24px;font-weight:700;letter-spacing:.02em;}
   .verify-input-group button.btn:hover{transform:none;filter:brightness(1.06);}
+
+  /* ---- Tarjetas de "consulta" reutilizables: Verificar folio y Mi
+     historial usaban un simple <input>+botón suelto sobre la página, sin
+     ninguna jerarquía visual — se sentía como un formulario de trámite, no
+     como parte de un sitio premium. Reutiliza la misma fórmula que ya
+     probamos en la tarjeta de la portada (ícono en placa + etiqueta +
+     subtítulo + campo con anillo de foco), con un ícono/color propio por
+     sección para que cada una se sienta distinta. ---- */
+  .lookup-card{max-width:560px;margin-top:20px;padding:28px 26px 24px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 14px 34px rgba(36,21,18,.1);}
+  .lookup-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--red), var(--brass) 55%, var(--red));}
+  .lookup-card-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .lookup-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;box-shadow:0 6px 14px rgba(36,21,18,.28);}
+  .lookup-icon svg{width:19px;height:19px;}
+  .verificar-lookup-icon{background:linear-gradient(135deg, var(--red), #8C0323);}
+  .cliente-lookup-icon{background:linear-gradient(135deg, var(--ok), #1B4A34);box-shadow:0 6px 14px rgba(47,122,79,.3);}
+  .lookup-card-head-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .lookup-card-head-text label{margin:0;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+  .lookup-card-sub{font-size:12px;color:var(--sage);}
+  .lookup-input-group{display:flex;gap:0;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);transition:border-color .15s ease, box-shadow .15s ease;}
+  .lookup-input-group:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(210,4,45,.12);}
+  .lookup-input-group input{border:none;border-radius:0;flex:1;min-width:0;background:transparent;padding:13px 16px;font-size:14.5px;}
+  .lookup-input-group input:focus{outline:none;}
+  .lookup-input-group button.btn{border-radius:0;box-shadow:none;padding:13px 22px;font-weight:700;letter-spacing:.02em;}
+  .lookup-input-group button.btn:hover{transform:none;filter:brightness(1.06);}
+  .lookup-trust-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;}
+  .lookup-trust-row span{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--sage-dim);}
   .method-steps{display:flex;flex-direction:column;position:relative;margin-left:17px;margin-top:24px;padding-left:0;}
   .method-steps::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--line);}
   .method-steps::after{content:'';position:absolute;left:0;top:0;width:2px;height:var(--mprog,0%);background:linear-gradient(var(--red-dim),var(--red));box-shadow:0 0 8px rgba(210,4,45,.55);transition:height .12s linear;}
@@ -1315,8 +1341,6 @@
   .cita-pill::before{content:'📅';font-size:11px;}
 
   /* ===== "Mi historial" — rastreo en tiempo real por código ===== */
-  .track-card{max-width:640px;padding:22px 24px;margin-top:18px;}
-  .track-card-label{margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brass-dim);}
   .track-phone-toggle{max-width:640px;margin-top:18px;font-size:13.5px;color:var(--sage);}
   .track-phone-toggle summary{cursor:pointer;color:var(--brass);font-weight:600;}
   .track-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
@@ -1589,19 +1613,24 @@
   .salon-hero h2{color:var(--salon-ink);font-size:clamp(24px,4vw,32px);max-width:640px;margin:0 0 14px;}
   .salon-lead{color:var(--salon-sage);font-size:15px;max-width:640px;line-height:1.65;margin:0;}
 
+  /* ---- El "hero" ahora es de 2 columnas: la copy a la izquierda, y a la
+     derecha una vista previa TANGIBLE de la membresía (una tarjeta, no un
+     precio suelto) — reutiliza exactamente el mismo componente visual que
+     la tarjeta real de un socio (.salon-member-card, con su efecto de
+     inclinación al mouse y su brillo), para que la promesa ("esto es lo
+     que vas a tener") se sienta concreta desde antes de entrar. ---- */
+  .salon-hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;align-items:center;}
+  @media(max-width:900px){.salon-hero-grid{grid-template-columns:1fr;gap:30px;}}
+  .salon-hero-card-wrap{display:flex;justify-content:center;}
+  .salon-member-card.salon-preview-card{max-width:380px;aspect-ratio:auto;padding-bottom:24px;}
+  .salon-preview-card .smc-name{font-size:19px;}
+  .salon-preview-ladder{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px;}
+
+  .salon-tiers-kicker{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--salon-gold-dim);margin:0 0 16px;}
   .salon-tiers-teaser{margin-bottom:26px;}
 
-  /* ---- Insignia de membresía única: el precio se muestra UNA sola vez
-     aquí (nunca repetido por nivel, que era lo que hacía ver el Salón como
-     si tuviera 3 precios distintos), seguida de una "ruta" con los 3
-     niveles conectados por flechas, dejando claro que son etapas de
-     reconocimiento de una misma membresía, no productos separados. ---- */
-  .salon-membership-badge{text-align:center;margin-bottom:22px;background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:16px;padding:30px 24px;}
-  .salon-membership-price{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:700;color:var(--salon-gold);background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:40px;padding:10px 26px;box-shadow:0 8px 24px rgba(0,0,0,.35);}
-  .salon-membership-price small{font-size:13px;font-weight:500;color:var(--salon-sage);}
-  .salon-membership-note{max-width:520px;margin:12px auto 0;font-size:13.5px;color:var(--salon-sage);line-height:1.6;}
-  .salon-ladder-path{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:18px;}
   .salon-ladder-node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--salon-silver);background:rgba(255,255,255,.04);border:1px solid var(--salon-line);border-radius:20px;padding:6px 14px;}
+  .salon-ladder-node.mini{font-size:9.5px;padding:4px 9px;letter-spacing:.03em;}
   .salon-ladder-node.salon-tier-n2{color:var(--salon-gold);border-color:rgba(232,196,104,.35);}
   .salon-ladder-node.salon-tier-n3{color:var(--salon-platinum);border-color:rgba(232,196,104,.5);box-shadow:0 0 14px rgba(232,196,104,.18);}
   .salon-ladder-arrow{color:var(--salon-gold-dim);font-size:16px;}
@@ -2825,11 +2854,28 @@
 <div class="view" id="view-verificar">
   <section>
     <h2 data-i18n="verificar.h2">Verificación pública de folio</h2>
-    <p style="color:var(--sage);" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
-    <div class="row" style="max-width:460px;">
-      <input id="v-folio" placeholder="Folio" data-i18n-placeholder="verificar.folioPh" style="flex:1;">
-      <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
+    <p style="color:var(--sage);max-width:600px;" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
+
+    <div class="card lookup-card">
+      <div class="lookup-card-head">
+        <span class="lookup-icon verificar-lookup-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <div class="lookup-card-head-text">
+          <label for="v-folio" data-i18n="verificar.lookupLabel">Consulta tu certificado</label>
+          <span class="lookup-card-sub" data-i18n="verificar.lookupSub">Público, gratuito e instantáneo</span>
+        </div>
+      </div>
+      <div class="lookup-input-group">
+        <input id="v-folio" placeholder="Folio" data-i18n-placeholder="verificar.folioPh">
+        <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
+      </div>
+      <div class="lookup-trust-row">
+        <span data-i18n="verificar.trust1">🔒 Público y gratuito</span>
+        <span data-i18n="verificar.trust2">✓ Válido para cualquier certificado emitido por el laboratorio</span>
+      </div>
     </div>
+
     <div id="v-result" style="margin-top:28px;"></div>
   </section>
 </div>
@@ -3126,11 +3172,23 @@
     <h2 data-i18n="cliente.h2">Mi historial</h2>
     <p style="color:var(--sage);max-width:600px;" data-i18n="cliente.p">Rastrea tu pieza en tiempo real con tu código de seguimiento — el mismo que te dimos al enviar tu solicitud — o consulta todo tu historial con tu teléfono.</p>
 
-    <div class="card track-card">
-      <p class="track-card-label" data-i18n="cliente.codigoLabel">Código de seguimiento</p>
-      <div class="row" style="max-width:460px;">
-        <input id="c-codigo" class="mono" placeholder="HV-MX-2026-000" style="flex:1;text-transform:uppercase;" onkeydown="if(event.key==='Enter')trackByCodigo();">
+    <div class="card lookup-card">
+      <div class="lookup-card-head">
+        <span class="lookup-icon cliente-lookup-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </span>
+        <div class="lookup-card-head-text">
+          <label for="c-codigo" data-i18n="cliente.codigoLabel">Código de seguimiento</label>
+          <span class="lookup-card-sub" data-i18n="cliente.lookupSub">Sigue el proceso de tu pieza, paso a paso</span>
+        </div>
+      </div>
+      <div class="lookup-input-group">
+        <input id="c-codigo" class="mono" placeholder="HV-MX-2026-000" style="text-transform:uppercase;" onkeydown="if(event.key==='Enter')trackByCodigo();">
         <button class="btn" onclick="trackByCodigo()" data-i18n="cliente.rastrear">Rastrear</button>
+      </div>
+      <div class="lookup-trust-row">
+        <span data-i18n="cliente.trust1">🔒 Solo tú, con tu código</span>
+        <span data-i18n="cliente.trust2">⏱ Estatus actualizado en tiempo real</span>
       </div>
       <div id="c-track-result" style="margin-top:18px;"></div>
     </div>
@@ -3157,11 +3215,35 @@
 <div class="view salon-scope" id="view-salon">
   <section>
     <div class="salon-hero reveal">
-      <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
-      <h2 data-i18n="salon.h2">El círculo más exclusivo del coleccionismo</h2>
-      <p class="salon-lead" data-i18n="salon.lead">Una sola membresía, $1,000 MXN al año — pero no es para cualquier pieza: el laboratorio selecciona y publica aquí solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio. Y mientras más certificas y más subes de nivel dentro del Salón, más crecen tus beneficios: descuentos, promociones y regalos por tu lealtad.</p>
+      <div class="salon-hero-grid">
+        <div class="salon-hero-copy">
+          <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
+          <h2 data-i18n="salon.h2">El círculo más exclusivo del coleccionismo</h2>
+          <p class="salon-lead" data-i18n="salon.lead">Una sola membresía, $1,000 MXN al año — pero no es para cualquier pieza: el laboratorio selecciona y publica aquí solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio. Y mientras más certificas y más subes de nivel dentro del Salón, más crecen tus beneficios: descuentos, promociones y regalos por tu lealtad.</p>
+        </div>
+        <div class="salon-hero-card-wrap">
+          <div class="salon-member-card salon-preview-card" id="salon-preview-card" aria-hidden="true">
+            <div class="smc-shine"></div>
+            <p class="smc-kicker" data-i18n="salon.preview.kicker">SALÓN PRIVADO HV</p>
+            <h3 class="smc-name" data-i18n="salon.preview.name">Comunidad de coleccionistas premium</h3>
+            <p class="smc-tier" data-i18n="salon.preview.tier">Membresía anual · $1,000 MXN</p>
+            <div class="smc-row">
+              <span class="smc-code mono">HVS-●●●●●●</span>
+              <span class="smc-piezas" data-i18n="salon.preview.piezas">Tu vitrina, tu reconocimiento</span>
+            </div>
+            <div class="salon-preview-ladder">
+              <span class="salon-ladder-node mini salon-tier-n1" data-i18n="salon.tiers.n1">Nivel Plata</span>
+              <span class="salon-ladder-arrow" aria-hidden="true">›</span>
+              <span class="salon-ladder-node mini salon-tier-n2" data-i18n="salon.tiers.n2">Nivel Oro</span>
+              <span class="salon-ladder-arrow" aria-hidden="true">›</span>
+              <span class="salon-ladder-node mini salon-tier-n3" data-i18n="salon.tiers.n3">Nivel Platino</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <p class="salon-tiers-kicker" data-i18n="salon.tiers.kicker">Así se ven tus niveles de reconocimiento dentro de esa misma membresía</p>
     <div class="salon-tiers-teaser" id="salon-tiers-teaser">
       <p style="color:var(--salon-silver);grid-column:1/-1;text-align:center;" data-i18n="salon.tiers.loading">Cargando los niveles del Salón…</p>
     </div>
@@ -4534,14 +4616,21 @@ const I18N_EN = {
   // Verificar folio (public verification page)
   'verificar.h2': 'Public folio verification',
   'verificar.p': 'Verify your certified piece\'s folio or the QR code on your certificate.',
+  'verificar.lookupLabel': 'Look up your certificate',
+  'verificar.lookupSub': 'Public, free and instant',
   'placeholder:verificar.folioPh': 'Folio',
   'verificar.btn': 'Verify',
+  'verificar.trust1': '🔒 Public and free',
+  'verificar.trust2': '✓ Valid for any certificate issued by the lab',
 
   // Mi historial (client tracking page)
   'cliente.h2': 'My history',
   'cliente.p': 'Track your piece in real time with your tracking code — the same one we gave you when you submitted your request — or look up your whole history with your phone number.',
   'cliente.codigoLabel': 'Tracking code',
+  'cliente.lookupSub': 'Follow your piece\'s progress, step by step',
   'cliente.rastrear': 'Track',
+  'cliente.trust1': '🔒 Only you, with your code',
+  'cliente.trust2': '⏱ Status updated in real time',
   'cliente.sinCodigo': 'Don\'t have your code? Look up by phone',
   'cliente.telPlaceholder': '55 0000 0000',
   'cliente.consultar': 'Look up',
@@ -4662,6 +4751,14 @@ const I18N_EN = {
   'salon.tiers.threshold5': 'Unlocks at 5 certified pieces',
   'salon.tiers.threshold10': 'Unlocks at 10 certified pieces',
   'salon.tiers.threshold20': 'Unlocks at 20+ certified pieces · lifetime',
+  'salon.tiers.kicker': 'Here\'s how your recognition levels look within that same membership',
+  'salon.tiers.n1': 'Silver Tier',
+  'salon.tiers.n2': 'Gold Tier',
+  'salon.tiers.n3': 'Platinum Tier',
+  'salon.preview.kicker': 'SALÓN PRIVADO HV',
+  'salon.preview.name': 'A premium collecting community',
+  'salon.preview.tier': 'Annual membership · $1,000 MXN',
+  'salon.preview.piezas': 'Your showcase, your recognition',
   'salon.gate.h3': 'Member access',
   'salon.gate.p': 'Enter your phone number and your member code (given to you once you become eligible) to enter the Salón.',
   'placeholder:salon.gate.telPlaceholder': '55 0000 0000',
@@ -4982,6 +5079,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   const themeBtn = document.getElementById('theme-toggle-btn');
   if(themeBtn) themeBtn.setAttribute('aria-label', current === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+  // La tarjeta de vista previa del Salón es estática (vive siempre en el
+  // DOM, no se re-genera al navegar) — el efecto de inclinación se liga
+  // una sola vez aquí, en vez de en cada go('salon'), para no ir apilando
+  // listeners de mousemove repetidos sobre el mismo elemento.
+  if(typeof initSalonCardTilt === 'function') initSalonCardTilt('salon-preview-card');
 });
 
 function go(view){
@@ -7408,15 +7510,11 @@ async function renderSalonTiersTeaser(){
   };
   // Es UNA sola membresía ($SALON_ANNUAL_FEE/año) — los 3 "niveles" no son
   // productos distintos que se cobran aparte, son etapas de reconocimiento
-  // dentro de esa misma membresía. Por eso el precio se muestra UNA vez en
-  // la insignia de arriba (nunca repetido por tarjeta, que era lo que se
-  // veía como si hubiera 3 precios distintos) y las tarjetas de nivel
-  // llevan en su lugar "Nivel N de 3" + un texto "incluye todo lo
-  // anterior, más:" para que quede claro que los beneficios se acumulan.
-  const pathHtml = [1,2,3].map((n,i) => `
-    <span class="salon-ladder-node salon-tier-n${n}">${escapeHtml(nombreDe(n))}</span>
-    ${i<2 ? '<span class="salon-ladder-arrow" aria-hidden="true">›</span>' : ''}
-  `).join('');
+  // dentro de esa misma membresía. El precio ya se muestra una sola vez, en
+  // la tarjeta de vista previa de la membresía (arriba, en .salon-hero), así
+  // que aquí las tarjetas de nivel NO lo repiten — muestran "Nivel N de 3" +
+  // un texto "incluye todo lo anterior, más:" para que quede claro que los
+  // beneficios se acumulan.
   const cardsHtml = [1,2,3].map(n => {
     const tier = tiers.niveles[n] || {};
     const nombre = nombreDe(n);
@@ -7433,14 +7531,7 @@ async function renderSalonTiersTeaser(){
       <ul class="salon-tier-benefits">${beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('') || `<li>${tt('Beneficios por definir','Benefits to be defined')}</li>`}</ul>
     </div>`;
   }).join('');
-  box.innerHTML = `
-    <div class="salon-membership-badge">
-      <span class="salon-membership-price">$${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN <small>${tt('/ año','/ year')}</small></span>
-      <p class="salon-membership-note">${tt('Una sola membresía — así crecen tus beneficios mientras más certificas y más confías en nosotros.','A single membership — this is how your benefits grow the more you certify and the more you trust us.')}</p>
-      <div class="salon-ladder-path">${pathHtml}</div>
-    </div>
-    <div class="salon-tiers-grid">${cardsHtml}</div>
-  `;
+  box.innerHTML = `<div class="salon-tiers-grid">${cardsHtml}</div>`;
 }
 
 async function submitSalonGate(){
@@ -7573,8 +7664,8 @@ async function enterSalonLobby(m){
 // Efecto "foil"/tilt de la tarjeta: sigue el mouse con dos variables CSS
 // (--mx/--my para la rotación 3D, --px/--py para el brillo radial), y
 // vuelve suavemente a plano al salir. Respeta prefers-reduced-motion.
-function initSalonCardTilt(){
-  const card = document.getElementById('salon-member-card');
+function initSalonCardTilt(cardId){
+  const card = document.getElementById(cardId||'salon-member-card');
   if(!card || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const onMove = (e) => {
     const rect = card.getBoundingClientRect();

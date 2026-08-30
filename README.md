@@ -98,24 +98,43 @@ grandes, en orden aproximado en que aparecen:
   sin cambios en su mecánica.
   - **Vitrina pública (`renderSalonTiersTeaser`)**: se corrigió que los 3
     niveles (Plata/Oro/Platino) se veían como si fueran 3 membresías con
-    precio propio (los 3 repetían "$1,000 MXN al año"). Ahora el precio se
-    muestra **una sola vez**, en una insignia fija arriba de los 3 niveles
-    (`.salon-membership-badge`), seguida de una "ruta" con los 3 nombres de
-    nivel conectados por flechas (`.salon-ladder-path`) para dejar claro
-    que es una sola membresía con niveles de reconocimiento que se
-    acumulan, no productos distintos. Cada tarjeta de nivel ya no repite el
-    precio — muestra "Nivel N de 3" y, a partir del nivel 2, una línea
-    "Incluye todo lo de [nivel anterior], más:" antes de sus beneficios
-    propios (los beneficios ya no repiten en texto los del nivel anterior,
-    como sí pasaba antes). Los beneficios semilla (`SALON_TIERS_DEFAULT`,
-    editables desde el admin en Niveles) ahora mencionan explícitamente
-    descuentos, promociones y regalos crecientes por nivel, como
-    reconocimiento a la lealtad — antes eran más genéricos (prioridad de
-    agenda, marketing, etc. sin mencionar descuentos). También se
-    reemplazó "el laboratorio cura y publica" por "el laboratorio
-    selecciona y publica" en el texto introductorio en español — "cura"
-    ahí generaba confusión (se lee como el sustantivo "cura", no como el
-    verbo curar/curar-editorial).
+    precio propio (los 3 repetían "$1,000 MXN al año"). Cada tarjeta de
+    nivel ya no repite el precio — muestra "Nivel N de 3" y, a partir del
+    nivel 2, una línea "Incluye todo lo de [nivel anterior], más:" antes de
+    sus beneficios propios (los beneficios ya no repiten en texto los del
+    nivel anterior, como sí pasaba antes). Los beneficios semilla
+    (`SALON_TIERS_DEFAULT`, editables desde el admin en Niveles) ahora
+    mencionan explícitamente descuentos, promociones y regalos crecientes
+    por nivel, como reconocimiento a la lealtad. También se reemplazó "el
+    laboratorio cura y publica" por "el laboratorio selecciona y publica"
+    en el texto introductorio en español — "cura" ahí generaba confusión
+    (se lee como el sustantivo "cura", no como el verbo curar/curaduría).
+  - **"Hero" del Salón, en 2 columnas**: la primera versión de este ajuste
+    mostraba el precio como una simple píldora de texto sobre un panel
+    oscuro — el cliente lo describió como que "se ve muy simple... parece
+    un pago, no una membresía". Se rediseñó como una vista previa TANGIBLE
+    de la membresía: a la derecha de la copy del hero (`.salon-hero-grid`,
+    2 columnas — se apila en móvil) se muestra una tarjeta con el mismo
+    componente visual de la tarjeta real de un socio (`.salon-member-card`,
+    reutilizada vía `.salon-preview-card`), con su efecto de inclinación
+    3D al mover el mouse y su brillo de "foil" — mismo `initSalonCardTilt()`
+    generalizado para aceptar cualquier id de tarjeta. La tarjeta de vista
+    previa muestra "Comunidad de coleccionistas premium", el precio, un
+    código enmascarado (`HVS-●●●●●●`) y los 3 niveles como una mini-ruta
+    dorada, para que la promesa se sienta concreta antes de entrar. Debajo,
+    un texto puente ("Así se ven tus niveles de reconocimiento...") lleva a
+    las 3 tarjetas de nivel con el detalle de beneficios.
+  - **"Verificar folio" y "Mi historial" — tarjetas de consulta**: ambas
+    vistas tenían solo un `<input>` y un botón sueltos sobre la página, sin
+    ninguna jerarquía visual. Se les dio el mismo tratamiento "premium" que
+    ya tenía la tarjeta de la portada (`.lookup-card`, reutilizable): ícono
+    en placa con degradado (escudo rojo/dorado para Verificar folio, reloj
+    verde para Mi historial — para diferenciarlas), etiqueta + subtítulo,
+    campo con esquinas redondeadas y anillo de enfoque, y una fila de
+    "confianza" debajo (p.ej. "🔒 Público y gratuito" / "⏱ Estatus
+    actualizado en tiempo real"). La vista de resultados de "Mi historial"
+    (la línea de tiempo con etapas) no cambió — ya tenía su propio diseño
+    animado; el ajuste fue solo en la tarjeta de búsqueda inicial.
 - **Folio/QR — público vs. Salón**: verificar un folio (`verifyFolio()`,
   incluyendo el que viene de escanear un QR) sigue siendo público para
   cualquier pieza de la **biblioteca pública** — así un comprador de segunda
