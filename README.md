@@ -482,6 +482,31 @@ grandes, en orden aproximado en que aparecen:
     resaltado suave al pasar el mouse sobre cada fila.
   - Todo probado en celular, tablet y escritorio, y en español e inglés.
 
+- **Intro de bienvenida remasterizada — más atmósfera, profundidad y
+  "espectáculo"**: el cliente mandó una imagen de referencia (un
+  científico de laboratorio, hecha con IA, con un caldero burbujeante
+  lleno de luces de colores) pidiendo que la intro se sintiera igual de
+  inmersiva y espectacular. Sin poder generar arte nuevo, se tradujo esa
+  sensación a CSS/animación puros:
+  - Tres manchas de luz borrosas (oro, violeta y rojo) derivan muy lento
+    de fondo, dándole a la escena esa sensación de "aire con color" en
+    vez del fondo plano de antes.
+  - Doce burbujas de colores de marca suben desde abajo y se desvanecen
+    arriba, como el gesto del caldero de la referencia pero en clave
+    dorado/violeta/rojo en vez de líquido literal.
+  - El sello con el logo ahora tiene un halo dorado que respira detrás
+    (crece y se atenúa en bucle), y al aterrizar dispara dos ondas de
+    choque que se expanden y desvanecen — el "golpe" del momento en que
+    la pieza toca el caldero.
+  - En computadoras con mouse, la atmósfera de fondo y las burbujas se
+    mueven ligeramente con el cursor (en direcciones opuestas, como capas
+    a distinta profundidad) para un efecto de paralaje 3D real.
+  - Se aprovechó para corregir un bug menor: con "reducir movimiento"
+    activado, el texto "Laboratorio HV México" de la intro perdía su
+    centrado y se veía corrido hacia la derecha.
+  - Todo respeta "reducir movimiento" (las burbujas y ondas de choque se
+    ocultan, el halo se queda fijo) y se probó en celular y escritorio.
+
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el
   cliente traía o recibía su pieza por paquetería. Ahora, al elegir
