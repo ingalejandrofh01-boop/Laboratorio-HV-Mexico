@@ -225,6 +225,11 @@
   .entrega-chip:hover{border-color:var(--brass);}
   .entrega-chip.selected{border-color:var(--red);background:rgba(210,4,45,0.05);}
   .entrega-chip.selected strong{color:var(--red);}
+  .entrega-velocidad-wrap{margin:10px 0 0 14px;padding:12px 14px;border-left:2px solid var(--line);}
+  .entrega-velocidad-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 8px;}
+  .entrega-chips-sm .entrega-chip{min-width:150px;padding:9px 12px;}
+  .entrega-chips-sm .entrega-chip strong{font-size:12.5px;}
+  .entrega-chips-sm .entrega-chip span{font-size:11px;}
   .wiz-bank-note{display:flex;gap:10px;align-items:flex-start;margin-top:6px;padding:12px 14px;background:rgba(184,134,47,0.08);border:1px dashed var(--warn);border-radius:8px;}
   .wiz-bank-note span{font-size:17px;flex:none;}
   .wiz-bank-note p{margin:0;font-size:12.5px;color:var(--sage);line-height:1.5;}
@@ -781,10 +786,20 @@
   }
 
   /* ===== Reseñas de clientes ===== */
-  .review-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;background:var(--panel);}
+  .review-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;background:var(--panel);transition:box-shadow .15s ease,transform .15s ease;}
+  .review-card:hover{box-shadow:0 8px 20px rgba(36,21,18,.08);transform:translateY(-1px);}
   .review-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;}
   .review-avatar-fallback{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;}
   .stars-display{color:var(--brass);font-size:13px;letter-spacing:1px;}
+  .reviews-rating-badge{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 18px;box-shadow:0 8px 20px rgba(36,21,18,.06);}
+  .reviews-rating-icon{font-size:24px;line-height:1;}
+  .reviews-empty{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--panel);}
+  .reviews-empty-icon{font-size:30px;margin-bottom:4px;}
+  .reviews-empty-title{font-weight:600;color:var(--ink);margin:0;font-size:14.5px;}
+  .reviews-empty-sub{color:var(--sage);margin:0;font-size:13px;max-width:420px;}
+  .reviews-write-card{position:relative;overflow:hidden;}
+  .reviews-write-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--red), var(--brass) 55%, var(--red));}
+  .reviews-write-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--brass-dim);background:rgba(184,134,47,0.1);border:1px solid rgba(184,134,47,0.3);border-radius:999px;padding:4px 10px;margin-bottom:10px;}
   .star-picker{display:flex;gap:4px;margin:4px 0 12px;}
   .star-picker .star{font-size:26px;color:var(--line);cursor:pointer;transition:color .1s ease;line-height:1;}
   .star-picker .star.on{color:var(--brass);}
@@ -1097,6 +1112,17 @@
     .hero-stat-counter{padding:9px 16px;gap:8px;}
     .hero-stat-num{font-size:17px;}
     .hero-stat-lbl{font-size:12.5px;}
+  }
+  .hero-trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 0;max-width:640px;}
+  .hero-trust-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#FBEDE4;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 13px;white-space:nowrap;}
+  .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:22px 0 4px;}
+  .hero-cta-primary{background:linear-gradient(120deg,var(--brass-dim),var(--brass) 55%,var(--brass-dim));color:#241512;border:none;font-weight:700;font-size:15px;padding:14px 26px;border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.28);transition:transform .15s ease,box-shadow .15s ease;}
+  .hero-cta-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.34);}
+  .btn.ghost.hero-cta-ghost{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.4)!important;color:#FBEDE4!important;font-weight:600;padding:14px 22px;border-radius:10px;}
+  .btn.ghost.hero-cta-ghost:hover{background:rgba(255,255,255,.12);border-color:#fff!important;color:#fff!important;}
+  @media(max-width:480px){
+    .hero-trust-chip{font-size:11.5px;padding:5px 11px;}
+    .hero-cta-primary,.hero-cta-ghost{width:100%;padding:13px 20px;font-size:14px;}
   }
   .finish-divider{height:9px;background-image:repeating-linear-gradient(90deg, var(--paper) 0 9px, var(--ink) 9px 18px);opacity:.35;border-radius:2px;margin:6px 0 0;}
   .tag-notch{position:relative;}
@@ -1655,6 +1681,12 @@
   .nav-salon{position:relative;color:var(--brass-dim)!important;font-weight:600!important;}
   .nav-salon:hover{background:rgba(184,134,47,.12)!important;color:var(--brass)!important;}
   .nav-salon.active{background:linear-gradient(120deg,#8C6524,#DDAE5C 55%,#8C6524)!important;color:#241512!important;}
+  /* "Piezas falsas" es un registro de advertencia, no una sección de venta
+     — se le da un tratamiento serio en negro/obsidiana (a tono con el
+     libro-abismo que abre) en vez del rojo/dorado del resto del menú. */
+  .nav-piezasfalsas{background:#0c0a10!important;color:#e8e3e0!important;border:1px solid rgba(139,92,193,.35)!important;font-weight:600!important;}
+  .nav-piezasfalsas:hover{background:#17131e!important;color:#fff!important;border-color:rgba(139,92,193,.55)!important;}
+  .nav-piezasfalsas.active{background:#000!important;color:#fff!important;border-color:#e0455a!important;}
 
   .salon-hero{position:relative;background:linear-gradient(160deg,var(--salon-obsidian),var(--salon-obsidian-2) 60%,#211A12);border-radius:18px;padding:44px 36px;overflow:hidden;isolation:isolate;margin-bottom:26px;}
   .salon-hero::before{content:"";position:absolute;top:-50%;left:-10%;width:420px;height:420px;background:radial-gradient(circle,var(--salon-gold-glow),transparent 70%);pointer-events:none;z-index:-1;animation:salonAuraDrift 14s ease-in-out infinite alternate;}
@@ -1805,6 +1837,57 @@
     .salon-hero{padding:30px 22px;}
     .salon-member-card{max-width:100%;}
   }
+
+  /* ============================================================
+     VENTANA DE BIENVENIDA DEL LOBBY — se abre cada vez que el socio entra
+     al Salón (o la reabre él mismo con el botón "✨"), reutilizando el
+     mismo overlay .book-stage/.book-stage-backdrop del Librero pero con su
+     propia tarjeta centrada en vez del libro. Da un resumen "espectacular"
+     de qué hay adentro y, lo más importante, el estado real de su
+     membresía (inicio, vencimiento, cuenta regresiva).
+     ============================================================ */
+  .salon-welcome-stage .book-stage-backdrop{background:rgba(4,3,2,.82);}
+  .salon-welcome-card{position:relative;width:min(560px,92vw);max-height:88vh;overflow-y:auto;background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid rgba(232,196,104,.32);border-radius:20px;padding:38px 34px;box-shadow:0 40px 80px -20px rgba(0,0,0,.75), 0 0 60px rgba(232,196,104,.08);color:var(--salon-ink);isolation:isolate;animation:salonWelcomeIn .5s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes salonWelcomeIn{0%{opacity:0;transform:scale(.92) translateY(10px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+  .salon-welcome-card::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:420px;height:320px;background:radial-gradient(ellipse at center, rgba(232,196,104,.16), transparent 70%);pointer-events:none;z-index:-1;}
+  @media(prefers-reduced-motion:reduce){.salon-welcome-card{animation:none;}}
+  .salon-welcome-kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 8px;}
+  .salon-welcome-title{font-family:'Fraunces',serif;font-size:26px;margin:0 0 10px;color:var(--salon-ink);}
+  .salon-welcome-sub{font-size:14px;color:var(--salon-sage);line-height:1.55;margin:0 0 22px;}
+  .salon-welcome-highlights{list-style:none;margin:0 0 24px;padding:0;display:grid;gap:12px;}
+  .salon-welcome-highlights li{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--salon-ink);line-height:1.5;}
+  .salon-welcome-highlights .swh-ic{flex:none;width:30px;height:30px;border-radius:9px;background:rgba(232,196,104,.12);border:1px solid rgba(232,196,104,.28);display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .salon-welcome-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .salon-welcome-reopen-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(232,196,104,.1);border:1px solid rgba(232,196,104,.3);color:var(--salon-gold);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;transition:background-color .15s ease;}
+  .salon-welcome-reopen-btn:hover{background:rgba(232,196,104,.18);}
+
+  /* ---- Línea de tiempo de membresía (inicio / vence / cuenta regresiva) ---- */
+  .salon-timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--salon-line);border:1px solid var(--salon-line);border-radius:12px;overflow:hidden;margin:14px 0;}
+  .salon-timeline-cell{background:var(--salon-panel);padding:12px 14px;text-align:center;}
+  .salon-timeline-cell .stl-lbl{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--salon-sage);margin-bottom:4px;}
+  .salon-timeline-cell .stl-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:var(--salon-ink);}
+  .salon-timeline.salon-timeline-warn .stl-val-countdown{color:var(--salon-gold);}
+  .salon-timeline.salon-timeline-danger .stl-val-countdown{color:#e0455a;}
+  @media(max-width:480px){.salon-timeline{grid-template-columns:1fr;}}
+  .salon-renewal-banner{display:flex;align-items:center;gap:10px;background:rgba(232,196,104,.1);border:1px solid rgba(232,196,104,.32);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--salon-gold);margin:14px 0;}
+
+  /* ---- Vista previa del Libro del Coleccionismo dentro del lobby — lo
+     primero que ve el socio junto a su tarjeta, sin tener que abrir la
+     Galería completa para saber que hay algo nuevo adentro. ---- */
+  .salon-book-teaser{margin-bottom:16px;}
+  .salon-book-teaser-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;}
+  .salon-book-teaser-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;margin-bottom:14px;}
+  .salon-book-teaser-thumb{aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--salon-line);background:rgba(255,255,255,.03);}
+  .salon-book-teaser-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .salon-book-teaser-empty{font-size:13px;color:var(--salon-sage);margin:0 0 14px;}
+
+  /* ---- Membresía vencida — el socio sigue viendo su tarjeta y su
+     historial (para que se sienta reconocido, no expulsado), pero la
+     Galería y el Calendario VIP quedan bloqueados hasta renovar. ---- */
+  .salon-expired-lock{text-align:center;padding:28px 20px;background:rgba(224,69,90,.08);border:1px solid rgba(224,69,90,.3);border-radius:14px;margin-bottom:16px;}
+  .salon-expired-lock .sel-ic{font-size:30px;margin-bottom:10px;}
+  .salon-expired-lock h3{margin:0 0 8px;color:var(--salon-ink);}
+  .salon-expired-lock p{font-size:13.5px;color:var(--salon-sage);margin:0 0 16px;line-height:1.5;}
 
   /* ============================================================
      COMPARTIR — hoja para compartir a redes sociales (piezas de la
@@ -1990,10 +2073,10 @@
       <button data-v="metodologia" onclick="go('metodologia')" data-i18n="nav.metodologia">Metodología</button>
       <button data-v="paquetes" onclick="go('paquetes')" data-i18n="nav.paquetes">Paquetes</button>
       <button data-v="verificar" onclick="go('verificar')" data-i18n="nav.verificar">Verificar folio</button>
-      <button data-v="piezasfalsas" onclick="go('piezasfalsas')" data-i18n="nav.piezasFalsas">Piezas falsas</button>
       <button data-v="solicitar" onclick="go('solicitar')" data-i18n="nav.solicitar">Solicitar validación</button>
       <button data-v="cliente" onclick="go('cliente')" data-i18n="nav.cliente">Mi historial</button>
       <button data-v="salon" onclick="go('salon')" class="nav-salon" data-i18n="nav.salon">Salón Privado HV</button>
+      <button data-v="piezasfalsas" onclick="go('piezasfalsas')" class="nav-piezasfalsas" data-i18n="nav.piezasFalsas">Piezas falsas</button>
     </nav>
   </div>
   <div class="nav-backdrop" id="nav-backdrop" onclick="closeMobileNav()"></div>
@@ -2058,9 +2141,21 @@
       <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:110px;margin:0 0 14px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
       <h1 style="margin-top:8px;" data-i18n="inicio.hero.h1">Certificación independiente de piezas vintage: Hot Wheels, CIPSA, Bólidos Lilí Ledy y Aurimat.</h1>
       <p class="lead" data-i18n="inicio.hero.lead">Somos coleccionistas certificando para coleccionistas: certificación independiente, con criterio experto y más de 25 años de experiencia — no afiliados a las marcas. Evaluamos si tu pieza es original, repintada o modificada, con criterios técnicos y trazables, y lo dejamos registrado con folio público.</p>
+      <div class="hero-trust-row">
+        <span class="hero-trust-chip">🏅 <span data-i18n="inicio.hero.trust1">+25 años de experiencia</span></span>
+        <span class="hero-trust-chip">🔎 <span data-i18n="inicio.hero.trust2">Folio público y verificable</span></span>
+        <span class="hero-trust-chip">🚫 <span data-i18n="inicio.hero.trust3">Sin afiliación a las marcas</span></span>
+        <span class="hero-trust-chip">🇲🇽 <span data-i18n="inicio.hero.trust4">100% mexicano</span></span>
+      </div>
       <div class="hero-stat-counter" id="hero-stat-counter" style="display:none;" aria-live="polite">
         <svg class="hero-stat-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4a3 3 0 0 0 3 4"/><path d="M17 5h3a3 3 0 0 1-3 4"/></svg>
         <span><span class="hero-stat-num" id="hero-stat-num">0</span> <span class="hero-stat-lbl" data-i18n="inicio.hero.statLbl">piezas certificadas</span></span>
+      </div>
+      <div class="hero-actions">
+        <button class="btn hero-cta-primary" onclick="go('solicitar')">
+          <span data-i18n="inicio.hero.ctaSolicitar">Solicitar certificación de tu pieza</span> <span aria-hidden="true">→</span>
+        </button>
+        <button class="btn ghost hero-cta-ghost" onclick="go('metodologia')" data-i18n="inicio.hero.ctaMetodologia">Ver cómo funciona</button>
       </div>
       <div class="card tag-notch verify-card" style="max-width:480px;margin-top:16px;">
         <div class="verify-card-head">
@@ -2228,15 +2323,19 @@
         <h2 data-i18n="inicio.reviews.h2">Lo que dicen nuestros clientes</h2>
         <p style="color:var(--sage);max-width:560px;margin:0;" data-i18n="inicio.reviews.p">Reseñas reales, verificadas con cuenta de Google — sin bots ni reseñas falsas.</p>
       </div>
-      <div style="text-align:right;">
-        <div id="reviews-average" style="font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--brass);line-height:1;">—</div>
-        <div id="reviews-count" class="foot-note" style="border:none;padding:2px 0 0;" data-i18n="inicio.reviews.loading">Cargando reseñas…</div>
+      <div class="reviews-rating-badge">
+        <span class="reviews-rating-icon">⭐</span>
+        <div>
+          <div id="reviews-average" style="font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--brass);line-height:1;">—</div>
+          <div id="reviews-count" class="foot-note" style="border:none;padding:2px 0 0;" data-i18n="inicio.reviews.loading">Cargando reseñas…</div>
+        </div>
       </div>
     </div>
     <div id="reviews-list" style="margin:20px 0;"></div>
-    <div class="card" style="max-width:520px;">
+    <div class="card reviews-write-card" style="max-width:520px;">
       <div id="review-write-prompt">
-        <h3 style="font-size:15px;margin-top:0;" data-i18n="inicio.reviews.promptH3">¿Ya certificaste una pieza con nosotros?</h3>
+        <span class="reviews-write-badge">🔒 <span data-i18n="inicio.reviews.verifiedBadge">Verificado con Google</span></span>
+        <h3 style="font-size:15px;" data-i18n="inicio.reviews.promptH3">¿Ya certificaste una pieza con nosotros?</h3>
         <p class="foot-note" style="border:none;margin-top:0;padding-top:0;" data-i18n="inicio.reviews.promptP">Para evitar reseñas falsas, verificamos tu identidad con tu cuenta de Google — no publicamos nada sin tu confirmación, y no guardamos tu sesión iniciada.</p>
         <button class="google-btn" onclick="startReviewFlow()">
           <svg viewBox="0 0 48 48" width="18" height="18"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.4 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C40.5 36.4 44 30.9 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
@@ -3130,29 +3229,53 @@
 
           <div class="entrega-block">
             <p class="entrega-block-label" data-i18n="wiz.logistica.idaLabel">¿Cómo nos haces llegar tu pieza?</p>
-            <div class="entrega-chips" role="group" aria-label="Cómo llega tu pieza al laboratorio" data-i18n-aria="wiz.logistica.idaAria">
+            <div class="entrega-chips" id="s-ida-chips" role="group" aria-label="Cómo llega tu pieza al laboratorio" data-i18n-aria="wiz.logistica.idaAria">
               <button type="button" class="entrega-chip selected" data-val="presencial" onclick="wizSetEntregaIda('presencial',this)" data-i18n="wiz.logistica.idaPresencial">
                 <strong>Yo la traigo</strong><span>La llevas tú mismo(a) al laboratorio — sin costo extra</span>
               </button>
               <button type="button" class="entrega-chip" data-val="envio" onclick="wizSetEntregaIda('envio',this)" data-i18n="wiz.logistica.idaEnvio">
-                <strong>La envío por paquetería</strong><span>Tú la envías al laboratorio — aprox. $200 MXN</span>
+                <strong>La envío por paquetería</strong><span>Tú la envías al laboratorio — desde $300 MXN</span>
               </button>
+            </div>
+            <div class="entrega-velocidad-wrap" id="s-ida-velocidad-wrap" style="display:none;">
+              <p class="entrega-velocidad-label" data-i18n="wiz.logistica.velocidadLabel">¿Qué tan rápido?</p>
+              <div class="entrega-chips entrega-chips-sm" role="group" aria-label="Velocidad de envío de ida" data-i18n-aria="wiz.logistica.velocidadAria">
+                <button type="button" class="entrega-chip selected" data-val="terrestre" onclick="wizSetVelocidadIda('terrestre',this)" data-i18n="wiz.logistica.velocidadTerrestre">
+                  <strong>Terrestre</strong><span>$300 MXN · llega en 3 a 5 días</span>
+                </button>
+                <button type="button" class="entrega-chip" data-val="siguiente_dia" onclick="wizSetVelocidadIda('siguiente_dia',this)" data-i18n="wiz.logistica.velocidadExpress">
+                  <strong>Entrega al siguiente día</strong><span>$450 MXN · llega al día hábil siguiente</span>
+                </button>
+              </div>
             </div>
           </div>
 
           <div class="entrega-block">
             <p class="entrega-block-label" data-i18n="wiz.logistica.vueltaLabel">¿Cómo quieres que te la regresemos?</p>
-            <div class="entrega-chips" role="group" aria-label="Cómo se regresa tu pieza" data-i18n-aria="wiz.logistica.vueltaAria">
+            <div class="entrega-chips" id="s-vuelta-chips" role="group" aria-label="Cómo se regresa tu pieza" data-i18n-aria="wiz.logistica.vueltaAria">
               <button type="button" class="entrega-chip selected" data-val="presencial" onclick="wizSetEntregaVuelta('presencial',this)" data-i18n="wiz.logistica.vueltaPresencial">
                 <strong>Yo la recojo</strong><span>Pasas tú mismo(a) por ella al laboratorio — sin costo extra</span>
               </button>
               <button type="button" class="entrega-chip" data-val="envio" onclick="wizSetEntregaVuelta('envio',this)" data-i18n="wiz.logistica.vueltaEnvio">
-                <strong>Que me la envíen</strong><span>Te la enviamos por paquetería — aprox. $200 MXN</span>
+                <strong>Que me la envíen</strong><span>Te la enviamos por paquetería — desde $300 MXN</span>
               </button>
+            </div>
+            <div class="entrega-velocidad-wrap" id="s-vuelta-velocidad-wrap" style="display:none;">
+              <p class="entrega-velocidad-label" data-i18n="wiz.logistica.velocidadLabel">¿Qué tan rápido?</p>
+              <div class="entrega-chips entrega-chips-sm" role="group" aria-label="Velocidad de envío de vuelta" data-i18n-aria="wiz.logistica.velocidadAria">
+                <button type="button" class="entrega-chip selected" data-val="terrestre" onclick="wizSetVelocidadVuelta('terrestre',this)" data-i18n="wiz.logistica.velocidadTerrestre">
+                  <strong>Terrestre</strong><span>$300 MXN · llega en 3 a 5 días</span>
+                </button>
+                <button type="button" class="entrega-chip" data-val="siguiente_dia" onclick="wizSetVelocidadVuelta('siguiente_dia',this)" data-i18n="wiz.logistica.velocidadExpress">
+                  <strong>Entrega al siguiente día</strong><span>$450 MXN · llega al día hábil siguiente</span>
+                </button>
+              </div>
             </div>
           </div>
           <input type="hidden" id="s-entrega-ida" value="presencial">
           <input type="hidden" id="s-entrega-vuelta" value="presencial">
+          <input type="hidden" id="s-entrega-ida-velocidad" value="terrestre">
+          <input type="hidden" id="s-entrega-vuelta-velocidad" value="terrestre">
 
           <div id="s-fecha-wrap">
             <label class="wiz-sr-label" for="s-fecha" data-i18n="wiz.logistica.citaLabel">Fecha y hora de tu cita</label>
@@ -3183,7 +3306,7 @@
           <div id="s-envio-bank-note" style="display:none;">
             <div class="wiz-bank-note">
               <span>🏦</span>
-              <p><span data-i18n="wiz.logistica.bankNote.pre">Como tu pieza requiere envío, es necesario hacer una <strong>transferencia bancaria</strong> antes de enviarla o de que te la regresemos (aprox.</span> <strong id="s-envio-costo-txt">$200 MXN</strong><span data-i18n="wiz.logistica.bankNote.post">, según el envío que elegiste). Te compartimos los datos de la cuenta y confirmamos el pago por WhatsApp.</span></p>
+              <p><span data-i18n="wiz.logistica.bankNote.pre">Como tu pieza requiere envío, es necesario hacer una <strong>transferencia bancaria</strong> antes de enviarla o de que te la regresemos (</span><strong id="s-envio-costo-txt">$300 MXN</strong><span data-i18n="wiz.logistica.bankNote.post">, según la velocidad de envío que elegiste). Te compartimos los datos de la cuenta y confirmamos el pago por WhatsApp.</span></p>
             </div>
           </div>
 
@@ -3381,6 +3504,24 @@
       </div>
     </div>
   </section>
+
+  <!-- Ventana de bienvenida del lobby — deliberadamente FUERA de la
+       <section> de arriba: esa sección recibe la clase "reveal" del
+       sistema de animación al hacer scroll (initRevealOnScroll, que le
+       aplica un transform temporal), y un transform en un ancestor rompe
+       el posicionamiento "fixed" de este overlay (deja de anclarse a la
+       ventana y se ancla a esa sección). Al vivir fuera, siempre cubre la
+       pantalla completa sin importar el estado de esa animación. Se abre
+       cada vez que el socio entra de verdad al lobby (o la reabre con el
+       botón "✨ Ver bienvenida"), nunca al re-renderizar por un simple
+       cambio de idioma. -->
+  <div class="book-stage salon-book salon-welcome-stage" id="salon-welcome-stage">
+    <div class="book-stage-backdrop" onclick="closeSalonWelcome()"></div>
+    <div class="salon-welcome-card" id="salon-welcome-card">
+      <button class="book-stage-close" type="button" onclick="closeSalonWelcome()" aria-label="Cerrar bienvenida">✕</button>
+      <div id="salon-welcome-body"></div>
+    </div>
+  </div>
 </div>
 
 <div class="view" id="view-admin">
@@ -3764,6 +3905,8 @@
                   <button class="btn ghost small filter-btn active" data-mfilter="todos" onclick="filterSalonMembers('todos')">Todos</button>
                   <button class="btn ghost small filter-btn" data-mfilter="elegible" onclick="filterSalonMembers('elegible')">Elegibles sin activar</button>
                   <button class="btn ghost small filter-btn" data-mfilter="activo" onclick="filterSalonMembers('activo')">Activos</button>
+                  <button class="btn ghost small filter-btn" data-mfilter="por_vencer" onclick="filterSalonMembers('por_vencer')">Por vencer pronto</button>
+                  <button class="btn ghost small filter-btn" data-mfilter="vencida" onclick="filterSalonMembers('vencida')">Vencidas</button>
                   <button class="btn ghost small filter-btn" data-mfilter="pendiente_pago" onclick="filterSalonMembers('pendiente_pago')">Pago pendiente</button>
                   <button class="btn ghost small filter-btn" data-mfilter="liquidado" onclick="filterSalonMembers('liquidado')">Liquidados</button>
                   <button class="btn ghost small filter-btn" data-mfilter="inactivo" onclick="filterSalonMembers('inactivo')">Inactivos</button>
@@ -4359,6 +4502,12 @@ const I18N_EN = {
   'inicio.hero.h1': 'Independent certification of vintage die-cast: Hot Wheels, CIPSA, Bólidos Lilí Ledy and Aurimat.',
   'inicio.hero.lead': 'We are collectors certifying for collectors: independent certification, expert judgment and over 25 years of experience — not affiliated with the brands. We assess whether your piece is original, repainted or modified, using traceable technical criteria, and record it with a public folio.',
   'inicio.hero.statLbl': 'pieces certified',
+  'inicio.hero.trust1': '25+ years of experience',
+  'inicio.hero.trust2': 'Public, verifiable folio',
+  'inicio.hero.trust3': 'Not affiliated with the brands',
+  'inicio.hero.trust4': '100% Mexican',
+  'inicio.hero.ctaSolicitar': 'Request certification for your piece',
+  'inicio.hero.ctaMetodologia': 'See how it works',
   'inicio.hero.verifyLabel': 'Verify a folio now',
   'inicio.hero.verifySub': 'Public, instant lookup',
   'placeholder:inicio.hero.verifyPh': 'Folio',
@@ -4397,6 +4546,7 @@ const I18N_EN = {
   'inicio.reviews.h2': 'What our clients say',
   'inicio.reviews.p': 'Real reviews, verified with a Google account — no bots or fake reviews.',
   'inicio.reviews.loading': 'Loading reviews…',
+  'inicio.reviews.verifiedBadge': 'Verified with Google',
   'inicio.reviews.promptH3': 'Already certified a piece with us?',
   'inicio.reviews.promptP': 'To prevent fake reviews, we verify your identity with your Google account — we don\'t publish anything without your confirmation, and we don\'t keep your session logged in.',
   'inicio.reviews.googleBtn': 'Write a review with Google',
@@ -4807,11 +4957,15 @@ const I18N_EN = {
   'wiz.logistica.idaLabel': 'How will you get your piece to us?',
   'wiz.logistica.idaAria': 'How your piece arrives at the lab',
   'wiz.logistica.idaPresencial': '<strong>I\'ll bring it myself</strong><span>You take it to the lab in person — no extra cost</span>',
-  'wiz.logistica.idaEnvio': '<strong>I\'ll ship it</strong><span>You send it to the lab — approx. $200 MXN</span>',
+  'wiz.logistica.idaEnvio': '<strong>I\'ll ship it</strong><span>You send it to the lab — from $300 MXN</span>',
   'wiz.logistica.vueltaLabel': 'How would you like it back?',
   'wiz.logistica.vueltaAria': 'How your piece is returned',
   'wiz.logistica.vueltaPresencial': '<strong>I\'ll pick it up</strong><span>You come by the lab yourself — no extra cost</span>',
-  'wiz.logistica.vueltaEnvio': '<strong>Ship it to me</strong><span>We\'ll ship it back to you — approx. $200 MXN</span>',
+  'wiz.logistica.vueltaEnvio': '<strong>Ship it to me</strong><span>We\'ll ship it back to you — from $300 MXN</span>',
+  'wiz.logistica.velocidadLabel': 'How fast?',
+  'wiz.logistica.velocidadAria': 'Shipping speed',
+  'wiz.logistica.velocidadTerrestre': '<strong>Ground shipping</strong><span>$300 MXN · arrives in 3 to 5 days</span>',
+  'wiz.logistica.velocidadExpress': '<strong>Next-day delivery</strong><span>$450 MXN · arrives the next business day</span>',
   'wiz.logistica.citaLabel': 'Date and time of your appointment',
   'wiz.cal.prev': 'Previous month',
   'wiz.cal.next': 'Next month',
@@ -4820,8 +4974,8 @@ const I18N_EN = {
   'wiz.cal.horariosPara': 'Available times for',
   'wiz.logistica.direccionLabel': 'Address for the return shipment',
   'wiz.logistica.direccionPh': 'Street, number, neighborhood, city, ZIP, landmarks',
-  'wiz.logistica.bankNote.pre': 'Since your piece requires shipping, a <strong>bank transfer</strong> is needed before we ship it or return it (approx.',
-  'wiz.logistica.bankNote.post': ', depending on the shipping you chose). We\'ll share the account details and confirm payment over WhatsApp.',
+  'wiz.logistica.bankNote.pre': 'Since your piece requires shipping, a <strong>bank transfer</strong> is needed before we ship it or return it (',
+  'wiz.logistica.bankNote.post': ', depending on the shipping speed you chose). We\'ll share the account details and confirm payment over WhatsApp.',
 
   // Wizard — step 5: evidencia
   'wiz.evidencia.kicker': 'Step 5 · Visual evidence',
@@ -5197,8 +5351,15 @@ function go(view){
   if(view==='quienes' && typeof renderPresStrip === 'function') renderPresStrip();
   if(view==='piezasfalsas' && typeof renderPiezasFalsasView === 'function') renderPiezasFalsasView();
   if(view==='salon' && typeof renderSalonTiersTeaser === 'function'){
-    renderSalonTiersTeaser();
-    if(SALON_SESSION_TEL){ salonResolveSessionMember().then(m => { if(m) enterSalonLobby(m); }); }
+    if(SALON_SESSION_TEL){
+      if(typeof salonSetPublicIntroVisible === 'function') salonSetPublicIntroVisible(false);
+      salonResolveSessionMember().then(m => {
+        if(m){ enterSalonLobby(m, {showWelcome:true}); }
+        else { SALON_SESSION_TEL = null; salonSetPublicIntroVisible(true); renderSalonTiersTeaser(); }
+      });
+    } else {
+      renderSalonTiersTeaser();
+    }
   }
   window.HV_CURRENT_VIEW = view;
   if(typeof updateStickyCta === 'function') updateStickyCta();
@@ -6199,10 +6360,15 @@ function onPackageChange(){
 // LOGÍSTICA DE ENTREGA — cómo llega la pieza al laboratorio (ida) y cómo
 // se le regresa al cliente (vuelta). Cada sentido es independiente: puede
 // traerla él mismo y que se la enviemos de regreso, o al revés, o ambos
-// por paquetería, o los dos en persona (sin costo). $200 MXN aprox. por
-// cada sentido que sea por envío — se paga por transferencia bancaria.
+// por paquetería, o los dos en persona (sin costo). Cuando un sentido es
+// por envío, el cliente además elige la velocidad: terrestre ($300 MXN,
+// llega en 3 a 5 días) o entrega al siguiente día ($450 MXN) — cada
+// sentido puede tener su propia velocidad. Se paga por transferencia
+// bancaria.
 // ============================================================
-const ENVIO_COSTO_TRAMO = 200;
+const ENVIO_COSTO_TERRESTRE = 300;
+const ENVIO_COSTO_SIGUIENTE_DIA = 450;
+function envioCostoPorVelocidad(vel){ return vel === 'siguiente_dia' ? ENVIO_COSTO_SIGUIENTE_DIA : ENVIO_COSTO_TERRESTRE; }
 
 function wizSetEntregaIda(val, el){
   document.getElementById('s-entrega-ida').value = val;
@@ -6216,11 +6382,26 @@ function wizSetEntregaVuelta(val, el){
   updateEntregaUI();
   updateSolicitudProgress();
 }
+function wizSetVelocidadIda(val, el){
+  document.getElementById('s-entrega-ida-velocidad').value = val;
+  if(el) el.closest('.entrega-chips').querySelectorAll('.entrega-chip').forEach(b=>b.classList.toggle('selected', b===el));
+  updateEntregaUI();
+  updateSolicitudProgress();
+}
+function wizSetVelocidadVuelta(val, el){
+  document.getElementById('s-entrega-vuelta-velocidad').value = val;
+  if(el) el.closest('.entrega-chips').querySelectorAll('.entrega-chip').forEach(b=>b.classList.toggle('selected', b===el));
+  updateEntregaUI();
+  updateSolicitudProgress();
+}
 function wizEntregaCosto(){
   const ida = document.getElementById('s-entrega-ida');
   const vuelta = document.getElementById('s-entrega-vuelta');
   if(!ida || !vuelta) return 0;
-  return (ida.value==='envio'?ENVIO_COSTO_TRAMO:0) + (vuelta.value==='envio'?ENVIO_COSTO_TRAMO:0);
+  const idaVel = document.getElementById('s-entrega-ida-velocidad');
+  const vueltaVel = document.getElementById('s-entrega-vuelta-velocidad');
+  return (ida.value==='envio'? envioCostoPorVelocidad(idaVel?idaVel.value:'terrestre') : 0)
+       + (vuelta.value==='envio'? envioCostoPorVelocidad(vueltaVel?vueltaVel.value:'terrestre') : 0);
 }
 function updateEntregaUI(){
   const pkg = document.getElementById('s-nivel').value;
@@ -6235,6 +6416,13 @@ function updateEntregaUI(){
   // mismo; si la va a enviar por paquetería no hay cita que agendar.
   if(fechaWrap) fechaWrap.style.display = (needsLogistica && ida === 'presencial') ? 'block' : 'none';
   if(needsLogistica && ida === 'presencial') calRenderMonth();
+
+  // El sub-selector de velocidad de envío solo aparece para el sentido
+  // que efectivamente se va a mandar por paquetería.
+  const idaVelWrap = document.getElementById('s-ida-velocidad-wrap');
+  if(idaVelWrap) idaVelWrap.style.display = (ida === 'envio') ? 'block' : 'none';
+  const vueltaVelWrap = document.getElementById('s-vuelta-velocidad-wrap');
+  if(vueltaVelWrap) vueltaVelWrap.style.display = (vuelta === 'envio') ? 'block' : 'none';
 
   // La dirección de envío de regreso solo aplica si le vamos a enviar la
   // pieza al cliente (nosotros necesitamos saber a dónde mandarla).
@@ -6423,6 +6611,9 @@ function renderWizardReview(){
   const hora = document.getElementById('s-hora').value;
   const entregaIda = document.getElementById('s-entrega-ida') ? document.getElementById('s-entrega-ida').value : 'presencial';
   const entregaVuelta = document.getElementById('s-entrega-vuelta') ? document.getElementById('s-entrega-vuelta').value : 'presencial';
+  const entregaIdaVelocidad = document.getElementById('s-entrega-ida-velocidad') ? document.getElementById('s-entrega-ida-velocidad').value : 'terrestre';
+  const entregaVueltaVelocidad = document.getElementById('s-entrega-vuelta-velocidad') ? document.getElementById('s-entrega-vuelta-velocidad').value : 'terrestre';
+  const velocidadTxt = (vel) => vel === 'siguiente_dia' ? tt('siguiente día','next-day') : tt('terrestre, 3 a 5 días','ground, 3 to 5 days');
   const envioDireccion = document.getElementById('s-envio-direccion') ? document.getElementById('s-envio-direccion').value.trim() : '';
   const envioCosto = wizEntregaCosto();
   let html = `
@@ -6456,9 +6647,9 @@ function renderWizardReview(){
     <div class="wiz-review-block">
       <div class="wiz-review-head"><strong>${tt('Logística','Logistics')}</strong><button type="button" class="wiz-review-edit" onclick="wizGoToStep('logistica','back')">${tt('Editar','Edit')}</button></div>
       <ul class="wiz-review-list">
-        <li><span>${tt('Cómo la traes','How you\'ll bring it')}</span><strong>${entregaIda==='envio'?tt('Por paquetería (tú la envías)','By courier (you ship it)'):tt('Tú la traes','You bring it')}</strong></li>
+        <li><span>${tt('Cómo la traes','How you\'ll bring it')}</span><strong>${entregaIda==='envio'?`${tt('Por paquetería (tú la envías)','By courier (you ship it)')} · ${velocidadTxt(entregaIdaVelocidad)}`:tt('Tú la traes','You bring it')}</strong></li>
         ${entregaIda==='presencial' ? `<li><span>${tt('Tu cita','Your appointment')}</span><strong>${fecha && hora ? escapeHtml(formatCitaLarga(fecha, hora)) : tt('Por agendar','To be scheduled')}</strong></li>` : ''}
-        <li><span>${tt('Cómo se regresa','How it\'s returned')}</span><strong>${entregaVuelta==='envio'?tt('Por paquetería (te la enviamos)','By courier (we ship it to you)'):tt('Tú la recoges','You pick it up')}</strong></li>
+        <li><span>${tt('Cómo se regresa','How it\'s returned')}</span><strong>${entregaVuelta==='envio'?`${tt('Por paquetería (te la enviamos)','By courier (we ship it to you)')} · ${velocidadTxt(entregaVueltaVelocidad)}`:tt('Tú la recoges','You pick it up')}</strong></li>
         ${entregaVuelta==='envio' && envioDireccion ? `<li><span>${tt('Dirección de envío','Shipping address')}</span><strong>${escapeHtml(envioDireccion)}</strong></li>` : ''}
         ${envioCosto>0 ? `<li><span>${tt('Costo de envío','Shipping cost')}</span><strong>$${envioCosto.toLocaleString('es-MX')} MXN (${tt('transferencia, se confirma por WhatsApp','bank transfer, confirmed over WhatsApp')})</strong></li>` : ''}
       </ul>
@@ -6550,7 +6741,7 @@ function solicitudDraftFieldIds(){
   const wrap = document.getElementById('wiz-steps-wrap');
   if(!wrap) return [];
   return Array.from(wrap.querySelectorAll('input[id], select[id], textarea[id]'))
-    .filter(el => el.type !== 'file' && el.type !== 'hidden' || ['s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-fecha','s-hora'].includes(el.id))
+    .filter(el => el.type !== 'file' && el.type !== 'hidden' || ['s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-entrega-ida-velocidad','s-entrega-vuelta-velocidad','s-fecha','s-hora'].includes(el.id))
     .map(el => el.id);
 }
 
@@ -6650,7 +6841,7 @@ function restoreSolicitudDraft(draft){
       });
     }
 
-    const handled = new Set(['s-nivel','s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-fecha','s-hora']);
+    const handled = new Set(['s-nivel','s-modo-digital','s-entrega-ida','s-entrega-vuelta','s-entrega-ida-velocidad','s-entrega-vuelta-velocidad','s-fecha','s-hora']);
     Object.keys(f).forEach(id => {
       if(handled.has(id)) return;
       const el = document.getElementById(id);
@@ -6658,14 +6849,29 @@ function restoreSolicitudDraft(draft){
     });
     if(f['s-ref-codigo']) setTieneCodigoReferido(true);
 
-    const chipGroups = document.querySelectorAll('.entrega-chips');
-    if(f['s-entrega-ida'] && chipGroups[0]){
-      const btn = chipGroups[0].querySelector(`.entrega-chip[data-val="${f['s-entrega-ida']}"]`);
+    // Grupos identificados por id (no por posición) — el de velocidad de
+    // envío vive dentro del mismo bloque que el grupo principal de cada
+    // sentido, así que contar divs ".entrega-chips" por índice ya no es
+    // seguro desde que existen los sub-selectores de velocidad.
+    const idaChips = document.getElementById('s-ida-chips');
+    const vueltaChips = document.getElementById('s-vuelta-chips');
+    if(f['s-entrega-ida'] && idaChips){
+      const btn = idaChips.querySelector(`.entrega-chip[data-val="${f['s-entrega-ida']}"]`);
       if(btn) wizSetEntregaIda(f['s-entrega-ida'], btn);
     }
-    if(f['s-entrega-vuelta'] && chipGroups[1]){
-      const btn = chipGroups[1].querySelector(`.entrega-chip[data-val="${f['s-entrega-vuelta']}"]`);
+    if(f['s-entrega-vuelta'] && vueltaChips){
+      const btn = vueltaChips.querySelector(`.entrega-chip[data-val="${f['s-entrega-vuelta']}"]`);
       if(btn) wizSetEntregaVuelta(f['s-entrega-vuelta'], btn);
+    }
+    const idaVelChips = document.querySelector('#s-ida-velocidad-wrap .entrega-chips');
+    const vueltaVelChips = document.querySelector('#s-vuelta-velocidad-wrap .entrega-chips');
+    if(f['s-entrega-ida-velocidad'] && idaVelChips){
+      const btn = idaVelChips.querySelector(`.entrega-chip[data-val="${f['s-entrega-ida-velocidad']}"]`);
+      if(btn) wizSetVelocidadIda(f['s-entrega-ida-velocidad'], btn);
+    }
+    if(f['s-entrega-vuelta-velocidad'] && vueltaVelChips){
+      const btn = vueltaVelChips.querySelector(`.entrega-chip[data-val="${f['s-entrega-vuelta-velocidad']}"]`);
+      if(btn) wizSetVelocidadVuelta(f['s-entrega-vuelta-velocidad'], btn);
     }
 
     if(f['s-fecha']){
@@ -6745,8 +6951,18 @@ function resetWizard(){
   if(timeEl) timeEl.textContent = tt('⏱ Entrega en 24–48 h','⏱ Delivery in 24–48 h');
   document.getElementById('s-entrega-ida').value = 'presencial';
   document.getElementById('s-entrega-vuelta').value = 'presencial';
+  document.getElementById('s-entrega-ida-velocidad').value = 'terrestre';
+  document.getElementById('s-entrega-vuelta-velocidad').value = 'terrestre';
   document.getElementById('s-envio-direccion').value = '';
-  document.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
+  const idaChipsReset = document.getElementById('s-ida-chips');
+  const vueltaChipsReset = document.getElementById('s-vuelta-chips');
+  if(idaChipsReset) idaChipsReset.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
+  if(vueltaChipsReset) vueltaChipsReset.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
+  document.querySelectorAll('.entrega-velocidad-wrap .entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='terrestre'));
+  const idaVelWrapReset = document.getElementById('s-ida-velocidad-wrap');
+  const vueltaVelWrapReset = document.getElementById('s-vuelta-velocidad-wrap');
+  if(idaVelWrapReset) idaVelWrapReset.style.display = 'none';
+  if(vueltaVelWrapReset) vueltaVelWrapReset.style.display = 'none';
   setTieneCodigoReferido(false);
   calReset();
   resetRecaptcha();
@@ -7042,13 +7258,26 @@ function computeMembershipStatus(m){
     // registrado el pago del siguiente año — distinto de una cuota
     // individual atrasada dentro del mismo periodo (pendiente_pago).
     if(m.fechaRenovacion && m.fechaRenovacion < hoy) return 'vencida';
+    // "Por vencer" = todavía tiene acceso, pero le quedan 30 días o menos
+    // para su renovación — se le avisa con tiempo, tanto en el admin como
+    // en su propio lobby, para que no lo agarre de sorpresa.
+    if(m.fechaRenovacion && salonRenewalDaysLeft(m) != null && salonRenewalDaysLeft(m) <= 30) return 'por_vencer';
     if(cuotas.length && cuotas.every(c => c.estado === 'pagado')) return 'liquidado';
     return 'activo';
   }
   return 'prospecto';
 }
-const SALON_STATUS_LABEL = { prospecto:'Prospecto', elegible:'Elegible sin activar', activo:'Activo', pendiente_pago:'Pendiente de pago', vencida:'Membresía vencida', liquidado:'Liquidado', inactivo:'Inactivo', ninguno:'—' };
-const SALON_STATUS_LABEL_EN = { prospecto:'Prospect', elegible:'Eligible, not activated', activo:'Active', pendiente_pago:'Payment due', vencida:'Membership expired', liquidado:'Paid in full', inactivo:'Inactive', ninguno:'—' };
+// Días que faltan para la fecha de renovación (negativo si ya pasó).
+// null si el socio todavía no tiene fecha de renovación registrada.
+function salonRenewalDaysLeft(m){
+  if(!m || !m.fechaRenovacion) return null;
+  const hoyTs = new Date(new Date().toISOString().slice(0,10)+'T00:00:00').getTime();
+  const limitTs = new Date(m.fechaRenovacion+'T00:00:00').getTime();
+  if(isNaN(limitTs)) return null;
+  return Math.round((limitTs - hoyTs) / (24*60*60*1000));
+}
+const SALON_STATUS_LABEL = { prospecto:'Prospecto', elegible:'Elegible sin activar', activo:'Activo', por_vencer:'Por vencer pronto', pendiente_pago:'Pendiente de pago', vencida:'Membresía vencida', liquidado:'Liquidado', inactivo:'Inactivo', ninguno:'—' };
+const SALON_STATUS_LABEL_EN = { prospecto:'Prospect', elegible:'Eligible, not activated', activo:'Active', por_vencer:'Renewal due soon', pendiente_pago:'Payment due', vencida:'Membership expired', liquidado:'Paid in full', inactivo:'Inactive', ninguno:'—' };
 function salonMemberStatusLabel(status){ return tt(SALON_STATUS_LABEL[status]||status, SALON_STATUS_LABEL_EN[status]||status); }
 
 // El corazón del programa: se llama desde createFolio() cada vez que se
@@ -7165,7 +7394,7 @@ async function saveSalonTiers(){
 // ---- Miembros (lista, filtros, detalle, ledger de pagos) ----
 let SALON_MEMBERS_CACHE = [];
 let SALON_MEMBER_FILTER = 'todos';
-const SALON_STATUS_PILL_CLASS = { prospecto:'neutral', elegible:'original', activo:'completado', pendiente_pago:'pendiente', vencida:'replica', liquidado:'completado', inactivo:'neutral' };
+const SALON_STATUS_PILL_CLASS = { prospecto:'neutral', elegible:'original', activo:'completado', por_vencer:'pendiente', pendiente_pago:'pendiente', vencida:'replica', liquidado:'completado', inactivo:'neutral' };
 async function renderSalonMembersAdmin(){
   const box = document.getElementById('salon-members-list');
   if(!box) return;
@@ -7596,7 +7825,7 @@ async function goToSalonLobbyAdmin(){
   const interes = document.getElementById('salon-interes-card');
   if(gate) gate.style.display = 'none';
   if(interes) interes.style.display = 'none';
-  await enterSalonLobby(salonAdminPreviewMember());
+  await enterSalonLobby(salonAdminPreviewMember(), {showWelcome:true});
 }
 function exitSalonPreview(){
   SALON_PREVIEW_ADMIN = false;
@@ -7607,6 +7836,7 @@ function exitSalonPreview(){
   const interes = document.getElementById('salon-interes-card');
   if(gate) gate.style.display = '';
   if(interes) interes.style.display = '';
+  salonSetPublicIntroVisible(true);
   go('admin');
   salonAdminGo('miembros');
 }
@@ -7674,7 +7904,7 @@ async function submitSalonGate(){
     }
     SALON_SESSION_TEL = telNorm;
     box.innerHTML = '';
-    enterSalonLobby(m);
+    enterSalonLobby(m, {showWelcome:true});
   }catch(e){
     box.innerHTML = `<div class="empty">${tt('No pudimos verificar tu acceso en este momento.','We couldn\'t verify your access right now.')}</div>`;
   }
@@ -7688,6 +7918,7 @@ function exitSalonLobby(){
   const interes = document.getElementById('salon-interes-card');
   if(gate) gate.style.display = '';
   if(interes) interes.style.display = '';
+  salonSetPublicIntroVisible(true);
   const telEl = document.getElementById('salon-gate-tel');
   const codeEl = document.getElementById('salon-gate-code');
   const ladaEl = document.getElementById('salon-gate-tel-lada');
@@ -7696,7 +7927,136 @@ function exitSalonLobby(){
   if(ladaEl) ladaEl.value = '52';
 }
 
-async function enterSalonLobby(m){
+// El "hero" público (portada + tarjeta de ejemplo) y las 3 tarjetas de
+// niveles son contenido de venta para prospectos — una vez que el socio ya
+// entró, repetírselo antes de su propia tarjeta lo obliga a hacer scroll
+// para ver lo que realmente le importa (su estatus). Por eso se ocultan
+// mientras el lobby está activo y se vuelven a mostrar al salir.
+function salonSetPublicIntroVisible(visible){
+  const hero = document.querySelector('#view-salon .salon-hero');
+  const kicker = document.querySelector('#view-salon .salon-tiers-kicker');
+  const teaser = document.getElementById('salon-tiers-teaser');
+  const disp = visible ? '' : 'none';
+  if(hero) hero.style.display = disp;
+  if(kicker) kicker.style.display = disp;
+  if(teaser) teaser.style.display = disp;
+}
+
+// Línea de tiempo de membresía (inicio / vence / cuenta regresiva) —
+// compartida entre el lobby normal, la ventana de bienvenida y el estado
+// de "membresía vencida", para que el socio siempre vea lo mismo sin
+// importar desde dónde lo esté viendo.
+function salonTimelineHtml(m){
+  const locale = SITE_LANG==='en' ? 'en-US' : 'es-MX';
+  const inicioTxt = m.activadoTs ? new Date(m.activadoTs).toLocaleDateString(locale) : tt('Sin registrar','Not set');
+  const venceTxt = m.fechaRenovacion ? new Date(m.fechaRenovacion+'T00:00:00').toLocaleDateString(locale) : tt('Sin registrar','Not set');
+  const daysLeft = salonRenewalDaysLeft(m);
+  let countdownTxt = '—', cls = '';
+  if(daysLeft != null){
+    if(daysLeft < 0){ countdownTxt = tt('Vencida','Expired'); cls = 'salon-timeline-danger'; }
+    else if(daysLeft === 0){ countdownTxt = tt('Vence hoy','Expires today'); cls = 'salon-timeline-danger'; }
+    else { countdownTxt = tt(`${daysLeft} día${daysLeft===1?'':'s'}`, `${daysLeft} day${daysLeft===1?'':'s'}`); if(daysLeft <= 30) cls = 'salon-timeline-warn'; }
+  }
+  return `<div class="salon-timeline ${cls}">
+    <div class="salon-timeline-cell"><span class="stl-lbl">${tt('Socio desde','Member since')}</span><span class="stl-val">${escapeHtml(inicioTxt)}</span></div>
+    <div class="salon-timeline-cell"><span class="stl-lbl">${tt('Se renueva','Renews')}</span><span class="stl-val">${escapeHtml(venceTxt)}</span></div>
+    <div class="salon-timeline-cell"><span class="stl-lbl">${tt('Cuenta regresiva','Countdown')}</span><span class="stl-val stl-val-countdown">${escapeHtml(countdownTxt)}</span></div>
+  </div>`;
+}
+// Aviso "un mes antes" — solo aparece cuando faltan 30 días o menos para
+// la renovación pero la membresía todavía no venció de verdad.
+function salonRenewalWarnBannerHtml(m){
+  if(computeMembershipStatus(m) !== 'por_vencer') return '';
+  const daysLeft = salonRenewalDaysLeft(m);
+  const msg = tt(
+    `⏳ Tu membresía vence en ${daysLeft} día${daysLeft===1?'':'s'} (${m.fechaRenovacion}) — renuévala para no perder tu acceso al Salón.`,
+    `⏳ Your membership expires in ${daysLeft} day${daysLeft===1?'':'s'} (${m.fechaRenovacion}) — renew it so you keep your access to the Salón.`
+  );
+  return `<div class="salon-renewal-banner">${escapeHtml(msg)}</div>`;
+}
+// Vista previa embebida del Libro del Coleccionismo — lo primero que el
+// socio ve junto a su tarjeta, sin tener que abrir la Galería completa
+// para saber que hay piezas nuevas adentro.
+function salonBookTeaserHtml(piezas){
+  const items = (piezas||[]).slice(0, 8);
+  const thumbs = items.map(p => {
+    const foto = p.fotos && p.fotos[0] && p.fotos[0].url;
+    return foto ? `<div class="salon-book-teaser-thumb"><img src="${escapeHtml(foto)}" alt="${escapeHtml(p.modelo||'')}" loading="lazy"></div>` : '';
+  }).filter(Boolean).join('');
+  const count = (piezas||[]).length;
+  const btnLabel = count ? tt(`Abrir el Libro (${count} pieza${count===1?'':'s'})`, `Open the Book (${count} piece${count===1?'':'s'})`) : tt('Abrir el Libro','Open the Book');
+  return `<div class="card salon-card salon-book-teaser">
+    <div class="salon-book-teaser-head">
+      <div>
+        <h3 style="margin:0;">${tt('El Libro del Coleccionismo','The Collector’s Book')}</h3>
+        <p class="foot-note salon-foot-note" style="margin:2px 0 0;">${tt('Actualizado constantemente por los mejores coleccionistas del Salón.','Constantly updated by the Salón’s top collectors.')}</p>
+      </div>
+    </div>
+    ${thumbs ? `<div class="salon-book-teaser-thumbs">${thumbs}</div>` : `<p class="salon-book-teaser-empty">${tt('Todavía no hay piezas publicadas — sé de los primeros en aparecer aquí.','No pieces published yet — be among the first to appear here.')}</p>`}
+    <button class="btn salon-btn-gold" onclick="openSalonBook()">${btnLabel}</button>
+  </div>`;
+}
+// Estado de membresía vencida: el socio sigue viendo su tarjeta y su
+// línea de tiempo (se le sigue reconociendo, no se le expulsa), pero la
+// Galería y el Calendario VIP quedan bloqueados hasta que renueve.
+function salonExpiredLockHtml(m){
+  const venceTxt = m.fechaRenovacion ? new Date(m.fechaRenovacion+'T00:00:00').toLocaleDateString(SITE_LANG==='en'?'en-US':'es-MX') : '';
+  const msg = tt(
+    `Tu membresía venció${venceTxt?` el ${venceTxt}`:''} — renuévala para volver a tener acceso a la Galería Exclusiva y al Calendario VIP.`,
+    `Your membership expired${venceTxt?` on ${venceTxt}`:''} — renew it to regain access to the Exclusive Gallery and the VIP Calendar.`
+  );
+  const waMsg = waTemplate('⭐', tt('Renovar membresía Salón Privado','Renew Salón Privado membership'), [
+    tt('Quiero renovar mi membresía del Salón Privado HV.', "I'd like to renew my Salón Privado HV membership."),
+    tt(`Código: HVS-${m.code||'—'}`, `Code: HVS-${m.code||'—'}`)
+  ]);
+  return `<div class="salon-expired-lock">
+    <div class="sel-ic">🔒</div>
+    <h3>${tt('Tu acceso está pausado','Your access is paused')}</h3>
+    <p>${escapeHtml(msg)}</p>
+    ${waBtnHtml(waMsg, tt('Renovar mi membresía','Renew my membership'))}
+  </div>`;
+}
+// Ventana de bienvenida "espectacular" — se abre cada vez que el socio
+// entra de verdad al lobby (nunca en un simple refresco de idioma), y
+// puede reabrirse en cualquier momento con el botón "✨" del lobby.
+function salonWelcomeBodyHtml(m){
+  const nombreRaw = (m.nombre||'').trim().split(' ')[0];
+  const saludoTxt = nombreRaw ? tt(`Bienvenido de vuelta, ${nombreRaw}`, `Welcome back, ${nombreRaw}`) : tt('Bienvenido de vuelta','Welcome back');
+  return `
+    <p class="salon-welcome-kicker">SALÓN PRIVADO HV</p>
+    <h3 class="salon-welcome-title">${escapeHtml(saludoTxt)}</h3>
+    <p class="salon-welcome-sub">${tt('Este es tu espacio privado como socio del laboratorio — aquí vive todo lo que tu membresía te da.','This is your private space as a lab member — everything your membership unlocks lives here.')}</p>
+    <ul class="salon-welcome-highlights">
+      <li><span class="swh-ic">🪪</span><span>${tt('<strong>Tu tarjeta de socio</strong> — tu nivel, tu progreso y tu código de acceso.','<strong>Your member card</strong> — your tier, your progress, and your access code.')}</span></li>
+      <li><span class="swh-ic">📖</span><span>${tt('<strong>El Libro del Coleccionismo</strong> — la galería exclusiva que actualizan los mejores coleccionistas del Salón, visible solo para socios.','<strong>The Collector’s Book</strong> — the exclusive gallery updated by the Salón’s top collectors, visible only to members.')}</span></li>
+      <li><span class="swh-ic">📅</span><span>${tt('<strong>Calendario VIP</strong> — agenda tu próxima cita con prioridad de socio.','<strong>VIP Calendar</strong> — book your next appointment with member priority.')}</span></li>
+      <li><span class="swh-ic">✦</span><span>${tt('<strong>Beneficios que crecen</strong> — mientras más certificas con nosotros, más sube tu nivel dentro del Salón.','<strong>Benefits that grow</strong> — the more you certify with us, the higher your tier climbs inside the Salón.')}</span></li>
+    </ul>
+    ${salonTimelineHtml(m)}
+    ${salonRenewalWarnBannerHtml(m)}
+    <div class="salon-welcome-actions">
+      <button class="btn salon-btn-gold" type="button" onclick="closeSalonWelcome()">${tt('Entrar al Salón','Enter the Salón')}</button>
+    </div>
+  `;
+}
+function openSalonWelcome(m){
+  const body = document.getElementById('salon-welcome-body');
+  const stage = document.getElementById('salon-welcome-stage');
+  if(!body || !stage || !m) return;
+  body.innerHTML = salonWelcomeBodyHtml(m);
+  stage.classList.add('open');
+}
+function closeSalonWelcome(){
+  const stage = document.getElementById('salon-welcome-stage');
+  if(stage) stage.classList.remove('open');
+}
+
+// `opts.showWelcome` controla si se abre la ventana de bienvenida — solo
+// debe ser true cuando el socio realmente ENTRA al lobby (login, volver a
+// la vista del Salón, vista previa del admin), nunca cuando esta función
+// se vuelve a llamar solo para re-renderizar en otro idioma.
+async function enterSalonLobby(m, opts){
+  const showWelcome = !!(opts && opts.showWelcome);
   SALON_CURRENT_MEMBER = m;
   const gate = document.getElementById('salon-gate-card');
   const interes = document.getElementById('salon-interes-card');
@@ -7704,8 +8064,42 @@ async function enterSalonLobby(m){
   if(!lobby) return;
   if(gate) gate.style.display = 'none';
   if(interes) interes.style.display = 'none';
+  salonSetPublicIntroVisible(false);
   lobby.style.display = 'block';
-  const tiers = await getSalonTiers();
+  const status = computeMembershipStatus(m);
+  const previewBanner = SALON_PREVIEW_ADMIN ? `<div class="card salon-card" style="border-color:var(--salon-gold);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <span style="font-size:13px;">🔍 <strong>Vista previa de administrador</strong> — así ve este socio su Salón.</span>
+      <button class="btn ghost salon-btn-ghost small" type="button" onclick="exitSalonPreview()">Volver al admin</button>
+    </div>` : '';
+
+  // Membresía vencida de verdad: se le sigue reconociendo (tarjeta +
+  // línea de tiempo visibles), pero Galería y Calendario VIP quedan
+  // bloqueados hasta que renueve — sin ventana de bienvenida "de fiesta"
+  // aquí, el aviso de bloqueo ya es el mensaje central de esta pantalla.
+  if(status === 'vencida' && !SALON_PREVIEW_ADMIN){
+    lobby.innerHTML = `
+      ${previewBanner}
+      <div class="salon-card-wrap reveal in-view">
+        <div class="salon-member-card salon-tier-n${m.nivelActual||1}" id="salon-member-card">
+          <div class="smc-shine"></div>
+          <p class="smc-kicker">SALÓN PRIVADO HV</p>
+          <h3 class="smc-name">${escapeHtml(m.nombre||tt('Socio HV','HV Member'))}</h3>
+          <p class="smc-tier">${tt('Membresía vencida','Membership expired')}</p>
+          <div class="smc-row">
+            <span class="smc-code mono">HVS-${escapeHtml(m.code||'—')}</span>
+            <span class="smc-piezas">${m.piezasCertificadas||0} ${tt('piezas','pieces')}</span>
+          </div>
+        </div>
+      </div>
+      ${salonTimelineHtml(m)}
+      ${salonExpiredLockHtml(m)}
+      <button class="btn ghost salon-btn-ghost" style="margin-top:14px;" onclick="salonLobbyExitClick()">${tt('Salir','Exit')}</button>
+    `;
+    initSalonCardTilt();
+    return;
+  }
+
+  const [tiers, piezas] = await Promise.all([getSalonTiers(), getSalonPiezas()]);
   const tierInfo = tiers.niveles[m.nivelActual] || {};
   const nombreNivel = tt(tierInfo.nombre||('Nivel '+m.nivelActual), tierInfo.nombreEn||tierInfo.nombre||('Tier '+m.nivelActual));
   const beneficios = (SITE_LANG==='en' && tierInfo.beneficiosEn && tierInfo.beneficiosEn.length) ? tierInfo.beneficiosEn : (tierInfo.beneficios||[]);
@@ -7714,16 +8108,8 @@ async function enterSalonLobby(m){
     ? tt(`Te faltan ${nextT - m.piezasCertificadas} pieza(s) para tu siguiente nivel (${nextT} piezas).`, `${nextT - m.piezasCertificadas} more piece(s) to your next tier (${nextT} pieces).`)
     : tt('Alcanzaste el nivel máximo — reconocimiento vitalicio.','You\'ve reached the top tier — lifetime recognition.');
   const pct = nextT ? Math.max(4, Math.min(100, Math.round((m.piezasCertificadas / nextT) * 100))) : 100;
-  // El reconocimiento de nivel puede ser vitalicio, pero el ACCESO sigue
-  // dependiendo de la cuota anual — se le avisa aquí su próxima renovación.
-  const renovacionTxt = m.fechaRenovacion
-    ? tt(`Tu membresía (${'$'}${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año) se renueva el ${m.fechaRenovacion}.`, `Your membership (${'$'}${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/year) renews on ${m.fechaRenovacion}.`)
-    : '';
   lobby.innerHTML = `
-    ${SALON_PREVIEW_ADMIN ? `<div class="card salon-card" style="border-color:var(--salon-gold);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <span style="font-size:13px;">🔍 <strong>Vista previa de administrador</strong> — así ve este socio su Salón.</span>
-      <button class="btn ghost salon-btn-ghost small" type="button" onclick="exitSalonPreview()">Volver al admin</button>
-    </div>` : ''}
+    ${previewBanner}
     <div class="salon-card-wrap reveal in-view">
       <div class="salon-member-card salon-tier-n${m.nivelActual||1}" id="salon-member-card">
         <div class="smc-shine"></div>
@@ -7736,17 +8122,22 @@ async function enterSalonLobby(m){
         </div>
         <div class="smc-progress"><div class="smc-progress-fill" style="width:${pct}%;"></div></div>
         <p class="smc-progress-txt">${progresoTxt}</p>
-        ${renovacionTxt ? `<p class="smc-progress-txt">${renovacionTxt}</p>` : ''}
       </div>
       <button class="btn ghost salon-btn-ghost" onclick="shareMembershipCard()">${tt('Compartir tarjeta','Share card')}</button>
     </div>
+    ${salonTimelineHtml(m)}
+    ${salonRenewalWarnBannerHtml(m)}
+    <div class="row" style="justify-content:center;margin:-4px 0 18px;">
+      <button class="salon-welcome-reopen-btn" type="button" onclick="openSalonWelcome(SALON_CURRENT_MEMBER)">✨ ${tt('Ver bienvenida','View welcome')}</button>
+    </div>
+    ${salonBookTeaserHtml(piezas)}
     <div class="card salon-card">
       <h3>${tt('Tus beneficios','Your benefits')}</h3>
       <ul class="salon-tier-benefits">${beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('')}</ul>
     </div>
     <div class="salon-grid-2">
-      <button class="btn salon-btn-gold" onclick="openSalonBook()">${tt('Galería Exclusiva','Exclusive Gallery')}</button>
       <button class="btn salon-btn-gold" onclick="openSalonVipCalendar()">${tt('Calendario VIP','VIP Calendar')}</button>
+      <button class="btn ghost salon-btn-ghost" onclick="openSalonBook()">${tt('Ver Galería completa','View full Gallery')}</button>
     </div>
 
     <div class="card salon-card" id="salon-vip-cal-panel" style="display:none;margin-top:16px;">
@@ -7778,6 +8169,7 @@ async function enterSalonLobby(m){
     <button class="btn ghost salon-btn-ghost" style="margin-top:14px;" onclick="salonLobbyExitClick()">${tt('Salir','Exit')}</button>
   `;
   initSalonCardTilt();
+  if(showWelcome) openSalonWelcome(m);
 }
 
 // Efecto "foil"/tilt de la tarjeta: sigue el mouse con dos variables CSS
@@ -8672,6 +9064,8 @@ async function submitSolicitud(){
   const citaHora = document.getElementById('s-hora').value;
   const entregaIda = requiresLogistica ? document.getElementById('s-entrega-ida').value : null;
   const entregaVuelta = requiresLogistica ? document.getElementById('s-entrega-vuelta').value : null;
+  const entregaIdaVelocidad = (requiresLogistica && entregaIda === 'envio') ? document.getElementById('s-entrega-ida-velocidad').value : null;
+  const entregaVueltaVelocidad = (requiresLogistica && entregaVuelta === 'envio') ? document.getElementById('s-entrega-vuelta-velocidad').value : null;
   const envioDireccion = document.getElementById('s-envio-direccion').value.trim();
   if(requiresLogistica && entregaIda === 'presencial' && !(fechaEntrega && citaHora)){
     toast(tt('Elige la fecha y hora de tu cita.','Choose the date and time for your appointment.'));
@@ -8709,7 +9103,7 @@ async function submitSolicitud(){
   // El costo de envío es aparte del precio del paquete — no entra a la
   // compuerta de aprobación (procesoAprueba) ni se toca si la pieza se
   // rechaza; es un cobro de logística, siempre se debe si se eligió envío.
-  const envioCosto = requiresLogistica ? ((entregaIda==='envio'?ENVIO_COSTO_TRAMO:0) + (entregaVuelta==='envio'?ENVIO_COSTO_TRAMO:0)) : 0;
+  const envioCosto = requiresLogistica ? ((entregaIda==='envio'?envioCostoPorVelocidad(entregaIdaVelocidad):0) + (entregaVuelta==='envio'?envioCostoPorVelocidad(entregaVueltaVelocidad):0)) : 0;
   const data = {
     id, nombre, telefono, modelo, paquete: pkg,
     modoValidacion: modoDigital,
@@ -8720,6 +9114,8 @@ async function submitSolicitud(){
     fechaEntrega, citaHora, citaTs,
     entregaIda: entregaIda || null,
     entregaVuelta: entregaVuelta || null,
+    entregaIdaVelocidad: entregaIdaVelocidad || null,
+    entregaVueltaVelocidad: entregaVueltaVelocidad || null,
     envioDireccion: envioDireccion || '',
     envioCosto,
     nivel: pkgLabels[pkg] || pkg,
@@ -9946,7 +10342,14 @@ async function submitReview(){
 function renderReviewsList(items){
   const list = document.getElementById('reviews-list');
   if(!list) return;
-  if(!items.length){ list.innerHTML = `<p style="color:var(--sage);font-size:14px;">${tt('Aún no hay reseñas — sé el primero en dejar la tuya.','No reviews yet — be the first to leave one.')}</p>`; return; }
+  if(!items.length){
+    list.innerHTML = `<div class="empty reviews-empty">
+      <div class="reviews-empty-icon">💬</div>
+      <p class="reviews-empty-title">${tt('Sé el primero en compartir tu experiencia','Be the first to share your experience')}</p>
+      <p class="reviews-empty-sub">${tt('Aún no hay reseñas públicas — cuéntale a otros coleccionistas cómo fue certificar tu pieza con nosotros.','There are no public reviews yet — tell other collectors how it went certifying your piece with us.')}</p>
+    </div>`;
+    return;
+  }
   list.innerHTML = items.map(r => `
     <div class="review-card">
       <div class="row" style="align-items:center;gap:10px;">
@@ -11050,13 +11453,14 @@ function esDigital(paquete){ return paquete === 'digital'; }
 // Resumen corto de logística de entrega/envío — usado en varias tarjetas
 // del admin para que se note de un vistazo cuándo hay que gestionar un
 // envío (y su transferencia) además del peritaje en sí.
+function envioVelocidadLabel(vel){ return vel === 'siguiente_dia' ? 'siguiente día' : 'terrestre'; }
 function envioBadgeHtml(d){
   if(esDigital(d.paquete) || !d.entregaIda) return '';
   const partes = [];
-  if(d.entregaIda === 'envio') partes.push('envío de ida');
-  if(d.entregaVuelta === 'envio') partes.push('envío de vuelta');
+  if(d.entregaIda === 'envio') partes.push(`envío de ida (${envioVelocidadLabel(d.entregaIdaVelocidad)})`);
+  if(d.entregaVuelta === 'envio') partes.push(`envío de vuelta (${envioVelocidadLabel(d.entregaVueltaVelocidad)})`);
   if(!partes.length) return '';
-  const costo = d.envioCosto || (partes.length * ENVIO_COSTO_TRAMO);
+  const costo = d.envioCosto != null ? d.envioCosto : (partes.length * ENVIO_COSTO_TERRESTRE);
   return `<span class="pill" style="background:rgba(184,134,47,0.12);color:var(--warn);border:1px solid var(--warn);">📦 ${partes.join(' + ')} · $${costo.toLocaleString('es-MX')} MXN</span>`;
 }
 // Bloque completo de logística de envío dentro del detalle de un proceso —

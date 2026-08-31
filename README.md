@@ -379,6 +379,67 @@ grandes, en orden aproximado en que aparecen:
     (p. ej. "Todas" en Historial) mostraba el texto invisible por un
     choque de estilos (texto rojo sobre fondo rojo).
 
+- **Lobby del Salón Privado — bienvenida, vigencia de membresía y "Libro
+  del Coleccionismo"**: al entrar al lobby (desde la puerta de acceso, el
+  menú, o la vista previa del admin) aparece una **ventana flotante de
+  bienvenida** con el nombre del socio, un resumen de lo que incluye la
+  membresía (tarjeta, Libro del Coleccionismo, Calendario VIP, beneficios
+  que crecen por nivel) y su línea de tiempo de membresía. Esa ventana se
+  puede cerrar y se puede volver a abrir en cualquier momento con el botón
+  "✨ Ver bienvenida" — pero **incluso sin abrirla**, el lobby ya muestra de
+  entrada, en este orden, su tarjeta de socio, su estatus/línea de tiempo
+  (socio desde / se renueva / cuenta regresiva) y el **Libro del
+  Coleccionismo** (las piezas más recientes del Salón, actualizadas por los
+  socios). La membresía ahora tiene **vigencia real**: 30 días antes de la
+  fecha de renovación aparece un aviso in-line de "por vencer pronto"
+  (también reflejado como filtro nuevo en la pestaña Miembros del admin), y
+  si la fecha de renovación ya pasó, el acceso a la Galería y al Calendario
+  VIP se bloquea automáticamente mostrando una tarjeta de "acceso pausado"
+  con un botón directo de WhatsApp para renovar — sin perder la calidez de
+  seguir mostrando su tarjeta y su historial como socio. Todo esto es
+  bilingüe (ES/EN) como el resto del sitio público.
+  - **Corrección**: el lobby mostraba primero toda la portada pública de
+    venta (el "hero" del Salón y las 3 tarjetas de niveles) y el socio
+    tenía que hacer scroll para llegar a su propia tarjeta — además la
+    ventana de bienvenida no se disparaba en el flujo real de acceso
+    (teléfono + código). Ahora, en cuanto el socio entra, esa portada
+    pública se oculta y lo primero que ve es su tarjeta, su línea de
+    tiempo y el Libro del Coleccionismo — sin scroll — y la ventana de
+    bienvenida sí aparece. Al salir del lobby, la portada pública vuelve a
+    mostrarse para el siguiente visitante.
+
+- **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
+  antes había un solo costo fijo de envío ($200 MXN) para cuando el
+  cliente traía o recibía su pieza por paquetería. Ahora, al elegir
+  "envío" (de ida y/o de regreso, cada sentido por separado), aparece un
+  segundo paso para escoger la velocidad: **terrestre** ($300 MXN, llega
+  en 3 a 5 días) o **entrega al siguiente día** ($450 MXN). El costo total,
+  el aviso de transferencia bancaria, el resumen final antes de enviar la
+  solicitud y las tarjetas del admin reflejan automáticamente la velocidad
+  elegida en cada sentido.
+
+- **Menú — "Piezas falsas" al final y en negro**: se movió al final del
+  menú de navegación (antes iba junto a "Verificar folio") y se le dio un
+  tratamiento visual serio en negro/obsidiana con acento morado — a tono
+  con el registro de advertencia que abre — en vez de compartir el
+  rojo/dorado del resto del menú, para que se perciba como una sección
+  aparte y no como una opción más de venta.
+
+- **Primera impresión de la portada**: la portada (hero) ahora incluye una
+  fila de insignias de confianza (25+ años de experiencia, folio público y
+  verificable, sin afiliación a las marcas, 100% mexicano) y dos botones de
+  acción directamente visibles al entrar — "Solicitar certificación de tu
+  pieza" y "Ver cómo funciona" — además de la búsqueda de folio que ya
+  existía, para que un visitante nuevo tenga un camino claro de inmediato
+  y no dependa solo de bajar por la página.
+
+- **Sección de reseñas remasterizada**: el promedio de calificación ahora
+  vive en una tarjeta con más peso visual, el estado sin reseñas todavía
+  se ve como una invitación (ícono + mensaje) en vez de una línea de texto
+  suelta, y la tarjeta para escribir una reseña tiene una franja de color
+  y una insignia "Verificado con Google" a tono con el resto de tarjetas
+  del sitio.
+
 ## Cómo desplegar una actualización
 
 1. Edita `index.html` (y `sw.js`/`manifest.json`/assets si aplica).
