@@ -534,6 +534,23 @@ grandes, en orden aproximado en que aparecen:
   - Probado en escritorio, celular y con "reducir movimiento" activado
     (la foto se queda fija, sin el acercamiento animado).
 
+- **Ajuste de la intro: menos sello, más foto visible, y un fondo con más
+  vida**: el cliente vio la versión anterior y notó que el sello con el
+  anillo a cuadros tapaba demasiado de la foto real detrás.
+  - Se quitó por completo el anillo a cuadros y se redujo bastante el
+    tamaño del sello con el logo (y su halo dorado) — ahora es una
+    insignia pequeña y luminosa flotando sobre el cochecito en vez de un
+    medallón grande que tapa el brazo del científico y buena parte del
+    caldero.
+  - Para compensar y darle "vivacidad" al fondo, la foto ahora respira
+    muy sutilmente (un pulso de brillo/saturación) después del
+    acercamiento inicial, y se agregaron pequeñas chispas de luz
+    parpadeantes sobre los matraces y tubos de ensayo de colores en los
+    costados — como pequeñas reacciones vivas del laboratorio, para que
+    el fondo se sienta con más energía sin distraer del personaje.
+  - Todo probado en escritorio, celular y con "reducir movimiento"
+    activado (ahí el fondo se queda fijo, sin el pulso ni las chispas).
+
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el
   cliente traía o recibía su pieza por paquetería. Ahora, al elegir
