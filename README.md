@@ -306,6 +306,44 @@ grandes, en orden aproximado en que aparecen:
   condición. También se dejó explícito por escrito que nunca se publican
   datos del dueño (nombre, teléfono, etc.) — únicamente la pieza, sus fotos
   y su condición.
+- **Paso 6 (Zigzag) — acordeón por zona + bloqueo real de avance**: hasta
+  ahora "Confirmar calificación y continuar" solo exigía que **alguna** zona
+  tuviera calificación, no las 16 — y las 16 zonas aparecían siempre
+  desplegadas de golpe, obligando a mucho scroll para ubicar qué faltaba.
+  Ahora:
+  - Cada zona se colapsa sola en cuanto queda calificada (`zzZoneIsComplete`)
+    y se abre automáticamente la siguiente pendiente — nunca hay que buscar
+    manualmente entre las 16. Cualquier encabezado de zona se puede volver a
+    tocar para revisarla o corregirla.
+    Cada zona muestra su estatus sin necesidad de abrirla: **Pendiente**,
+    **✓ calificación** o **No aplica**.
+  - Una barra flotante fija en la parte inferior de la pantalla
+    (`.zz-progress-float`) siempre visible mientras el Paso 6 está abierto,
+    con el conteo "X/16 zonas calificadas", el nombre de la siguiente zona
+    pendiente, y un botón "Ir a la siguiente pendiente" que salta directo a
+    ella con scroll suave — así nunca hay que adivinar qué falta.
+  - "Confirmar calificación y continuar" ahora queda **bloqueado de verdad**
+    hasta calificar las 16 zonas (o marcarlas "No aplica", ver abajo), con un
+    aviso en rojo debajo del botón listando por nombre las zonas que faltan.
+  - **Volante — "¿Aplica esta zona?"**: como no todas las piezas traen
+    volante, esta zona (y cualquier futura zona que se marque igual,
+    `opcionalAplica` en `ZZ_ZONAS_DEF`) ahora pregunta primero "¿Aplica esta
+    zona en esta pieza?" (Sí / No). Si se responde "No aplica", la zona se
+    excluye del promedio general y **no bloquea** confirmar la calificación;
+    si no se ha respondido todavía, sigue contando como pendiente. Antes,
+    una pieza sin volante calificable habría bloqueado el paso para siempre
+    bajo el nuevo requisito de "calificar todas las zonas".
+  - El mismo bloqueo de avance ahora aplica a los 8 pasos del proceso
+    completo (y a los pasos del flujo de Validación digital): cada paso
+    queda bloqueado hasta terminar el anterior, con un aviso que nombra el
+    paso exacto que falta ("Se habilita cuando completes el paso 2..."). Antes
+    esto solo pasaba entre el paso 1 (recepción) y el resto — del 2 en
+    adelante se podían abrir y marcar en cualquier orden.
+- **Formulario de solicitud — código de referido**: el campo ya no se
+  muestra siempre con un ejemplo de código ("Ej. HV-A3F9K2"), lo que se
+  sentía como un requisito. Ahora primero se pregunta "¿Alguien te
+  recomendó Laboratorio HV?" con botones Sí/No; el campo de texto para
+  escribir el código solo aparece si el cliente responde que sí tiene uno.
 
 ## Cómo desplegar una actualización
 

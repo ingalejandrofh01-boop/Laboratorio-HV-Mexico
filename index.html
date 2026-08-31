@@ -683,10 +683,24 @@
   .zz-glossary ul{margin:8px 0 0;padding-left:18px;color:var(--sage);line-height:1.6;}
   .zz-zones{display:flex;flex-direction:column;gap:10px;}
   .zz-zone{border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden;}
-  .zz-zone-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel-2);}
+  .zz-zone.zz-zone-complete{border-color:rgba(47,122,79,0.3);}
+  .zz-zone-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel-2);cursor:pointer;}
+  .zz-zone.open .zz-zone-head{background:rgba(184,134,47,0.08);}
+  .zz-zone-chevron{font-size:10px;color:var(--sage);flex:none;width:14px;text-align:center;}
+  .zz-zone-status{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;border-radius:20px;padding:3px 10px;flex:none;white-space:nowrap;}
+  .zz-zone-status-pending{background:var(--panel);color:var(--brass-dim);border:1px solid var(--line);}
+  .zz-zone-status-ok{background:rgba(47,122,79,0.1);color:var(--ok);border:1px solid rgba(47,122,79,0.3);}
+  .zz-zone-status-na{background:rgba(27,36,32,0.06);color:var(--sage-dim);border:1px solid var(--line);font-style:italic;}
+  html[data-theme="dark"] .zz-zone-status-na{background:rgba(255,255,255,0.04);}
+  .zz-zones-hint{font-size:11.5px;color:var(--sage-dim);margin:-6px 0 10px;}
+  .zz-progress-float{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;max-width:min(92vw,560px);padding:10px 18px;border-radius:30px;background:var(--panel);border:1px solid var(--line);box-shadow:0 8px 24px rgba(27,36,32,0.18);}
+  html[data-theme="dark"] .zz-progress-float{box-shadow:0 8px 24px rgba(0,0,0,0.45);}
+  .zz-progress-float-text{font-size:12.5px;color:var(--ink);}
+  .zz-progress-float-text strong{color:var(--red);font-family:'IBM Plex Mono',monospace;}
+  .zz-progress-float-missing{color:var(--brass-dim);}
+  .zz-progress-float-done{color:var(--ok);font-weight:600;}
   .zz-zone-num{width:22px;height:22px;border-radius:50%;background:var(--brass);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;}
   .zz-zone-head h5{margin:0;flex:1;min-width:0;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);}
-  .zz-zone-score{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--red);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 9px;flex:none;}
   .zz-zone-body{padding:14px;display:flex;flex-direction:column;gap:12px;}
   .zz-field label{margin:0 0 6px;}
   .zz-na{margin:0;font-size:12px;color:var(--sage-dim);font-style:italic;}
@@ -2698,7 +2712,7 @@
         <span class="pkg-card-time" id="pkg-time-fisico" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
         <ul class="pkg-list">
           <li data-i18n="paquetes.fisico.li1">Peritaje presencial en laboratorio</li>
-          <li data-i18n="paquetes.fisico.li2">Folio y certificado físico</li>
+          <li data-i18n="paquetes.fisico.li2">Folio y dictamen digital y físico</li>
           <li data-i18n="paquetes.fisico.li3">Grado de conservación oficial</li>
         </ul>
         <div class="pkg-speed">
@@ -2716,7 +2730,7 @@
           <ul class="pkg-detail-body">
             <li data-i18n="paquetes.fisico.det1">Revisión física en laboratorio con Protocolo Zigzag C-Z</li>
             <li data-i18n="paquetes.fisico.det2">Fotos HD de criterios de origen y zonas de desgaste</li>
-            <li data-i18n="paquetes.fisico.det3">Certificado con folio oficial HV + QR</li>
+            <li data-i18n="paquetes.fisico.det3">Dictamen con folio oficial HV + QR — entrega digital y física</li>
           </ul>
         </details>
         <div class="pkg-cta">
@@ -2733,6 +2747,7 @@
         <span class="pkg-card-time" id="pkg-time-premium" data-i18n="wiz.time.estandar10">⏱ Entrega en 10 días (Estándar)</span>
         <ul class="pkg-list">
           <li data-i18n="paquetes.premium.li1">Todo lo del peritaje físico</li>
+          <li data-i18n="paquetes.premium.li4">Evaluación y graduación oficial de la pieza</li>
           <li data-i18n="paquetes.premium.li2">Encapsulado protector sellado</li>
           <li data-i18n="paquetes.premium.li3">Prioridad en cola de laboratorio</li>
         </ul>
@@ -2972,7 +2987,7 @@
               <span class="wiz-pkg-card-price" id="wiz-pkg-price-fisico">$400 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li data-i18n="wiz.pkg.fisico.b1">Peritaje presencial en laboratorio</li>
-                <li data-i18n="wiz.pkg.fisico.b2">Folio y certificado físico</li>
+                <li data-i18n="wiz.pkg.fisico.b2">Folio y dictamen digital y físico</li>
                 <li data-i18n="wiz.pkg.fisico.b3">Grado de conservación oficial</li>
               </ul>
               <div class="pkg-speed" onclick="event.stopPropagation();">
@@ -2994,6 +3009,7 @@
               <span class="wiz-pkg-card-price" id="wiz-pkg-price-premium">$800 <small>MXN</small></span>
               <ul class="wiz-pkg-card-bullets">
                 <li data-i18n="wiz.pkg.premium.b1">Todo lo del peritaje físico</li>
+                <li data-i18n="wiz.pkg.premium.b4">Evaluación y graduación oficial de la pieza</li>
                 <li data-i18n="wiz.pkg.premium.b2">Encapsulado protector sellado</li>
                 <li data-i18n="wiz.pkg.premium.b3">Prioridad en cola de laboratorio</li>
               </ul>
@@ -3036,9 +3052,16 @@
             <input id="s-telefono" placeholder="55 0000 0000" oninput="updateSolicitudProgress()">
           </div>
           <p class="wiz-field-note" data-i18n="wiz.contacto.telNote">Te contactamos por aquí y por WhatsApp. También lo vas a usar en "Mi historial" para consultar el estatus de tus folios — anótalo bien.</p>
-          <label for="s-ref-codigo" data-i18n="wiz.contacto.refLabel">¿Alguien te recomendó Laboratorio HV? Código de referido (opcional)</label>
-          <input id="s-ref-codigo" placeholder="Ej. HV-A3F9K2" style="text-transform:uppercase;" oninput="saveSolicitudDraft()">
-          <p class="wiz-field-note" id="s-ref-codigo-note" data-i18n="wiz.contacto.refNote">Si un cliente te compartió su código, escríbelo aquí — así le damos las gracias con un descuento en su próxima certificación.</p>
+          <label data-i18n="wiz.contacto.refQuestion">¿Alguien te recomendó Laboratorio HV?</label>
+          <div class="zz-toggle-group" id="s-ref-tiene-group">
+            <button type="button" class="zz-toggle" id="s-ref-tiene-si" onclick="setTieneCodigoReferido(true)" data-i18n="wiz.contacto.refSi">Sí, tengo un código</button>
+            <button type="button" class="zz-toggle" id="s-ref-tiene-no" onclick="setTieneCodigoReferido(false)" data-i18n="wiz.contacto.refNo">No</button>
+          </div>
+          <div id="s-ref-codigo-wrap" style="display:none;margin-top:10px;">
+            <label for="s-ref-codigo" data-i18n="wiz.contacto.refLabel">Código de referido</label>
+            <input id="s-ref-codigo" style="text-transform:uppercase;" oninput="saveSolicitudDraft()">
+            <p class="wiz-field-note" id="s-ref-codigo-note" data-i18n="wiz.contacto.refNote">Si un cliente te compartió su código, escríbelo aquí — así le damos las gracias con un descuento en su próxima certificación.</p>
+          </div>
         </div>
 
         <div class="wiz-step" data-step="pieza">
@@ -4505,15 +4528,16 @@ const I18N_EN = {
   'paquetes.fisico.badge': 'Most complete',
   'paquetes.fisico.name': 'Appraisal + assessment',
   'paquetes.fisico.li1': 'In-person appraisal at the lab',
-  'paquetes.fisico.li2': 'Folio and physical certificate',
+  'paquetes.fisico.li2': 'Folio and digital & physical assessment report',
   'paquetes.fisico.li3': 'Official preservation grade',
   'paquetes.fisico.det1': 'Physical review at the lab with the Zigzag C-Z Protocol',
   'paquetes.fisico.det2': 'HD photos of origin criteria and wear areas',
-  'paquetes.fisico.det3': 'Certificate with official HV folio + QR',
+  'paquetes.fisico.det3': 'Assessment report with official HV folio + QR — digital and physical delivery',
   'paquetes.fisico.chipsAria': 'Choose delivery time for physical appraisal',
   'paquetes.premium.badge': 'Maximum protection',
   'paquetes.premium.name': 'Premium + certification + encapsulation',
   'paquetes.premium.li1': 'Everything in the physical appraisal',
+  'paquetes.premium.li4': 'Official evaluation and grading of the piece',
   'paquetes.premium.li2': 'Sealed protective encapsulation',
   'paquetes.premium.li3': 'Priority in the lab queue',
   'paquetes.premium.det1': 'Everything in the previous package',
@@ -4664,7 +4688,7 @@ const I18N_EN = {
   'wiz.time.estandar10': '⏱ Delivery in 10 days (Standard)',
   'wiz.pkg.fisico.name': 'Appraisal + assessment',
   'wiz.pkg.fisico.b1': 'In-person appraisal at the lab',
-  'wiz.pkg.fisico.b2': 'Folio and physical certificate',
+  'wiz.pkg.fisico.b2': 'Folio and digital & physical assessment report',
   'wiz.pkg.fisico.b3': 'Official condition grade',
   'wiz.speed.label': 'Choose your delivery time',
   'wiz.speed.aria.fisico': 'Choose delivery time for physical appraisal',
@@ -4675,6 +4699,7 @@ const I18N_EN = {
   'wiz.speed.super': 'Super Express · 24–48h',
   'wiz.pkg.premium.name': 'Premium + certification + encapsulation',
   'wiz.pkg.premium.b1': 'Everything in the physical appraisal',
+  'wiz.pkg.premium.b4': 'Official evaluation and grading of the piece',
   'wiz.pkg.premium.b2': 'Sealed protective encapsulation',
   'wiz.pkg.premium.b3': 'Priority in the lab queue',
 
@@ -4687,7 +4712,10 @@ const I18N_EN = {
   'wiz.contacto.nombreNote': 'This is how we identify your request. This name will appear on your certificate if your piece turns out to be authentic.',
   'wiz.contacto.telLabel': 'Phone number (you\'ll use this to check your history)',
   'wiz.contacto.telNote': 'We\'ll contact you here and on WhatsApp. You\'ll also use it in "My history" to check your folio status — write it down carefully.',
-  'wiz.contacto.refLabel': 'Did someone refer you to Laboratorio HV? Referral code (optional)',
+  'wiz.contacto.refQuestion': 'Did someone refer you to Laboratorio HV?',
+  'wiz.contacto.refSi': 'Yes, I have a code',
+  'wiz.contacto.refNo': 'No',
+  'wiz.contacto.refLabel': 'Referral code',
   'wiz.contacto.refNote': 'If a customer shared their code with you, write it here — that way we can thank them with a discount on their next certification.',
 
   // Wizard — step 3: pieza
@@ -6460,6 +6488,24 @@ function solicitudDraftFieldIds(){
     .map(el => el.id);
 }
 
+// Pregunta Sí/No de si el cliente tiene un código de referido — antes había
+// un campo de texto siempre visible con un ejemplo de código ("Ej.
+// HV-A3F9K2"), lo que confundía y se sentía como un requisito. Ahora el
+// campo de texto solo aparece si el cliente responde que sí tiene uno.
+function setTieneCodigoReferido(tiene){
+  const wrap = document.getElementById('s-ref-codigo-wrap');
+  const btnSi = document.getElementById('s-ref-tiene-si');
+  const btnNo = document.getElementById('s-ref-tiene-no');
+  if(btnSi) btnSi.classList.toggle('active', tiene===true);
+  if(btnNo) btnNo.classList.toggle('active', tiene===false);
+  if(wrap) wrap.style.display = tiene ? 'block' : 'none';
+  if(!tiene){
+    const input = document.getElementById('s-ref-codigo');
+    if(input) input.value = '';
+  }
+  saveSolicitudDraft();
+}
+
 function saveSolicitudDraft(){
   if(solicitudDraftRestoring || !wizPageInitDone) return;
   try{
@@ -6544,6 +6590,7 @@ function restoreSolicitudDraft(draft){
       const el = document.getElementById(id);
       if(el) el.value = f[id];
     });
+    if(f['s-ref-codigo']) setTieneCodigoReferido(true);
 
     const chipGroups = document.querySelectorAll('.entrega-chips');
     if(f['s-entrega-ida'] && chipGroups[0]){
@@ -6634,6 +6681,7 @@ function resetWizard(){
   document.getElementById('s-entrega-vuelta').value = 'presencial';
   document.getElementById('s-envio-direccion').value = '';
   document.querySelectorAll('.entrega-chip').forEach(b => b.classList.toggle('selected', b.dataset.val==='presencial'));
+  setTieneCodigoReferido(false);
   calReset();
   resetRecaptcha();
   onPackageChange();
@@ -8714,6 +8762,7 @@ async function submitSolicitud(){
     document.getElementById('s-confirm').scrollIntoView({behavior:'smooth', block:'start'});
     ['s-nombre','s-telefono','s-modelo','s-anio','s-color','s-desc','s-fecha','s-hora','s-envio-direccion','s-ref-codigo'].forEach(fid=>document.getElementById(fid).value='');
     if(document.getElementById('s-telefono-lada')) document.getElementById('s-telefono-lada').value = '52';
+    setTieneCodigoReferido(false);
     SOLICITUD_FOTOS_DATA = [];
     clearSolicitudDraft();
     resetRecaptcha();
@@ -11204,8 +11253,12 @@ const ZZ_ZONAS_DEF = [
   {key:'cristales', label:'Cristales', tampoAplica:false},
   {key:'defensas', label:'Defensas', tampoAplica:false},
   {key:'ejes', label:'Ejes', tampoAplica:false},
-  {key:'volante', label:'Volante (si aplica)', tampoAplica:false}
+  {key:'volante', label:'Volante (si aplica)', tampoAplica:false, opcionalAplica:true}
 ];
+// Helper para leer la definición fija de una zona por su key — evita repetir
+// ZZ_ZONAS_DEF.find(...) en cada función que necesita saber si una zona es
+// "opcional" (opcionalAplica), como Volante.
+function zzZonaDef(key){ return ZZ_ZONAS_DEF.find(z=>z.key===key); }
 let CURRENT_PROCESO = null;
 
 // Algunas zonas no se califican con una sola escala, sino con varias
@@ -11232,7 +11285,7 @@ function ensureZigzag(step){
   if(!step.zigzag){
     step.zigzag = {
       medidas: {peso:'', largo:'', ancho:'', alto:'', diametroLlantaTrasera:'', diametroLlantaDelantera:'', ok:false},
-      zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:''})),
+      zonas: ZZ_ZONAS_DEF.map(z => ({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:'', aplica:null})),
       escalaFinal: '',
       origenTexto: ''
     };
@@ -11253,13 +11306,44 @@ function ensureZigzag(step){
   const zonasActuales = new Set(step.zigzag.zonas.map(z=>z.key));
   ZZ_ZONAS_DEF.forEach(z => {
     if(!zonasActuales.has(z.key)){
-      step.zigzag.zonas.push({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:''});
+      step.zigzag.zonas.push({key:z.key, label:z.label, tampoAplica:z.tampoAplica, tampo:null, critZigzag:null, critPC:zzInitialCritPC(z.key), instrumentos:[], nota:'', aplica:null});
     }
+  });
+  // Dictámenes calificados antes de agregar el toggle "¿Aplica esta zona?"
+  // (por ahora, solo Volante) traen la zona sin el campo `aplica` — se
+  // completa aquí una sola vez, sin tocar ninguna calificación ya asignada.
+  step.zigzag.zonas.forEach(zona => {
+    const def = zzZonaDef(zona.key);
+    if(def && def.opcionalAplica && zona.aplica === undefined) zona.aplica = null;
   });
   return step.zigzag;
 }
 
+// Una zona queda "completa" (no bloquea confirmar la calificación) cuando
+// tiene una calificación válida, o — para zonas marcadas `opcionalAplica`
+// como Volante — cuando el perito respondió explícitamente que no aplica en
+// esta pieza. Mientras no se responda esa pregunta, la zona sigue pendiente.
+function zzZoneIsComplete(zona){
+  const def = zzZonaDef(zona.key);
+  if(def && def.opcionalAplica){
+    if(zona.aplica === 'no') return true;
+    if(zona.aplica !== 'si') return false;
+  }
+  return zzZoneScore(zona) != null;
+}
+function zzMissingZonas(zz){
+  return zz.zonas.filter(z => !zzZoneIsComplete(z));
+}
+function zzAllZonasComplete(zz){
+  return zzMissingZonas(zz).length === 0;
+}
+
 function zzZoneScore(zona){
+  const def = zzZonaDef(zona.key);
+  // Zona marcada explícitamente "No aplica" (p.ej. Volante en una pieza que
+  // no lo trae) — se excluye del promedio general sin importar si quedó
+  // algún dato residual capturado antes de marcarla así.
+  if(def && def.opcionalAplica && zona.aplica === 'no') return null;
   const partes = ZZ_MULTI_PART[zona.key];
   if(partes){
     const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
@@ -11628,6 +11712,7 @@ async function openProceso(id){
   try{ p = await getProceso(id); }catch(e){ detail.innerHTML = '<p style="color:var(--sage);font-size:14px;">No se encontró esta validación.</p>'; return; }
   CURRENT_PROCESO = p;
   PROCESO_OPEN_STEP = undefined; // cada proceso abre enfocado en su propio siguiente paso
+  ZZ_OPEN_ZONE = undefined; // idem, para la zona del Paso 6 (Zigzag)
   renderProcesoDetail(p);
 }
 
@@ -11639,6 +11724,7 @@ let PROCESO_OPEN_STEP = undefined;
 
 function toggleStepOpen(pid, key){
   PROCESO_OPEN_STEP = (PROCESO_OPEN_STEP === key) ? null : key;
+  ZZ_OPEN_ZONE = undefined; // recalcula la zona pendiente por defecto al reabrir el Paso 6
   if(CURRENT_PROCESO && CURRENT_PROCESO.id === pid) renderProcesoDetail(CURRENT_PROCESO);
 }
 
@@ -11647,9 +11733,6 @@ function renderProcesoDetail(p){
   if(p.paquete === 'digital') return renderProcesoDetailDigital(p);
   if(p.estado === 'rechazada') return renderProcesoDetailRechazada(p);
   const detail = document.getElementById('validacion-detail');
-  const isDigital = false;
-  const recepcionStep = p.pasos.find(s=>s.key==='recepcion');
-  const recepcionDone = !recepcionStep || recepcionStep.done;
   const doneCount = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(doneCount / p.pasos.length * 100);
   const dl = deadlineInfo(p);
@@ -11681,12 +11764,16 @@ function renderProcesoDetail(p){
     const stepsHtml = pasosFase.map(s=>{
       const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
       const def = METODO_PASOS.find(d=>d.key===s.key);
-      const stepLocked = !recepcionDone && !isDigital && s.key !== 'recepcion';
+      // Cada paso queda bloqueado hasta que el anterior esté completo — no
+      // basta con haber recibido la pieza (paso 1): hay que llenar y
+      // confirmar cada paso, en orden, para poder avanzar al siguiente.
+      const prevStep = globalIdx > 0 ? p.pasos[globalIdx-1] : null;
+      const stepLocked = !!prevStep && !prevStep.done;
       const isOpen = PROCESO_OPEN_STEP === s.key;
       let bodyHtml = '';
       if(isOpen){
         if(stepLocked){
-          bodyHtml = `<div class="step-locked-note">🔒 Se habilita cuando confirmes la recepción de la pieza (paso 1).</div>`;
+          bodyHtml = `<div class="step-locked-note">🔒 Se habilita cuando completes el paso ${globalIdx} ("${escapeHtml(prevStep.label)}").</div>`;
         } else {
           if(def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
           if(def.type==='recepcion') bodyHtml += renderRecepcionStepBody(p, s);
@@ -11814,16 +11901,23 @@ function renderProcesoDetailDigital(p){
 
   const stepsHtml = p.pasos.map((s,i)=>{
     const def = digitalPasoDefs(modo).find(d=>d.key===s.key);
+    const prevStep = i > 0 ? p.pasos[i-1] : null;
+    const stepLocked = !!prevStep && !prevStep.done;
     const isOpen = PROCESO_OPEN_STEP === s.key;
+    const checkClickable = !stepLocked;
     let bodyHtml = '';
     if(isOpen){
-      if(def && def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
-      bodyHtml += def.type==='dictamen_digital' ? renderDictamenDigitalStepBody(p, s) : renderSimpleStepBody(p, s);
+      if(stepLocked){
+        bodyHtml = `<div class="step-locked-note">🔒 Se habilita cuando completes el paso ${i} ("${escapeHtml(prevStep.label)}").</div>`;
+      } else {
+        if(def && def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
+        bodyHtml += def.type==='dictamen_digital' ? renderDictamenDigitalStepBody(p, s) : renderSimpleStepBody(p, s);
+      }
     }
     return `
-    <div class="step-row step-accordion ${isOpen?'open':''}" data-step-key="${escapeHtml(s.key)}">
-      <div class="step-row-head" onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')">
-        <div class="step-check ${s.done?'done':''}" onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')">${s.done?'✓':''}</div>
+    <div class="step-row step-accordion ${stepLocked?'step-locked':''} ${isOpen?'open':''}" data-step-key="${escapeHtml(s.key)}">
+      <div class="step-row-head" ${stepLocked?'':`onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')"`}>
+        <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
         <h4>${i+1}. ${escapeHtml(s.label)}</h4>
         <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
       </div>
@@ -11984,35 +12078,18 @@ function zzCritPCBlockHtml(pid, stepKey, zona){
         </div>
       </div>`;
 }
+// Qué zona del Paso 6 está expandida — se resetea cada vez que se
+// abre/cierra el paso 6 en el acordeón exterior (ver toggleStepOpen) o se
+// abre un proceso distinto (ver openProceso), y por defecto abre la primera
+// zona pendiente. Así el admin siempre entra directo a donde debe seguir,
+// sin tener que hacer scroll entre las 16 zonas para encontrarla.
+let ZZ_OPEN_ZONE;
+
 function renderCondicionStepBody(p, step){
   const zz = ensureZigzag(step);
   const overall = zzOverallAvg(zz);
   const m = zz.medidas;
-  const zonasHtml = zz.zonas.map((zona, idx) => {
-    const score = zzZoneScore(zona);
-    return `
-      <div class="zz-zone" id="zz-zone-${zona.key}">
-        <div class="zz-zone-head">
-          <span class="zz-zone-num">${idx+1}</span>
-          <h5>${escapeHtml(zona.label)}</h5>
-          <span class="zz-zone-score" id="zz-score-${zona.key}">${score!=null?score.toFixed(1):'—'}</span>
-        </div>
-        <div class="zz-zone-body">
-          <div id="zz-tampo-wrap-${zona.key}">${zzTampoBlockHtml(p.id, step.key, zona)}</div>
-          ${zzCritPCBlockHtml(p.id, step.key, zona)}
-          <div class="zz-field">
-            <label>Instrumentos utilizados</label>
-            <div class="zz-instr-group">
-              ${ZZ_INSTRUMENTOS.map(ins=>`<button type="button" class="zz-chip ${zona.instrumentos.includes(ins.key)?'active':''}" id="zz-chip-${zona.key}-${ins.key}" onclick="zzToggleInstrumento('${escapeHtml(p.id)}','${step.key}','${zona.key}','${ins.key}',this)">${ins.label}</button>`).join('')}
-            </div>
-          </div>
-          <div class="zz-field">
-            <label>Nota rápida (opcional)</label>
-            <input type="text" value="${escapeHtml(zona.nota||'')}" placeholder="Hallazgo breve de esta zona…" onchange="zzSetNota('${escapeHtml(p.id)}','${step.key}','${zona.key}',this.value)">
-          </div>
-        </div>
-      </div>`;
-  }).join('');
+  const allComplete = zzAllZonasComplete(zz);
 
   return `
     <div class="zz-form">
@@ -12042,7 +12119,8 @@ function renderCondicionStepBody(p, step){
           <li><strong>Escala 10–6</strong>: 10 = Perfecto, 9 = Excelente, 8 = Muy bueno, 7 = Bueno con detalles, 6 = Regular.</li>
         </ul>
       </details>
-      <div class="zz-zones">${zonasHtml}</div>
+      <p class="zz-zones-hint">Cada zona se colapsa sola en cuanto queda calificada y se abre la siguiente pendiente — toca cualquier encabezado para revisarla o corregirla.</p>
+      <div class="zz-zones" id="zz-zones">${zzZonesListHtml(p.id, step.key, zz)}</div>
 
       <div class="zz-dictamen-grid" style="margin-top:16px;">
         <div class="zz-field">
@@ -12055,9 +12133,171 @@ function renderCondicionStepBody(p, step){
         </div>
       </div>
       <div class="row" style="margin-top:12px;">
-        ${!step.done ? `<button class="btn small" ${overall==null?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar calificación y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Condición calificada.</span>`}
+        ${!step.done ? `<button class="btn small" id="zz-confirm-btn" ${!allComplete?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar calificación y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Condición calificada.</span>`}
       </div>
+      <p class="foot-note" id="zz-missing-warn" style="border:none;padding-top:6px;color:var(--bad);${allComplete?'display:none;':''}">${zzMissingWarnHtml(zz)}</p>
+      ${!step.done ? `<div class="zz-progress-float" id="zz-progress-float">${zzProgressFloatInnerHtml(p.id, step.key, zz)}</div>` : ''}
     </div>`;
+}
+
+// Genera el acordeón de las 16 zonas: colapsadas por defecto, salvo la que
+// esté en ZZ_OPEN_ZONE (por defecto, la primera pendiente). Cada zona
+// muestra un estatus (Pendiente / ✓ puntaje / No aplica) visible sin
+// necesidad de abrirla — así se ve de un vistazo qué falta sin scroll.
+function zzZonesListHtml(pid, stepKey, zz){
+  if(ZZ_OPEN_ZONE === undefined){
+    const missing = zzMissingZonas(zz);
+    ZZ_OPEN_ZONE = missing.length ? missing[0].key : null;
+  }
+  return zz.zonas.map((zona, idx) => {
+    const def = zzZonaDef(zona.key);
+    const score = zzZoneScore(zona);
+    const complete = zzZoneIsComplete(zona);
+    const isOpen = ZZ_OPEN_ZONE === zona.key;
+    const esNoAplica = !!(def && def.opcionalAplica && zona.aplica === 'no');
+    let statusHtml;
+    if(esNoAplica) statusHtml = `<span class="zz-zone-status zz-zone-status-na">No aplica</span>`;
+    else if(complete) statusHtml = `<span class="zz-zone-status zz-zone-status-ok">✓${score!=null?' '+score.toFixed(1):''}</span>`;
+    else statusHtml = `<span class="zz-zone-status zz-zone-status-pending">Pendiente</span>`;
+    const showScoring = !(def && def.opcionalAplica) || zona.aplica === 'si';
+    const bodyHtml = !isOpen ? '' : `
+        <div class="zz-zone-body">
+          ${(def && def.opcionalAplica) ? zzAplicaBlockHtml(pid, stepKey, zona) : ''}
+          ${showScoring ? `
+            <div id="zz-tampo-wrap-${zona.key}">${zzTampoBlockHtml(pid, stepKey, zona)}</div>
+            ${zzCritPCBlockHtml(pid, stepKey, zona)}
+            <div class="zz-field">
+              <label>Instrumentos utilizados</label>
+              <div class="zz-instr-group">
+                ${ZZ_INSTRUMENTOS.map(ins=>`<button type="button" class="zz-chip ${zona.instrumentos.includes(ins.key)?'active':''}" id="zz-chip-${zona.key}-${ins.key}" onclick="event.stopPropagation();zzToggleInstrumento('${escapeHtml(pid)}','${stepKey}','${zona.key}','${ins.key}',this)">${ins.label}</button>`).join('')}
+              </div>
+            </div>
+            <div class="zz-field">
+              <label>Nota rápida (opcional)</label>
+              <input type="text" value="${escapeHtml(zona.nota||'')}" placeholder="Hallazgo breve de esta zona…" onclick="event.stopPropagation();" onchange="zzSetNota('${escapeHtml(pid)}','${stepKey}','${zona.key}',this.value)">
+            </div>` : ''}
+        </div>`;
+    return `
+      <div class="zz-zone ${complete?'zz-zone-complete':''} ${isOpen?'open':''}" id="zz-zone-${zona.key}">
+        <div class="zz-zone-head" onclick="zzToggleZoneOpen('${escapeHtml(pid)}','${stepKey}','${zona.key}')">
+          <span class="zz-zone-num">${idx+1}</span>
+          <h5>${escapeHtml(zona.label)}</h5>
+          ${statusHtml}
+          <span class="zz-zone-chevron">${isOpen?'▲':'▼'}</span>
+        </div>
+        ${bodyHtml}
+      </div>`;
+  }).join('');
+}
+
+// Bloque "¿Aplica esta zona?" — solo para zonas marcadas opcionalAplica
+// (por ahora, Volante). Mientras no se responda, la zona sigue pendiente;
+// si se responde "No aplica", se oculta la calificación y la zona ya no
+// bloquea "Confirmar calificación y continuar" ni cuenta en el promedio.
+function zzAplicaBlockHtml(pid, stepKey, zona){
+  return `
+    <div class="zz-field">
+      <label>¿Aplica esta zona en esta pieza?</label>
+      <div class="zz-toggle-group">
+        <button type="button" class="zz-toggle ${zona.aplica==='si'?'active':''}" onclick="zzSetAplica('${escapeHtml(pid)}','${stepKey}','${zona.key}','si',this)">Sí — aplica</button>
+        <button type="button" class="zz-toggle ${zona.aplica==='no'?'active':''}" onclick="zzSetAplica('${escapeHtml(pid)}','${stepKey}','${zona.key}','no',this)">No aplica</button>
+      </div>
+      ${zona.aplica==null ? `<p class="zz-na">Responde para continuar — si la pieza no trae esta parte, marca "No aplica" y se descarta del promedio sin bloquear la calificación.</p>` : ''}
+      ${zona.aplica==='no' ? `<p class="zz-na">No aplica en esta pieza — se excluye del promedio general y no bloquea confirmar la calificación.</p>` : ''}
+    </div>`;
+}
+
+function zzMissingWarnHtml(zz){
+  const missing = zzMissingZonas(zz);
+  if(!missing.length) return '';
+  return `Faltan ${missing.length} de ${zz.zonas.length} zonas por calificar: ${missing.map(z=>escapeHtml(z.label)).join(', ')}.`;
+}
+
+function zzProgressFloatInnerHtml(pid, stepKey, zz){
+  const missing = zzMissingZonas(zz);
+  const total = zz.zonas.length;
+  const done = total - missing.length;
+  return `
+    <div class="zz-progress-float-text">
+      <strong>${done}/${total}</strong> zonas calificadas
+      ${missing.length ? `<span class="zz-progress-float-missing">· falta ${escapeHtml(missing[0].label)}${missing.length>1?' (+'+(missing.length-1)+' más)':''}</span>` : `<span class="zz-progress-float-done">· ¡Todo listo!</span>`}
+    </div>
+    ${missing.length ? `<button type="button" class="btn ghost small" onclick="zzJumpToNextPending('${escapeHtml(pid)}','${stepKey}')">Ir a la siguiente pendiente ↓</button>` : ''}`;
+}
+
+// Toca el encabezado de una zona — la abre o la cierra. No se toca ningún
+// dato: solo redibuja el contenedor de zonas (no todo el Paso 6), así no
+// hay brinco de scroll.
+function zzToggleZoneOpen(pid, stepKey, zonaKey){
+  ZZ_OPEN_ZONE = (ZZ_OPEN_ZONE === zonaKey) ? null : zonaKey;
+  zzRerenderZones(pid, stepKey);
+}
+
+function zzJumpToNextPending(pid, stepKey){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = step.zigzag;
+  const missing = zzMissingZonas(zz);
+  if(!missing.length) return;
+  ZZ_OPEN_ZONE = missing[0].key;
+  zzRerenderZones(pid, stepKey, {scrollTo: missing[0].key});
+}
+
+// Redibuja SOLO el contenedor de zonas (#zz-zones), la barra flotante y el
+// botón de confirmar — nunca todo el Paso 6, para no perder la posición de
+// scroll con cada clic.
+function zzRerenderZones(pid, stepKey, opts){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = ensureZigzag(step);
+  const wrap = document.getElementById('zz-zones');
+  if(wrap) wrap.innerHTML = zzZonesListHtml(pid, stepKey, zz);
+  zzUpdateOverall(zz);
+  zzUpdateProgressFloat(pid, stepKey);
+  if(opts && opts.scrollTo){
+    requestAnimationFrame(()=>{
+      const el = document.getElementById('zz-zone-'+opts.scrollTo);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  }
+}
+
+function zzUpdateProgressFloat(pid, stepKey){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = step.zigzag;
+  const floatEl = document.getElementById('zz-progress-float');
+  if(floatEl) floatEl.innerHTML = zzProgressFloatInnerHtml(pid, stepKey, zz);
+  const missing = zzMissingZonas(zz);
+  const btn = document.getElementById('zz-confirm-btn');
+  if(btn){
+    btn.disabled = missing.length>0;
+    btn.style.opacity = missing.length>0 ? '.5' : '';
+    btn.style.cursor = missing.length>0 ? 'not-allowed' : '';
+  }
+  const warn = document.getElementById('zz-missing-warn');
+  if(warn){
+    warn.innerHTML = zzMissingWarnHtml(zz);
+    warn.style.display = missing.length ? '' : 'none';
+  }
+}
+
+// Después de cualquier cambio de calificación en una zona: si la zona
+// acaba de pasar de incompleta a completa, se colapsa sola y se abre (con
+// scroll suave) la siguiente zona pendiente — así el admin nunca tiene que
+// buscarla manualmente entre las 16.
+function zzOnZoneChanged(pid, stepKey, zona, wasComplete){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  const zz = step.zigzag;
+  const nowComplete = zzZoneIsComplete(zona);
+  let scrollTo = null;
+  if(nowComplete && !wasComplete){
+    const missing = zzMissingZonas(zz).filter(z=>z.key!==zona.key);
+    ZZ_OPEN_ZONE = missing.length ? missing[0].key : null;
+    scrollTo = ZZ_OPEN_ZONE;
+  }
+  zzRerenderZones(pid, stepKey, scrollTo ? {scrollTo} : null);
 }
 
 // ===== Paso 8 — "Registro digital, certificación web y entrega" (fase
@@ -12106,10 +12346,6 @@ function zzGetZona(p, stepKey, zonaKey){
   const zz = ensureZigzag(step);
   return zz.zonas.find(z=>z.key===zonaKey);
 }
-function zzUpdateZoneScore(zona){
-  const el = document.getElementById('zz-score-'+zona.key);
-  if(el){ const sc = zzZoneScore(zona); el.textContent = sc!=null ? sc.toFixed(1) : '—'; }
-}
 function zzUpdateOverall(zz){
   const el = document.getElementById('zz-overall-score');
   const avg = zzOverallAvg(zz);
@@ -12123,67 +12359,52 @@ function zzUpdateOverall(zz){
 async function zzSetTampo(pid, stepKey, zonaKey, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
-  const eraNo = zona.tampo === 'no';
+  const wasComplete = zzZoneIsComplete(zona);
   zona.tampo = (zona.tampo === val) ? null : val;
   // Si el tampo no es original, no tiene sentido conservar una calificación
   // de Criterio Zigzag C-Z de tampo previamente asignada — se descarta.
   if(zona.tampo === 'no') zona.critZigzag = null;
   await zzPersist();
-  // Reemplazamos SOLO el bloque de tampo de esta zona (no todo el paso 6):
-  // evita el brinco de scroll que pasaba antes al re-dibujar y re-centrar
-  // todo el detalle del proceso con cada clic.
-  const wrap = document.getElementById('zz-tampo-wrap-'+zonaKey);
-  if(wrap) wrap.innerHTML = zzTampoBlockHtml(pid, stepKey, zona);
-  zzUpdateZoneScore(zona);
-  const step = p.pasos.find(s=>s.key===stepKey);
-  zzUpdateOverall(step.zigzag);
-  // "No agregado" significa que esta zona ya no tiene más que calificar —
-  // llevamos la vista, con un scroll suave y puntual, a la siguiente zona
-  // de la lista (no a recentrar todo el paso).
-  if(zona.tampo === 'no' && !eraNo){
-    const idx = step.zigzag.zonas.findIndex(z=>z.key===zonaKey);
-    const next = step.zigzag.zonas[idx+1];
-    if(next){
-      requestAnimationFrame(()=>{
-        const nextEl = document.getElementById('zz-zone-'+next.key);
-        if(nextEl) nextEl.scrollIntoView({behavior:'smooth', block:'center'});
-      });
-    }
-  }
+  zzOnZoneChanged(pid, stepKey, zona, wasComplete);
 }
 async function zzSetScore(pid, stepKey, zonaKey, field, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  const wasComplete = zzZoneIsComplete(zona);
   zona[field] = (zona[field] == val) ? null : val;
-  const group = btnEl.closest('.zz-scale-group');
-  if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
-  if(zona[field] == val) btnEl.classList.add('active');
-  zzUpdateZoneScore(zona);
-  const step = p.pasos.find(s=>s.key===stepKey);
-  zzUpdateOverall(step.zigzag);
   await zzPersist();
+  zzOnZoneChanged(pid, stepKey, zona, wasComplete);
 }
 async function zzSetMultiScore(pid, stepKey, zonaKey, sub, val, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  const wasComplete = zzZoneIsComplete(zona);
   if(!zona.critPC || typeof zona.critPC !== 'object') zona.critPC = zzInitialCritPC(zonaKey);
   zona.critPC[sub] = (zona.critPC[sub] == val) ? null : val;
-  const group = btnEl.closest('.zz-scale-group');
-  if(group) group.querySelectorAll('.zz-scale-btn').forEach(b => b.classList.remove('active'));
-  if(zona.critPC[sub] == val) btnEl.classList.add('active');
-  zzUpdateZoneScore(zona);
-  const step = p.pasos.find(s=>s.key===stepKey);
-  zzUpdateOverall(step.zigzag);
   await zzPersist();
+  zzOnZoneChanged(pid, stepKey, zona, wasComplete);
+}
+async function zzSetAplica(pid, stepKey, zonaKey, val, btnEl){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
+  const wasComplete = zzZoneIsComplete(zona);
+  zona.aplica = (zona.aplica === val) ? null : val;
+  // Si se marca "No aplica", se descarta cualquier calificación previa para
+  // que no quede "fantasma" contando en el promedio si luego se corrige a "Sí".
+  if(zona.aplica === 'no'){
+    zona.tampo = null; zona.critZigzag = null;
+    zona.critPC = ZZ_MULTI_PART[zonaKey] ? zzInitialCritPC(zonaKey) : null;
+  }
+  await zzPersist();
+  zzOnZoneChanged(pid, stepKey, zona, wasComplete);
 }
 async function zzToggleInstrumento(pid, stepKey, zonaKey, insKey, btnEl){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const zona = zzGetZona(p, stepKey, zonaKey); if(!zona) return;
   const idx = zona.instrumentos.indexOf(insKey);
-  const nowActive = idx === -1;
-  if(nowActive) zona.instrumentos.push(insKey); else zona.instrumentos.splice(idx,1);
-  btnEl.classList.toggle('active', nowActive);
+  if(idx === -1) zona.instrumentos.push(insKey); else zona.instrumentos.splice(idx,1);
   await zzPersist();
+  zzRerenderZones(pid, stepKey);
 }
 async function zzSetNota(pid, stepKey, zonaKey, value){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
