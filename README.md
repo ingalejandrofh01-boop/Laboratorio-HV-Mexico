@@ -507,6 +507,33 @@ grandes, en orden aproximado en que aparecen:
   - Todo respeta "reducir movimiento" (las burbujas y ondas de choque se
     ocultan, el halo se queda fijo) y se probó en celular y escritorio.
 
+- **Intro de bienvenida: la foto real del cliente como fondo (no una
+  recreación en CSS)**: el cliente aclaró que quería literalmente su
+  propia foto (el científico del laboratorio metiendo el cochecito en el
+  caldero) como fondo real de la intro, en alta definición e inmersiva —
+  no la interpretación atmosférica en CSS de la ronda anterior.
+  - Se usó la imagen que el cliente subió (comprimida a JPEG optimizado
+    para que la app siga cargando rápido) como fondo a pantalla completa
+    de la intro, con un ligero efecto de acercamiento tipo "Ken Burns" al
+    aparecer para que se sienta viva desde el primer instante.
+  - Se agregó un degradado oscuro sobre la foto (más fuerte hacia abajo)
+    para que el título, las categorías y el botón "Saltar" se sigan
+    leyendo perfectamente encima de una imagen con tanto detalle.
+  - El sello/medallón con el logo se reposicionó del rostro del
+    científico al cochecito dentro del caldero — es el punto donde
+    naturalmente tiene más sentido que "aterrice" el sello de
+    certificación, y ya no tapa la cara del personaje.
+  - Las tres insignias de herramientas (microscopio, lupa, calibrador) se
+    quitaron porque ahora son redundantes: la propia foto ya muestra el
+    laboratorio y sus instrumentos con mucho más detalle del que esas
+    insignias podían aportar.
+  - Se conservaron las manchas de luz de color, las burbujas ascendentes,
+    el halo del sello y el paralaje con el mouse de la ronda anterior,
+    ahora mezclados sobre la foto (modo de mezcla "screen") como una capa
+    de ambiente extra en vez de sustituir el fondo.
+  - Probado en escritorio, celular y con "reducir movimiento" activado
+    (la foto se queda fija, sin el acercamiento animado).
+
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el
   cliente traía o recibía su pieza por paquetería. Ahora, al elegir

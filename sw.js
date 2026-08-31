@@ -2,7 +2,7 @@
 // Habilita la instalación como app y un caché básico para que el sitio
 // cargue más rápido y funcione si la conexión falla momentáneamente.
 
-const CACHE_NAME = 'labhv-cache-v70';
+const CACHE_NAME = 'labhv-cache-v71';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const CORE_ASSETS = [
   './assets/icons/icon-512.png',
   './assets/icons/apple-touch-icon.png',
   './assets/img/logo.png',
+  './assets/img/intro-lab-hero.jpg',
   './assets/img/sello-ricardo.png',
   './assets/img/sello-andres.png',
   './assets/img/mx-flag.jpg',
