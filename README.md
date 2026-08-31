@@ -407,6 +407,53 @@ grandes, en orden aproximado en que aparecen:
     tiempo y el Libro del Coleccionismo — sin scroll — y la ventana de
     bienvenida sí aparece. Al salir del lobby, la portada pública vuelve a
     mostrarse para el siguiente visitante.
+  - **Ajuste**: la ventana de bienvenida ya solo se abre sola la primera
+    vez que un socio entra — queda guardado (en este dispositivo) que ya
+    la vio, así que las siguientes veces que entra al lobby no se le
+    interrumpe con la ventana. Siempre puede volver a verla a mano con el
+    botón "✨ Ver bienvenida".
+
+- **Remaster del "primer vistazo" (hero de inicio, Ubicación, Escala de
+  grados y presentación institucional)**: pase de diseño para que la
+  primera impresión del sitio se sienta más completa y espectacular.
+  - Se quitó el carrito decorativo animado del hero y en su lugar se
+    agregó un **brillo metálico en movimiento** (barrido diagonal sobre
+    el fondo rojo, respetando "reducir movimiento" del sistema), y se
+    ajustaron los espaciados del hero (logo, márgenes) para que todo su
+    contenido — encabezado, insignias de confianza, botones y la tarjeta
+    de verificar folio — se lea completo sin sentirse apretado.
+  - La sección **Ubicación** se remasterizó: el mapa ahora tiene una
+    franja de color superior y un botón flotante "Cómo llegar" que abre
+    direcciones directo en Google Maps, y las instrucciones de acceso se
+    presentan en una tarjeta con ícono circular por cada punto, en vez de
+    texto plano.
+  - La **Escala de grados** (Metodología → Escala) ahora se ve siempre en
+    **una sola fila de 6 tarjetas** en escritorio, cada una con su ícono
+    en una insignia circular de color según el resultado (verde/ámbar/
+    rojo) y efecto de elevación al pasar el mouse; en anchos intermedios
+    se ocultan las descripciones para que las tarjetas no se vean
+    apretadas, y en celular se acomodan en 2 columnas legibles.
+  - La **presentación institucional** (dentro de Quiénes somos) se
+    actualizó visualmente: franja de color superior, una insignia "19
+    láminas"/"19 slides", una lupa que aparece al pasar el mouse sobre
+    cada miniatura (para dejar claro que se puede ampliar), un desvanecido
+    en el borde de la tira de miniaturas que insinúa que hay más para
+    deslizar, y un ícono de "reproducir" en el botón "Ver presentación
+    completa".
+  - Todo lo anterior se probó en celular, tablet y escritorio, y en
+    español e inglés.
+
+- **Contorno dinámico "luz dorada viajando" en el Salón Privado**: tanto
+  la tarjeta de presentación del Salón (la sección de bienvenida con la
+  vista previa de la membresía) como el botón "Salón Privado HV" del menú
+  ahora tienen un segmento de luz dorada que recorre el contorno sin
+  parar — nunca un anillo fijo completo, sino una línea que "camina"
+  alrededor del borde — para que se sienta que hay algo especial ahí
+  invitando a entrar a verlo. Se ve siempre, esté o no esa vista activa
+  en el menú. Es puro CSS (sin imágenes ni JavaScript adicional): si el
+  navegador de alguien no soporta la técnica de ángulo animado, el borde
+  simplemente se queda dorado fijo — nunca rompe el diseño — y respeta
+  "reducir movimiento" del sistema mostrando también un borde fijo.
 
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el

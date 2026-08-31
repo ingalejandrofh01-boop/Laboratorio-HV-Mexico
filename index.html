@@ -949,21 +949,32 @@
      no var(--ink), para que el texto claro no desaparezca en modo oscuro. */
   .pres-showcase{margin-top:30px;background:linear-gradient(155deg,#241512,#37211c);border-radius:14px;padding:34px 30px;position:relative;overflow:hidden;}
   .pres-showcase::before{content:"";position:absolute;top:-40%;right:-10%;width:320px;height:320px;background:radial-gradient(circle,rgba(210,4,45,.25),transparent 70%);pointer-events:none;}
+  .pres-showcase::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--brass), var(--red) 55%, var(--brass));z-index:1;}
   .pres-showcase-head{position:relative;max-width:640px;}
   .pres-showcase .section-eyebrow{color:var(--brass);}
   .pres-showcase h3{color:#fff;font-size:20px;margin:0 0 8px;}
   .pres-showcase p{color:#D8C9B8;font-size:13.5px;margin:0;}
-  .pres-strip{position:relative;display:flex;gap:12px;margin-top:24px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;}
+  .pres-count-badge{position:absolute;top:34px;right:30px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.03em;color:#F0DEC2;background:rgba(199,152,76,.14);border:1px solid rgba(199,152,76,.4);padding:4px 12px;border-radius:20px;white-space:nowrap;}
+  .pres-strip{position:relative;display:flex;gap:12px;margin-top:24px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);}
   .pres-strip::-webkit-scrollbar{height:6px;}
   .pres-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:3px;}
-  .pres-thumb{flex:0 0 auto;width:150px;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:#000;position:relative;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .18s ease, box-shadow .18s ease;padding:0;}
+  .pres-thumb{flex:0 0 auto;width:150px;border-radius:8px;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:#000;position:relative;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;padding:0;}
   .pres-thumb img{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;opacity:.92;transition:opacity .18s ease;}
-  .pres-thumb:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.45);}
+  .pres-thumb::after{content:"";position:absolute;inset:0;background:rgba(20,10,8,0);transition:background .18s ease;z-index:1;}
+  .pres-thumb:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.45);border-color:rgba(199,152,76,.55);}
   .pres-thumb:hover img{opacity:1;}
-  .pres-thumb .n{position:absolute;left:6px;bottom:6px;background:rgba(14,9,7,.75);color:#fff;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 6px;border-radius:3px;letter-spacing:.03em;}
+  .pres-thumb:hover::after{background:rgba(20,10,8,.22);}
+  .pres-thumb .n{position:absolute;left:6px;bottom:6px;z-index:2;background:rgba(14,9,7,.75);color:#fff;font-size:10px;font-family:'IBM Plex Mono',monospace;padding:2px 6px;border-radius:3px;letter-spacing:.03em;}
+  .pres-thumb .zoom-ic{position:absolute;top:50%;left:50%;z-index:2;transform:translate(-50%,-50%) scale(.6);width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.95);color:#241512;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease, transform .18s ease;pointer-events:none;}
+  .pres-thumb .zoom-ic svg{width:14px;height:14px;}
+  .pres-thumb:hover .zoom-ic{opacity:1;transform:translate(-50%,-50%) scale(1);}
   .pres-cta-row{position:relative;display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;}
   .pres-cta-row .btn.ghost{border-color:#fff;color:#fff!important;}
   .pres-cta-row .btn.ghost:hover{background:rgba(255,255,255,.08);}
+  .pres-cta-row .btn svg{width:14px;height:14px;vertical-align:-2px;margin-right:6px;}
+  @media (prefers-reduced-motion: reduce){ .pres-thumb, .pres-thumb::after, .pres-thumb .zoom-ic{transition:none;} }
+  @media (max-width:640px){ .pres-count-badge{position:static;display:inline-block;margin-top:8px;} }
 
   .pres-stage{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease, visibility 0s linear .25s;}
   .pres-stage.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease;}
@@ -1094,11 +1105,17 @@
 
   .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
   .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(122,3,32,.45) 0%, rgba(51,1,14,.92) 100%);z-index:1;}
-  .hero-road{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:1;overflow:hidden;opacity:.9;pointer-events:none;}
-  .hero-road .lane{position:absolute;bottom:10px;left:0;right:0;height:3px;background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.55) 0 22px, transparent 22px 44px);}
-  .hero-road .car{position:absolute;bottom:2px;left:-140px;width:110px;animation:driveby 13s linear infinite;}
-  @keyframes driveby{from{left:-140px;}to{left:110%;}}
-  .hero-inner{position:relative;z-index:2;padding:34px 32px 40px;max-width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:0;}
+  /* Brillo metálico: una franja de luz diagonal que recorre el fondo rojo
+     de forma continua y sutil, para que el hero se sienta "vivo" sin
+     estorbar la lectura del texto encima (z-index 1, debajo de .hero-inner
+     que va en 2; pointer-events:none para no interceptar clics). */
+  .hero-shine{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
+  .hero-shine::before{content:"";position:absolute;top:-50%;left:-60%;width:45%;height:200%;
+    background:linear-gradient(75deg, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,225,180,.16) 48%, rgba(255,255,255,.32) 50%, rgba(255,225,180,.16) 52%, rgba(255,255,255,0) 65%, transparent 100%);
+    animation:heroShineSweep 7s ease-in-out infinite;}
+  @keyframes heroShineSweep{0%{transform:translateX(0);}45%,100%{transform:translateX(260%);}}
+  @media (prefers-reduced-motion: reduce){ .hero-shine::before{animation:none;display:none;} }
+  .hero-inner{position:relative;z-index:2;padding:28px 32px 32px;max-width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:0;}
   .hero-inner > h1, .hero-inner > p.lead{color:#FBEDE4;}
   .hero-inner > p.lead{color:#F0C9CE;}
   .hero-inner > h1{max-width:780px;margin-bottom:.3em;}
@@ -1113,9 +1130,9 @@
     .hero-stat-num{font-size:17px;}
     .hero-stat-lbl{font-size:12.5px;}
   }
-  .hero-trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 0;max-width:640px;}
+  .hero-trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0 0;max-width:640px;}
   .hero-trust-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#FBEDE4;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 13px;white-space:nowrap;}
-  .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:22px 0 4px;}
+  .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:16px 0 4px;}
   .hero-cta-primary{background:linear-gradient(120deg,var(--brass-dim),var(--brass) 55%,var(--brass-dim));color:#241512;border:none;font-weight:700;font-size:15px;padding:14px 26px;border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.28);transition:transform .15s ease,box-shadow .15s ease;}
   .hero-cta-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.34);}
   .btn.ghost.hero-cta-ghost{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.4)!important;color:#FBEDE4!important;font-weight:600;padding:14px 22px;border-radius:10px;}
@@ -1264,14 +1281,20 @@
 
   /* Dictamen de autenticidad: tarjetas dinámicas */
   .dictamen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:6px;}
-  .dictamen-card{position:relative;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--sage);border-radius:8px;padding:18px 16px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
-  .dictamen-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(36,21,18,.12);}
+  @media(min-width:920px){ .dictamen-grid{grid-template-columns:repeat(6,1fr);gap:12px;} }
+  .dictamen-card{position:relative;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--sage);border-radius:10px;padding:18px 14px;text-align:center;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+  .dictamen-card:hover{transform:translateY(-5px);box-shadow:0 12px 26px rgba(36,21,18,.14);}
   .dictamen-card.tier-ok{border-top-color:var(--ok);}
   .dictamen-card.tier-warn{border-top-color:var(--warn);}
   .dictamen-card.tier-bad{border-top-color:var(--bad);}
-  .dictamen-icon{font-size:23px;display:block;margin-bottom:10px;}
-  .dictamen-card h4{font-family:'Fraunces',serif;font-size:15px;margin:0 0 6px;color:var(--ink);}
-  .dictamen-card p{font-size:12.5px;color:var(--sage);line-height:1.55;margin:0 0 12px;}
+  .dictamen-icon{width:42px;height:42px;font-size:19px;display:flex;align-items:center;justify-content:center;border-radius:50%;margin:0 auto 12px;}
+  .dictamen-card.tier-ok .dictamen-icon{background:rgba(47,122,79,.12);}
+  .dictamen-card.tier-warn .dictamen-icon{background:rgba(184,134,47,.15);}
+  .dictamen-card.tier-bad .dictamen-icon{background:rgba(163,38,56,.12);}
+  .dictamen-card h4{font-family:'Fraunces',serif;font-size:14.5px;margin:0 0 6px;color:var(--ink);}
+  .dictamen-card p{font-size:12px;color:var(--sage);line-height:1.5;margin:0 0 12px;}
+  .dictamen-card .pill{margin:0 auto;width:fit-content;}
+  @media(min-width:920px) and (max-width:1180px){ .dictamen-card p{display:none;} .dictamen-card{padding:16px 10px;} }
 
   /* ===== Paquetes: rediseño (tarjetas dinámicas + tabla mejorada) ===== */
   .pkg-card{position:relative;display:flex;flex-direction:column;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;overflow:visible;}
@@ -1482,11 +1505,18 @@
   .showcase-plaque .k{font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#B79A6B;}
   .showcase-plaque .v{font-family:'Fraunces',serif;font-size:15px;color:#FBEDE4;}
 
-  .map-frame{border-radius:6px;overflow:hidden;border:1px solid var(--line);box-shadow:0 4px 20px rgba(36,21,18,.08);}
+  .loc-grid{gap:24px;}
+  .map-frame{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 44px rgba(36,21,18,.16);}
+  .map-frame::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--red), var(--brass) 55%, var(--red));z-index:2;}
   .map-frame iframe{width:100%;height:420px;border:0;display:block;}
-  .loc-detail{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .map-frame-cta{position:absolute;left:14px;bottom:14px;z-index:3;display:inline-flex;align-items:center;gap:7px;background:#fff;color:var(--ink);font-weight:600;font-size:13px;padding:10px 16px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.3);text-decoration:none;transition:transform .15s ease,box-shadow .15s ease;}
+  .map-frame-cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.35);}
+  .map-frame-cta svg{width:15px;height:15px;color:var(--red);flex:none;}
+  .loc-card{position:relative;overflow:hidden;padding-top:24px;}
+  .loc-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--brass), var(--red) 55%, var(--brass));}
+  .loc-detail{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
   .loc-detail:last-child{border-bottom:none;}
-  .loc-icon{width:30px;flex:none;color:var(--red);font-size:18px;}
+  .loc-icon{width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(210,4,45,0.08);color:var(--red);font-size:17px;}
 
   .gallery-item{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3;background:var(--panel-2);border:1px solid var(--line);}
   .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -1681,6 +1711,14 @@
   .nav-salon{position:relative;color:var(--brass-dim)!important;font-weight:600!important;}
   .nav-salon:hover{background:rgba(184,134,47,.12)!important;color:var(--brass)!important;}
   .nav-salon.active{background:linear-gradient(120deg,#8C6524,#DDAE5C 55%,#8C6524)!important;color:#241512!important;}
+  /* Contorno dinámico: una luz dorada que recorre el borde sin parar, como
+     invitación permanente a entrar al Salón — se ve en el botón del menú
+     todo el tiempo, sin depender de hover ni de estar en esa vista. */
+  .nav-salon::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;padding:1.5px;
+    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 296deg,rgba(232,196,104,0) 312deg,#E8C468 330deg,#FFF6DE 338deg,#E8C468 346deg,rgba(232,196,104,0) 360deg);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+    animation:hvTravelBorder 2.8s linear infinite;}
+  @media (prefers-reduced-motion: reduce){ .nav-salon::after{animation:none;} }
   /* "Piezas falsas" es un registro de advertencia, no una sección de venta
      — se le da un tratamiento serio en negro/obsidiana (a tono con el
      libro-abismo que abre) en vez del rojo/dorado del resto del menú. */
@@ -1692,6 +1730,19 @@
   .salon-hero::before{content:"";position:absolute;top:-50%;left:-10%;width:420px;height:420px;background:radial-gradient(circle,var(--salon-gold-glow),transparent 70%);pointer-events:none;z-index:-1;animation:salonAuraDrift 14s ease-in-out infinite alternate;}
   .salon-hero::after{content:"";position:absolute;bottom:-55%;right:-8%;width:380px;height:380px;background:radial-gradient(circle,rgba(232,196,104,.18),transparent 72%);pointer-events:none;z-index:-1;animation:salonAuraDrift 17s ease-in-out infinite alternate-reverse;}
   @keyframes salonAuraDrift{from{transform:translate(0,0) scale(1);}to{transform:translate(30px,-20px) scale(1.12);}}
+  /* Contorno dinámico: un segmento de luz dorada que recorre el perímetro
+     de la tarjeta del Salón sin parar (nunca un anillo fijo completo),
+     como si "algo estuviera presente ahí" invitando a entrar a verlo.
+     Técnica: conic-gradient animado por ángulo (vía @property) + máscara
+     de resta para dejar visible solo el grosor del borde. Si el navegador
+     no soporta @property, el borde se queda dorado fijo — nunca rompe. */
+  @property --hvtb-angle{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+  @keyframes hvTravelBorder{ to{ --hvtb-angle:360deg; } }
+  .hv-travel-border{position:absolute;inset:0;z-index:5;pointer-events:none;border-radius:inherit;padding:2.5px;
+    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 296deg,rgba(232,196,104,0) 312deg,#E8C468 330deg,#FFF6DE 338deg,#E8C468 346deg,rgba(232,196,104,0) 360deg);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+    animation:hvTravelBorder 4.5s linear infinite;}
+  @media (prefers-reduced-motion: reduce){ .hv-travel-border{animation:none;} }
   .salon-kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 12px;}
   .salon-hero h2{color:var(--salon-ink);font-size:clamp(24px,4vw,32px);max-width:640px;margin:0 0 14px;}
   .salon-lead{color:var(--salon-sage);font-size:15px;max-width:640px;line-height:1.65;margin:0;}
@@ -2123,22 +2174,9 @@
   <section class="hero" id="hero-section">
     <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
-    <div class="hero-road">
-      <div class="lane"></div>
-      <svg class="car" viewBox="0 0 120 40" aria-hidden="true">
-        <g fill="#F0C9CE" opacity=".85">
-          <path d="M8,30 L14,16 Q20,8 34,8 L78,8 Q90,8 96,18 L112,22 Q118,24 118,30 L118,32 L8,32 Z"/>
-          <path d="M32,10 L42,10 L46,20 L28,20 Z" fill="#7A0320"/>
-          <path d="M50,10 L70,10 L72,20 L48,20 Z" fill="#7A0320"/>
-        </g>
-        <circle cx="30" cy="32" r="6" fill="#1B1512"/>
-        <circle cx="30" cy="32" r="2.4" fill="#F0C9CE"/>
-        <circle cx="96" cy="32" r="6" fill="#1B1512"/>
-        <circle cx="96" cy="32" r="2.4" fill="#F0C9CE"/>
-      </svg>
-    </div>
+    <div class="hero-shine" aria-hidden="true"></div>
     <div class="hero-inner">
-      <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:110px;margin:0 0 14px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
+      <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:92px;margin:0 0 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
       <h1 style="margin-top:8px;" data-i18n="inicio.hero.h1">Certificación independiente de piezas vintage: Hot Wheels, CIPSA, Bólidos Lilí Ledy y Aurimat.</h1>
       <p class="lead" data-i18n="inicio.hero.lead">Somos coleccionistas certificando para coleccionistas: certificación independiente, con criterio experto y más de 25 años de experiencia — no afiliados a las marcas. Evaluamos si tu pieza es original, repintada o modificada, con criterios técnicos y trazables, y lo dejamos registrado con folio público.</p>
       <div class="hero-trust-row">
@@ -2358,13 +2396,18 @@
   </section>
 
   <section>
+    <p class="section-eyebrow" data-i18n="inicio.ubicacion.eyebrow">Visítanos en persona</p>
     <h2 data-i18n="inicio.ubicacion.h2">Ubicación</h2>
     <p style="color:var(--sage);max-width:640px;"><img class="mx-flag sm" src="assets/img/mx-flag.jpg" alt="Bandera de México"> <span data-i18n="inicio.ubicacion.p">Laboratorio físico en Ciudad de México — puedes visitarnos para entregar tu pieza en persona.</span></p>
-    <div class="grid grid-2" style="align-items:start;">
+    <div class="grid grid-2 loc-grid" style="align-items:start;">
       <div class="map-frame">
         <iframe loading="lazy" src="https://www.google.com/maps?q=Calle+Norte+164+466,+Pensador+Mexicano,+Venustiano+Carranza,+CDMX&output=embed"></iframe>
+        <a class="map-frame-cta" href="https://www.google.com/maps/dir/?api=1&destination=Calle+Norte+164+466,+Pensador+Mexicano,+Venustiano+Carranza,+CDMX" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+          <span data-i18n="inicio.ubicacion.comoLlegar">Cómo llegar</span>
+        </a>
       </div>
-      <div class="card">
+      <div class="card loc-card">
         <div class="loc-detail"><div class="loc-icon">📍</div><div><strong data-i18n="inicio.ubicacion.direccionK">Dirección</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.direccionV">Calle Norte 164 #466, Col. Pensador Mexicano, Venustiano Carranza, CDMX</p></div></div>
         <div class="loc-detail"><div class="loc-icon">🚇</div><div><strong data-i18n="inicio.ubicacion.metroK">Metro más cercano</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.metroV">Metro Romero Rubio, a dos calles del centro comercial Encuentro Oceanía.</p></div></div>
         <div class="loc-detail"><div class="loc-icon">🚌</div><div><strong data-i18n="inicio.ubicacion.camionK">Camión / RTP</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.camionV">Paradas sobre Av. del Peñón y Norte 172, a 2 minutos caminando.</p></div></div>
@@ -2499,6 +2542,7 @@
     </div>
 
     <div class="pres-showcase">
+      <span class="pres-count-badge" data-i18n="quienes.pres.badge">19 láminas</span>
       <div class="pres-showcase-head">
         <p class="section-eyebrow" data-i18n="quienes.pres.eyebrow">Presentación institucional</p>
         <h3 data-i18n="quienes.pres.h3">Conoce el laboratorio a detalle</h3>
@@ -2506,7 +2550,7 @@
       </div>
       <div class="pres-strip" id="pres-strip"></div>
       <div class="pres-cta-row">
-        <button class="btn" onclick="openPresentacion(0)" data-i18n="quienes.pres.verBtn">Ver presentación completa</button>
+        <button class="btn" onclick="openPresentacion(0)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span data-i18n="quienes.pres.verBtn">Ver presentación completa</span></button>
         <a class="btn ghost" href="assets/docs/laboratorio-hv-presentacion.pdf" target="_blank" rel="noopener" data-i18n="quienes.pres.pdfBtn">Descargar en PDF</a>
       </div>
     </div>
@@ -3406,6 +3450,7 @@
 <div class="view salon-scope" id="view-salon">
   <section>
     <div class="salon-hero reveal">
+      <div class="hv-travel-border" aria-hidden="true"></div>
       <div class="salon-hero-grid">
         <div class="salon-hero-copy">
           <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
@@ -4555,6 +4600,8 @@ const I18N_EN = {
   'inicio.reviews.commentPlaceholder': 'Tell us about your experience...',
   'inicio.reviews.publish': 'Post review',
   'inicio.reviews.cancel': 'Cancel',
+  'inicio.ubicacion.eyebrow': 'Visit us in person',
+  'inicio.ubicacion.comoLlegar': 'Get directions',
   'inicio.ubicacion.h2': 'Location',
   'inicio.ubicacion.p': 'Physical lab in Mexico City — you can visit us to drop off your piece in person.',
   'inicio.ubicacion.direccionK': 'Address',
@@ -4605,6 +4652,7 @@ const I18N_EN = {
   'quienes.tecnico.card1.p': 'Responsible for establishing, overseeing and validating that every authentication method meets Laboratorio HV\'s technical standards and criteria. It is the final authority that endorses and authorizes the final certification.',
   'quienes.tecnico.card2.h4': 'Technical Head of Authentication and Appraisal',
   'quienes.tecnico.card2.p': 'An expert appraiser with extensive experience recognizing variants, original paint, bases, rivets and manufacturing features. Directly responsible for the visual inspection, physical cross-check of the piece, and drafting the expert assessment of authenticity and condition.',
+  'quienes.pres.badge': '19 slides',
   'quienes.pres.eyebrow': 'Institutional presentation',
   'quienes.pres.h3': 'Get to know the lab in detail',
   'quienes.pres.p': 'Methodology, tools, grading scale, pricing and guarantees — all explained in depth across 19 slides. Ideal if you have questions before requesting your certification.',
@@ -8051,10 +8099,26 @@ function closeSalonWelcome(){
   if(stage) stage.classList.remove('open');
 }
 
+// La ventana de bienvenida solo necesita mostrarse automáticamente UNA vez
+// por socio — después queda "almacenado" que ya la vio (localStorage, para
+// que sobreviva a recargas y a futuras sesiones en el mismo dispositivo) y
+// ya no se vuelve a abrir sola. El socio siempre puede volver a verla a
+// mano con el botón "✨ Ver bienvenida" del lobby.
+function salonWelcomeSeenKey(m){ return 'hv_salon_welcome_seen_' + ((m && (m.code || m.telefono)) || 'anon'); }
+function salonWelcomeAlreadySeen(m){
+  try{ return localStorage.getItem(salonWelcomeSeenKey(m)) === '1'; }catch(e){ return false; }
+}
+function markSalonWelcomeSeen(m){
+  try{ localStorage.setItem(salonWelcomeSeenKey(m), '1'); }catch(e){}
+}
+
 // `opts.showWelcome` controla si se abre la ventana de bienvenida — solo
 // debe ser true cuando el socio realmente ENTRA al lobby (login, volver a
 // la vista del Salón, vista previa del admin), nunca cuando esta función
-// se vuelve a llamar solo para re-renderizar en otro idioma.
+// se vuelve a llamar solo para re-renderizar en otro idioma. Aun así, solo
+// se abre de verdad la primera vez que ese socio la ve (ver
+// salonWelcomeAlreadySeen arriba) — las siguientes entradas ya no la
+// interrumpen con la ventana, solo queda el botón para reabrirla.
 async function enterSalonLobby(m, opts){
   const showWelcome = !!(opts && opts.showWelcome);
   SALON_CURRENT_MEMBER = m;
@@ -8169,7 +8233,10 @@ async function enterSalonLobby(m, opts){
     <button class="btn ghost salon-btn-ghost" style="margin-top:14px;" onclick="salonLobbyExitClick()">${tt('Salir','Exit')}</button>
   `;
   initSalonCardTilt();
-  if(showWelcome) openSalonWelcome(m);
+  if(showWelcome && !salonWelcomeAlreadySeen(m)){
+    openSalonWelcome(m);
+    markSalonWelcomeSeen(m);
+  }
 }
 
 // Efecto "foil"/tilt de la tarjeta: sigue el mouse con dos variables CSS
@@ -10104,6 +10171,7 @@ function renderPresStrip(){
   box.innerHTML = PRES_SLIDES.map(s => `
     <button type="button" class="pres-thumb" onclick="openPresentacion(${s.n - 1})" aria-label="${tt(`Ver lámina ${s.n} de la presentación`,`View slide ${s.n} of the presentation`)}">
       <img src="${s.thumb}" width="480" height="270" alt="${tt(`Lámina ${s.n} de la presentación institucional`,`Slide ${s.n} of the institutional presentation`)}" loading="lazy">
+      <span class="zoom-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
       <span class="n">${s.n}/${PRES_TOTAL}</span>
     </button>`).join('');
 }
