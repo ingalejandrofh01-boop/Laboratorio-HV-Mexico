@@ -454,6 +454,10 @@ grandes, en orden aproximado en que aparecen:
   navegador de alguien no soporta la técnica de ángulo animado, el borde
   simplemente se queda dorado fijo — nunca rompe el diseño — y respeta
   "reducir movimiento" del sistema mostrando también un borde fijo.
+  - **Ajuste**: el contorno casi no se notaba, así que se engrosó bastante
+    la línea de luz y se le agregó un resplandor real alrededor (no solo
+    el trazo) para que el borde iluminado se vea con fuerza tanto en la
+    tarjeta como en el botón del menú.
 
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el

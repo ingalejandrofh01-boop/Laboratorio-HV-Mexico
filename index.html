@@ -1714,9 +1714,10 @@
   /* Contorno dinámico: una luz dorada que recorre el borde sin parar, como
      invitación permanente a entrar al Salón — se ve en el botón del menú
      todo el tiempo, sin depender de hover ni de estar en esa vista. */
-  .nav-salon::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;padding:1.5px;
-    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 296deg,rgba(232,196,104,0) 312deg,#E8C468 330deg,#FFF6DE 338deg,#E8C468 346deg,rgba(232,196,104,0) 360deg);
+  .nav-salon::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;padding:3px;
+    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 245deg,rgba(232,196,104,.15) 264deg,#E8C468 286deg,#FFFCEF 313deg,#E8C468 338deg,rgba(232,196,104,.12) 356deg,transparent 360deg);
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+    filter:drop-shadow(0 0 3px rgba(255,241,199,.95)) drop-shadow(0 0 9px rgba(232,196,104,.85));
     animation:hvTravelBorder 2.8s linear infinite;}
   @media (prefers-reduced-motion: reduce){ .nav-salon::after{animation:none;} }
   /* "Piezas falsas" es un registro de advertencia, no una sección de venta
@@ -1738,9 +1739,10 @@
      no soporta @property, el borde se queda dorado fijo — nunca rompe. */
   @property --hvtb-angle{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
   @keyframes hvTravelBorder{ to{ --hvtb-angle:360deg; } }
-  .hv-travel-border{position:absolute;inset:0;z-index:5;pointer-events:none;border-radius:inherit;padding:2.5px;
-    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 296deg,rgba(232,196,104,0) 312deg,#E8C468 330deg,#FFF6DE 338deg,#E8C468 346deg,rgba(232,196,104,0) 360deg);
+  .hv-travel-border{position:absolute;inset:0;z-index:5;pointer-events:none;border-radius:inherit;padding:5px;
+    background:conic-gradient(from var(--hvtb-angle),transparent 0deg,transparent 245deg,rgba(232,196,104,.15) 264deg,#E8C468 286deg,#FFFCEF 313deg,#E8C468 338deg,rgba(232,196,104,.12) 356deg,transparent 360deg);
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+    filter:drop-shadow(0 0 5px rgba(255,241,199,.95)) drop-shadow(0 0 16px rgba(232,196,104,.8)) drop-shadow(0 0 30px rgba(232,196,104,.45));
     animation:hvTravelBorder 4.5s linear infinite;}
   @media (prefers-reduced-motion: reduce){ .hv-travel-border{animation:none;} }
   .salon-kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 12px;}
