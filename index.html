@@ -1101,20 +1101,22 @@
   .holo .num{font-family:'IBM Plex Mono',monospace;font-size:4.2pt;margin-top:1pt;}
   .etiqueta-preview{background:#181210;border:1px dashed var(--line);border-radius:8px;padding:30px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;align-items:center;}
 
-  .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(150deg, #D2042D 0%, #7A0320 55%, #33010E 100%);}
+  .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(150deg, #D2042D 0%, #7A0320 55%, #33010E 100%);
+    animation:heroGlowPulse 3.4s ease-in-out infinite;}
 
   .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
   .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(122,3,32,.45) 0%, rgba(51,1,14,.92) 100%);z-index:1;}
-  /* Brillo metálico: una franja de luz diagonal que recorre el fondo rojo
-     de forma continua y sutil, para que el hero se sienta "vivo" sin
-     estorbar la lectura del texto encima (z-index 1, debajo de .hero-inner
-     que va en 2; pointer-events:none para no interceptar clics). */
-  .hero-shine{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;}
-  .hero-shine::before{content:"";position:absolute;top:-50%;left:-60%;width:45%;height:200%;
-    background:linear-gradient(75deg, transparent 0%, rgba(255,255,255,0) 35%, rgba(255,225,180,.16) 48%, rgba(255,255,255,.32) 50%, rgba(255,225,180,.16) 52%, rgba(255,255,255,0) 65%, transparent 100%);
-    animation:heroShineSweep 7s ease-in-out infinite;}
-  @keyframes heroShineSweep{0%{transform:translateX(0);}45%,100%{transform:translateX(260%);}}
-  @media (prefers-reduced-motion: reduce){ .hero-shine::before{animation:none;display:none;} }
+  /* Contorno que "respira": en vez de una franja de luz cruzando el fondo,
+     todo el cuadro del hero pulsa con un resplandor dorado/rojo alrededor
+     del borde — sutil en el valle, intenso en el pico — para que se sienta
+     vivo sin competir con el texto de encima. box-shadow no se recorta por
+     el propio overflow:hidden del elemento, así que el brillo se ve hacia
+     afuera del cuadro sin necesitar una capa aparte. */
+  @keyframes heroGlowPulse{
+    0%,100%{ box-shadow:0 0 0 1px rgba(232,196,104,.35), 0 0 16px 1px rgba(232,196,104,.22), 0 0 40px 6px rgba(210,4,45,.28); }
+    50%{ box-shadow:0 0 0 1.5px rgba(255,224,153,.9), 0 0 32px 5px rgba(255,224,153,.6), 0 0 78px 16px rgba(210,4,45,.55); }
+  }
+  @media (prefers-reduced-motion: reduce){ .hero{animation:none;box-shadow:0 0 0 1px rgba(232,196,104,.5), 0 0 26px 3px rgba(232,196,104,.32);} }
   .hero-inner{position:relative;z-index:2;padding:28px 32px 32px;max-width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:0;}
   .hero-inner > h1, .hero-inner > p.lead{color:#FBEDE4;}
   .hero-inner > p.lead{color:#F0C9CE;}
@@ -1514,9 +1516,18 @@
   .map-frame-cta svg{width:15px;height:15px;color:var(--red);flex:none;}
   .loc-card{position:relative;overflow:hidden;padding-top:24px;}
   .loc-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--brass), var(--red) 55%, var(--brass));}
-  .loc-detail{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .loc-card-title{font-family:'Fraunces',serif;font-size:16px;margin:0 0 4px;color:var(--ink);}
+  .loc-card-sub{font-size:12.5px;color:var(--sage);margin:0 0 4px;}
+  .loc-detail{display:flex;gap:14px;padding:13px 6px;margin:0 -6px;border-radius:10px;border-bottom:1px solid var(--line);align-items:flex-start;transition:background .15s ease;}
   .loc-detail:last-child{border-bottom:none;}
-  .loc-icon{width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(210,4,45,0.08);color:var(--red);font-size:17px;}
+  .loc-detail:hover{background:rgba(210,4,45,0.04);}
+  .loc-icon{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(210,4,45,0.08);color:var(--red);font-size:18px;transition:transform .15s ease;}
+  .loc-detail:hover .loc-icon{transform:scale(1.08);}
+  .loc-icon.metro{background:rgba(184,134,47,.14);color:var(--brass);}
+  .loc-icon.bus{background:rgba(47,122,79,.12);color:var(--ok);}
+  .loc-icon.horario{background:rgba(184,134,47,.16);color:var(--warn);}
+  .loc-detail-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .pill.warn{background:rgba(184,134,47,.12);color:var(--warn);border:1px solid var(--warn);}
 
   .gallery-item{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3;background:var(--panel-2);border:1px solid var(--line);}
   .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -1759,6 +1770,20 @@
   @media(max-width:900px){.salon-hero-grid{grid-template-columns:1fr;gap:30px;}}
   .salon-hero-card-wrap{display:flex;justify-content:center;}
   .salon-member-card.salon-preview-card{max-width:380px;aspect-ratio:auto;padding-bottom:24px;}
+
+  /* ---- Vista previa de la Galería Exclusiva en el banner del Salón (en
+     Inicio): antes ese lado derecho quedaba vacío. Un mosaico de 4 fotos
+     desenfocadas/oscurecidas con un candado encima da una probadita
+     tangible de "hay contenido exclusivo aquí" sin revelar realmente
+     ninguna pieza — la curiosidad hace el resto del trabajo. ---- */
+  .salon-gallery-teaser{position:relative;width:100%;max-width:380px;aspect-ratio:4/3;border-radius:16px;overflow:hidden;border:1px solid var(--salon-line);box-shadow:0 20px 50px rgba(0,0,0,.45);}
+  .sgt-grid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;}
+  .sgt-thumb{background-size:cover;background-position:center;filter:blur(3px) brightness(.55) saturate(1.1);transform:scale(1.1);}
+  .salon-gallery-teaser::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,9,6,.1) 0%, rgba(11,9,6,.55) 58%, rgba(11,9,6,.94) 100%);}
+  .sgt-overlay{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:22px 20px;gap:5px;}
+  .sgt-lock{width:38px;height:38px;border-radius:50%;background:rgba(232,196,104,.16);border:1px solid rgba(232,196,104,.42);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:5px;}
+  .sgt-label{color:var(--salon-ink);font-family:'Fraunces',serif;font-size:17px;margin:0;}
+  .sgt-sub{color:var(--salon-sage);font-size:12.5px;margin:0;max-width:260px;}
   .salon-preview-card .smc-name{font-size:19px;}
   .salon-preview-ladder{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px;}
 
@@ -2176,7 +2201,6 @@
   <section class="hero" id="hero-section">
     <div class="hero-bg" id="hero-bg"></div>
     <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
-    <div class="hero-shine" aria-hidden="true"></div>
     <div class="hero-inner">
       <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:92px;margin:0 0 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
       <h1 style="margin-top:8px;" data-i18n="inicio.hero.h1">Certificación independiente de piezas vintage: Hot Wheels, CIPSA, Bólidos Lilí Ledy y Aurimat.</h1>
@@ -2220,10 +2244,30 @@
 
   <section class="salon-scope">
     <div class="salon-hero reveal in-view">
-      <p class="salon-kicker" data-i18n="inicio.salonBanner.kicker">Salón Privado HV</p>
-      <h2 data-i18n="inicio.salonBanner.h2">Una membresía que se gana certificando con nosotros</h2>
-      <p class="salon-lead" data-i18n="inicio.salonBanner.lead">Certifica 5 piezas y vuélvete socio preferente: prioridad de agenda, obsequios de cortesía, una galería exclusiva y mucho más. Si prefieres, también puedes adquirir tu membresía directamente.</p>
-      <button class="btn salon-btn-gold" style="margin-top:8px;" onclick="go('salon')" data-i18n="inicio.salonBanner.btn">Conocer el Salón Privado →</button>
+      <div class="hv-travel-border" aria-hidden="true"></div>
+      <div class="salon-hero-grid">
+        <div class="salon-hero-copy">
+          <p class="salon-kicker" data-i18n="inicio.salonBanner.kicker">Salón Privado HV</p>
+          <h2 data-i18n="inicio.salonBanner.h2">Una membresía que se gana certificando con nosotros</h2>
+          <p class="salon-lead" data-i18n="inicio.salonBanner.lead">Certifica 5 piezas y vuélvete socio preferente: prioridad de agenda, obsequios de cortesía, una galería exclusiva y mucho más. Si prefieres, también puedes adquirir tu membresía directamente.</p>
+          <button class="btn salon-btn-gold" style="margin-top:8px;" onclick="go('salon')" data-i18n="inicio.salonBanner.btn">Conocer el Salón Privado →</button>
+        </div>
+        <div class="salon-hero-card-wrap">
+          <div class="salon-gallery-teaser" aria-hidden="true">
+            <div class="sgt-grid">
+              <div class="sgt-thumb" style="background-image:url('assets/img/wm-1.jpg')"></div>
+              <div class="sgt-thumb" style="background-image:url('assets/img/wm-2.jpg')"></div>
+              <div class="sgt-thumb" style="background-image:url('assets/img/wm-3.jpg')"></div>
+              <div class="sgt-thumb" style="background-image:url('assets/img/showcase-piece.jpg')"></div>
+            </div>
+            <div class="sgt-overlay">
+              <span class="sgt-lock">🔒</span>
+              <p class="sgt-label" data-i18n="inicio.salonBanner.galleryLabel">Galería Exclusiva del Salón</p>
+              <p class="sgt-sub" data-i18n="inicio.salonBanner.gallerySub">Piezas raras de la colección, visibles solo para socios</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2410,10 +2454,12 @@
         </a>
       </div>
       <div class="card loc-card">
-        <div class="loc-detail"><div class="loc-icon">📍</div><div><strong data-i18n="inicio.ubicacion.direccionK">Dirección</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.direccionV">Calle Norte 164 #466, Col. Pensador Mexicano, Venustiano Carranza, CDMX</p></div></div>
-        <div class="loc-detail"><div class="loc-icon">🚇</div><div><strong data-i18n="inicio.ubicacion.metroK">Metro más cercano</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.metroV">Metro Romero Rubio, a dos calles del centro comercial Encuentro Oceanía.</p></div></div>
-        <div class="loc-detail"><div class="loc-icon">🚌</div><div><strong data-i18n="inicio.ubicacion.camionK">Camión / RTP</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.camionV">Paradas sobre Av. del Peñón y Norte 172, a 2 minutos caminando.</p></div></div>
-        <div class="loc-detail"><div class="loc-icon">🕒</div><div><strong data-i18n="inicio.ubicacion.horarioK">Horario de atención</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.horarioV">Lunes a viernes, 10:00 am – 6:00 pm. Con cita agendada desde "Solicitar validación" — una pieza por horario, por favor sé puntual.</p></div></div>
+        <h4 class="loc-card-title" data-i18n="inicio.ubicacion.cardTitle">Cómo encontrarnos</h4>
+        <p class="loc-card-sub" data-i18n="inicio.ubicacion.cardSub">Todo lo que necesitas para planear tu visita.</p>
+        <div class="loc-detail"><div class="loc-icon dir">📍</div><div><strong data-i18n="inicio.ubicacion.direccionK">Dirección</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.direccionV">Calle Norte 164 #466, Col. Pensador Mexicano, Venustiano Carranza, CDMX</p></div></div>
+        <div class="loc-detail"><div class="loc-icon metro">🚇</div><div><strong data-i18n="inicio.ubicacion.metroK">Metro más cercano</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.metroV">Metro Romero Rubio, a dos calles del centro comercial Encuentro Oceanía.</p></div></div>
+        <div class="loc-detail"><div class="loc-icon bus">🚌</div><div><strong data-i18n="inicio.ubicacion.camionK">Camión / RTP</strong><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.camionV">Paradas sobre Av. del Peñón y Norte 172, a 2 minutos caminando.</p></div></div>
+        <div class="loc-detail"><div class="loc-icon horario">🕒</div><div><div class="loc-detail-head"><strong data-i18n="inicio.ubicacion.horarioK">Horario de atención</strong><span class="pill warn" data-i18n="inicio.ubicacion.citaPill">Con cita</span></div><p style="margin:2px 0 0;color:var(--sage);font-size:14px;" data-i18n="inicio.ubicacion.horarioV">Lunes a viernes, 10:00 am – 6:00 pm. Con cita agendada desde "Solicitar validación" — una pieza por horario, por favor sé puntual.</p></div></div>
       </div>
     </div>
   </section>
@@ -4614,6 +4660,9 @@ const I18N_EN = {
   'inicio.ubicacion.camionV': 'Stops on Av. del Peñón and Norte 172, a 2-minute walk.',
   'inicio.ubicacion.horarioK': 'Business hours',
   'inicio.ubicacion.horarioV': 'Monday to Friday, 10:00 am – 6:00 pm. By appointment via "Request certification" — one piece per time slot, please be punctual.',
+  'inicio.ubicacion.cardTitle': 'How to find us',
+  'inicio.ubicacion.cardSub': 'Everything you need to plan your visit.',
+  'inicio.ubicacion.citaPill': 'By appointment',
   'inicio.social.h2': 'Follow us and join the community',
   'inicio.social.p': 'New pieces, freshly certified folios and lab announcements — all first on our social media.',
   'inicio.social.fbSub': 'Official lab account',
@@ -5079,6 +5128,8 @@ const I18N_EN = {
   'inicio.salonBanner.h2': 'A membership you earn by certifying with us',
   'inicio.salonBanner.lead': 'Certify 5 pieces and become a preferred member: priority booking, courtesy gifts, an exclusive gallery, and much more. You can also get your membership directly if you prefer.',
   'inicio.salonBanner.btn': 'Discover the Salón Privado →',
+  'inicio.salonBanner.galleryLabel': 'Salón Exclusive Gallery',
+  'inicio.salonBanner.gallerySub': 'Rare pieces from the collection, visible only to members',
   'salon.book.porCategoria': 'By category',
   'salon.book.porSocio': 'By member',
   'salon.book.indexHeading': 'Exclusive Gallery',

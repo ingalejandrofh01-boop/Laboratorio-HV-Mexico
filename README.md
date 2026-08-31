@@ -459,6 +459,29 @@ grandes, en orden aproximado en que aparecen:
     el trazo) para que el borde iluminado se vea con fuerza tanto en la
     tarjeta como en el botón del menú.
 
+- **Hero de inicio: contorno que "respira" en vez del brillo diagonal, y
+  Salón/Ubicación con más contenido**:
+  - Se quitó el brillo metálico diagonal del hero (la franja de luz que
+    cruzaba el fondo rojo) porque distraía más de lo que aportaba. En su
+    lugar, todo el cuadro del hero ahora tiene un resplandor dorado/rojo
+    que pulsa alrededor del borde — sutil en el valle, bien intenso en el
+    pico — dándole ese efecto "vivo" sin la línea. Es puro CSS (box-shadow
+    animado) y respeta "reducir movimiento" mostrando un resplandor fijo.
+  - El banner de "Salón Privado HV" en Inicio tenía el lado derecho vacío.
+    Ahora ese espacio muestra una vista previa de la **Galería Exclusiva**:
+    un mosaico de fotos desenfocadas/oscurecidas con un candado encima y
+    el texto "Galería Exclusiva del Salón" — una probadita tangible de que
+    hay contenido especial ahí sin revelar ninguna pieza real, para generar
+    curiosidad. También se le agregó el mismo contorno dorado en movimiento
+    que ya tenía la tarjeta del Salón.
+  - La tarjeta de instrucciones de acceso en **Ubicación** se sintió muy
+    simple, así que se le agregó un título ("Cómo encontrarnos") y
+    subtítulo, cada fila ahora tiene su ícono en un color distinto según
+    el tipo (dirección en rojo, metro en dorado, camión en verde, horario
+    en ámbar), una insignia "Con cita" junto al horario de atención, y un
+    resaltado suave al pasar el mouse sobre cada fila.
+  - Todo probado en celular, tablet y escritorio, y en español e inglés.
+
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el
   cliente traía o recibía su pieza por paquetería. Ahora, al elegir
