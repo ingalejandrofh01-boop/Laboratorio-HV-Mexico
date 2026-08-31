@@ -344,6 +344,40 @@ grandes, en orden aproximado en que aparecen:
   sentía como un requisito. Ahora primero se pregunta "¿Alguien te
   recomendó Laboratorio HV?" con botones Sí/No; el campo de texto para
   escribir el código solo aparece si el cliente responde que sí tiene uno.
+- **"Verificar folio" y "Mi historial" — centradas**: la tarjeta de consulta
+  se quedaba pegada a la izquierda, con mucho espacio vacío a la derecha en
+  pantallas anchas. Ahora el título, subtítulo y tarjeta viven dentro de
+  `.lookup-stage`, centrados como una sola pantalla de foco, con un
+  degradado radial sutil detrás de la tarjeta, ícono más grande, elevación
+  al pasar el mouse, y la fila de confianza ("🔒 Público y gratuito", etc.)
+  ahora son píldoras con fondo en vez de texto suelto.
+
+- **Remaster del panel admin — rendimiento, organización y diseño**: pase
+  grande sobre el panel administrador, en tres frentes.
+  - *Rendimiento*: las listas del admin (Solicitudes, Validación en curso,
+    Historial, Dashboard, exportaciones) leían cada documento uno por uno
+    en secuencia — con 100+ piezas eso se sentía lento. Ahora todas usan
+    `Promise.all` para traer los documentos en paralelo.
+  - *Organización a escala*: "Historial de piezas" ahora deja elegir entre
+    agrupar **por semana o por mes** (antes solo por mes); hay un botón
+    para **exportar a CSV exactamente lo que se está viendo** (respeta el
+    filtro activo); nueva pestaña **"Cliente 360°"** que junta en una sola
+    pantalla todo lo de un cliente (solicitudes, piezas en proceso, folios
+    certificados, gasto total y su estatus de Salón Privado) buscando solo
+    por teléfono — ya no hay que ir pestaña por pestaña; y el buscador
+    global ahora tiene un botón "👤" junto a cada resultado para saltar
+    directo al perfil de ese cliente. También hay **alertas de plazos**:
+    el Dashboard muestra un aviso arriba de todo cuando alguna pieza en
+    proceso está atrasada o le queda menos de 24h, y el ícono de
+    "Validación en curso" en el menú se pone rojo con el número de piezas
+    atrasadas.
+  - *Diseño*: el panel se ve más pulido y con más peso visual — esquinas
+    más redondeadas, sombras más suaves, tarjetas de KPI con una franja de
+    color arriba y elevación al pasar el mouse, el menú lateral agrupado
+    en "Operación diaria" / "Contenido y sistema" con íconos en su propio
+    círculo, y se corrigió un bug real donde el botón de filtro activo
+    (p. ej. "Todas" en Historial) mostraba el texto invisible por un
+    choque de estilos (texto rojo sobre fondo rojo).
 
 ## Cómo desplegar una actualización
 

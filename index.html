@@ -367,10 +367,13 @@
   .ags-group{padding:6px 6px 4px;}
   .ags-group + .ags-group{border-top:1px solid var(--line);}
   .ags-group-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--brass-dim);padding:4px 6px;font-weight:600;}
-  .ags-item{display:block;width:100%;text-align:left;padding:8px 9px;border-radius:8px;border:none;background:transparent;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .ags-item-row{display:flex;align-items:stretch;gap:4px;}
+  .ags-item{display:block;flex:1;min-width:0;text-align:left;padding:8px 9px;border-radius:8px;border:none;background:transparent;color:var(--ink);cursor:pointer;font-family:inherit;}
   .ags-item:hover,.ags-item.active{background:var(--panel-2);}
   .ags-item-title{display:block;font-size:13.5px;font-weight:600;}
-  .ags-item-sub{display:block;font-size:12px;color:var(--sage);margin-top:1px;}
+  .ags-item-sub{display:block;font-size:12px;color:var(--sage);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ags-item-cliente{flex:none;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:15px;padding:0 8px;color:var(--sage);transition:background-color .15s ease;}
+  .ags-item-cliente:hover{background:rgba(210,4,45,0.1);color:var(--red);}
   .ags-empty{padding:18px;color:var(--sage);font-size:13px;text-align:center;}
   @keyframes agsFlash{0%{background:rgba(221,174,92,.4);}100%{background:transparent;}}
   .ags-highlight{animation:agsFlash 1.8s ease;border-radius:10px;}
@@ -576,21 +579,35 @@
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
 
   /* ===== Panel de administración rediseñado ===== */
-  .admin-shell{display:flex;align-items:stretch;min-height:60vh;min-width:0;box-shadow:0 2px 14px rgba(36,21,18,0.05);}
-  .admin-sidebar{display:block;flex-wrap:nowrap;width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:18px 12px;box-sizing:border-box;}
-  .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);padding:11px 12px;border-radius:8px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .15s ease,color .15s ease,border-color .15s ease;}
-  .admin-sidebar button .ic{width:18px;height:18px;flex:none;display:flex;align-items:center;justify-content:center;}
-  .admin-sidebar button .ic svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+  .admin-shell{display:flex;align-items:stretch;min-height:60vh;min-width:0;box-shadow:0 10px 34px rgba(36,21,18,0.08);}
+  .admin-shell.card{border-radius:16px;}
+  .admin-sidebar{display:block;flex-wrap:nowrap;width:230px;flex:none;background:var(--panel-2);border-right:1px solid var(--line);padding:20px 14px;box-sizing:border-box;}
+  .admin-sidebar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sage-dim);padding:12px 10px 6px;}
+  .admin-sidebar-label:first-child{padding-top:2px;}
+  .admin-sidebar button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:10px;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;}
+  .admin-sidebar button .ic{width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--panel-2);border-radius:8px;transition:background-color .15s ease;}
+  .admin-sidebar button .ic svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
   .admin-sidebar button .lbl{flex:1;}
-  .admin-sidebar button:hover{background:rgba(210,4,45,0.07);color:var(--ink);}
-  .admin-sidebar button.active{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 2px 8px rgba(210,4,45,0.28);}
+  .admin-sidebar button:hover{background:rgba(210,4,45,0.07);color:var(--ink);transform:translateX(2px);}
+  .admin-sidebar button:hover .ic{background:rgba(210,4,45,0.14);}
+  .admin-sidebar button.active{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 4px 14px rgba(210,4,45,0.32);}
+  .admin-sidebar button.active .ic{background:rgba(255,255,255,0.22);}
   .admin-sidebar hr{border:none;border-top:1px solid var(--line);margin:10px 6px;}
   .admin-badge{background:var(--brass);color:#fff;font-size:10.5px;font-family:'IBM Plex Mono',monospace;padding:1px 7px;border-radius:20px;line-height:1.5;flex:none;}
   .admin-sidebar button.active .admin-badge{background:rgba(255,255,255,0.28);}
-  .admin-main{flex:1;min-width:0;padding:26px 28px;background:var(--panel);}
+  .admin-badge-alert{background:var(--red)!important;}
+  .dash-deadline-alert{border-left:4px solid var(--brass);font-size:13.5px;}
+  .dash-deadline-alert-late{border-left-color:var(--red);background:rgba(210,4,45,0.06);}
+  .dash-deadline-alert-warn{border-left-color:var(--brass);background:rgba(184,134,47,0.08);}
+  .admin-main{flex:1;min-width:0;padding:30px 32px;background:var(--panel);}
   .admin-tab{display:none;}
   .admin-tab.active{display:block;}
   .admin-tab h3{font-family:'Fraunces',serif;font-weight:500;}
+  .admin-main .card{border-radius:12px;box-shadow:0 2px 12px rgba(36,21,18,0.05);transition:box-shadow .2s ease,border-color .2s ease;}
+  .admin-main table{width:100%;border-collapse:collapse;}
+  .admin-main table tr:nth-child(even) td{background:var(--panel-2);}
+  .admin-main table th{text-align:left;padding:9px 7px;color:var(--sage-dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--line);font-weight:700;}
+  .admin-main table td{padding:9px 7px;}
   .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:20px;}
   .dash-charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px;}
   .dash-chart-card{display:flex;flex-direction:column;}
@@ -600,11 +617,18 @@
   .dash-chart-center-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;}
   .dash-chart-center-label .pct{display:block;font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--ink);}
   .dash-chart-center-label .txt{display:block;font-size:10.5px;color:var(--sage-dim);text-transform:uppercase;letter-spacing:.04em;}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px 16px;text-align:center;min-width:0;transition:box-shadow .15s ease,border-color .15s ease;}
-  .kpi:hover{box-shadow:0 4px 14px rgba(36,21,18,0.06);border-color:rgba(210,4,45,0.25);}
+  .kpi{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 16px;text-align:center;min-width:0;transition:box-shadow .18s ease,border-color .18s ease,transform .18s ease;}
+  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--brass) 60%,var(--red));opacity:.85;}
+  .kpi:hover{box-shadow:0 10px 24px rgba(36,21,18,0.09);border-color:rgba(210,4,45,0.25);transform:translateY(-2px);}
   .kpi .num{font-family:'IBM Plex Mono',monospace;font-size:26px;color:var(--red);margin:0;line-height:1;}
   .kpi .lbl{font-size:11px;color:var(--sage);margin:8px 0 0;text-transform:uppercase;letter-spacing:.05em;}
-  .filter-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
+  .filter-btn.active{background:var(--red);color:#fff!important;border-color:var(--red);}
+  .filter-btn.active:hover{background:var(--red);}
+  .group-mode-toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel);}
+  .group-mode-btn{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;border:none;background:transparent;color:var(--sage);padding:8px 13px;cursor:pointer;transition:background-color .15s ease,color .15s ease;}
+  .group-mode-btn+.group-mode-btn{border-left:1px solid var(--line);}
+  .group-mode-btn.active{background:var(--red);color:#fff;}
+  .group-mode-btn:hover:not(.active){background:rgba(210,4,45,0.07);color:var(--ink);}
   .proc-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease;background:var(--panel);}
   .proc-card:hover{box-shadow:0 4px 14px rgba(36,21,18,0.08);border-color:var(--red);transform:translateY(-1px);}
   .proc-card-late{border-color:rgba(184,44,44,0.4);}
@@ -1103,11 +1127,24 @@
      probamos en la tarjeta de la portada (ícono en placa + etiqueta +
      subtítulo + campo con anillo de foco), con un ícono/color propio por
      sección para que cada una se sienta distinta. ---- */
-  .lookup-card{max-width:560px;margin-top:20px;padding:28px 26px 24px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 14px 34px rgba(36,21,18,.1);}
+  /* ---- Página de "consulta" (Verificar folio / Mi historial) centrada como
+     una sola pantalla de foco: título + subtítulo + tarjeta, todo alineado
+     al centro dentro de .lookup-stage — antes la tarjeta se quedaba pegada
+     a la izquierda con mucho espacio vacío a la derecha en pantallas
+     anchas. La tarjeta conserva texto alineado a la izquierda por dentro
+     (más legible para el formulario). ---- */
+  .lookup-stage{max-width:620px;margin:0 auto;text-align:center;position:relative;}
+  .lookup-stage::before{content:"";position:absolute;left:50%;top:-24px;transform:translateX(-50%);width:480px;height:260px;background:radial-gradient(ellipse at center, rgba(210,4,45,.07), transparent 72%);pointer-events:none;z-index:0;}
+  html[data-theme="dark"] .lookup-stage::before{background:radial-gradient(ellipse at center, rgba(221,174,92,.09), transparent 72%);}
+  .lookup-stage>*{position:relative;z-index:1;}
+  .lookup-stage h2,.lookup-stage>p{text-align:center;margin-left:auto;margin-right:auto;}
+  .lookup-card{max-width:580px;margin:26px auto 0;padding:30px 28px 26px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 14px 34px rgba(36,21,18,.1);text-align:left;transition:transform .2s ease, box-shadow .2s ease;}
+  .lookup-card:hover{transform:translateY(-3px);box-shadow:0 20px 46px rgba(36,21,18,.16);}
   .lookup-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg, var(--red), var(--brass) 55%, var(--red));}
-  .lookup-card-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
-  .lookup-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;box-shadow:0 6px 14px rgba(36,21,18,.28);}
-  .lookup-icon svg{width:19px;height:19px;}
+  .lookup-card-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .lookup-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;box-shadow:0 6px 14px rgba(36,21,18,.28), 0 0 0 5px rgba(36,21,18,.05);}
+  html[data-theme="dark"] .lookup-icon{box-shadow:0 6px 14px rgba(0,0,0,.4), 0 0 0 5px rgba(255,255,255,.05);}
+  .lookup-icon svg{width:21px;height:21px;}
   .verificar-lookup-icon{background:linear-gradient(135deg, var(--red), #8C0323);}
   .cliente-lookup-icon{background:linear-gradient(135deg, var(--ok), #1B4A34);box-shadow:0 6px 14px rgba(47,122,79,.3);}
   .lookup-card-head-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
@@ -1119,8 +1156,8 @@
   .lookup-input-group input:focus{outline:none;}
   .lookup-input-group button.btn{border-radius:0;box-shadow:none;padding:13px 22px;font-weight:700;letter-spacing:.02em;}
   .lookup-input-group button.btn:hover{transform:none;filter:brightness(1.06);}
-  .lookup-trust-row{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;}
-  .lookup-trust-row span{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--sage-dim);}
+  .lookup-trust-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .lookup-trust-row span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--sage-dim);background:var(--panel-2);border:1px solid var(--line);border-radius:20px;padding:5px 12px;}
   .method-steps{display:flex;flex-direction:column;position:relative;margin-left:17px;margin-top:24px;padding-left:0;}
   .method-steps::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--line);}
   .method-steps::after{content:'';position:absolute;left:0;top:0;width:2px;height:var(--mprog,0%);background:linear-gradient(var(--red-dim),var(--red));box-shadow:0 0 8px rgba(210,4,45,.55);transition:height .12s linear;}
@@ -2872,26 +2909,28 @@
 
 <div class="view" id="view-verificar">
   <section>
-    <h2 data-i18n="verificar.h2">Verificación pública de folio</h2>
-    <p style="color:var(--sage);max-width:600px;" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
+    <div class="lookup-stage">
+      <h2 data-i18n="verificar.h2">Verificación pública de folio</h2>
+      <p style="color:var(--sage);max-width:600px;" data-i18n="verificar.p">Verifica el folio de tu pieza certificada o el código QR de tu certificado.</p>
 
-    <div class="card lookup-card">
-      <div class="lookup-card-head">
-        <span class="lookup-icon verificar-lookup-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
-        </span>
-        <div class="lookup-card-head-text">
-          <label for="v-folio" data-i18n="verificar.lookupLabel">Consulta tu certificado</label>
-          <span class="lookup-card-sub" data-i18n="verificar.lookupSub">Público, gratuito e instantáneo</span>
+      <div class="card lookup-card">
+        <div class="lookup-card-head">
+          <span class="lookup-icon verificar-lookup-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <div class="lookup-card-head-text">
+            <label for="v-folio" data-i18n="verificar.lookupLabel">Consulta tu certificado</label>
+            <span class="lookup-card-sub" data-i18n="verificar.lookupSub">Público, gratuito e instantáneo</span>
+          </div>
         </div>
-      </div>
-      <div class="lookup-input-group">
-        <input id="v-folio" placeholder="Folio" data-i18n-placeholder="verificar.folioPh">
-        <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
-      </div>
-      <div class="lookup-trust-row">
-        <span data-i18n="verificar.trust1">🔒 Público y gratuito</span>
-        <span data-i18n="verificar.trust2">✓ Válido para cualquier certificado emitido por el laboratorio</span>
+        <div class="lookup-input-group">
+          <input id="v-folio" placeholder="Folio" data-i18n-placeholder="verificar.folioPh">
+          <button class="btn" onclick="verifyFolio()" data-i18n="verificar.btn">Verificar</button>
+        </div>
+        <div class="lookup-trust-row">
+          <span data-i18n="verificar.trust1">🔒 Público y gratuito</span>
+          <span data-i18n="verificar.trust2">✓ Válido para cualquier certificado emitido por el laboratorio</span>
+        </div>
       </div>
     </div>
 
@@ -3196,28 +3235,30 @@
 
 <div class="view" id="view-cliente">
   <section>
-    <h2 data-i18n="cliente.h2">Mi historial</h2>
-    <p style="color:var(--sage);max-width:600px;" data-i18n="cliente.p">Rastrea tu pieza en tiempo real con tu código de seguimiento — el mismo que te dimos al enviar tu solicitud — o consulta todo tu historial con tu teléfono.</p>
+    <div class="lookup-stage">
+      <h2 data-i18n="cliente.h2">Mi historial</h2>
+      <p style="color:var(--sage);max-width:600px;" data-i18n="cliente.p">Rastrea tu pieza en tiempo real con tu código de seguimiento — el mismo que te dimos al enviar tu solicitud — o consulta todo tu historial con tu teléfono.</p>
 
-    <div class="card lookup-card">
-      <div class="lookup-card-head">
-        <span class="lookup-icon cliente-lookup-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        </span>
-        <div class="lookup-card-head-text">
-          <label for="c-codigo" data-i18n="cliente.codigoLabel">Código de seguimiento</label>
-          <span class="lookup-card-sub" data-i18n="cliente.lookupSub">Sigue el proceso de tu pieza, paso a paso</span>
+      <div class="card lookup-card">
+        <div class="lookup-card-head">
+          <span class="lookup-icon cliente-lookup-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </span>
+          <div class="lookup-card-head-text">
+            <label for="c-codigo" data-i18n="cliente.codigoLabel">Código de seguimiento</label>
+            <span class="lookup-card-sub" data-i18n="cliente.lookupSub">Sigue el proceso de tu pieza, paso a paso</span>
+          </div>
         </div>
+        <div class="lookup-input-group">
+          <input id="c-codigo" class="mono" placeholder="HV-MX-2026-000" style="text-transform:uppercase;" onkeydown="if(event.key==='Enter')trackByCodigo();">
+          <button class="btn" onclick="trackByCodigo()" data-i18n="cliente.rastrear">Rastrear</button>
+        </div>
+        <div class="lookup-trust-row">
+          <span data-i18n="cliente.trust1">🔒 Solo tú, con tu código</span>
+          <span data-i18n="cliente.trust2">⏱ Estatus actualizado en tiempo real</span>
+        </div>
+        <div id="c-track-result" style="margin-top:18px;"></div>
       </div>
-      <div class="lookup-input-group">
-        <input id="c-codigo" class="mono" placeholder="HV-MX-2026-000" style="text-transform:uppercase;" onkeydown="if(event.key==='Enter')trackByCodigo();">
-        <button class="btn" onclick="trackByCodigo()" data-i18n="cliente.rastrear">Rastrear</button>
-      </div>
-      <div class="lookup-trust-row">
-        <span data-i18n="cliente.trust1">🔒 Solo tú, con tu código</span>
-        <span data-i18n="cliente.trust2">⏱ Estatus actualizado en tiempo real</span>
-      </div>
-      <div id="c-track-result" style="margin-top:18px;"></div>
     </div>
 
     <details class="track-phone-toggle">
@@ -3403,6 +3444,7 @@
             <option value="validacion">Validación en curso</option>
             <option value="certificados">Certificados y folios</option>
             <option value="historial">Historial de piezas</option>
+            <option value="cliente">Cliente 360°</option>
             <option value="ingresos">Ingresos</option>
             <option value="salon">Salón Privado</option>
             <option value="galeria">Imágenes del sitio</option>
@@ -3411,14 +3453,17 @@
           </select>
         </div>
         <nav class="admin-sidebar">
+          <div class="admin-sidebar-label">Operación diaria</div>
           <button data-tab="dashboard" class="active" onclick="adminGo('dashboard')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span><span class="lbl">Panel general</span></button>
           <button data-tab="solicitudes" onclick="adminGo('solicitudes')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="lbl">Solicitudes</span><span class="admin-badge" id="badge-solicitudes" style="display:none;">0</span></button>
           <button data-tab="validacion" onclick="adminGo('validacion')"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><span class="lbl">Validación en curso</span><span class="admin-badge" id="badge-validacion" style="display:none;">0</span></button>
           <button data-tab="certificados" onclick="adminGo('certificados')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><span class="lbl">Certificados y folios</span></button>
           <button data-tab="historial" onclick="adminGo('historial')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg></span><span class="lbl">Historial de piezas</span></button>
+          <button data-tab="cliente" onclick="adminGo('cliente')"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span><span class="lbl">Cliente 360°</span></button>
           <button data-tab="ingresos" onclick="adminGo('ingresos')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><rect x="5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="16" y="4" width="3" height="16"/></svg></span><span class="lbl">Ingresos</span></button>
           <button data-tab="salon" onclick="adminGo('salon')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.9L21 9.6l-4.6 4.2L17.6 21 12 17.6 6.4 21l1.2-7.2L3 9.6l6.4-.7z"/></svg></span><span class="lbl">Salón Privado</span><span class="admin-badge" id="badge-salon" style="display:none;">0</span></button>
           <hr>
+          <div class="admin-sidebar-label">Contenido y sistema</div>
           <button data-tab="galeria" onclick="adminGo('galeria')"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5.5-5.5L4 21"/></svg></span><span class="lbl">Imágenes del sitio</span></button>
           <button data-tab="etiquetas" onclick="adminGo('etiquetas')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 8-9 9-8-8z"/><circle cx="8.5" cy="8.5" r="1.4"/></svg></span><span class="lbl">Etiquetas de impresión</span></button>
           <button data-tab="respaldo" onclick="adminGo('respaldo')"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 18v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span><span class="lbl">Respaldo de datos</span></button>
@@ -3428,6 +3473,7 @@
 
           <!-- ===== DASHBOARD ===== -->
           <div class="admin-tab active" id="admin-tab-dashboard">
+            <div class="card dash-deadline-alert" id="dash-deadline-alert" style="display:none;margin-bottom:16px;"></div>
             <div class="kpi-grid">
               <div class="kpi"><p class="num" id="stat-solicitudes">—</p><p class="lbl">Solicitudes pendientes</p></div>
               <div class="kpi"><p class="num" id="stat-validacion">—</p><p class="lbl">Validaciones en curso</p></div>
@@ -3655,15 +3701,35 @@
           <div class="admin-tab" id="admin-tab-historial">
             <h3 style="font-size:16px;margin-top:0;">Historial completo de piezas</h3>
             <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Cada pieza que ha pasado por el laboratorio, con su paquete, resultado, calificación y lo que se cobró — para ver el proceso completo de cualquiera, en cualquier momento.</p>
-            <div class="row" style="margin-bottom:14px;flex-wrap:wrap;">
-              <button class="btn ghost small filter-btn active" data-hfilter="todas" onclick="filterHistorial('todas')">Todas</button>
-              <button class="btn ghost small filter-btn" data-hfilter="en_proceso" onclick="filterHistorial('en_proceso')">En proceso</button>
-              <button class="btn ghost small filter-btn" data-hfilter="certificada" onclick="filterHistorial('certificada')">Certificadas</button>
-              <button class="btn ghost small filter-btn" data-hfilter="rechazada" onclick="filterHistorial('rechazada')">No aprobadas</button>
-              <button class="btn ghost small filter-btn" data-hfilter="en_linea" onclick="filterHistorial('en_linea')">En línea</button>
+            <div class="row" style="margin-bottom:10px;flex-wrap:wrap;justify-content:space-between;gap:10px;">
+              <div class="row" style="flex-wrap:wrap;gap:8px;">
+                <button class="btn ghost small filter-btn active" data-hfilter="todas" onclick="filterHistorial('todas')">Todas</button>
+                <button class="btn ghost small filter-btn" data-hfilter="en_proceso" onclick="filterHistorial('en_proceso')">En proceso</button>
+                <button class="btn ghost small filter-btn" data-hfilter="certificada" onclick="filterHistorial('certificada')">Certificadas</button>
+                <button class="btn ghost small filter-btn" data-hfilter="rechazada" onclick="filterHistorial('rechazada')">No aprobadas</button>
+                <button class="btn ghost small filter-btn" data-hfilter="en_linea" onclick="filterHistorial('en_linea')">En línea</button>
+              </div>
+              <div class="row" style="gap:8px;flex-wrap:wrap;">
+                <div class="group-mode-toggle" role="group" aria-label="Agrupar por">
+                  <button type="button" class="group-mode-btn active" data-hgroup="month" onclick="setHistorialGroupMode('month')">Por mes</button>
+                  <button type="button" class="group-mode-btn" data-hgroup="week" onclick="setHistorialGroupMode('week')">Por semana</button>
+                </div>
+                <button class="btn ghost small" onclick="exportHistorialCSV()">⇩ Exportar esta vista (CSV)</button>
+              </div>
             </div>
             <div id="historial-stats" style="margin-bottom:14px;"></div>
             <div id="historial-list"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
+          </div>
+
+          <!-- ===== CLIENTE 360° ===== -->
+          <div class="admin-tab" id="admin-tab-cliente">
+            <h3 style="font-size:16px;margin-top:0;">Vista 360° del cliente</h3>
+            <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Junta en una sola pantalla todo lo que un cliente ha hecho con nosotros — solicitudes, piezas certificadas, gasto total y su estatus en el Salón Privado — para no tener que ir pestaña por pestaña ni scrollear buscando cada pieza suya.</p>
+            <div class="row" style="max-width:440px;gap:8px;">
+              <input id="cliente360-tel" placeholder="Teléfono del cliente" onkeydown="if(event.key==='Enter'){event.preventDefault();buscarCliente360();}">
+              <button class="btn small" onclick="buscarCliente360()">Buscar</button>
+            </div>
+            <div id="cliente360-result" style="margin-top:18px;"></div>
           </div>
 
           <!-- ===== INGRESOS ===== -->
@@ -6953,11 +7019,10 @@ async function getAllSalonMembers(){
   try{
     const all = await HVStorage.list('salon:', true).catch(()=>({keys:[]}));
     const memberKeys = (all.keys||[]).filter(k => k.startsWith('salon:member:'));
-    const out = [];
-    for(const k of memberKeys){
-      try{ const r = await HVStorage.get(k, true); if(r && r.value) out.push(JSON.parse(r.value)); }catch(e){}
-    }
-    return out;
+    const results = await Promise.all(memberKeys.map(k =>
+      HVStorage.get(k, true).then(r => (r && r.value) ? JSON.parse(r.value) : null).catch(()=>null)
+    ));
+    return results.filter(Boolean);
   }catch(e){ return []; }
 }
 
@@ -8782,20 +8847,25 @@ async function lookupCliente(){
       HVStorage.list('folio:', true).catch(()=>({keys:[]}))
     ]);
     let rows = [];
-    for(const k of (sol.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const d = JSON.parse(r.value);
-        if(d.telefono === tel) rows.push({tipo:'Solicitud', ref:d.id, modelo:d.modelo, estado:d.estado, fecha:d.fecha});
-      }catch(e){}
-    }
-    for(const k of (fol.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const d = JSON.parse(r.value);
-        if(d.telefono === tel) rows.push({tipo:'Folio', ref:d.folio, modelo:d.modelo, estado:'completado', fecha:d.fecha});
-      }catch(e){}
-    }
+    const [solRows, folRows] = await Promise.all([
+      Promise.all((sol.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const d = JSON.parse(r.value);
+          if(d.telefono === tel) return {tipo:'Solicitud', ref:d.id, modelo:d.modelo, estado:d.estado, fecha:d.fecha};
+        }catch(e){}
+        return null;
+      })),
+      Promise.all((fol.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const d = JSON.parse(r.value);
+          if(d.telefono === tel) return {tipo:'Folio', ref:d.folio, modelo:d.modelo, estado:'completado', fecha:d.fecha};
+        }catch(e){}
+        return null;
+      }))
+    ]);
+    rows = solRows.filter(Boolean).concat(folRows.filter(Boolean));
     let refCodeHtml = '';
     try{
       const rc = await HVStorage.get('referido:code:'+normalizeTelReferido(tel), true).catch(()=>null);
@@ -10514,7 +10584,29 @@ function parseFechaFolio(fecha){
   if(parts.length !== 3) return null;
   const [dd, mm, yyyy] = parts.map(n => parseInt(n, 10));
   if(!mm || !yyyy) return null;
-  return { mm, yyyy };
+  return { dd: dd||1, mm, yyyy };
+}
+
+// Devuelve el lunes de la semana ISO que contiene esa fecha, a las 00:00.
+function isoWeekMonday(dateObj){
+  const d = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+  const day = d.getDay(); // 0=domingo..6=sábado
+  const diffToMonday = (day===0) ? -6 : (1-day);
+  d.setDate(d.getDate() + diffToMonday);
+  return d;
+}
+function formatWeekRangeEs(monday){
+  const sunday = new Date(monday);
+  sunday.setDate(sunday.getDate()+6);
+  const sameMonth = monday.getMonth() === sunday.getMonth();
+  const sameYear = monday.getFullYear() === sunday.getFullYear();
+  if(sameMonth){
+    return `${monday.getDate()}–${sunday.getDate()} de ${MESES_ES[monday.getMonth()]} ${sunday.getFullYear()}`;
+  }
+  if(sameYear){
+    return `${monday.getDate()} de ${MESES_ES[monday.getMonth()]} – ${sunday.getDate()} de ${MESES_ES[sunday.getMonth()]} ${sunday.getFullYear()}`;
+  }
+  return `${monday.getDate()} de ${MESES_ES[monday.getMonth()]} ${monday.getFullYear()} – ${sunday.getDate()} de ${MESES_ES[sunday.getMonth()]} ${sunday.getFullYear()}`;
 }
 
 // ============================================================
@@ -10575,17 +10667,26 @@ function skeletonBookIndexHtml(n){
 // acumulan meses de datos. Solo el grupo más reciente empieza abierto; el
 // resto queda colapsado pero a un clic de distancia. Los elementos sin
 // fecha reconocible caen en un grupo aparte al final.
-function renderGroupedByMonth(items, opts){
-  const { getFecha, renderItem, emptyMsg, idPrefix } = opts;
+// mode: 'month' (por defecto) o 'week' — agrupa exactamente igual, solo
+// cambia cómo se calcula la clave/etiqueta de cada bloque colapsable.
+function renderGroupedByPeriod(items, opts){
+  const { getFecha, renderItem, emptyMsg, idPrefix, mode } = opts;
   if(!items || !items.length) return `<p style="color:var(--sage);font-size:14px;">${emptyMsg||'Sin resultados.'}</p>`;
   const groups = {};
   const sinFecha = [];
   items.forEach(it => {
     const parsed = parseFechaFolio(getFecha(it));
     if(!parsed){ sinFecha.push(it); return; }
-    const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
-    if(!groups[key]) groups[key] = { yyyy:parsed.yyyy, mm:parsed.mm, items: [] };
-    groups[key].items.push(it);
+    if(mode === 'week'){
+      const monday = isoWeekMonday(new Date(parsed.yyyy, parsed.mm-1, parsed.dd));
+      const key = monday.toISOString().slice(0,10);
+      if(!groups[key]) groups[key] = { sortKey:key, label: formatWeekRangeEs(monday), items: [] };
+      groups[key].items.push(it);
+    } else {
+      const key = parsed.yyyy + '-' + String(parsed.mm).padStart(2,'0');
+      if(!groups[key]) groups[key] = { sortKey:key, label: MESES_ES[parsed.mm-1] + ' ' + parsed.yyyy, items: [] };
+      groups[key].items.push(it);
+    }
   });
   const sortedKeys = Object.keys(groups).sort().reverse();
   let html = '';
@@ -10593,7 +10694,7 @@ function renderGroupedByMonth(items, opts){
     const g = groups[key];
     html += `
     <details class="month-group" id="${escapeHtml(idPrefix)}-${key}" ${idx===0?'open':''}>
-      <summary class="month-group-summary"><span>${MESES_ES[g.mm-1]} ${g.yyyy}</span><span class="month-group-count">${g.items.length}</span></summary>
+      <summary class="month-group-summary"><span>${escapeHtml(g.label)}</span><span class="month-group-count">${g.items.length}</span></summary>
       <div class="month-group-body">${g.items.map(renderItem).join('')}</div>
     </details>`;
   });
@@ -10605,6 +10706,11 @@ function renderGroupedByMonth(items, opts){
     </details>`;
   }
   return html;
+}
+// Nombre histórico conservado como alias (agrupación por mes) para no
+// tocar los llamados existentes que no necesitan elegir semana/mes.
+function renderGroupedByMonth(items, opts){
+  return renderGroupedByPeriod(items, Object.assign({mode:'month'}, opts));
 }
 
 // ============================================================
@@ -10703,9 +10809,10 @@ async function renderAprobacionChart(folItems){
   let rechazadas = 0;
   try{
     const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
-    for(const k of (proc.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado === 'rechazada') rechazadas++; }catch(e){}
-    }
+    const flags = await Promise.all((proc.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); return p.estado === 'rechazada'; }catch(e){ return false; }
+    }));
+    rechazadas = flags.filter(Boolean).length;
   }catch(e){}
   const aprobadas = folItems.length;
   const total = aprobadas + rechazadas;
@@ -10741,10 +10848,10 @@ async function refreshIncomeTable(){
   wrap.innerHTML = '<p style="color:var(--sage);font-size:14px;">Cargando…</p>';
   try{
     const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
-    const items = [];
-    for(const k of (fol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
-    }
+    const fetched = await Promise.all((fol.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+    }));
+    const items = fetched.filter(Boolean);
     const byMonth = {};
     for(const f of items){
       const parsed = parseFechaFolio(f.fecha) || {mm: new Date().getMonth()+1, yyyy: new Date().getFullYear()};
@@ -10820,10 +10927,13 @@ function adminSearchItemHtml(type, d, idx){
     sub = [d.categoria ? categoriaLabel(d.categoria) : '', d.folio ? 'folio ' + d.folio : ''].filter(Boolean).join(' · ');
     icon = '🚗';
   }
-  return `<button type="button" class="ags-item" data-idx="${idx}" onmouseenter="setAdminSearchActive(${idx})" onclick="goToAdminSearchResult(${idx})">
-    <span class="ags-item-title">${icon} ${escapeHtml(title)}</span>
-    <span class="ags-item-sub">${escapeHtml(sub)}</span>
-  </button>`;
+  const clienteBtn = (d.telefono) ? `<button type="button" class="ags-item-cliente" title="Ver todo de este cliente" onclick="event.stopPropagation();clearAdminSearch();adminGo('cliente');document.getElementById('cliente360-tel').value='${escapeHtml(d.telefono)}';buscarCliente360();">👤</button>` : '';
+  return `<div class="ags-item-row">
+    <button type="button" class="ags-item" data-idx="${idx}" onmouseenter="setAdminSearchActive(${idx})" onclick="goToAdminSearchResult(${idx})">
+      <span class="ags-item-title">${icon} ${escapeHtml(title)}</span>
+      <span class="ags-item-sub">${escapeHtml(sub)}</span>
+    </button>${clienteBtn}
+  </div>`;
 }
 
 function handleAdminSearch(raw){
@@ -11564,10 +11674,10 @@ async function refreshValidacionList(){
   listBox.innerHTML = skeletonCardsHtml(3);
   try{
     const list = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
-    const items = [];
-    for(const k of (list.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); if(p.estado==='en_proceso') items.push(p); }catch(e){}
-    }
+    const fetched = await Promise.all((list.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); return (p.estado==='en_proceso') ? p : null; }catch(e){ return null; }
+    }));
+    const items = fetched.filter(Boolean);
     if(!items.length){
       if(statsBox) statsBox.innerHTML = '';
       listBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">No hay piezas en validación por ahora. Inicia una desde "Solicitudes".</p>';
@@ -12784,21 +12894,36 @@ async function finalizeProceso(id){
 
 async function updateAdminStats(){
   try{
-    const sol = await HVStorage.list('solicitud:', true).catch(()=>({keys:[]}));
-    let pendientes = 0;
-    for(const k of (sol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); if(d.estado!=='completado' && d.estado!=='en_validacion') pendientes++; }catch(e){}
-    }
-    const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
-    let enProceso = 0;
-    for(const k of (proc.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); if(p.estado==='en_proceso') enProceso++; }catch(e){}
-    }
-    const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
-    let ingresos = 0;
-    for(const k of (fol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); ingresos += (d.precioFinal ? Number(d.precioFinal) : 0) || PKG_PRICE[d.nivel] || 0; }catch(e){}
-    }
+    const [sol, proc, fol] = await Promise.all([
+      HVStorage.list('solicitud:', true).catch(()=>({keys:[]})),
+      HVStorage.list('proceso:', true).catch(()=>({keys:[]})),
+      HVStorage.list('folio:', true).catch(()=>({keys:[]}))
+    ]);
+    const [pendFlags, procFetched, folMontos] = await Promise.all([
+      Promise.all((sol.keys||[]).map(async k => {
+        try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); return (d.estado!=='completado' && d.estado!=='en_validacion'); }catch(e){ return false; }
+      })),
+      Promise.all((proc.keys||[]).map(async k => {
+        try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); return (p.estado==='en_proceso') ? p : null; }catch(e){ return null; }
+      })),
+      Promise.all((fol.keys||[]).map(async k => {
+        try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); return (d.precioFinal ? Number(d.precioFinal) : 0) || PKG_PRICE[d.nivel] || 0; }catch(e){ return 0; }
+      }))
+    ]);
+    const pendientes = pendFlags.filter(Boolean).length;
+    const enProcesoItems = procFetched.filter(Boolean);
+    const enProceso = enProcesoItems.length;
+    const ingresos = folMontos.reduce((s,v)=>s+v, 0);
+    // Plazos: cuántas piezas en proceso ya están atrasadas o quedan menos
+    // de 24h para el plazo — para avisar en el Dashboard sin que el admin
+    // tenga que entrar a Validación en curso a fijarse pieza por pieza.
+    let atrasadas = 0, porVencer = 0;
+    enProcesoItems.forEach(p => {
+      const dl = deadlineInfo(p);
+      if(!dl) return;
+      if(dl.cls === 'deadline-late') atrasadas++;
+      else if(dl.cls === 'deadline-warn') porVencer++;
+    });
     const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
     setText('stat-solicitudes', pendientes);
     setText('stat-validacion', enProceso);
@@ -12807,7 +12932,28 @@ async function updateAdminStats(){
     const badgeSol = document.getElementById('badge-solicitudes');
     if(badgeSol){ badgeSol.style.display = pendientes>0 ? 'inline-block' : 'none'; badgeSol.textContent = pendientes; }
     const badgeVal = document.getElementById('badge-validacion');
-    if(badgeVal){ badgeVal.style.display = enProceso>0 ? 'inline-block' : 'none'; badgeVal.textContent = enProceso; }
+    if(badgeVal){
+      badgeVal.style.display = enProceso>0 ? 'inline-block' : 'none';
+      badgeVal.textContent = atrasadas>0 ? '⚠ '+atrasadas : enProceso;
+      badgeVal.classList.toggle('admin-badge-alert', atrasadas>0);
+      badgeVal.title = atrasadas>0 ? `${atrasadas} pieza(s) con plazo vencido` : '';
+    }
+    const alertBox = document.getElementById('dash-deadline-alert');
+    if(alertBox){
+      if(atrasadas>0 || porVencer>0){
+        alertBox.style.display = 'block';
+        alertBox.className = 'card dash-deadline-alert ' + (atrasadas>0 ? 'dash-deadline-alert-late' : 'dash-deadline-alert-warn');
+        const partes = [];
+        if(atrasadas>0) partes.push(`<strong>${atrasadas}</strong> pieza${atrasadas===1?'':'s'} con plazo <strong>vencido</strong>`);
+        if(porVencer>0) partes.push(`<strong>${porVencer}</strong> pieza${porVencer===1?'':'s'} a menos de 24h de su plazo`);
+        alertBox.innerHTML = `<div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <span>${atrasadas>0?'🔴':'🟡'} ${partes.join(' · ')} — revísalas antes de que el cliente pregunte.</span>
+          <button class="btn small" onclick="adminGo('validacion')">Ver validación en curso →</button>
+        </div>`;
+      } else {
+        alertBox.style.display = 'none';
+      }
+    }
   }catch(e){}
   // Programa de referidos: un solo documento agregado ("referido:stats") que
   // se actualiza en el momento en que ocurre cada evento (código generado,
@@ -12865,10 +13011,10 @@ async function exportCSV(kind){
   try{
     const prefix = kind === 'folios' ? 'folio:' : 'solicitud:';
     const list = await HVStorage.list(prefix, true).catch(()=>({keys:[]}));
-    const items = [];
-    for(const k of (list.keys||[])){
-      try{ const r = await HVStorage.get(k, true); items.push(JSON.parse(r.value)); }catch(e){}
-    }
+    const fetched = await Promise.all((list.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+    }));
+    const items = fetched.filter(Boolean);
     if(items.length === 0){ toast('No hay datos para exportar todavía.'); return; }
     const cols = Object.keys(items[0]);
     const rows = [cols, ...items.map(it => cols.map(c => it[c]))];
@@ -12908,14 +13054,16 @@ async function exportExcelCompleto(){
       HVStorage.list('folio:', true).catch(()=>({keys:[]})),
       getPiezas().catch(()=>[])
     ]);
-    const solicitudes = [];
-    for(const k of (solList.keys||[])){
-      try{ const r = await HVStorage.get(k, true); solicitudes.push(JSON.parse(r.value)); }catch(e){}
-    }
-    const folios = [];
-    for(const k of (folList.keys||[])){
-      try{ const r = await HVStorage.get(k, true); folios.push(JSON.parse(r.value)); }catch(e){}
-    }
+    const [solFetched, folFetched] = await Promise.all([
+      Promise.all((solList.keys||[]).map(async k => {
+        try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+      })),
+      Promise.all((folList.keys||[]).map(async k => {
+        try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+      }))
+    ]);
+    const solicitudes = solFetched.filter(Boolean);
+    const folios = folFetched.filter(Boolean);
     if(!solicitudes.length && !folios.length && !piezas.length){
       toast('Todavía no hay datos guardados para exportar.');
       return;
@@ -12965,24 +13113,26 @@ async function cleanupOldData(){
       HVStorage.list('solicitud:', true).catch(()=>({keys:[]})),
       HVStorage.list('folio:', true).catch(()=>({keys:[]}))
     ]);
-    const solToDelete = [];
-    for(const k of (solList.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const d = JSON.parse(r.value);
-        const parsed = parseFechaFolio(d.fecha || d.creado);
-        if(parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) solToDelete.push(d.id);
-      }catch(e){}
-    }
-    const folToDelete = [];
-    for(const k of (folList.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const f = JSON.parse(r.value);
-        const parsed = parseFechaFolio(f.fecha);
-        if(parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) folToDelete.push(f.folio);
-      }catch(e){}
-    }
+    const [solIdsRaw, folIdsRaw] = await Promise.all([
+      Promise.all((solList.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const d = JSON.parse(r.value);
+          const parsed = parseFechaFolio(d.fecha || d.creado);
+          return (parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) ? d.id : null;
+        }catch(e){ return null; }
+      })),
+      Promise.all((folList.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const f = JSON.parse(r.value);
+          const parsed = parseFechaFolio(f.fecha);
+          return (parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) ? f.folio : null;
+        }catch(e){ return null; }
+      }))
+    ]);
+    const solToDelete = solIdsRaw.filter(Boolean);
+    const folToDelete = folIdsRaw.filter(Boolean);
     const total = solToDelete.length + folToDelete.length;
     if(!total){
       if(statusBox) statusBox.textContent = 'No hay registros anteriores a esa fecha.';
@@ -13058,6 +13208,7 @@ function solicitudMiniHtml(d){
 // ============================================================
 let HISTORIAL_ITEMS = [];
 let HISTORIAL_FILTER = 'todas';
+let HISTORIAL_GROUP_MODE = 'month';
 
 function historialCategoria(item){
   if(item.tipo === 'folio') return 'certificada';
@@ -13126,25 +13277,29 @@ async function refreshHistorial(){
   if(!listBox) return;
   listBox.innerHTML = skeletonRowsHtml(4);
   try{
-    const items = [];
-    const proc = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
-    for(const k of (proc.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const p = JSON.parse(r.value);
-        migrateProcesoShape(p);
-        items.push({ tipo:'proceso', raw:p, sortTs: p.creadoTs || 0 });
-      }catch(e){}
-    }
-    const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
-    for(const k of (fol.keys||[])){
-      try{
-        const r = await HVStorage.get(k, true);
-        const f = JSON.parse(r.value);
-        const parsed = parseFechaFolio(f.fecha);
-        items.push({ tipo:'folio', raw:f, sortTs: parsed ? new Date(parsed.yyyy, parsed.mm-1).getTime() : 0 });
-      }catch(e){}
-    }
+    const [proc, fol] = await Promise.all([
+      HVStorage.list('proceso:', true).catch(()=>({keys:[]})),
+      HVStorage.list('folio:', true).catch(()=>({keys:[]}))
+    ]);
+    const [procItems, folItemsRaw] = await Promise.all([
+      Promise.all((proc.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const p = JSON.parse(r.value);
+          migrateProcesoShape(p);
+          return { tipo:'proceso', raw:p, sortTs: p.creadoTs || 0 };
+        }catch(e){ return null; }
+      })),
+      Promise.all((fol.keys||[]).map(async k => {
+        try{
+          const r = await HVStorage.get(k, true);
+          const f = JSON.parse(r.value);
+          const parsed = parseFechaFolio(f.fecha);
+          return { tipo:'folio', raw:f, sortTs: parsed ? new Date(parsed.yyyy, parsed.mm-1).getTime() : 0 };
+        }catch(e){ return null; }
+      }))
+    ]);
+    const items = procItems.filter(Boolean).concat(folItemsRaw.filter(Boolean));
     items.forEach(it => it.categoria = historialCategoria(it));
     items.sort((a,b) => b.sortTs - a.sortTs);
     HISTORIAL_ITEMS = items;
@@ -13168,12 +13323,152 @@ function filterHistorial(filter){
   const listBox = document.getElementById('historial-list');
   if(!listBox) return;
   const items = filter === 'todas' ? HISTORIAL_ITEMS : HISTORIAL_ITEMS.filter(it => it.categoria === filter);
-  listBox.innerHTML = renderGroupedByMonth(items, {
+  listBox.innerHTML = renderGroupedByPeriod(items, {
     getFecha: it => it.tipo === 'folio' ? it.raw.fecha : it.raw.creado,
     renderItem: historialRowHtml,
     emptyMsg: 'No hay piezas en esta categoría todavía.',
-    idPrefix: 'hist'
+    idPrefix: 'hist',
+    mode: HISTORIAL_GROUP_MODE
   });
+}
+
+// Alterna cómo se agrupa el Historial de piezas (mes o semana) — útil
+// cuando el laboratorio certifica muchas piezas por mes y conviene ver
+// bloques más chicos para no perder de vista ninguna.
+function setHistorialGroupMode(mode){
+  HISTORIAL_GROUP_MODE = mode;
+  document.querySelectorAll('#admin-tab-historial .group-mode-btn').forEach(b=>b.classList.toggle('active', b.dataset.hgroup===mode));
+  filterHistorial(HISTORIAL_FILTER);
+}
+
+// Exporta exactamente lo que se está viendo ahora en Historial de piezas
+// (respetando el filtro de estatus activo) — a diferencia del respaldo
+// completo de "Respaldo de datos", que siempre exporta todo sin filtrar.
+function exportHistorialCSV(){
+  const items = HISTORIAL_FILTER === 'todas' ? HISTORIAL_ITEMS : HISTORIAL_ITEMS.filter(it => it.categoria === HISTORIAL_FILTER);
+  if(!items.length){ toast('No hay piezas en esta vista para exportar.'); return; }
+  const rows = [['Tipo','Folio/ID','Cliente','Teléfono','Modelo','Categoría','Grado','Estatus','Fecha','Monto']];
+  items.forEach(it => {
+    const r = it.raw;
+    rows.push([
+      it.tipo === 'folio' ? 'Folio' : 'Proceso',
+      it.tipo === 'folio' ? (r.folio||'') : (r.id||''),
+      r.nombre || '',
+      r.telefono || '',
+      r.modelo || '',
+      it.categoria || '',
+      r.grado != null ? r.grado : '',
+      r.estado || (it.tipo==='folio' ? 'completado' : ''),
+      it.tipo === 'folio' ? (r.fecha||'') : (r.creado||''),
+      r.precioFinal != null ? r.precioFinal : ''
+    ]);
+  });
+  downloadCSV(`hv-historial-${HISTORIAL_FILTER}-${Date.now()}.csv`, rows);
+  toast('Descargando historial…');
+}
+
+// ============================================================
+// CLIENTE 360° — junta en una sola pantalla todo lo que un cliente
+// (identificado por teléfono) ha hecho con nosotros: sus solicitudes, sus
+// piezas en proceso, sus folios certificados, cuánto ha gastado y su
+// estatus en el Salón Privado. Pensado para cuando ya hay muchos clientes
+// y buscar "todo sobre fulano" a mano, pestaña por pestaña, se vuelve lento.
+// Los procesos NO están cacheados globalmente (a diferencia de solicitudes
+// y folios), así que solo se piden los que corresponden a este cliente —
+// nunca se lista la colección completa — y en paralelo con Promise.all.
+// ============================================================
+async function buscarCliente360(){
+  const box = document.getElementById('cliente360-result');
+  const raw = document.getElementById('cliente360-tel').value;
+  const telNorm = normalizeTelReferido(raw);
+  if(!box) return;
+  if(!telNorm){ box.innerHTML = '<p class="foot-note" style="border:none;">Escribe el teléfono del cliente para buscar.</p>'; return; }
+  box.innerHTML = '<p style="color:var(--sage);font-size:14px;">Buscando…</p>';
+  try{
+    // Comparación flexible: si el admin escribe el teléfono sin el código de
+    // país (como suelen marcarlo en México) igual encuentra al cliente,
+    // aunque lo tengamos guardado con "52" al inicio, y viceversa.
+    const matchTel = t => {
+      const tn = normalizeTelReferido(t);
+      if(!tn) return false;
+      if(tn === telNorm) return true;
+      if(telNorm.length < 8) return false; // evita falsos positivos con números muy cortos
+      return tn.endsWith(telNorm) || telNorm.endsWith(tn);
+    };
+    const solicitudes = (CURRENT_SOLICITUDES||[]).filter(d => matchTel(d.telefono));
+    const folios = (CURRENT_FOLIOS||[]).filter(d => matchTel(d.telefono));
+    const [procesosFetched, socio] = await Promise.all([
+      Promise.all(solicitudes.map(async d => {
+        try{
+          const r = await HVStorage.get('proceso:'+d.id, true);
+          if(r && r.value){ const p = JSON.parse(r.value); migrateProcesoShape(p); return p; }
+        }catch(e){}
+        return null;
+      })),
+      getSalonMember(telNorm)
+    ]);
+    const procesos = procesosFetched.filter(Boolean);
+    if(!solicitudes.length && !folios.length && !socio){
+      box.innerHTML = `<p class="foot-note" style="border:none;">No se encontró ningún cliente con el teléfono "${escapeHtml(raw)}".</p>`;
+      return;
+    }
+    box.innerHTML = renderCliente360(telNorm, {solicitudes, procesos, folios, socio});
+  }catch(e){
+    box.innerHTML = '<p class="foot-note" style="border:none;">No se pudo cargar la información de este cliente.</p>';
+  }
+}
+
+function renderCliente360(telNorm, data){
+  const {solicitudes, procesos, folios, socio} = data;
+  const nombre = (folios[0] && folios[0].nombre) || (solicitudes[0] && solicitudes[0].nombre) || (socio && socio.nombre) || '(sin nombre registrado)';
+  const gastado = folios.reduce((s,f) => s + ((f.precioFinal!=null ? Number(f.precioFinal) : 0) || PKG_PRICE[f.nivel] || 0), 0);
+  const procesosByFase = {};
+  procesos.forEach(p => { const f = procesoFase(p); procesosByFase[f] = (procesosByFase[f]||0) + 1; });
+
+  let html = `<div class="card" style="background:var(--panel-2);margin-bottom:16px;">
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h3 style="font-size:17px;margin:0 0 2px;">${escapeHtml(nombre)}</h3>
+        <p class="foot-note" style="border:none;padding:0;margin:0;">Tel. ${escapeHtml(telNorm)}</p>
+      </div>
+      ${socio ? `<span class="pill ${SALON_STATUS_PILL_CLASS[computeMembershipStatus(socio)]||'neutral'}">⭐ Salón Privado · ${salonMemberStatusLabel(computeMembershipStatus(socio))}</span>` : ''}
+    </div>
+    <div class="kpi-grid" style="margin:14px 0 0;">
+      <div class="kpi"><p class="num">${solicitudes.length}</p><p class="lbl">Solicitudes</p></div>
+      <div class="kpi"><p class="num">${procesos.length}</p><p class="lbl">En proceso</p></div>
+      <div class="kpi"><p class="num">${folios.length}</p><p class="lbl">Certificadas</p></div>
+      <div class="kpi"><p class="num">$${gastado.toLocaleString('es-MX')}</p><p class="lbl">Gastado (MXN)</p></div>
+    </div>
+  </div>`;
+
+  if(socio){
+    const nextT = nextSalonThreshold(socio.piezasCertificadas||0);
+    html += `<div class="card" style="margin-bottom:16px;">
+      <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h4 style="font-size:14px;margin:0;">Salón Privado HV</h4>
+        <button class="btn ghost small" onclick="adminGo('salon');salonAdminGo('miembros');setTimeout(()=>openSalonMemberDetail('${escapeHtml(telNorm)}'),120);">Ver ficha completa en Salón Privado →</button>
+      </div>
+      <p style="font-size:13.5px;margin:8px 0 0;">Código HVS-${escapeHtml(socio.code||'—')} · Nivel actual: ${socio.nivelActual||0}${socio.vitalicio?' (vitalicio)':''}</p>
+      <p style="font-size:13.5px;margin:4px 0 0;">Piezas certificadas: <strong>${socio.piezasCertificadas||0}</strong>${nextT ? ` — faltan ${nextT - socio.piezasCertificadas} para el siguiente nivel (${nextT} piezas)` : ' — nivel máximo alcanzado'}</p>
+    </div>`;
+  }
+
+  html += `<div class="card" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;margin:0 0 10px;">Piezas en proceso (${procesos.length})</h4>
+    ${procesos.length ? procesos.map(procCardHtml).join('') : '<p class="foot-note" style="border:none;">Sin piezas en proceso actualmente.</p>'}
+  </div>`;
+
+  html += `<div class="card" style="margin-bottom:16px;">
+    <h4 style="font-size:14px;margin:0 0 10px;">Folios certificados (${folios.length})</h4>
+    ${folios.length ? folios.map(folioCardHtml).join('') : '<p class="foot-note" style="border:none;">Sin folios certificados todavía.</p>'}
+  </div>`;
+
+  html += `<div class="card">
+    <h4 style="font-size:14px;margin:0 0 10px;">Historial de solicitudes (${solicitudes.length})</h4>
+    ${solicitudes.length ? solicitudes.map(solicitudCardHtml).join('') : '<p class="foot-note" style="border:none;">Sin solicitudes registradas todavía.</p>'}
+  </div>`;
+
+  return html;
 }
 
 // ============================================================
@@ -13233,9 +13528,10 @@ async function refreshAdminLists(){
   let solItems = [];
   try{
     const sol = await HVStorage.list('solicitud:', true).catch(()=>({keys:[]}));
-    for(const k of (sol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); solItems.push(JSON.parse(r.value)); }catch(e){}
-    }
+    const fetchedSol = await Promise.all((sol.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+    }));
+    solItems = fetchedSol.filter(Boolean);
     solItems.sort((a,b)=> (b.id||'').localeCompare(a.id||''));
     CURRENT_SOLICITUDES = solItems;
     filterSolicitudes(SOLICITUDES_FILTER);
@@ -13247,9 +13543,10 @@ async function refreshAdminLists(){
   let folItems = [];
   try{
     const fol = await HVStorage.list('folio:', true).catch(()=>({keys:[]}));
-    for(const k of (fol.keys||[])){
-      try{ const r = await HVStorage.get(k, true); folItems.push(JSON.parse(r.value)); }catch(e){}
-    }
+    const fetchedFol = await Promise.all((fol.keys||[]).map(async k => {
+      try{ const r = await HVStorage.get(k, true); return JSON.parse(r.value); }catch(e){ return null; }
+    }));
+    folItems = fetchedFol.filter(Boolean);
     folItems.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
     CURRENT_FOLIOS = folItems;
     folBox.innerHTML = folItems.length ? folItems.map(folioCardHtml).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
