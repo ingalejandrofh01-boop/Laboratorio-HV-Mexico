@@ -734,6 +734,57 @@ grandes, en orden aproximado en que aparecen:
     una regla de estilo más específica que pisaba su ancho; ahora se
     respeta su tamaño de 34×34px.
 
+- **Footer oscuro con letras blancas, aviso de IA ampliado, y el fondo del
+  inicio ahora es una rotación de fotos reales en vez de una sola imagen
+  con lavado rojo**:
+  - El pie de página tenía texto en un gris oscuro (`--sage-dim`) que,
+    sobre la marca de agua de autos de fondo, se leía casi negro y costaba
+    trabajo de leer. Ahora el footer tiene su propio fondo oscuro sólido
+    (independiente del tema claro/oscuro del sitio, como es normal en la
+    mayoría de los sitios) y todo su texto — el aviso legal, la nota de
+    IA, "Términos y condiciones", "Aviso de privacidad" y "acceso interno"
+    — es blanco/crema, con buen contraste en ambos temas.
+  - El aviso de que algunos elementos fueron hechos con IA ahora también
+    menciona explícitamente que **algunas fotografías** del sitio son
+    ilustrativas y creadas con IA (antes solo mencionaba los sellos del
+    laboratorio).
+  - El fondo de la sección de inicio dejó de ser una sola foto fija subida
+    desde el admin con un lavado de color rojo encima. Ahora esa foto (si
+    hay una subida) entra en una **rotación tipo "splash"**: se turna cada
+    pocos segundos, con un fundido suave, junto con las fotos de portada
+    (la primera foto de cada pieza) de todo lo que ya esté publicado en la
+    Biblioteca pública — así el inicio siempre muestra piezas reales
+    certificadas por el laboratorio, no una sola imagen estática. El
+    lavado de color sobre las fotos cambió de rojo a un degradado oscuro
+    neutro ("foto formal con transparencia"), para que se vea profesional
+    sin importar qué foto esté activa. Si no hay ninguna foto (ni subida
+    ni piezas publicadas), se sigue viendo el fondo rojo de marca de
+    siempre. La rotación respeta "reducir movimiento" del sistema
+    operativo (se queda en la primera foto, sin animar).
+
+- **Salón Privado HV: los 3 niveles ya no tienen beneficios distintos —
+  ahora son puro reconocimiento y prioridad**:
+  - Antes, Nivel Oro y Nivel Platino "desbloqueaban" beneficios extra que
+    Nivel Plata no tenía (el sitio incluso decía "incluye todo lo del
+    nivel anterior, más:"). Ahora los tres niveles tienen **exactamente
+    los mismos beneficios** — se editan una sola vez desde el admin
+    (Salón Privado → Niveles), en vez de tener 3 listas separadas que
+    fácilmente se podían desalinear entre sí.
+  - Lo que sí sigue cambiando por nivel es el reconocimiento (el nombre —
+    Plata/Oro/Platino) y la prioridad de atención/agenda que el
+    laboratorio le da a un socio mientras más certifica y más confía en
+    el laboratorio — eso se comunica ahora como una frase corta en cada
+    tarjeta ("Prioridad estándar de socio" / "Mayor prioridad de agenda y
+    atención" / "Máxima prioridad · reconocimiento vitalicio"), no como
+    beneficios adicionales en la lista.
+  - Se actualizó el texto correspondiente en Términos y condiciones, en
+    el teaser público del Salón, en la ventana de bienvenida del socio y
+    en la vista de "Tus beneficios" del lobby, para que todos digan lo
+    mismo de forma consistente. Si algún socio ya tenía datos guardados
+    con el formato viejo (beneficios por nivel), el sitio los combina
+    automáticamente en una sola lista la primera vez que se cargan, para
+    no perder nada de lo que el admin ya había escrito.
+
 ## Cómo desplegar una actualización
 
 1. Edita `index.html` (y `sw.js`/`manifest.json`/assets si aplica).

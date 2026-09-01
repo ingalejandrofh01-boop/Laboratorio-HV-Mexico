@@ -666,7 +666,9 @@
   .step:last-child{border-bottom:none;}
   .step .num{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:13px;width:22px;flex:none;}
   .scale-row{display:grid;grid-template-columns:58px 1fr;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center;}
-  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--sage-dim);font-size:13px;}
+  footer{position:relative;border-top:1px solid rgba(221,174,92,.25);padding:36px 0;color:rgba(255,247,238,.8);font-size:13px;
+    background:linear-gradient(180deg, #1D1310, #120B08);}
+  footer .mx-flag.sm{filter:none;}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
 
   /* ===== Panel de administración rediseñado ===== */
@@ -1208,8 +1210,13 @@
   .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(150deg, #D2042D 0%, #7A0320 55%, #33010E 100%);
     animation:heroGlowPulse 3.4s ease-in-out infinite;}
 
-  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;}
-  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(122,3,32,.45) 0%, rgba(51,1,14,.92) 100%);z-index:1;}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;opacity:0;transition:opacity 1.4s ease;}
+  /* Tono neutro/oscuro tipo "foto formal" para las fotos reales que rotan
+     de fondo (antes era un lavado rojizo que competía con el color de las
+     piezas certificadas). El degradado sigue siendo más oscuro abajo para
+     que el texto y los botones se lean bien sin importar qué foto esté
+     activa. */
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(18,13,10,.4) 0%, rgba(8,5,4,.9) 100%);z-index:1;}
   /* Contorno que "respira": en vez de una franja de luz cruzando el fondo,
      todo el cuadro del hero pulsa con un resplandor dorado/rojo alrededor
      del borde — sutil en el valle, intenso en el pico — para que se sienta
@@ -1484,9 +1491,9 @@
   .footer-social a{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
   .footer-social a:hover{transform:translateY(-3px);}
   .footer-social a svg{width:19px;height:19px;fill:#fff;}
-  .footer-legal-links{color:var(--sage-dim);}
-  .footer-legal-link{background:none;border:none;cursor:pointer;color:var(--sage-dim);font-size:12px;padding:2px 6px;text-decoration:underline;text-underline-offset:2px;font-family:inherit;}
-  .footer-legal-link:hover{color:var(--ink);}
+  .footer-legal-links{color:rgba(255,247,238,.6);}
+  .footer-legal-link{background:none;border:none;cursor:pointer;color:rgba(255,247,238,.85);font-size:12px;padding:2px 6px;text-decoration:underline;text-underline-offset:2px;font-family:inherit;}
+  .footer-legal-link:hover{color:#DDAE5C;}
   .whatsapp-float{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:150;cursor:pointer;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease;animation:wa-pulse 2.6s ease-in-out infinite;}
   .whatsapp-float:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.4);animation:none;}
   .whatsapp-float svg{width:30px;height:30px;}
@@ -1953,7 +1960,8 @@
   .salon-preview-card .smc-name{font-size:19px;}
   .salon-preview-ladder{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:14px;}
 
-  .salon-tiers-kicker{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--salon-gold-dim);margin:0 0 16px;}
+  .salon-tiers-kicker{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--salon-gold-dim);margin:0 0 4px;}
+  .salon-tiers-subkicker{text-align:center;font-size:13.5px;color:var(--salon-silver-dim,var(--salon-silver));max-width:640px;margin:0 auto 20px;line-height:1.6;opacity:.85;}
   .salon-tiers-teaser{margin-bottom:26px;}
 
   .salon-ladder-node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--salon-silver);background:rgba(255,255,255,.04);border:1px solid var(--salon-line);border-radius:20px;padding:6px 14px;}
@@ -1969,8 +1977,7 @@
   .salon-tier-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--salon-gold),transparent);}
   .salon-tier-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--salon-gold-dim);margin:0 0 10px;}
   .salon-tier-name{font-family:'Fraunces',serif;font-size:20px;color:var(--salon-ink);margin:0 0 6px;}
-  .salon-tier-cost{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 10px;}
-  .salon-tier-includes{font-size:12px;font-style:italic;color:var(--salon-sage);margin:0 0 10px;}
+  .salon-tier-cost{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 10px;line-height:1.5;}
   .salon-tier-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;}
   .salon-tier-benefits li{font-size:12.5px;color:var(--salon-sage);line-height:1.5;padding-left:18px;position:relative;}
   .salon-tier-benefits li::before{content:"✦";position:absolute;left:0;top:0;color:var(--salon-gold);font-size:11px;}
@@ -2361,6 +2368,7 @@
 <div class="view active" id="view-inicio">
   <section class="hero" id="hero-section">
     <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-bg" id="hero-bg-2"></div>
     <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
     <div class="hero-inner">
       <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:92px;margin:0 0 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
@@ -3686,7 +3694,7 @@
         <div class="salon-hero-copy">
           <p class="salon-kicker" data-i18n="salon.kicker">Salón Privado HV</p>
           <h2 data-i18n="salon.h2">El círculo más exclusivo del coleccionismo</h2>
-          <p class="salon-lead" data-i18n="salon.lead">Una sola membresía, $1,000 MXN al año — pero no es para cualquier pieza: el laboratorio selecciona y publica aquí solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio. Y mientras más certificas y más subes de nivel dentro del Salón, más crecen tus beneficios: descuentos, promociones y regalos por tu lealtad.</p>
+          <p class="salon-lead" data-i18n="salon.lead">Una sola membresía, $1,000 MXN al año, con los mismos beneficios para todos los socios — pero no es para cualquier pieza: el laboratorio selecciona y publica aquí solo las piezas más raras y extraordinarias que hemos certificado, para que otros coleccionistas serios las descubran, las reconozcan y puedan contactarte por ellas. Te ganas tu entrada certificando 5+ piezas con nosotros, o la adquieres directamente si ya confías en el laboratorio. Y mientras más certificas y más subes de nivel dentro del Salón, mayor es el reconocimiento y la prioridad que te damos por tu actividad y tu confianza con nosotros.</p>
         </div>
         <div class="salon-hero-card-wrap">
           <div class="salon-member-card salon-preview-card" id="salon-preview-card" aria-hidden="true">
@@ -3711,6 +3719,7 @@
     </div>
 
     <p class="salon-tiers-kicker" data-i18n="salon.tiers.kicker">Así se ven tus niveles de reconocimiento dentro de esa misma membresía</p>
+    <p class="salon-tiers-subkicker" data-i18n="salon.tiers.subkicker">Los beneficios son los mismos en los tres niveles — lo que cambia es el reconocimiento y la prioridad que te damos por certificar más y confiar más en nosotros.</p>
     <div class="salon-tiers-teaser" id="salon-tiers-teaser">
       <p style="color:var(--salon-silver);grid-column:1/-1;text-align:center;" data-i18n="salon.tiers.loading">Cargando los niveles del Salón…</p>
     </div>
@@ -4248,6 +4257,7 @@
               <h3 style="font-size:16px;">Imágenes del sitio</h3>
               <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Adjunta las fotos directo desde tu computadora o celular — se comprimen automáticamente antes de guardarse para mantenernos 100% en el plan gratis de Firebase.</p>
               <label>Imagen de fondo del inicio</label>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">El fondo del inicio ya no es una sola foto fija: esta imagen entra a una rotación con "splash" (fundido suave) junto con las fotos de portada de las piezas ya publicadas en la biblioteca pública — cada una se muestra unos segundos y va cambiando a la siguiente. Si no subes nada aquí, la rotación usa solo las fotos de portada de la biblioteca; si tampoco hay piezas publicadas, se ve el fondo rojo de siempre.</p>
               <div class="photo-drop" id="a-hero-drop" style="max-width:220px;aspect-ratio:16/10;" onclick="document.getElementById('a-hero-file').click()">
                 <input type="file" accept="image/*" id="a-hero-file" style="display:none;" onchange="handleHeroUpload(this)">
                 <img class="photo-preview" id="a-hero-preview" style="display:none;" alt="Vista previa de la foto principal">
@@ -4420,7 +4430,7 @@
       <p data-i18n="terminos.s8.p">El laboratorio ofrece un programa de referidos opcional y gratuito: al enviar tu solicitud recibes un código propio que puedes compartir con otras personas interesadas en certificar sus piezas. Si un nuevo cliente escribe tu código al solicitar su certificación y su pieza llega a certificarse con folio, recibes un crédito de 10% de descuento, que se aplica automáticamente en tu siguiente certificación con costo. Este beneficio no tiene valor en efectivo, no es transferible a un tercero, y el laboratorio puede modificar, pausar o dar por terminado el programa en cualquier momento hacia adelante, sin afectar los créditos que ya hayas ganado y aún no hayas usado.</p>
 
       <h3 data-i18n="terminos.s9.h3">9. Salón Privado HV — membresía de socios</h3>
-      <p data-i18n="terminos.s9.p">El Salón Privado HV es un programa de membresía para clientes que han certificado 5 piezas o más con el laboratorio; esa es la única forma de volverse socio — la membresía no se vende ni se activa por ningún otro medio, incluyendo compra directa sin haber certificado piezas. Al alcanzar ese número el cliente queda elegible; el laboratorio activa la membresía y le asigna un código de acceso personal. El pago de la cuota de membresía (activación, renovación o el costo de un nuevo nivel alcanzado) únicamente se acepta por transferencia bancaria o en efectivo directamente en el laboratorio; no se procesan pagos con tarjeta ni por ningún otro medio. La membresía tiene una cuota anual vigente publicada en el sitio, igual para todos los socios — los tres niveles de reconocimiento (Plata, Oro y Platino) dependen del número acumulado de piezas certificadas y determinan los beneficios aplicables, no el costo de la membresía. Al alcanzar el Nivel Platino (20 piezas certificadas o más), ese reconocimiento es vitalicio y no se pierde por falta de renovación de la cuota; sin embargo, el acceso a los beneficios activos de la membresía (Galería Exclusiva, Calendario VIP y demás) sí requiere mantener la cuota anual al corriente. Los beneficios de cada nivel (prioridad de agenda, promociones, obsequios, uso promocional de las piezas del socio en las plataformas que él elija, entre otros) son procesos que el laboratorio gestiona manualmente caso por caso, no automatizaciones garantizadas del sitio, y sus términos específicos pueden variar según lo publicado en cada momento. El acceso al Salón se realiza con el teléfono registrado y el código de socio asignado; el socio es responsable de mantener su código en un lugar seguro y no compartirlo — el laboratorio no es responsable por el acceso o uso que un tercero haga con un código extraviado o compartido por el propio socio. El laboratorio puede actualizar hacia el futuro el costo de la membresía, sus niveles y beneficios, sin afectar el periodo ya pagado y vigente de un socio.</p>
+      <p data-i18n="terminos.s9.p">El Salón Privado HV es un programa de membresía para clientes que han certificado 5 piezas o más con el laboratorio; esa es la única forma de volverse socio — la membresía no se vende ni se activa por ningún otro medio, incluyendo compra directa sin haber certificado piezas. Al alcanzar ese número el cliente queda elegible; el laboratorio activa la membresía y le asigna un código de acceso personal. El pago de la cuota de membresía (activación, renovación o el costo de un nuevo nivel alcanzado) únicamente se acepta por transferencia bancaria o en efectivo directamente en el laboratorio; no se procesan pagos con tarjeta ni por ningún otro medio. La membresía tiene una cuota anual vigente publicada en el sitio, igual para todos los socios — los tres niveles de reconocimiento (Plata, Oro y Platino) dependen del número acumulado de piezas certificadas y reflejan el reconocimiento y la prioridad de atención del socio, pero no determinan el costo de la membresía ni cambian qué beneficios recibe: los beneficios de la membresía son exactamente los mismos para los tres niveles. Al alcanzar el Nivel Platino (20 piezas certificadas o más), ese reconocimiento es vitalicio y no se pierde por falta de renovación de la cuota; sin embargo, el acceso a los beneficios activos de la membresía (Galería Exclusiva, Calendario VIP y demás) sí requiere mantener la cuota anual al corriente. Los beneficios de la membresía (promociones, obsequios, uso promocional de las piezas del socio en las plataformas que él elija, entre otros) son procesos que el laboratorio gestiona manualmente caso por caso, no automatizaciones garantizadas del sitio, y sus términos específicos pueden variar según lo publicado en cada momento; la prioridad de agenda y atención sí puede ser mayor conforme sube el nivel de reconocimiento del socio. El acceso al Salón se realiza con el teléfono registrado y el código de socio asignado; el socio es responsable de mantener su código en un lugar seguro y no compartirlo — el laboratorio no es responsable por el acceso o uso que un tercero haga con un código extraviado o compartido por el propio socio. El laboratorio puede actualizar hacia el futuro el costo de la membresía, sus niveles y beneficios, sin afectar el periodo ya pagado y vigente de un socio.</p>
 
       <h3 data-i18n="terminos.s10.h3">10. Propiedad intelectual</h3>
       <p data-i18n="terminos.s10.p">El contenido del sitio (textos, diseño, metodología, sellos, logotipos y certificados) es propiedad de Laboratorio HV México o se usa bajo licencia. Las fotografías de la pieza que el cliente sube al formulario siguen siendo propiedad del cliente; al enviarlas, el cliente otorga al laboratorio una licencia no exclusiva para usarlas en la operación del servicio (incluyendo, en su caso, la publicación descrita en el punto 7).</p>
@@ -4520,13 +4530,13 @@
       <a href="#" id="footer-whatsapp" target="_blank" rel="noopener" title="WhatsApp" style="background:#25D366;"><svg viewBox="0 0 32 32" fill="#fff"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg></a>
     </div>
     <p style="max-width:600px;margin:0 auto;text-align:center;" data-i18n="footer.disclaimer"><img class="mx-flag sm" src="assets/img/mx-flag.jpg" alt="Bandera de México"> Laboratorio HV México — laboratorio independiente de coleccionismo, con sede física en Ciudad de México. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
-    <p style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;color:var(--sage-dim);" data-i18n="footer.ai-note">Algunos elementos gráficos de este sitio (como los sellos oficiales del laboratorio) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
+    <p style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;color:rgba(255,247,238,.55);" data-i18n="footer.ai-note">Algunas imágenes y elementos gráficos de este sitio (como los sellos oficiales del laboratorio y ciertas fotografías ilustrativas) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
     <p class="footer-legal-links" style="margin:14px 0 0;font-size:12px;">
       <button type="button" onclick="go('terminos')" class="footer-legal-link" data-i18n="footer.terminos">Términos y condiciones</button>
       <span aria-hidden="true">·</span>
       <button type="button" onclick="go('privacidad')" class="footer-legal-link" data-i18n="footer.privacidad">Aviso de privacidad</button>
     </p>
-    <button data-v="admin" onclick="go('admin')" style="background:none;border:none;cursor:pointer;color:var(--sage-dim);opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
+    <button data-v="admin" onclick="go('admin')" style="background:none;border:none;cursor:pointer;color:rgba(255,247,238,.85);opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
   </div>
 </footer>
 
@@ -4821,7 +4831,7 @@ const I18N_EN = {
   'pwa-install': 'Install app',
   // Footer
   'footer.disclaimer': '<img class="mx-flag sm" src="assets/img/mx-flag.jpg" alt="Mexican flag"> Laboratorio HV México — an independent collectibles lab based in Mexico City. Not affiliated with Mattel, Inc. or Hot Wheels®. Our reports are expert opinion, not a commercial appraisal.',
-  'footer.ai-note': 'Some graphic elements on this site (such as the lab’s official seals) were created and designed with the help of artificial intelligence.',
+  'footer.ai-note': 'Some images and graphic elements on this site (such as the lab’s official seals and certain illustrative photos) were created and designed with the help of artificial intelligence.',
   'footer.terminos': 'Terms & Conditions',
   'footer.privacidad': 'Privacy Notice',
 
@@ -5166,7 +5176,7 @@ const I18N_EN = {
   'terminos.s8.h3': '8. Referral program',
   'terminos.s8.p': 'The lab offers an optional, free referral program: when you submit your request you receive your own code, which you can share with other people interested in certifying their pieces. If a new client enters your code when requesting their certification and their piece is certified with a folio, you receive a 10% discount credit, applied automatically to your next paid certification. This benefit has no cash value, is not transferable to a third party, and the lab may modify, pause or end the referral program at any time going forward, without affecting credits you have already earned and not yet used.',
   'terminos.s9.h3': '9. Salón Privado HV — member program',
-  'terminos.s9.p': 'Salón Privado HV is a membership program for clients who have certified 5 or more pieces with the lab; that is the only way to become a member — membership is not sold or activated through any other means, including a direct purchase without having certified pieces. Once that number is reached the client becomes eligible; the lab activates the membership and assigns a personal access code. Payment of the membership fee (activation, renewal, or the cost of a newly reached tier) is only accepted by bank transfer or in cash directly at the lab; no card or other payment method is processed. Membership carries an annual fee, published on the site, the same for every member — the three recognition tiers (Silver, Gold and Platinum) depend on the accumulated number of certified pieces and determine the applicable benefits, not the cost of membership. Once Platinum Tier is reached (20 or more certified pieces), that recognition is lifetime and is not lost for failing to renew the annual fee; however, access to active membership benefits (Exclusive Gallery, VIP Calendar and others) does require keeping the annual fee current. Each tier\'s benefits (priority scheduling, promotions, gifts, promotional use of the member\'s pieces on platforms of their choice, among others) are handled manually by the lab on a case-by-case basis, not guaranteed automations of the site, and their specific terms may vary as published from time to time. Access to the Salón is done with the registered phone number and the assigned member code; the member is responsible for keeping their code somewhere safe and not sharing it — the lab is not responsible for access or use by a third party through a code lost or shared by the member themselves. The lab may update the cost of membership, its tiers and benefits going forward, without affecting a member\'s already-paid, current period.',
+  'terminos.s9.p': 'Salón Privado HV is a membership program for clients who have certified 5 or more pieces with the lab; that is the only way to become a member — membership is not sold or activated through any other means, including a direct purchase without having certified pieces. Once that number is reached the client becomes eligible; the lab activates the membership and assigns a personal access code. Payment of the membership fee (activation, renewal, or the cost of a newly reached tier) is only accepted by bank transfer or in cash directly at the lab; no card or other payment method is processed. Membership carries an annual fee, published on the site, the same for every member — the three recognition tiers (Silver, Gold and Platinum) depend on the accumulated number of certified pieces and reflect the member\'s recognition and scheduling priority, but do not determine the cost of membership or change which benefits they receive: membership benefits are exactly the same across all three tiers. Once Platinum Tier is reached (20 or more certified pieces), that recognition is lifetime and is not lost for failing to renew the annual fee; however, access to active membership benefits (Exclusive Gallery, VIP Calendar and others) does require keeping the annual fee current. Membership benefits (promotions, gifts, promotional use of the member\'s pieces on platforms of their choice, among others) are handled manually by the lab on a case-by-case basis, not guaranteed automations of the site, and their specific terms may vary as published from time to time; scheduling priority and attention can be higher as the member\'s recognition tier goes up. Access to the Salón is done with the registered phone number and the assigned member code; the member is responsible for keeping their code somewhere safe and not sharing it — the lab is not responsible for access or use by a third party through a code lost or shared by the member themselves. The lab may update the cost of membership, its tiers and benefits going forward, without affecting a member\'s already-paid, current period.',
   'terminos.s10.h3': '10. Intellectual property',
   'terminos.s10.p': 'The site\'s content (text, design, methodology, seals, logos and certificates) is the property of Laboratorio HV México or is used under license. Photographs of the piece that the client uploads to the form remain the client\'s property; by submitting them, the client grants the lab a non-exclusive license to use them in operating the service (including, where applicable, the publication described in point 7).',
   'terminos.s11.h3': '11. Limitation of liability',
@@ -5348,12 +5358,13 @@ const I18N_EN = {
   // Salón Privado HV — membership program
   'salon.kicker': 'Salón Privado HV',
   'salon.h2': 'The most exclusive circle in collecting',
-  'salon.lead': 'A single membership, $1,000 MXN/year — but it\'s not for just any piece: the lab curates and publishes here only the rarest, most extraordinary pieces we\'ve certified, so serious collectors can discover them, recognize them, and reach out about them. Earn your way in by certifying 5+ pieces with us, or acquire it directly if you already trust the lab. And the more you certify and level up within the Salón, the more your benefits grow: discounts, promotions and gifts for your loyalty.',
+  'salon.lead': 'A single membership, $1,000 MXN/year, with the same benefits for every member — but it\'s not for just any piece: the lab curates and publishes here only the rarest, most extraordinary pieces we\'ve certified, so serious collectors can discover them, recognize them, and reach out about them. Earn your way in by certifying 5+ pieces with us, or acquire it directly if you already trust the lab. And the more you certify and level up within the Salón, the greater the recognition and priority we give you for your activity and your trust in us.',
   'salon.tiers.loading': 'Loading the Salón\'s tiers…',
   'salon.tiers.threshold5': 'Unlocks at 5 certified pieces',
   'salon.tiers.threshold10': 'Unlocks at 10 certified pieces',
   'salon.tiers.threshold20': 'Unlocks at 20+ certified pieces · lifetime',
   'salon.tiers.kicker': 'Here\'s how your recognition levels look within that same membership',
+  'salon.tiers.subkicker': 'The benefits are the same across all three tiers — what changes is the recognition and priority we give you for certifying more and trusting us more.',
   'salon.tiers.n1': 'Silver Tier',
   'salon.tiers.n2': 'Gold Tier',
   'salon.tiers.n3': 'Platinum Tier',
@@ -7532,48 +7543,54 @@ function deriveSalonTier(piezas){
   return 0;
 }
 
+// Los 3 niveles ya NO desbloquean beneficios distintos — son la MISMA
+// membresía con los MISMOS privilegios para todos. Lo único que cambia por
+// nivel es el nombre/tema visual (reconocimiento) y, en la práctica, la
+// prioridad que el laboratorio le da a un socio más activo/leal — eso no
+// es una lista de beneficios que varíe, es cómo se atiende a cada quien.
 const SALON_TIERS_DEFAULT = {
+  beneficios: [
+    'Acceso automático a la Galería Exclusiva del Salón Privado',
+    'Calendario VIP exclusivo para socios, con reservas prioritarias',
+    'Descuentos en certificaciones y servicios del laboratorio',
+    'Promociones y obsequios de cortesía periódicos',
+    'Tus piezas usadas como marketing en las plataformas que elijas, por tiempo limitado',
+    'Recomendación directa del laboratorio'
+  ],
+  beneficiosEn: [
+    'Automatic access to the Salón Privado\'s Exclusive Gallery',
+    'A VIP calendar exclusive to members, with priority booking',
+    'Discounts on certifications and services from the lab',
+    'Periodic promotions and courtesy gifts',
+    'Your pieces featured as marketing on the platforms of your choice, for a limited time',
+    'Direct recommendation from the lab'
+  ],
   niveles: {
-    1: { nombre:'Nivel Plata', nombreEn:'Silver Tier', costo:0, moneda:'MXN', colorTema:'plata', beneficios:[
-      'Acceso automático a la Galería Exclusiva del Salón Privado',
-      'Reservas con prioridad en el calendario del laboratorio',
-      'Descuento de bienvenida en tu próxima certificación',
-      'Recomendación directa del laboratorio'
-    ], beneficiosEn:[
-      'Automatic access to the Salón Privado\'s Exclusive Gallery',
-      'Priority booking on the lab\'s calendar',
-      'A welcome discount on your next certification',
-      'Direct recommendation from the lab'
-    ]},
-    2: { nombre:'Nivel Oro', nombreEn:'Gold Tier', costo:0, moneda:'MXN', colorTema:'oro', beneficios:[
-      'Calendario VIP exclusivo para socios',
-      'Mayores descuentos en certificaciones y servicios',
-      'Promociones y obsequios de cortesía periódicos',
-      'Tus piezas usadas como marketing en las plataformas que elijas, por tiempo limitado'
-    ], beneficiosEn:[
-      'A VIP calendar exclusive to members',
-      'Bigger discounts on certifications and services',
-      'Periodic promotions and courtesy gifts',
-      'Your pieces featured as marketing on the platforms of your choice, for a limited time'
-    ]},
-    3: { nombre:'Nivel Platino', nombreEn:'Platinum Tier', costo:0, moneda:'MXN', colorTema:'platino', beneficios:[
-      'Reconocimiento vitalicio — una vez Platino, nunca se pierde el nivel',
-      'El descuento más alto disponible para socios del laboratorio',
-      'Regalos y promociones exclusivas con cada nueva certificación',
-      'Máxima prioridad de agenda y atención personalizada'
-    ], beneficiosEn:[
-      'Lifetime recognition — once Platinum, the tier is never lost',
-      'The highest discount available to lab members',
-      'Exclusive gifts and promotions with every new certification',
-      'Highest scheduling priority and personalized attention'
-    ]}
+    1: { nombre:'Nivel Plata', nombreEn:'Silver Tier', colorTema:'plata' },
+    2: { nombre:'Nivel Oro', nombreEn:'Gold Tier', colorTema:'oro' },
+    3: { nombre:'Nivel Platino', nombreEn:'Platinum Tier', colorTema:'platino' }
   }
 };
 
 async function getSalonTiers(){
   try{
     const r = await HVStorage.get('salon:tiers', true).catch(()=>null);
-    if(r && r.value) return JSON.parse(r.value);
+    if(r && r.value){
+      const tiers = JSON.parse(r.value);
+      // Compatibilidad con datos guardados antes de que los beneficios
+      // fueran compartidos: si no hay lista compartida pero sí había
+      // beneficios por nivel (formato viejo), se combinan sin duplicar
+      // para no perder lo que el admin ya había escrito.
+      if((!tiers.beneficios || !tiers.beneficios.length) && tiers.niveles){
+        const combos = [1,2,3].flatMap(n => (tiers.niveles[n] && tiers.niveles[n].beneficios) || []);
+        const combosEn = [1,2,3].flatMap(n => (tiers.niveles[n] && tiers.niveles[n].beneficiosEn) || []);
+        if(combos.length) tiers.beneficios = [...new Set(combos)];
+        if(combosEn.length) tiers.beneficiosEn = [...new Set(combosEn)];
+      }
+      if(!tiers.beneficios || !tiers.beneficios.length) tiers.beneficios = SALON_TIERS_DEFAULT.beneficios;
+      if(!tiers.beneficiosEn || !tiers.beneficiosEn.length) tiers.beneficiosEn = SALON_TIERS_DEFAULT.beneficiosEn;
+      return tiers;
+    }
   }catch(e){}
   return JSON.parse(JSON.stringify(SALON_TIERS_DEFAULT));
 }
@@ -7728,9 +7745,16 @@ async function renderSalonTiersAdmin(){
   const nombres = {1:'Nivel 1 · se activa a las 5 piezas', 2:'Nivel 2 · se activa a las 10 piezas', 3:'Nivel 3 · se activa a las 20+ piezas (vitalicio)'};
   box.innerHTML = `<div class="card" style="background:var(--panel-2);border-left:3px solid var(--salon-gold, var(--brass));margin-bottom:14px;">
       <strong>Cuota de membresía: $${SALON_ANNUAL_FEE.toLocaleString('es-MX')} MXN/año</strong>
-      <p class="foot-note" style="border:none;padding:0;margin-top:4px;">Es una sola cuota fija, igual para los 3 niveles — los niveles ya no tienen costo propio, solo nombre y beneficios (reconocimiento por piezas certificadas). Para cambiar el monto de la cuota, pide que se actualice la constante SALON_ANNUAL_FEE en el código.</p>
+      <p class="foot-note" style="border:none;padding:0;margin-top:4px;">Es una sola cuota fija, igual para los 3 niveles. Los niveles (Plata/Oro/Platino) ya NO tienen beneficios distintos entre sí — son de reconocimiento y prioridad por piezas certificadas, no desbloquean privilegios extra. Todos los socios, sin importar su nivel, tienen exactamente los mismos beneficios (se editan una sola vez abajo). Para cambiar el monto de la cuota, pide que se actualice la constante SALON_ANNUAL_FEE en el código.</p>
+    </div>
+    <div class="card" style="background:var(--panel-2);margin-bottom:14px;">
+      <h4 style="margin:0 0 4px;font-size:14.5px;">Beneficios de la membresía (iguales para los 3 niveles)</h4>
+      <label style="font-size:12px;">Beneficios en español (uno por línea) — se muestran en el sitio público</label>
+      <textarea id="st-beneficios" rows="6" style="margin-bottom:8px;">${escapeHtml((tiers.beneficios||[]).join('\n'))}</textarea>
+      <label style="font-size:12px;">Beneficios en inglés (uno por línea, opcional — si se deja vacío se muestra el español)</label>
+      <textarea id="st-beneficios-en" rows="6" style="margin-bottom:0;">${escapeHtml((tiers.beneficiosEn||[]).join('\n'))}</textarea>
     </div>` + [1,2,3].map(n => {
-    const t = tiers.niveles[n] || {nombre:'', nombreEn:'', beneficios:[], beneficiosEn:[]};
+    const t = tiers.niveles[n] || {nombre:'', nombreEn:''};
     return `
     <div class="card" style="background:var(--panel-2);margin-bottom:14px;">
       <h4 style="margin:0 0 4px;font-size:14.5px;">${nombres[n]}</h4>
@@ -7738,23 +7762,20 @@ async function renderSalonTiersAdmin(){
         <div style="flex:1;"><label style="font-size:12px;">Nombre del nivel (ES)</label><input id="st-nombre-${n}" value="${escapeHtml(t.nombre||'')}" style="margin-bottom:8px;"></div>
         <div style="flex:1;"><label style="font-size:12px;">Nombre del nivel (EN)</label><input id="st-nombre-en-${n}" value="${escapeHtml(t.nombreEn||'')}" style="margin-bottom:8px;"></div>
       </div>
-      <label style="font-size:12px;">Beneficios en español (uno por línea) — se muestran en el sitio público</label>
-      <textarea id="st-beneficios-${n}" rows="4" style="margin-bottom:8px;">${escapeHtml((t.beneficios||[]).join('\n'))}</textarea>
-      <label style="font-size:12px;">Beneficios en inglés (uno por línea, opcional — si se deja vacío se muestra el español)</label>
-      <textarea id="st-beneficios-en-${n}" rows="4" style="margin-bottom:0;">${escapeHtml((t.beneficiosEn||[]).join('\n'))}</textarea>
     </div>`;
   }).join('') + `<button class="btn small" onclick="saveSalonTiers()">Guardar niveles</button> <span id="salon-tiers-status" class="foot-note" style="border:none;"></span>`;
 }
 async function saveSalonTiers(){
-  const tiers = { niveles: {} };
+  const tiers = {
+    beneficios: (document.getElementById('st-beneficios').value||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    beneficiosEn: (document.getElementById('st-beneficios-en').value||'').split('\n').map(s=>s.trim()).filter(Boolean),
+    niveles: {}
+  };
   [1,2,3].forEach(n => {
     tiers.niveles[n] = {
       nombre: (document.getElementById('st-nombre-'+n).value||'').trim(),
       nombreEn: (document.getElementById('st-nombre-en-'+n).value||'').trim(),
-      costo: 0, moneda: 'MXN', // ya sin uso — la cuota es fija (SALON_ANNUAL_FEE), no por nivel
-      colorTema: n==1?'plata':(n==2?'oro':'platino'),
-      beneficios: (document.getElementById('st-beneficios-'+n).value||'').split('\n').map(s=>s.trim()).filter(Boolean),
-      beneficiosEn: (document.getElementById('st-beneficios-en-'+n).value||'').split('\n').map(s=>s.trim()).filter(Boolean)
+      colorTema: n==1?'plata':(n==2?'oro':'platino')
     };
   });
   try{
@@ -8240,27 +8261,27 @@ async function renderSalonTiersTeaser(){
     const tier = tiers.niveles[n] || {};
     return tt(tier.nombre||('Nivel '+n), tier.nombreEn||tier.nombre||('Tier '+n));
   };
-  // Es UNA sola membresía ($SALON_ANNUAL_FEE/año) — los 3 "niveles" no son
-  // productos distintos que se cobran aparte, son etapas de reconocimiento
-  // dentro de esa misma membresía. El precio ya se muestra una sola vez, en
-  // la tarjeta de vista previa de la membresía (arriba, en .salon-hero), así
-  // que aquí las tarjetas de nivel NO lo repiten — muestran "Nivel N de 3" +
-  // un texto "incluye todo lo anterior, más:" para que quede claro que los
-  // beneficios se acumulan.
+  const prioridadTxt = {
+    1: tt('Prioridad estándar de socio','Standard member priority'),
+    2: tt('Mayor prioridad de agenda y atención','Higher scheduling priority and attention'),
+    3: tt('Máxima prioridad · reconocimiento vitalicio','Highest priority · lifetime recognition')
+  };
+  // Es UNA sola membresía ($SALON_ANNUAL_FEE/año) con LOS MISMOS beneficios
+  // para los 3 niveles — Plata/Oro/Platino ya no desbloquean privilegios
+  // distintos, son etapas de RECONOCIMIENTO por piezas certificadas. Lo
+  // único que sube con el nivel es la prioridad de atención (ver
+  // `prioridadTxt`), no la lista de beneficios, que es idéntica en las 3
+  // tarjetas.
+  const beneficios = (SITE_LANG==='en' && tiers.beneficiosEn && tiers.beneficiosEn.length) ? tiers.beneficiosEn : (tiers.beneficios||[]);
+  const beneficiosHtml = beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('') || `<li>${tt('Beneficios por definir','Benefits to be defined')}</li>`;
   const cardsHtml = [1,2,3].map(n => {
-    const tier = tiers.niveles[n] || {};
     const nombre = nombreDe(n);
-    const beneficios = (SITE_LANG==='en' && tier.beneficiosEn && tier.beneficiosEn.length) ? tier.beneficiosEn : (tier.beneficios||[]);
-    const includesTxt = n===2 ? tt(`Incluye todo lo de ${nombreDe(1)}, más:`,`Includes everything in ${nombreDe(1)}, plus:`)
-                       : n===3 ? tt(`Incluye todo lo de ${nombreDe(2)}, más:`,`Includes everything in ${nombreDe(2)}, plus:`)
-                       : '';
     return `
     <div class="card salon-tier-card salon-tier-n${n}">
       <p class="salon-tier-eyebrow">${thresholdTxt[n]}</p>
       <h3 class="salon-tier-name">${escapeHtml(nombre)}</h3>
-      <p class="salon-tier-cost">${tt(`Nivel ${n} de 3`,`Tier ${n} of 3`)}</p>
-      ${includesTxt ? `<p class="salon-tier-includes">${includesTxt}</p>` : ''}
-      <ul class="salon-tier-benefits">${beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('') || `<li>${tt('Beneficios por definir','Benefits to be defined')}</li>`}</ul>
+      <p class="salon-tier-cost">${tt(`Nivel ${n} de 3`,`Tier ${n} of 3`)} · ${prioridadTxt[n]}</p>
+      <ul class="salon-tier-benefits">${beneficiosHtml}</ul>
     </div>`;
   }).join('');
   box.innerHTML = `<div class="salon-tiers-grid">${cardsHtml}</div>`;
@@ -8413,7 +8434,7 @@ function salonWelcomeBodyHtml(m){
       <li><span class="swh-ic">🪪</span><span>${tt('<strong>Tu tarjeta de socio</strong> — tu nivel, tu progreso y tu código de acceso.','<strong>Your member card</strong> — your tier, your progress, and your access code.')}</span></li>
       <li><span class="swh-ic">📖</span><span>${tt('<strong>El Libro del Coleccionismo</strong> — la galería exclusiva que actualizan los mejores coleccionistas del Salón, visible solo para socios.','<strong>The Collector’s Book</strong> — the exclusive gallery updated by the Salón’s top collectors, visible only to members.')}</span></li>
       <li><span class="swh-ic">📅</span><span>${tt('<strong>Calendario VIP</strong> — agenda tu próxima cita con prioridad de socio.','<strong>VIP Calendar</strong> — book your next appointment with member priority.')}</span></li>
-      <li><span class="swh-ic">✦</span><span>${tt('<strong>Beneficios que crecen</strong> — mientras más certificas con nosotros, más sube tu nivel dentro del Salón.','<strong>Benefits that grow</strong> — the more you certify with us, the higher your tier climbs inside the Salón.')}</span></li>
+      <li><span class="swh-ic">✦</span><span>${tt('<strong>Reconocimiento y prioridad que crecen</strong> — mientras más certificas con nosotros, más sube tu nivel dentro del Salón (los beneficios son los mismos en los 3 niveles).','<strong>Recognition and priority that grow</strong> — the more you certify with us, the higher your tier climbs inside the Salón (benefits are the same across all 3 tiers).')}</span></li>
     </ul>
     ${salonTimelineHtml(m)}
     ${salonRenewalWarnBannerHtml(m)}
@@ -8501,7 +8522,10 @@ async function enterSalonLobby(m, opts){
   const [tiers, piezas] = await Promise.all([getSalonTiers(), getSalonPiezas()]);
   const tierInfo = tiers.niveles[m.nivelActual] || {};
   const nombreNivel = tt(tierInfo.nombre||('Nivel '+m.nivelActual), tierInfo.nombreEn||tierInfo.nombre||('Tier '+m.nivelActual));
-  const beneficios = (SITE_LANG==='en' && tierInfo.beneficiosEn && tierInfo.beneficiosEn.length) ? tierInfo.beneficiosEn : (tierInfo.beneficios||[]);
+  // Los beneficios son los mismos para los 3 niveles (ver SALON_TIERS_DEFAULT
+  // / getSalonTiers) — el nivel del socio ya no cambia QUÉ beneficios recibe,
+  // solo su reconocimiento y la prioridad con la que se le atiende.
+  const beneficios = (SITE_LANG==='en' && tiers.beneficiosEn && tiers.beneficiosEn.length) ? tiers.beneficiosEn : (tiers.beneficios||[]);
   const nextT = nextSalonThreshold(m.piezasCertificadas||0);
   const progresoTxt = nextT
     ? tt(`Te faltan ${nextT - m.piezasCertificadas} pieza(s) para tu siguiente nivel (${nextT} piezas).`, `${nextT - m.piezasCertificadas} more piece(s) to your next tier (${nextT} pieces).`)
@@ -10066,24 +10090,83 @@ if(fbAuth){
   });
 }
 
-async function loadHeroImage(){
+// El fondo del "inicio" ya no es una sola foto fija subida a mano: se arma
+// una rotación (fondo del admin, si hay uno, + las fotos de portada —
+// fotos[0] — de las piezas ya publicadas en la biblioteca pública) y se va
+// haciendo un "splash"/crossfade entre ellas cada pocos segundos, con dos
+// capas apiladas (#hero-bg / #hero-bg-2) para que el cambio se vea suave y
+// nunca haya un parpadeo en blanco entre una foto y la siguiente.
+let HERO_SLIDES = [];
+let HERO_SLIDE_IDX = 0;
+let HERO_ACTIVE_LAYER = 1;
+let HERO_ROTATION_TIMER = null;
+
+async function buildHeroSlides(){
+  const slides = [];
   try{
     const res = await HVStorage.get('site:hero', true);
     const url = res && res.value ? JSON.parse(res.value).url : '';
-    const section = document.getElementById('hero-section');
-    const bg = document.getElementById('hero-bg');
-    const overlay = document.getElementById('hero-overlay');
-    if(url){
-      bg.style.backgroundImage = `url("${url}")`;
-      overlay.style.display = 'block';
-      section.classList.add('has-image');
-    } else {
-      bg.style.backgroundImage = '';
-      overlay.style.display = 'none';
-      section.classList.remove('has-image');
+    if(url) slides.push(url);
+  }catch(e){}
+  try{
+    const piezas = await getPiezas();
+    for(const p of (piezas || [])){
+      const cover = p.fotos && p.fotos[0] && p.fotos[0].url;
+      if(cover && !slides.includes(cover)){
+        slides.push(cover);
+        if(slides.length >= 6) break;
+      }
     }
-  }catch(e){
-    document.getElementById('hero-section').classList.remove('has-image');
+  }catch(e){}
+  return slides;
+}
+
+function advanceHeroSlide(){
+  const view = document.getElementById('view-inicio');
+  if(view && !view.classList.contains('active')) return;
+  if(!HERO_SLIDES.length) return;
+  HERO_SLIDE_IDX = (HERO_SLIDE_IDX + 1) % HERO_SLIDES.length;
+  const nextUrl = HERO_SLIDES[HERO_SLIDE_IDX];
+  const bg1 = document.getElementById('hero-bg');
+  const bg2 = document.getElementById('hero-bg-2');
+  const showing = HERO_ACTIVE_LAYER === 1 ? bg1 : bg2;
+  const hidden = HERO_ACTIVE_LAYER === 1 ? bg2 : bg1;
+  hidden.style.backgroundImage = `url("${nextUrl}")`;
+  void hidden.offsetWidth; // fuerza reflow para que sí anime la opacidad
+  hidden.style.opacity = '1';
+  showing.style.opacity = '0';
+  HERO_ACTIVE_LAYER = HERO_ACTIVE_LAYER === 1 ? 2 : 1;
+}
+
+async function loadHeroImage(){
+  const section = document.getElementById('hero-section');
+  const bg1 = document.getElementById('hero-bg');
+  const bg2 = document.getElementById('hero-bg-2');
+  const overlay = document.getElementById('hero-overlay');
+  if(HERO_ROTATION_TIMER){ clearInterval(HERO_ROTATION_TIMER); HERO_ROTATION_TIMER = null; }
+  try{
+    HERO_SLIDES = await buildHeroSlides();
+  }catch(e){ HERO_SLIDES = []; }
+  if(HERO_SLIDES.length){
+    HERO_SLIDE_IDX = 0;
+    HERO_ACTIVE_LAYER = 1;
+    bg1.style.backgroundImage = `url("${HERO_SLIDES[0]}")`;
+    bg1.style.opacity = '1';
+    bg2.style.backgroundImage = '';
+    bg2.style.opacity = '0';
+    overlay.style.display = 'block';
+    section.classList.add('has-image');
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(HERO_SLIDES.length > 1 && !reduceMotion){
+      HERO_ROTATION_TIMER = setInterval(advanceHeroSlide, 6000);
+    }
+  } else {
+    bg1.style.backgroundImage = '';
+    bg2.style.backgroundImage = '';
+    bg1.style.opacity = '0';
+    bg2.style.opacity = '0';
+    overlay.style.display = 'none';
+    section.classList.remove('has-image');
   }
 }
 
