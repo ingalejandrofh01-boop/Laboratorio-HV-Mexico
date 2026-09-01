@@ -535,13 +535,11 @@
   /* ---- Estuche acrílico ilustrado junto a la tarjeta (más visual, evoca
      el encapsulado físico real: caja transparente + tarjeta de etiqueta) ---- */
   .cert-case-mock{flex:none;width:172px;}
-  .ccm-glass{position:relative;width:100%;height:210px;border-radius:14px;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.6),rgba(255,255,255,.08) 45%,rgba(255,255,255,.4));border:1.5px solid rgba(255,255,255,.55);box-shadow:0 16px 36px rgba(36,21,18,.18), inset 0 0 0 1px rgba(36,21,18,.06);display:flex;align-items:center;justify-content:center;}
-  .ccm-shine{position:absolute;top:-30%;left:-20%;width:60%;height:160%;background:linear-gradient(120deg,rgba(255,255,255,.55),transparent 70%);transform:rotate(18deg);pointer-events:none;}
-  .ccm-car{width:74%;height:auto;fill:var(--ink);opacity:.28;}
-  .ccm-car .ccm-car-window{fill:var(--bg);opacity:.9;}
+  .ccm-glass{position:relative;width:100%;height:210px;border-radius:14px;overflow:hidden;background:#1a1a1a;border:1.5px solid rgba(255,255,255,.55);box-shadow:0 16px 36px rgba(36,21,18,.18), inset 0 0 0 1px rgba(36,21,18,.06);display:flex;align-items:center;justify-content:center;}
+  .ccm-photo{width:100%;height:100%;object-fit:cover;display:block;}
+  .ccm-shine{position:absolute;top:-30%;left:-20%;width:60%;height:160%;background:linear-gradient(120deg,rgba(255,255,255,.35),transparent 70%);transform:rotate(18deg);pointer-events:none;}
   .ccm-caption{margin:10px 0 0;font-size:11.5px;color:var(--sage);line-height:1.4;}
-  html[data-theme="dark"] .ccm-glass{background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.02) 45%,rgba(255,255,255,.09));border-color:rgba(255,255,255,.16);}
-  html[data-theme="dark"] .ccm-car{opacity:.34;}
+  html[data-theme="dark"] .ccm-glass{border-color:rgba(255,255,255,.16);}
   @media(max-width:560px){.cert-case-mock{width:150px;}.ccm-glass{height:190px;}}
   /* ---- Tarjeta de ejemplo rediseñada para parecerse a la etiqueta física
      real que va pegada al estuche (ver .cert-label, usada para imprimir la
@@ -911,7 +909,7 @@
   .hv-book-pages{position:absolute;right:-5px;top:8px;bottom:8px;width:9px;background:repeating-linear-gradient(#f4ece0,#f4ece0 1px,#e2d5c0 1px,#e2d5c0 2px);border-radius:0 3px 3px 0;box-shadow:1px 0 3px rgba(0,0,0,.15);}
   .hv-book-cover{position:absolute;inset:0;background:linear-gradient(150deg,#D2042D,#7A0320 75%);border-radius:3px 9px 9px 3px;box-shadow:0 22px 44px rgba(36,4,4,0.28),inset 0 0 0 1px rgba(255,255,255,0.1),inset 0 0 40px rgba(0,0,0,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;text-align:center;padding:30px;cursor:pointer;transform-origin:left center;transition:transform .85s cubic-bezier(.45,0,.2,1),box-shadow .85s ease;transform-style:preserve-3d;}
   .hv-book-cover::before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,0.25);border-radius:2px 6px 6px 2px;pointer-events:none;}
-  .hv-book-cover h3{font-family:'Fraunces',serif;font-size:19px;font-weight:500;margin:0;line-height:1.3;}
+  .hv-book-cover h3{font-family:'Fraunces',serif;font-size:19px;font-weight:500;margin:0;line-height:1.3;color:inherit;}
   .hv-book-cover p{font-size:11px;opacity:.82;margin:0;text-transform:uppercase;letter-spacing:.08em;}
   .hv-book-cover:hover{transform:rotateY(-10deg);}
   .hv-book.open .hv-book-cover{transform:rotateY(-155deg);box-shadow:-14px 14px 32px rgba(0,0,0,0.22);}
@@ -2446,13 +2444,8 @@
     <div class="cert-flip-wrap">
       <div class="cert-case-mock" aria-hidden="true">
         <div class="ccm-glass">
+          <img class="ccm-photo" src="assets/img/encapsulado-ejemplo.jpg" data-i18n-alt="inicio.cert.caseImgAlt" alt="Pieza real encapsulada en estuche acrílico junto a su tarjeta de certificación HV" loading="lazy" width="900" height="679">
           <div class="ccm-shine"></div>
-          <svg class="ccm-car" viewBox="0 0 220 100">
-            <path d="M12 68 Q10 40 45 36 L70 20 Q85 12 110 12 L150 12 Q168 12 178 26 L195 40 Q210 42 210 60 L210 68 Q210 76 200 76 L190 76 Q190 60 174 60 Q158 60 158 76 L68 76 Q68 60 52 60 Q36 60 36 76 L22 76 Q12 76 12 68 Z"/>
-            <path class="ccm-car-window" d="M78 34 L98 20 L140 20 L152 34 Z"/>
-            <circle cx="52" cy="76" r="15"/>
-            <circle cx="174" cy="76" r="15"/>
-          </svg>
         </div>
         <p class="ccm-caption" data-i18n="inicio.cert.caseCaption">Así queda tu pieza: encapsulada en un estuche acrílico transparente con su tarjeta de certificación.</p>
       </div>
@@ -4858,6 +4851,7 @@ const I18N_EN = {
   'inicio.cert.hintFront': 'Tap to see the back ↻',
   'inicio.cert.certifiedBadge': 'Certified',
   'inicio.cert.caseCaption': 'This is how your piece ends up: encapsulated in a clear acrylic case with its certification card.',
+  'inicio.cert.caseImgAlt': 'Real piece encapsulated in an acrylic case next to its HV certification card',
   'inicio.cert.dictamenLabel': 'Authenticity assessment',
   'inicio.cert.dictamenText': 'This piece is assessed as corresponding to original CIPSA production, with no evidence of repainting, restoration or repair.',
   'inicio.cert.qrAlt': 'Sample verification QR code',
