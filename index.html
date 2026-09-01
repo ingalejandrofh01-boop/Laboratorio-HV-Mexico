@@ -173,6 +173,38 @@
     box-shadow:0 6px 18px rgba(210,4,45,.4), inset 0 1px 0 rgba(255,255,255,.4);}
   .admin-link{font-size:12px!important;color:var(--sage-dim)!important;opacity:.75;margin-left:6px;padding-left:14px!important;border-left:1px solid var(--line);border-radius:0!important;}
   .admin-link:hover{background:none!important;color:var(--red)!important;opacity:1;}
+
+  /* Header/menú sobre una vista de fondo fijo oscuro (Salón Privado HV y la
+     ficha pública de una pieza del Salón) — ver updateHeaderDarkMode() en
+     el script. Reusa el mismo tratamiento del modo oscuro del sitio, pero
+     activado por esta clase en vez de data-theme, para que se vea bien
+     incluso con el sitio en modo claro. */
+  body.header-on-dark header{
+    background:linear-gradient(180deg, rgba(36,26,20,.74), rgba(20,14,11,.58));
+    border-bottom-color:rgba(255,255,255,.08);
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 10px 30px rgba(0,0,0,.4);}
+  body.header-on-dark .brand .brand-name{color:#F1E7DC;}
+  body.header-on-dark .brand .tagline{color:#C9B9A8;}
+  body.header-on-dark .theme-toggle{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#F1E7DC;}
+  body.header-on-dark .lang-toggle{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);}
+  body.header-on-dark .lang-toggle span{color:#9C8C7E;}
+  body.header-on-dark .lang-toggle span.active{background:#DDAE5C;color:#241C08;}
+  body.header-on-dark .nav-toggle{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);}
+  body.header-on-dark .nav-toggle span{background:#F1E7DC;}
+  body.header-on-dark #main-nav{
+    background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02) 45%, rgba(255,255,255,.06)), rgba(20,14,11,.35);
+    border-color:rgba(255,255,255,.14);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 10px 26px rgba(0,0,0,.4);}
+  body.header-on-dark #main-nav button{color:#C9B9A8;}
+  body.header-on-dark #main-nav button:hover{background:rgba(255,255,255,.08);color:#F1E7DC;}
+  body.header-on-dark .admin-link{color:#9C8C7E!important;border-left-color:rgba(255,255,255,.14);}
+  @media(max-width:760px){
+    body.header-on-dark #main-nav{
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(23,16,12,.95) 30%, rgba(20,14,11,.98));
+      border-color:rgba(255,255,255,.14);
+      box-shadow:-10px 0 40px rgba(0,0,0,.5), inset 1px 0 0 rgba(255,255,255,.1);}
+    body.header-on-dark .nav-close{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#F1E7DC;}
+  }
   .navbar{flex-wrap:wrap;row-gap:12px;}
   section{padding:56px 0;}
   .view{display:none;}
@@ -5776,10 +5808,30 @@ function go(view){
   }
   window.HV_CURRENT_VIEW = view;
   if(typeof updateStickyCta === 'function') updateStickyCta();
+  if(typeof updateHeaderDarkMode === 'function') updateHeaderDarkMode();
   setTimeout(() => {
     const activeView = document.getElementById('view-'+view);
     if(activeView) activeView.querySelectorAll('.reveal:not(.in-view)').forEach(el => el.classList.add('in-view'));
   }, 260);
+}
+
+// El header y el menú principal son un panel de vidrio translúcido pensado
+// para verse bien sobre el fondo claro/oscuro normal del sitio — pero el
+// Salón Privado HV (y la ficha pública de una pieza que pertenece a él) usa
+// un tema oscuro/obsidiana FIJO, independiente del claro/oscuro del sitio.
+// Al hacer scroll ahí, el header dejaba pasar ese fondo oscuro por debajo
+// del vidrio y el texto (pensado para fondo claro) perdía casi todo el
+// contraste. Esta función prende una clase en <body> cuando la vista activa
+// es de ese tipo, y el CSS de abajo le da al header/menú el mismo
+// tratamiento oscuro que ya usa el modo oscuro del sitio, sin depender de
+// data-theme.
+function updateHeaderDarkMode(){
+  let dark = (window.HV_CURRENT_VIEW === 'salon');
+  if(!dark && window.HV_CURRENT_VIEW === 'pieza'){
+    const el = document.getElementById('pieza-publica-content');
+    if(el && el.classList.contains('salon-scope')) dark = true;
+  }
+  document.body.classList.toggle('header-on-dark', dark);
 }
 
 // Modal de lectura de Términos/Privacidad — clona el contenido ya escrito
