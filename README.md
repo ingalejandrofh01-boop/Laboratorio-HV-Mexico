@@ -551,6 +551,19 @@ grandes, en orden aproximado en que aparecen:
   - Todo probado en escritorio, celular y con "reducir movimiento"
     activado (ahí el fondo se queda fijo, sin el pulso ni las chispas).
 
+- **Dos afinaciones más a la intro (recorte en celular + duración)**:
+  - En celular la foto (horizontal) se recorta por los lados, no por
+    arriba/abajo — el ajuste anterior movía la posición vertical, que ahí
+    no hace nada. Se corrigió moviendo la posición horizontal (55%), lo
+    que centra mejor la cara, deja ver el logo bordado de la bata y el
+    brazo/pinza completos sujetando el auto, en vez de un encuadre más
+    apretado y descentrado.
+  - La intro pasaba al sitio a los 3.1s, justo cuando el acercamiento de
+    la foto (3.4s) apenas terminaba — se alargó a 4.8s para que se
+    alcance a ver la escena ya asentada (con su pulso de brillo y las
+    chispas) antes de continuar. "Saltar" y el clic siguen disponibles
+    para quien no quiera esperar.
+
 - **Envío con dos velocidades — $300 terrestre / $450 al día siguiente**:
   antes había un solo costo fijo de envío ($200 MXN) para cuando el
   cliente traía o recibía su pieza por paquetería. Ahora, al elegir

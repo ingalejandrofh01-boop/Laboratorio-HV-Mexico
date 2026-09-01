@@ -1749,10 +1749,12 @@
     .intro-stage{height:min(78vh,460px);}
     .intro-cats{bottom:12%;}
     .intro-text{bottom:-9%;}
-    /* En pantallas altas y angostas el recorte vertical de la foto deja
-       muy poco aire — se sube el encuadre para que se vea más cara y
-       menos caldero apretado contra el texto de abajo. */
-    .intro-photo-bg img{object-position:44% 42%;}
+    /* En pantallas angostas la foto (horizontal) se recorta por los
+       lados, no arriba/abajo (el ancho sobra, no el alto) — así que lo
+       que de verdad mueve el encuadre aquí es la posición horizontal.
+       55% centra mejor la cara, deja ver el logo bordado de la bata y
+       conserva el brazo/pinza completos sujetando el auto. */
+    .intro-photo-bg img{object-position:55% 50%;}
   }
   @media(prefers-reduced-motion:reduce){
     .intro-stage,.intro-seal,.intro-cat,.intro-skip,.intro-seal-glow{animation:none!important;opacity:1!important;transform:none!important;transition:opacity .3s ease!important;}
@@ -2144,7 +2146,12 @@
   var skipBtn = document.getElementById('intro-skip-btn');
   if(skipBtn) skipBtn.addEventListener('click', dismissIntro);
   splash.addEventListener('click', function(e){ if(e.target === splash) dismissIntro(); });
-  setTimeout(dismissIntro, reduceMotion ? 900 : 3100);
+  // 4.8s en vez de 3.1s: antes la intro desaparecía justo cuando el
+  // acercamiento de la foto (3.4s) apenas terminaba — ahora alcanza a
+  // verse la escena ya asentada (con su pulso de brillo y las chispas)
+  // antes de pasar al sitio. "Saltar" y el clic siguen disponibles para
+  // quien no quiera esperar.
+  setTimeout(dismissIntro, reduceMotion ? 1300 : 4800);
   // Paralaje sutil con el mouse: la atmósfera de fondo se mueve al
   // contrario del cursor (capa lejana) y las burbujas un poco a favor
   // (capa cercana) — el clásico truco de profundidad, solo en equipos
