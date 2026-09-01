@@ -935,20 +935,29 @@
   }
 
   /* ============================================================
-     PANEL ADMIN — remaster "vidrio esmerilado" oscuro y premium,
-     SIEMPRE oscuro sin importar el tema claro/oscuro del sitio
-     público (mismo principio que .salon-scope): variables propias
-     con alcance en .admin-scope, nunca en :root. A diferencia del
-     Salón (que usa nombres de variable propios porque su marcado es
-     todo nuevo), el admin YA usa var(--panel)/var(--ink)/var(--sage)…
-     en absolutamente todo (sidebar, tarjetas, tablas, formularios,
-     .zz-*, etc.) — así que sobreescribir esas MISMAS variables aquí
-     hace que casi todo el panel adopte el look nuevo automáticamente,
-     sin tener que tocar cada regla una por una. Lo que sí se agrega
-     a mano es el vidrio (backdrop-filter+blur) en las superficies
-     flotantes, porque eso no viaja con las variables.
+     PANEL ADMIN — remaster "vidrio esmerilado" premium, con dos tonos
+     completos (claro y oscuro): el admin YA NO es fijo oscuro como el
+     Salón — sigue el mismo claro/oscuro que el visitante eligió para
+     el sitio, pero en ambos casos con vidrio translúcido + blur real,
+     nunca plano. Variables propias con alcance en .admin-scope (nunca
+     en :root); el bloque base de abajo es el tono CLARO (el que ya
+     usa var(--panel)/var(--ink)/var(--sage)… en absolutamente todo —
+     sidebar, tarjetas, tablas, formularios, .zz-*, etc. — así que
+     sobreescribir esas MISMAS variables hace que casi todo el panel
+     adopte el look nuevo solo con esto) y el segundo bloque, bajo
+     html[data-theme="dark"] .admin-scope, es el tono OSCURO. Lo que sí
+     se agrega a mano en cada tono es el vidrio (backdrop-filter+blur)
+     de las superficies flotantes y el contraste de bordes/sombras,
+     porque eso no viaja con las variables.
      ============================================================ */
   .admin-scope{
+    --bg:#F2E9D8; --panel:rgba(255,255,255,.55); --panel-2:rgba(255,255,255,.4);
+    --paper:#FFFDF8; --ink:#241512; --red:#D2042D; --red-dim:#9E0322;
+    --brass:#B8862F; --brass-dim:#8C6524;
+    --sage:#7A6659; --sage-dim:#9C8C7E; --line:rgba(36,21,18,0.12);
+    --ok:#2F7A4F; --warn:#B8862F; --bad:#A32638;
+  }
+  html[data-theme="dark"] .admin-scope{
     --bg:#0A0E17; --panel:rgba(255,255,255,.06); --panel-2:rgba(255,255,255,.1);
     --paper:#0D1220; --ink:#F1EDE6; --red:#FF3B57; --red-dim:#C81428;
     --brass:#E8C167; --brass-dim:#B98A3A;
@@ -958,25 +967,35 @@
   /* El certificado real (y su vista previa editable) y el "papel
      informal" de $150 representan un documento físico que el cliente
      recibe — deben verse siempre como papel/tinta normal, nunca con
-     el vidrio oscuro del admin, para que la exportación/impresión no
-     salga oscura por accidente. */
-  .admin-scope .cert, .admin-scope .cert-editor-preview, .admin-scope .papel-informal{
+     el vidrio del admin (claro u oscuro), para que la exportación/
+     impresión no salga rara por accidente. */
+  .admin-scope .cert, .admin-scope .cert-editor-preview, .admin-scope .papel-informal,
+  html[data-theme="dark"] .admin-scope .cert, html[data-theme="dark"] .admin-scope .cert-editor-preview, html[data-theme="dark"] .admin-scope .papel-informal{
     --panel:#FFFFFF; --panel-2:#F3E9DC; --paper:#FFFDF8; --ink:#241512;
     --sage:#7A6659; --sage-dim:#9C8C7E; --line:rgba(36,21,18,0.14);
     --red:#D2042D; --red-dim:#9E0322; --brass:#B8862F; --brass-dim:#8C6524;
   }
-  /* La "sala de control": un fondo oscuro con manchas de luz roja/dorada
-     muy tenues detrás de todo el vidrio — sin esto, el blur no tiene
-     nada que desenfocar y se ve plano en vez de esmerilado. */
+  /* La "sala de control": manchas de luz roja/dorada muy tenues detrás
+     de todo el vidrio — sin esto, el blur no tiene nada que desenfocar
+     y se ve plano en vez de esmerilado. En claro son manchas suaves
+     sobre un fondo cálido; en oscuro, el mismo truco pero sobre negro
+     profundo, más intenso. */
   #view-admin.admin-scope{
+    background:
+      radial-gradient(1100px 560px at 15% -10%, rgba(210,4,45,.11), transparent 60%),
+      radial-gradient(900px 520px at 100% 0%, rgba(184,134,47,.12), transparent 56%),
+      radial-gradient(1000px 620px at 50% 115%, rgba(210,4,45,.05), transparent 60%),
+      var(--bg);
+    border-radius:20px;
+    padding:28px 24px 56px;
+    margin:8px 0 32px;
+  }
+  html[data-theme="dark"] #view-admin.admin-scope{
     background:
       radial-gradient(1100px 560px at 15% -10%, rgba(255,59,87,.15), transparent 60%),
       radial-gradient(900px 520px at 100% 0%, rgba(232,193,103,.13), transparent 56%),
       radial-gradient(1000px 620px at 50% 115%, rgba(255,59,87,.07), transparent 60%),
       var(--bg);
-    border-radius:20px;
-    padding:28px 24px 56px;
-    margin:8px 0 32px;
   }
   @media(max-width:760px){
     #view-admin.admin-scope{padding:18px 12px 36px;border-radius:14px;}
@@ -998,6 +1017,25 @@
   .admin-scope .step-check,
   .admin-scope .faq-item{
     backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+    border-color:rgba(36,21,18,.09);
+    box-shadow:0 1px 0 rgba(255,255,255,.65) inset, 0 10px 28px rgba(36,21,18,.09);
+  }
+  html[data-theme="dark"] .admin-scope .admin-sidebar,
+  html[data-theme="dark"] .admin-scope .admin-main,
+  html[data-theme="dark"] .admin-scope .card,
+  html[data-theme="dark"] .admin-scope .kpi,
+  html[data-theme="dark"] .admin-scope .proc-card,
+  html[data-theme="dark"] .admin-scope .board-stat,
+  html[data-theme="dark"] .admin-scope .board-col,
+  html[data-theme="dark"] .admin-scope .month-group,
+  html[data-theme="dark"] .admin-scope .zz-zone,
+  html[data-theme="dark"] .admin-scope .zz-form,
+  html[data-theme="dark"] .admin-scope .review-card,
+  html[data-theme="dark"] .admin-scope .notif-panel,
+  html[data-theme="dark"] .admin-scope .ags-results,
+  html[data-theme="dark"] .admin-scope .seg-allowed-list li,
+  html[data-theme="dark"] .admin-scope .step-check,
+  html[data-theme="dark"] .admin-scope .faq-item{
     border-color:rgba(255,255,255,.13);
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 10px 28px rgba(0,0,0,.32);
   }
@@ -1009,38 +1047,68 @@
   .admin-scope .group-mode-toggle,
   .admin-scope .copy-btn{
     backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);
+    border-color:rgba(36,21,18,.1);
+  }
+  html[data-theme="dark"] .admin-scope .admin-sidebar button,
+  html[data-theme="dark"] .admin-scope .notif-bell,
+  html[data-theme="dark"] .admin-scope .ags-input-wrap,
+  html[data-theme="dark"] .admin-scope input, html[data-theme="dark"] .admin-scope select, html[data-theme="dark"] .admin-scope textarea,
+  html[data-theme="dark"] .admin-scope .admin-tab-select,
+  html[data-theme="dark"] .admin-scope .group-mode-toggle,
+  html[data-theme="dark"] .admin-scope .copy-btn{
     border-color:rgba(255,255,255,.13);
   }
-  .admin-scope .admin-sidebar button:hover{background:rgba(255,59,87,.16);}
+  .admin-scope .admin-sidebar button:hover{background:rgba(210,4,45,.1);}
+  html[data-theme="dark"] .admin-scope .admin-sidebar button:hover{background:rgba(255,59,87,.16);}
   .admin-scope .admin-sidebar button.active{
     background:linear-gradient(135deg, var(--red), #ff3d63 50%, var(--red-dim));
-    border-color:transparent;
+    border-color:transparent;color:#fff;
+    box-shadow:0 8px 22px rgba(210,4,45,.3), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  html[data-theme="dark"] .admin-scope .admin-sidebar button.active{
     box-shadow:0 8px 22px rgba(255,59,87,.4), inset 0 1px 0 rgba(255,255,255,.35);
   }
   .admin-scope input:focus, .admin-scope select:focus, .admin-scope textarea:focus{outline:2px solid var(--red);}
   /* Botones "vidrio": el rojo de marca se mantiene pero translúcido, con
-     blur y un brillo superior, en vez del rojo plano de siempre. */
+     blur y un brillo superior, en vez del rojo plano de siempre —
+     tonos distintos (más saturado en oscuro) para que siga sintiéndose
+     "de marca" en los dos temas. */
   .admin-scope .btn{
-    background:linear-gradient(135deg, rgba(255,59,87,.9), rgba(255,90,120,.72) 50%, rgba(200,20,40,.9));
+    background:linear-gradient(135deg, rgba(210,4,45,.88), rgba(255,90,120,.58) 50%, rgba(158,3,34,.9));
     backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);
-    border:1px solid rgba(255,255,255,.22);
+    border:1px solid rgba(255,255,255,.55);
+    box-shadow:0 10px 22px rgba(210,4,45,.25), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  .admin-scope .btn:hover{background:linear-gradient(135deg, rgba(225,20,60,.92), rgba(255,110,140,.65) 50%, rgba(175,10,45,.94));}
+  html[data-theme="dark"] .admin-scope .btn{
+    background:linear-gradient(135deg, rgba(255,59,87,.9), rgba(255,90,120,.72) 50%, rgba(200,20,40,.9));
+    border-color:rgba(255,255,255,.22);
     box-shadow:0 10px 26px rgba(255,59,87,.35), inset 0 1px 0 rgba(255,255,255,.3);
   }
-  .admin-scope .btn:hover{background:linear-gradient(135deg, rgba(255,80,105,.95), rgba(255,110,140,.8) 50%, rgba(220,30,50,.95));}
+  html[data-theme="dark"] .admin-scope .btn:hover{background:linear-gradient(135deg, rgba(255,80,105,.95), rgba(255,110,140,.8) 50%, rgba(220,30,50,.95));}
   .admin-scope .btn.ghost{
-    background:rgba(255,255,255,.05);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);
-    border:1.5px solid var(--red);color:var(--red)!important;box-shadow:none;
+    background:rgba(255,255,255,.5);backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%);
+    border:1.5px solid var(--red);color:var(--red)!important;box-shadow:0 4px 14px rgba(36,21,18,.05);
   }
-  .admin-scope .btn.ghost:hover{background:rgba(255,59,87,.12);}
-  .admin-scope .google-btn{box-shadow:0 4px 14px rgba(0,0,0,.35);}
+  .admin-scope .btn.ghost:hover{background:rgba(210,4,45,.09);}
+  html[data-theme="dark"] .admin-scope .btn.ghost{background:rgba(255,255,255,.05);box-shadow:none;}
+  html[data-theme="dark"] .admin-scope .btn.ghost:hover{background:rgba(255,59,87,.12);}
+  .admin-scope .google-btn{box-shadow:0 4px 14px rgba(36,21,18,.14);}
+  html[data-theme="dark"] .admin-scope .google-btn{box-shadow:0 4px 14px rgba(0,0,0,.35);}
   .admin-scope ::-webkit-scrollbar{width:10px;height:10px;}
   .admin-scope ::-webkit-scrollbar-track{background:transparent;}
-  .admin-scope ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:20px;}
-  .admin-scope ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.26);}
+  .admin-scope ::-webkit-scrollbar-thumb{background:rgba(36,21,18,.16);border-radius:20px;}
+  .admin-scope ::-webkit-scrollbar-thumb:hover{background:rgba(36,21,18,.26);}
+  html[data-theme="dark"] .admin-scope ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);}
+  html[data-theme="dark"] .admin-scope ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.26);}
   .admin-title-badge{flex:none;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(150deg, rgba(255,59,87,.28), rgba(232,193,103,.16));
-    border:1px solid rgba(255,255,255,.16);
+    background:linear-gradient(150deg, rgba(210,4,45,.16), rgba(184,134,47,.12));
+    border:1px solid rgba(36,21,18,.1);
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 8px 20px rgba(210,4,45,.12);}
+  html[data-theme="dark"] .admin-title-badge{
+    background:linear-gradient(150deg, rgba(255,59,87,.28), rgba(232,193,103,.16));
+    border-color:rgba(255,255,255,.16);
     box-shadow:0 1px 0 rgba(255,255,255,.12) inset, 0 8px 20px rgba(255,59,87,.18);}
   .admin-title-badge svg{width:24px;height:24px;stroke:var(--brass);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 
@@ -4979,6 +5047,10 @@ function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');
   if(typeof refreshDashChartsTheme === 'function') setTimeout(refreshDashChartsTheme, 30);
+  // El admin ahora sigue el claro/oscuro del sitio (a diferencia del
+  // Salón, que es oscuro fijo) — si el header está sobre el admin cuando
+  // se cambia de tema, su propio contraste debe actualizarse al instante.
+  if(typeof updateHeaderDarkMode === 'function') updateHeaderDarkMode();
 }
 
 // ============================================================
@@ -5948,7 +6020,14 @@ function go(view){
 // tratamiento oscuro que ya usa el modo oscuro del sitio, sin depender de
 // data-theme.
 function updateHeaderDarkMode(){
-  let dark = (window.HV_CURRENT_VIEW === 'salon' || window.HV_CURRENT_VIEW === 'admin');
+  // El Salón (y una pieza suya) son oscuros FIJOS sin importar el tema del
+  // sitio. El admin, en cambio, ahora sigue el claro/oscuro del sitio —
+  // solo se trata como fondo oscuro (para oscurecer el header también)
+  // cuando el sitio de verdad está en modo oscuro.
+  let dark = (window.HV_CURRENT_VIEW === 'salon');
+  if(!dark && window.HV_CURRENT_VIEW === 'admin'){
+    dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  }
   if(!dark && window.HV_CURRENT_VIEW === 'pieza'){
     const el = document.getElementById('pieza-publica-content');
     if(el && el.classList.contains('salon-scope')) dark = true;
