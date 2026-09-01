@@ -710,6 +710,30 @@ grandes, en orden aproximado en que aparecen:
     del entorno — se ve como una foto de producto, no como una foto de
     taller.
 
+- **Rediseño del menú principal: efecto vidrio/espejo translúcido**:
+  - El header y la píldora de navegación ahora usan un tratamiento tipo
+    "glassmorphism" (fondo translúcido con degradado + `backdrop-filter`
+    de desenfoque + un brillo interior tipo "espejo" en el borde superior)
+    en vez del fondo sólido plano de antes, tanto en modo claro como
+    oscuro. El estado activo de cada pestaña ahora usa un degradado rojo
+    con sombra en vez de un rojo plano, y el header tiene una línea de
+    acento en degradado (rojo → dorado → rojo) en su borde inferior.
+  - `#main-nav` (la píldora de navegación) se movió en el HTML para ser
+    hermano de `<header>` en vez de estar anidado dentro — esto evita un
+    problema real de Chromium: cuando un elemento con `position:fixed`
+    (el panel del menú en celular) queda dentro de un ancestro con
+    `backdrop-filter`, ese ancestro se vuelve su "contenedor de
+    posicionamiento" y si además tiene overflow recortado, el panel se ve
+    invisible salvo una franja diminuta. Se corrigió también moviéndolo
+    fuera del header, y en escritorio se le dio su propio
+    `position:sticky` (con una variable CSS `--header-h` recalculada en
+    JS) para que seguiera pegado justo debajo del header al hacer scroll,
+    igual que antes.
+  - De paso se corrigió un bug cosmético preexistente: el botón de cerrar
+    (✕) del menú móvil se estiraba a casi el ancho completo del panel por
+    una regla de estilo más específica que pisaba su ancho; ahora se
+    respeta su tamaño de 34×34px.
+
 ## Cómo desplegar una actualización
 
 1. Edita `index.html` (y `sw.js`/`manifest.json`/assets si aplica).

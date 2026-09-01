@@ -117,7 +117,24 @@
   img.hv-logo{display:block;height:60px;width:auto;object-fit:contain;}
   img.hv-logo.lg{height:70px;}
   img.hv-logo.xl{height:110px;}
-  header{position:sticky;top:0;background:var(--paper);z-index:50;border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease;overflow-x:hidden;}
+  /* ---- Header y menú: vidrio esmerilado translúcido con efecto "espejo"
+     (blur + brillo superior) y colores fuertes en el estado activo, en vez
+     del header sólido plano de antes. Se apoya en las variables del tema
+     (--paper/--ink/--red/--brass) así que sigue funcionando igual en modo
+     claro/oscuro; los overrides de dark van junto a cada regla. ---- */
+  header{position:sticky;top:0;z-index:50;overflow-x:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,253,248,.55));
+    backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);
+    border-bottom:1px solid rgba(36,21,18,0.08);
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 10px 30px rgba(36,21,18,.06);
+    transition:background-color .25s ease, border-color .25s ease;}
+  header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;pointer-events:none;
+    background:linear-gradient(90deg, transparent, var(--red) 20%, var(--brass) 50%, var(--red) 80%, transparent);
+    opacity:.6;}
+  html[data-theme="dark"] header{
+    background:linear-gradient(180deg, rgba(36,26,20,.68), rgba(20,14,11,.5));
+    border-bottom-color:rgba(255,255,255,.08);
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 10px 30px rgba(0,0,0,.4);}
   .navbar{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px 24px;max-width:1080px;margin:0 auto;text-align:center;}
   .brand{display:flex;align-items:center;gap:14px;}
   .brand .hv-logo{cursor:pointer;}
@@ -129,15 +146,26 @@
      es angosta, se desliza horizontalmente (arrastrando o con el trackpad)
      dentro de la misma píldora — sin barra de scroll visible, para que se
      sienta como parte del diseño y no como un menú roto. */
-  #main-nav{display:flex;align-items:center;justify-content:flex-start;gap:2px;background:var(--panel-2);border-radius:14px;padding:6px;flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;}
+  #main-nav{display:flex;align-items:center;justify-content:flex-start;gap:2px;border-radius:16px;padding:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;
+    position:sticky;top:var(--header-h,84px);z-index:49;
+    width:calc(100% - 48px);max-width:1032px;margin:14px auto;
+    background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.08) 45%, rgba(255,255,255,.22)), rgba(255,255,255,.16);
+    backdrop-filter:blur(12px) saturate(160%);-webkit-backdrop-filter:blur(12px) saturate(160%);
+    border:1px solid rgba(255,255,255,.6);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.75), inset 0 -1px 0 rgba(36,21,18,.05), 0 10px 26px rgba(36,21,18,.08);}
+  html[data-theme="dark"] #main-nav{
+    background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02) 45%, rgba(255,255,255,.06)), rgba(20,14,11,.3);
+    border-color:rgba(255,255,255,.14);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 10px 26px rgba(0,0,0,.4);}
   #main-nav::-webkit-scrollbar{display:none;}
-  #main-nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 14px;border-radius:9px;cursor:pointer;transition:background .15s ease, color .15s ease;white-space:nowrap;flex:none;}
+  #main-nav button{background:none;border:none;color:var(--sage);font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:13.5px;padding:9px 14px;border-radius:11px;cursor:pointer;transition:background .18s ease, color .18s ease, box-shadow .18s ease, transform .12s ease;white-space:nowrap;flex:none;}
   @media(min-width:761px) and (max-width:1180px){
     #main-nav{gap:0;}
     #main-nav button{font-size:12px;padding:8px 10px;}
   }
-  #main-nav button:hover{background:rgba(210,4,45,0.08);color:var(--ink);}
-  #main-nav button.active{background:var(--red);color:#fff;}
+  #main-nav button:hover{background:rgba(210,4,45,0.12);color:var(--ink);transform:translateY(-1px);}
+  #main-nav button.active{background:linear-gradient(135deg, var(--red), #ff3d63 50%, var(--red-dim));color:#fff;
+    box-shadow:0 6px 18px rgba(210,4,45,.4), inset 0 1px 0 rgba(255,255,255,.4);}
   .admin-link{font-size:12px!important;color:var(--sage-dim)!important;opacity:.75;margin-left:6px;padding-left:14px!important;border-left:1px solid var(--line);border-radius:0!important;}
   .admin-link:hover{background:none!important;color:var(--red)!important;opacity:1;}
   .navbar{flex-wrap:wrap;row-gap:12px;}
@@ -411,7 +439,7 @@
   body.nav-open .nav-toggle span:nth-child(2){opacity:0;}
   body.nav-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
   .nav-close{display:none;}
-  .nav-backdrop{display:none;position:fixed;inset:0;background:rgba(27,17,14,.5);z-index:99;opacity:0;transition:opacity .25s ease;}
+  .nav-backdrop{display:none;position:fixed;inset:0;background:rgba(27,17,14,.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:99;opacity:0;transition:opacity .25s ease;}
   @media(max-width:760px){
     .grid-3,.grid-2{grid-template-columns:1fr;}
     .hero h1{font-size:30px;}
@@ -432,9 +460,19 @@
     .nav-toggle{display:flex;width:36px;height:36px;}
     .nav-backdrop{opacity:0;pointer-events:none;}
     body.nav-open .nav-backdrop{display:block;opacity:1;pointer-events:auto;}
-    #main-nav{position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;grid-template-columns:none;width:min(80vw,320px);height:100%;height:100dvh;margin:0;background:var(--paper);border-radius:0;padding:70px 18px 24px;gap:4px;box-shadow:-10px 0 30px rgba(27,17,14,.25);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:100;}
+    #main-nav{position:fixed;top:0;right:0;bottom:0;display:flex;flex-direction:column;grid-template-columns:none;width:min(80vw,320px);max-width:none;height:100%;height:100dvh;margin:0;
+      background:linear-gradient(180deg, rgba(255,255,255,.8), rgba(253,250,244,.94) 30%, rgba(253,250,244,.98));
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+      border:1px solid rgba(255,255,255,.55);border-right:none;border-radius:0;padding:70px 18px 24px;gap:4px;
+      box-shadow:-10px 0 40px rgba(27,17,14,.28), inset 1px 0 0 rgba(255,255,255,.65);
+      transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:100;}
+    html[data-theme="dark"] #main-nav{
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(23,16,12,.95) 30%, rgba(20,14,11,.98));
+      border-color:rgba(255,255,255,.14);
+      box-shadow:-10px 0 40px rgba(0,0,0,.5), inset 1px 0 0 rgba(255,255,255,.1);}
     body.nav-open #main-nav{transform:translateX(0);}
     #main-nav button{width:100%;text-align:left;border-radius:10px;padding:14px 16px;font-size:15px;}
+    #main-nav button.nav-close{width:34px;}
     .nav-close{display:flex;align-items:center;justify-content:center;position:absolute;top:14px;right:14px;width:34px;height:34px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;color:var(--ink);font-size:15px;cursor:pointer;padding:0;}
     .admin-link{grid-column:auto;border-left:none;border-top:1px solid var(--line);padding:14px 16px 0!important;margin:6px 0 0!important;}
   }
@@ -1282,7 +1320,7 @@
 
   /* ===== Metodología: rediseño (subnav, fases, diagrama de fotos, medallas) ===== */
   .section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-dim);margin:0 0 6px;}
-  .metodo-subnav{position:sticky;top:var(--header-h,84px);z-index:45;background:var(--paper);border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease, top .1s ease;}
+  .metodo-subnav{position:sticky;top:var(--subnav-top,84px);z-index:45;background:var(--paper);border-bottom:1px solid var(--line);transition:background-color .25s ease, border-color .25s ease, top .1s ease;}
   .metodo-subnav-inner{display:flex;gap:4px;overflow-x:auto;padding:10px 24px;max-width:1080px;margin:0 auto;scrollbar-width:none;}
   .metodo-subnav-inner::-webkit-scrollbar{display:none;}
   .metodo-subnav-link{flex:none;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--sage);text-decoration:none;padding:7px 14px;border-radius:20px;white-space:nowrap;transition:background .15s ease,color .15s ease;}
@@ -2267,21 +2305,21 @@
     <button class="nav-toggle" id="nav-toggle-btn" type="button" onclick="toggleMobileNav()" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
     </button>
-    <nav id="main-nav">
-      <button class="nav-close" type="button" onclick="closeMobileNav()" aria-label="Cerrar menú">✕</button>
-      <button data-v="inicio" onclick="go('inicio')" class="active" data-i18n="nav.inicio">Inicio</button>
-      <button data-v="quienes" onclick="go('quienes')" data-i18n="nav.quienes">Quiénes somos</button>
-      <button data-v="metodologia" onclick="go('metodologia')" data-i18n="nav.metodologia">Metodología</button>
-      <button data-v="paquetes" onclick="go('paquetes')" data-i18n="nav.paquetes">Paquetes</button>
-      <button data-v="verificar" onclick="go('verificar')" data-i18n="nav.verificar">Verificar folio</button>
-      <button data-v="solicitar" onclick="go('solicitar')" data-i18n="nav.solicitar">Solicitar validación</button>
-      <button data-v="cliente" onclick="go('cliente')" data-i18n="nav.cliente">Mi historial</button>
-      <button data-v="salon" onclick="go('salon')" class="nav-salon" data-i18n="nav.salon">Salón Privado HV</button>
-      <button data-v="piezasfalsas" onclick="go('piezasfalsas')" class="nav-piezasfalsas" data-i18n="nav.piezasFalsas">Piezas falsas</button>
-    </nav>
   </div>
-  <div class="nav-backdrop" id="nav-backdrop" onclick="closeMobileNav()"></div>
 </header>
+<nav id="main-nav">
+  <button class="nav-close" type="button" onclick="closeMobileNav()" aria-label="Cerrar menú">✕</button>
+  <button data-v="inicio" onclick="go('inicio')" class="active" data-i18n="nav.inicio">Inicio</button>
+  <button data-v="quienes" onclick="go('quienes')" data-i18n="nav.quienes">Quiénes somos</button>
+  <button data-v="metodologia" onclick="go('metodologia')" data-i18n="nav.metodologia">Metodología</button>
+  <button data-v="paquetes" onclick="go('paquetes')" data-i18n="nav.paquetes">Paquetes</button>
+  <button data-v="verificar" onclick="go('verificar')" data-i18n="nav.verificar">Verificar folio</button>
+  <button data-v="solicitar" onclick="go('solicitar')" data-i18n="nav.solicitar">Solicitar validación</button>
+  <button data-v="cliente" onclick="go('cliente')" data-i18n="nav.cliente">Mi historial</button>
+  <button data-v="salon" onclick="go('salon')" class="nav-salon" data-i18n="nav.salon">Salón Privado HV</button>
+  <button data-v="piezasfalsas" onclick="go('piezasfalsas')" class="nav-piezasfalsas" data-i18n="nav.piezasFalsas">Piezas falsas</button>
+</nav>
+<div class="nav-backdrop" id="nav-backdrop" onclick="closeMobileNav()"></div>
 
 <div id="firebase-warning" style="display:none;background:#B8862F;color:#241C08;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;">
   ⚠ Firebase no está configurado — nada de lo que guardes (folios, solicitudes, fotos) se va a quedar guardado todavía. Edita <span class="mono">FIREBASE_CONFIG</span> en el código.
@@ -10946,7 +10984,20 @@ function initMethodTimeline(){
 
 function syncHeaderHeightVar(){
   const header = document.querySelector('header');
-  if(header) document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+  const headerH = header ? header.offsetHeight : 0;
+  document.documentElement.style.setProperty('--header-h', headerH + 'px');
+  // #main-nav vive fuera de <header> (para evitar un bug de recorte de
+  // Chromium cuando un fixed queda dentro de un ancestro con backdrop-filter),
+  // así que en escritorio (donde se queda "pegado" justo debajo del header)
+  // hay que sumar su alto aparte para que el subnav de Metodología no quede
+  // tapado. En móvil el nav es un panel fixed de pantalla completa y no debe
+  // contarse aquí.
+  const mainNav = document.getElementById('main-nav');
+  let subnavTop = headerH;
+  if(mainNav && getComputedStyle(mainNav).position !== 'fixed'){
+    subnavTop += mainNav.offsetHeight;
+  }
+  document.documentElement.style.setProperty('--subnav-top', subnavTop + 'px');
 }
 
 function initMetodoSubnav(){
@@ -10961,7 +11012,8 @@ function initMetodoSubnav(){
       const target = document.querySelector(this.getAttribute('href'));
       if(!target) return;
       e.preventDefault();
-      const offset = (document.querySelector('header')?.offsetHeight || 0) + (nav.offsetHeight || 0) + 14;
+      const subnavTopVar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--subnav-top')) || 0;
+      const offset = subnavTopVar + (nav.offsetHeight || 0) + 14;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({top, behavior: reduceMotion ? 'auto' : 'smooth'});
     });
