@@ -1230,8 +1230,8 @@
      turno, así que funciona igual con 2 fotos que con 6. */
   .hero-cube-wrap{position:absolute;inset:0;z-index:0;perspective:1900px;overflow:hidden;opacity:0;transition:opacity .6s ease;}
   .hero.has-image .hero-cube-wrap{opacity:1;}
-  .hero-cube{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.65,0,.35,1);will-change:transform;}
-  .hero-cube-face{position:absolute;inset:0;background-size:cover;background-position:center;backface-visibility:hidden;}
+  .hero-cube{position:relative;width:100%;height:100%;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.65,0,.35,1);will-change:transform;}
+  .hero-cube-face{position:absolute;inset:0;background-size:cover;background-position:center;-webkit-backface-visibility:hidden;backface-visibility:hidden;}
   .hcf-front{transform:translateZ(var(--cube-depth,300px));}
   .hcf-right{transform:rotateY(90deg) translateZ(var(--cube-depth,300px));}
   .hcf-back{transform:rotateY(180deg) translateZ(var(--cube-depth,300px));}
@@ -1999,20 +1999,34 @@
   .salon-ladder-node.salon-tier-n3{color:var(--salon-platinum);border-color:rgba(232,196,104,.5);box-shadow:0 0 14px rgba(232,196,104,.18);}
   .salon-ladder-arrow{color:var(--salon-gold-dim);font-size:16px;}
 
-  .salon-tiers-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
-  @media(max-width:820px){.salon-tiers-grid{grid-template-columns:1fr;}}
-  .salon-tier-card{background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);border-radius:14px;padding:24px 22px;position:relative;overflow:hidden;transition:transform .25s ease, box-shadow .25s ease;}
-  .salon-tier-card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.4);}
-  .salon-tier-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--salon-gold),transparent);}
-  .salon-tier-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--salon-gold-dim);margin:0 0 10px;}
-  .salon-tier-name{font-family:'Fraunces',serif;font-size:20px;color:var(--salon-ink);margin:0 0 6px;}
-  .salon-tier-cost{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--salon-gold);margin:0 0 10px;line-height:1.5;}
   .salon-tier-benefits{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;}
   .salon-tier-benefits li{font-size:12.5px;color:var(--salon-sage);line-height:1.5;padding-left:18px;position:relative;}
   .salon-tier-benefits li::before{content:"✦";position:absolute;left:0;top:0;color:var(--salon-gold);font-size:11px;}
-  .salon-tier-card.salon-tier-n2 .salon-tier-name,.salon-tier-card.salon-tier-n2 .salon-tier-cost{color:var(--salon-gold);}
-  .salon-tier-card.salon-tier-n3{border-color:rgba(232,196,104,.4);box-shadow:0 0 0 1px rgba(232,196,104,.12) inset;}
-  .salon-tier-card.salon-tier-n3 .salon-tier-name{background:linear-gradient(120deg,var(--salon-platinum),var(--salon-gold) 50%,var(--salon-platinum));-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  /* ---- Un solo mensaje de beneficios (ya no se repite 3 veces — los
+     beneficios son idénticos en los 3 niveles) + una línea de tiempo con
+     los 3 hitos por piezas certificadas, en vez de 3 tarjetas redundantes. ---- */
+  .salon-benefits-single{max-width:760px;margin:0 auto 34px;padding:26px 30px;}
+  .salon-benefits-single .salon-tier-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px;}
+  @media(max-width:600px){.salon-benefits-single .salon-tier-benefits{grid-template-columns:1fr;}}
+  .salon-tier-timeline{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;max-width:820px;margin:0 auto;padding:28px 24px 24px;}
+  .salon-tier-timeline-line{position:absolute;top:23px;left:16.6%;right:16.6%;height:2px;background:linear-gradient(90deg,var(--salon-silver-dim),var(--salon-gold) 50%,var(--salon-platinum));z-index:0;opacity:.6;}
+  .salon-tl-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .salon-tl-dot{width:46px;height:46px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--salon-obsidian-2);border:2px solid var(--salon-silver-dim);font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;color:var(--salon-silver);margin-bottom:10px;}
+  .salon-tl-node.salon-tier-n2 .salon-tl-dot{border-color:var(--salon-gold);color:var(--salon-gold);}
+  .salon-tl-node.salon-tier-n3 .salon-tl-dot{border-color:var(--salon-platinum);color:var(--salon-platinum);box-shadow:0 0 14px rgba(232,196,104,.28);}
+  .salon-tl-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--salon-gold-dim);margin:0 0 4px;}
+  .salon-tl-name{font-family:'Fraunces',serif;font-size:18px;color:var(--salon-ink);margin:0 0 4px;}
+  .salon-tl-node.salon-tier-n2 .salon-tl-name{color:var(--salon-gold);}
+  .salon-tl-node.salon-tier-n3 .salon-tl-name{background:linear-gradient(120deg,var(--salon-platinum),var(--salon-gold) 50%,var(--salon-platinum));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .salon-tl-detail{font-size:11.5px;color:var(--salon-sage);margin:0;line-height:1.45;max-width:190px;}
+  @media(max-width:700px){
+    .salon-tier-timeline{grid-template-columns:1fr;gap:26px;max-width:360px;}
+    .salon-tier-timeline-line{top:0;bottom:0;left:22px;right:auto;width:2px;height:auto;background:linear-gradient(180deg,var(--salon-silver-dim),var(--salon-gold) 50%,var(--salon-platinum));}
+    .salon-tl-node{flex-direction:row;align-items:flex-start;text-align:left;gap:16px;}
+    .salon-tl-dot{margin-bottom:0;}
+    .salon-tl-detail{max-width:none;}
+  }
 
   .salon-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
   @media(max-width:760px){.salon-grid-2{grid-template-columns:1fr;}}
@@ -8291,10 +8305,11 @@ async function renderSalonTiersTeaser(){
   const box = document.getElementById('salon-tiers-teaser');
   if(!box) return;
   const tiers = await getSalonTiers();
-  const thresholdTxt = {
-    1: tt('Se desbloquea a las 5 piezas certificadas','Unlocks at 5 certified pieces'),
-    2: tt('Se desbloquea a las 10 piezas certificadas','Unlocks at 10 certified pieces'),
-    3: tt('Se desbloquea a las 20+ piezas · vitalicio','Unlocks at 20+ pieces · lifetime')
+  const thresholdNum = { 1:'5', 2:'10', 3:'20+' };
+  const thresholdEyebrow = {
+    1: tt('Piezas certificadas','Certified pieces'),
+    2: tt('Piezas certificadas','Certified pieces'),
+    3: tt('Piezas certificadas · vitalicio','Certified pieces · lifetime')
   };
   const nombreDe = n => {
     const tier = tiers.niveles[n] || {};
@@ -8307,23 +8322,28 @@ async function renderSalonTiersTeaser(){
   };
   // Es UNA sola membresía ($SALON_ANNUAL_FEE/año) con LOS MISMOS beneficios
   // para los 3 niveles — Plata/Oro/Platino ya no desbloquean privilegios
-  // distintos, son etapas de RECONOCIMIENTO por piezas certificadas. Lo
-  // único que sube con el nivel es la prioridad de atención (ver
-  // `prioridadTxt`), no la lista de beneficios, que es idéntica en las 3
-  // tarjetas.
+  // distintos, son etapas de RECONOCIMIENTO por piezas certificadas. Por
+  // eso los beneficios se muestran UNA sola vez (antes se repetían
+  // idénticos en 3 tarjetas, lo que se veía redundante) y lo que sí cambia
+  // por nivel — el umbral y la prioridad de atención — se muestra como una
+  // línea de tiempo de 3 hitos en vez de 3 tarjetas completas.
   const beneficios = (SITE_LANG==='en' && tiers.beneficiosEn && tiers.beneficiosEn.length) ? tiers.beneficiosEn : (tiers.beneficios||[]);
   const beneficiosHtml = beneficios.map(b => `<li>${escapeHtml(b)}</li>`).join('') || `<li>${tt('Beneficios por definir','Benefits to be defined')}</li>`;
-  const cardsHtml = [1,2,3].map(n => {
-    const nombre = nombreDe(n);
-    return `
-    <div class="card salon-tier-card salon-tier-n${n}">
-      <p class="salon-tier-eyebrow">${thresholdTxt[n]}</p>
-      <h3 class="salon-tier-name">${escapeHtml(nombre)}</h3>
-      <p class="salon-tier-cost">${tt(`Nivel ${n} de 3`,`Tier ${n} of 3`)} · ${prioridadTxt[n]}</p>
+  const nodesHtml = [1,2,3].map(n => `
+    <div class="salon-tl-node salon-tier-n${n}">
+      <div class="salon-tl-dot">${thresholdNum[n]}</div>
+      <p class="salon-tl-eyebrow">${thresholdEyebrow[n]}</p>
+      <p class="salon-tl-name">${escapeHtml(nombreDe(n))}</p>
+      <p class="salon-tl-detail">${prioridadTxt[n]}</p>
+    </div>`).join('');
+  box.innerHTML = `
+    <div class="salon-card salon-benefits-single">
       <ul class="salon-tier-benefits">${beneficiosHtml}</ul>
+    </div>
+    <div class="salon-card salon-tier-timeline" role="list" aria-label="${tt('Niveles de reconocimiento por piezas certificadas','Recognition tiers by certified pieces')}">
+      <div class="salon-tier-timeline-line" aria-hidden="true"></div>
+      ${nodesHtml}
     </div>`;
-  }).join('');
-  box.innerHTML = `<div class="salon-tiers-grid">${cardsHtml}</div>`;
 }
 
 async function submitSalonGate(){
@@ -10161,7 +10181,7 @@ async function buildHeroSlides(){
     const res = await HVStorage.get('site:hero', true);
     const url = res && res.value ? JSON.parse(res.value).url : '';
     if(url) slides.push(url);
-  }catch(e){}
+  }catch(e){ console.warn('[hero-cube] no se pudo leer site:hero (foto principal):', e); }
   try{
     const piezas = await getPiezas();
     for(const p of (piezas || [])){
@@ -10171,7 +10191,11 @@ async function buildHeroSlides(){
         if(slides.length >= 6) break;
       }
     }
-  }catch(e){}
+  }catch(e){ console.warn('[hero-cube] no se pudieron leer las piezas publicadas:', e); }
+  // Diagnóstico temporal: si el cubo no gira en producción, revisa la
+  // consola del navegador — esta línea dice cuántas fotos juntó realmente
+  // (con 0 o 1 el cubo se queda quieto a propósito, no es un bug).
+  console.log('[hero-cube] fotos juntadas para la rotación:', slides.length, slides);
   return slides;
 }
 
@@ -10191,13 +10215,14 @@ function initHeroCubeFaces(){
 
 function advanceHeroSlide(){
   const view = document.getElementById('view-inicio');
-  if(view && !view.classList.contains('active')) return;
+  if(view && !view.classList.contains('active')){ console.log('[hero-cube] tick ignorado: view-inicio no está activa'); return; }
   const n = HERO_SLIDES.length;
   if(n < 2) return;
   const cube = document.getElementById('hero-cube');
-  if(!cube) return;
+  if(!cube){ console.warn('[hero-cube] no se encontró #hero-cube en el DOM'); return; }
   HERO_CUBE_STEP++;
   cube.style.transform = `rotateY(${-90 * HERO_CUBE_STEP}deg)`;
+  console.log('[hero-cube] giro #' + HERO_CUBE_STEP, cube.style.transform);
   if(n > 4){
     // La cara 2 pasos adelante queda mirando exactamente hacia atrás en
     // cuanto termina este giro — está 100% oculta, así que es seguro
@@ -10221,6 +10246,7 @@ async function loadHeroImage(){
     overlay.style.display = 'block';
     section.classList.add('has-image');
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    console.log('[hero-cube] ¿arranca la rotación?', HERO_SLIDES.length > 1 && !reduceMotion, '(slides:', HERO_SLIDES.length, ', reduceMotion:', reduceMotion, ')');
     if(HERO_SLIDES.length > 1 && !reduceMotion){
       HERO_ROTATION_TIMER = setInterval(advanceHeroSlide, 6000);
     }
