@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<!-- Precarga de la foto de fondo de la intro: se pide desde muy arriba del
+     <head>, antes de Google Fonts y del <style> grande, para que el
+     navegador empiece a descargarla en paralelo y no se sienta tan tardada
+     la primera pantalla. -->
+<link rel="preload" as="image" href="assets/img/intro-lab-hero.jpg" fetchpriority="high">
 <script>
 (function(){
   try{
@@ -518,7 +523,11 @@
      certificado real: mismas clases .cert / .cert-topband / etc.,
      encogidas a escala para que sea una réplica fiel, no una versión
      genérica aparte). ---- */
-  .cert-flip-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;margin-top:20px;}
+  .cert-flip-wrap{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap;margin-top:20px;}
+  .cert-step{flex:none;display:flex;flex-direction:column;}
+  .cert-step-tag{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .cert-step-num{display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--red);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex:none;line-height:1;}
+  .cert-step-tag span:last-child{font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--sage);}
   .cert-flip-card{width:320px;height:210px;perspective:1400px;cursor:pointer;flex:none;}
   .cert-flip-inner{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
   .cert-flip-card:hover .cert-flip-inner,
@@ -528,19 +537,21 @@
   .cert-flip-back{transform:rotateY(180deg);}
   .cert-flip-front .cf-hint,
   .cert-flip-back .cf-hint{text-align:center;font-size:10.5px;color:var(--sage);opacity:.85;margin-top:6px;flex:none;}
-  .cert-flip-copy{flex:1;min-width:220px;max-width:380px;}
+  .cert-flip-copy{flex:1;min-width:220px;max-width:380px;padding-top:32px;}
   .cert-flip-copy p{margin:0 0 12px;color:var(--sage);font-size:14px;}
-  @media(max-width:560px){.cert-flip-card{width:100%;max-width:320px;height:220px;}.cert-flip-wrap{justify-content:center;text-align:center;}.cert-flip-copy{max-width:320px;}}
+  @media(max-width:560px){.cert-flip-card{width:100%;max-width:320px;height:220px;}.cert-flip-wrap{justify-content:center;text-align:center;}.cert-step{align-items:center;width:100%;max-width:320px;}.cert-step-tag{justify-content:center;}.cert-flip-copy{max-width:320px;padding-top:0;}}
   @media(prefers-reduced-motion:reduce){.cert-flip-inner{transition:none;}}
-  /* ---- Estuche acrílico ilustrado junto a la tarjeta (más visual, evoca
-     el encapsulado físico real: caja transparente + tarjeta de etiqueta) ---- */
-  .cert-case-mock{flex:none;width:172px;}
-  .ccm-glass{position:relative;width:100%;height:210px;border-radius:14px;overflow:hidden;background:#1a1a1a;border:1.5px solid rgba(255,255,255,.55);box-shadow:0 16px 36px rgba(36,21,18,.18), inset 0 0 0 1px rgba(36,21,18,.06);display:flex;align-items:center;justify-content:center;}
+  /* ---- Estuche acrílico con la foto real de una pieza encapsulada — mismo
+     tamaño que la tarjeta de certificado (paso 2 de la misma secuencia),
+     con el recuadro ajustado al encuadre real de la foto para no recortar
+     ni el auto ni la etiqueta. ---- */
+  .cert-case-mock{flex:none;width:320px;}
+  .ccm-glass{position:relative;width:100%;aspect-ratio:1000/673;border-radius:14px;overflow:hidden;background:#1a1a1a;border:1.5px solid rgba(255,255,255,.55);box-shadow:0 16px 36px rgba(36,21,18,.18), inset 0 0 0 1px rgba(36,21,18,.06);display:flex;align-items:center;justify-content:center;}
   .ccm-photo{width:100%;height:100%;object-fit:cover;display:block;}
   .ccm-shine{position:absolute;top:-30%;left:-20%;width:60%;height:160%;background:linear-gradient(120deg,rgba(255,255,255,.35),transparent 70%);transform:rotate(18deg);pointer-events:none;}
   .ccm-caption{margin:10px 0 0;font-size:11.5px;color:var(--sage);line-height:1.4;}
   html[data-theme="dark"] .ccm-glass{border-color:rgba(255,255,255,.16);}
-  @media(max-width:560px){.cert-case-mock{width:150px;}.ccm-glass{height:190px;}}
+  @media(max-width:560px){.cert-case-mock{width:100%;max-width:320px;}}
   /* ---- Tarjeta de ejemplo rediseñada para parecerse a la etiqueta física
      real que va pegada al estuche (ver .cert-label, usada para imprimir la
      etiqueta de verdad) en vez del certificado digital de página completa. ---- */
@@ -664,7 +675,9 @@
   .step:last-child{border-bottom:none;}
   .step .num{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:13px;width:22px;flex:none;}
   .scale-row{display:grid;grid-template-columns:58px 1fr;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center;}
-  footer{position:relative;border-top:1px solid rgba(221,174,92,.25);padding:36px 0;color:rgba(255,247,238,.8);font-size:13px;
+  footer{position:relative;border-top:1px solid var(--line);padding:36px 0;color:var(--sage);font-size:13px;
+    background:linear-gradient(180deg, var(--panel-2), var(--bg));transition:background-color .18s ease,color .18s ease,border-color .18s ease;}
+  html[data-theme="dark"] footer{border-top-color:rgba(221,174,92,.25);color:rgba(255,247,238,.8);
     background:linear-gradient(180deg, #1D1310, #120B08);}
   footer .mx-flag.sm{filter:none;}
   .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:6px;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:200;display:none;}
@@ -1208,7 +1221,22 @@
   .hero{position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--line);background:linear-gradient(150deg, #D2042D 0%, #7A0320 55%, #33010E 100%);
     animation:heroGlowPulse 3.4s ease-in-out infinite;}
 
-  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;opacity:0;transition:opacity 1.4s ease;}
+  /* Fondo del hero: un "cubo" 3D real (perspectiva + 4 caras rotando en
+     Y) en vez del crossfade plano de antes — cuando toca cambiar de foto,
+     todo el cubo gira 90° y revela la siguiente cara, como una vitrina que
+     rota. Solo se mantienen 4 caras en el DOM sin importar cuántas fotos
+     haya en la rotación: la cara que queda mirando hacia atrás (oculta) se
+     recicla con la siguiente foto pendiente antes de que vuelva a tocarle
+     turno, así que funciona igual con 2 fotos que con 6. */
+  .hero-cube-wrap{position:absolute;inset:0;z-index:0;perspective:1900px;overflow:hidden;opacity:0;transition:opacity .6s ease;}
+  .hero.has-image .hero-cube-wrap{opacity:1;}
+  .hero-cube{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.65,0,.35,1);will-change:transform;}
+  .hero-cube-face{position:absolute;inset:0;background-size:cover;background-position:center;backface-visibility:hidden;}
+  .hcf-front{transform:translateZ(var(--cube-depth,300px));}
+  .hcf-right{transform:rotateY(90deg) translateZ(var(--cube-depth,300px));}
+  .hcf-back{transform:rotateY(180deg) translateZ(var(--cube-depth,300px));}
+  .hcf-left{transform:rotateY(-90deg) translateZ(var(--cube-depth,300px));}
+  @media (prefers-reduced-motion: reduce){ .hero-cube{transition:none;} }
   /* Tono neutro/oscuro tipo "foto formal" para las fotos reales que rotan
      de fondo (antes era un lavado rojizo que competía con el color de las
      piezas certificadas). El degradado sigue siendo más oscuro abajo para
@@ -1489,9 +1517,12 @@
   .footer-social a{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
   .footer-social a:hover{transform:translateY(-3px);}
   .footer-social a svg{width:19px;height:19px;fill:#fff;}
-  .footer-legal-links{color:rgba(255,247,238,.6);}
-  .footer-legal-link{background:none;border:none;cursor:pointer;color:rgba(255,247,238,.85);font-size:12px;padding:2px 6px;text-decoration:underline;text-underline-offset:2px;font-family:inherit;}
-  .footer-legal-link:hover{color:#DDAE5C;}
+  .footer-legal-links{color:var(--sage-dim);}
+  .footer-legal-link{background:none;border:none;cursor:pointer;color:var(--red);font-size:12px;padding:2px 6px;text-decoration:underline;text-underline-offset:2px;font-family:inherit;}
+  .footer-legal-link:hover{color:var(--brass);}
+  .foot-disclaimer{color:var(--ink);}
+  .foot-ai-note{color:var(--sage-dim);}
+  .foot-admin-btn{color:var(--sage);}
   .whatsapp-float{position:fixed;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:150;cursor:pointer;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease;animation:wa-pulse 2.6s ease-in-out infinite;}
   .whatsapp-float:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(0,0,0,.4);animation:none;}
   .whatsapp-float svg{width:30px;height:30px;}
@@ -2180,7 +2211,7 @@
 
 <div class="intro-splash" id="intro-splash" role="dialog" aria-label="Presentación — Laboratorio HV México">
   <div class="intro-photo-bg" aria-hidden="true">
-    <img src="assets/img/intro-lab-hero.jpg" alt="">
+    <img src="assets/img/intro-lab-hero.jpg" alt="" fetchpriority="high" decoding="async">
   </div>
   <div class="intro-photo-overlay" aria-hidden="true"></div>
   <div class="intro-sparks" aria-hidden="true">
@@ -2365,8 +2396,14 @@
 
 <div class="view active" id="view-inicio">
   <section class="hero" id="hero-section">
-    <div class="hero-bg" id="hero-bg"></div>
-    <div class="hero-bg" id="hero-bg-2"></div>
+    <div class="hero-cube-wrap" id="hero-cube-wrap" aria-hidden="true">
+      <div class="hero-cube" id="hero-cube">
+        <div class="hero-cube-face hcf-front" id="hero-cube-face-front"></div>
+        <div class="hero-cube-face hcf-right" id="hero-cube-face-right"></div>
+        <div class="hero-cube-face hcf-back" id="hero-cube-face-back"></div>
+        <div class="hero-cube-face hcf-left" id="hero-cube-face-left"></div>
+      </div>
+    </div>
     <div class="hero-overlay" id="hero-overlay" style="display:none;"></div>
     <div class="hero-inner">
       <img class="hv-logo" src="assets/img/logo.png" alt="Laboratorio HV México" style="height:92px;margin:0 0 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5));">
@@ -2442,55 +2479,61 @@
     <h2 data-i18n="inicio.cert.h2">Así luce tu certificado</h2>
     <p style="color:var(--sage);max-width:640px;" data-i18n="inicio.cert.p">Pasa el cursor encima (o tócalo en tu celular) para verlo por ambos lados, como si tuvieras la pieza encapsulada en tus manos.</p>
     <div class="cert-flip-wrap">
-      <div class="cert-case-mock" aria-hidden="true">
-        <div class="ccm-glass">
-          <img class="ccm-photo" src="assets/img/encapsulado-ejemplo.jpg" data-i18n-alt="inicio.cert.caseImgAlt" alt="Pieza real encapsulada en estuche acrílico junto a su tarjeta de certificación HV" loading="lazy" width="900" height="679">
-          <div class="ccm-shine"></div>
-        </div>
-        <p class="ccm-caption" data-i18n="inicio.cert.caseCaption">Así queda tu pieza: encapsulada en un estuche acrílico transparente con su tarjeta de certificación.</p>
-      </div>
-      <div class="cert-flip-card" tabindex="0" role="button" data-i18n-aria="inicio.cert.flipAria" aria-label="Ver ambos lados del certificado de ejemplo">
-        <div class="cert-flip-inner">
-          <div class="cert-flip-face cert-flip-front">
-            <div class="cert-showcase-label">
-              <div class="csl-head">
-                <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
-                <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
-                <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
-              </div>
-              <div class="csl-body">
-                <p class="csl-model" data-i18n="inicio.cert.modelName">Sedán clásico — 1978</p>
-                <p class="csl-sub mono" data-i18n="inicio.cert.folioLine">Folio HV-MX-2026-000 · CIPSA · Escala 1:64</p>
-                <div class="csl-grade-row">
-                  <span class="csl-grade-tag">GRADE</span>
-                  <span class="csl-grade-num">9.4</span>
-                  <span class="csl-grade-word" data-i18n="inicio.cert.tier">Ejemplar sobresaliente</span>
+      <div class="cert-step">
+        <div class="cert-step-tag"><span class="cert-step-num">1</span><span data-i18n="inicio.cert.step1">Tu certificado digital</span></div>
+        <div class="cert-flip-card" tabindex="0" role="button" data-i18n-aria="inicio.cert.flipAria" aria-label="Ver ambos lados del certificado de ejemplo">
+          <div class="cert-flip-inner">
+            <div class="cert-flip-face cert-flip-front">
+              <div class="cert-showcase-label">
+                <div class="csl-head">
+                  <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
+                  <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
+                  <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
                 </div>
-              </div>
-            </div>
-            <span class="cf-hint" data-i18n="inicio.cert.hintFront">Toca para ver el reverso ↻</span>
-          </div>
-          <div class="cert-flip-face cert-flip-back">
-            <div class="cert-showcase-label">
-              <div class="csl-head">
-                <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
-                <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
-                <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
-              </div>
-              <div class="csl-body" style="justify-content:flex-start;gap:9px;">
-                <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#7A6659;" data-i18n="inicio.cert.dictamenLabel">Dictamen de autenticidad</p>
-                <p style="margin:0;font-size:11px;line-height:1.4;color:#181110;" data-i18n="inicio.cert.dictamenText">Se dictamina que esta pieza corresponde a la producción original de CIPSA, sin evidencia de repintado, restauración o reparación.</p>
-                <div class="row" style="align-items:center;gap:12px;margin-top:2px;flex-wrap:nowrap;">
-                  <img id="cf-mini-qr" data-i18n-alt="inicio.cert.qrAlt" alt="QR de verificación de ejemplo" class="qr-embed" style="border:1px solid rgba(24,17,16,.12);border-radius:4px;flex:none;width:62px;height:62px;">
-                  <div>
-                    <p style="margin:0;font-size:10.5px;color:#7A6659;" data-i18n="inicio.cert.scanNote">Escanea para verificar en línea.</p>
-                    <p class="mono" style="margin:2px 0 0;font-size:9.5px;color:#B8862F;" data-i18n="inicio.cert.exampleNote">HV-MX-2026-000 (ejemplo)</p>
+                <div class="csl-body">
+                  <p class="csl-model" data-i18n="inicio.cert.modelName">Sedán clásico — 1978</p>
+                  <p class="csl-sub mono" data-i18n="inicio.cert.folioLine">Folio HV-MX-2026-000 · CIPSA · Escala 1:64</p>
+                  <div class="csl-grade-row">
+                    <span class="csl-grade-tag">GRADE</span>
+                    <span class="csl-grade-num">9.4</span>
+                    <span class="csl-grade-word" data-i18n="inicio.cert.tier">Ejemplar sobresaliente</span>
                   </div>
                 </div>
               </div>
+              <span class="cf-hint" data-i18n="inicio.cert.hintFront">Toca para ver el reverso ↻</span>
             </div>
-            <span class="cf-hint" data-i18n="inicio.cert.hintBack">Cada folio real es único y verificable en línea</span>
+            <div class="cert-flip-face cert-flip-back">
+              <div class="cert-showcase-label">
+                <div class="csl-head">
+                  <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
+                  <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
+                  <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
+                </div>
+                <div class="csl-body" style="justify-content:flex-start;gap:9px;">
+                  <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#7A6659;" data-i18n="inicio.cert.dictamenLabel">Dictamen de autenticidad</p>
+                  <p style="margin:0;font-size:11px;line-height:1.4;color:#181110;" data-i18n="inicio.cert.dictamenText">Se dictamina que esta pieza corresponde a la producción original de CIPSA, sin evidencia de repintado, restauración o reparación.</p>
+                  <div class="row" style="align-items:center;gap:12px;margin-top:2px;flex-wrap:nowrap;">
+                    <img id="cf-mini-qr" data-i18n-alt="inicio.cert.qrAlt" alt="QR de verificación de ejemplo" class="qr-embed" style="border:1px solid rgba(24,17,16,.12);border-radius:4px;flex:none;width:62px;height:62px;">
+                    <div>
+                      <p style="margin:0;font-size:10.5px;color:#7A6659;" data-i18n="inicio.cert.scanNote">Escanea para verificar en línea.</p>
+                      <p class="mono" style="margin:2px 0 0;font-size:9.5px;color:#B8862F;" data-i18n="inicio.cert.exampleNote">HV-MX-2026-000 (ejemplo)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="cf-hint" data-i18n="inicio.cert.hintBack">Cada folio real es único y verificable en línea</span>
+            </div>
           </div>
+        </div>
+      </div>
+      <div class="cert-step">
+        <div class="cert-step-tag"><span class="cert-step-num">2</span><span data-i18n="inicio.cert.step2">Encapsulado, sello y etiqueta</span></div>
+        <div class="cert-case-mock">
+          <div class="ccm-glass">
+            <img class="ccm-photo" src="assets/img/encapsulado-ejemplo.jpg" data-i18n-alt="inicio.cert.caseImgAlt" alt="Pieza real encapsulada en estuche acrílico junto a su tarjeta de certificación HV" loading="lazy" width="1000" height="673">
+            <div class="ccm-shine"></div>
+          </div>
+          <p class="ccm-caption" data-i18n="inicio.cert.caseCaption">Así queda tu pieza: encapsulada en un estuche acrílico transparente con su tarjeta de certificación.</p>
         </div>
       </div>
       <div class="cert-flip-copy">
@@ -4522,14 +4565,14 @@
       <a href="https://www.facebook.com/share/p/17V72Zp4iw/" target="_blank" rel="noopener" title="Facebook" style="background:#1877F2;"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></a>
       <a href="#" id="footer-whatsapp" target="_blank" rel="noopener" title="WhatsApp" style="background:#25D366;"><svg viewBox="0 0 32 32" fill="#fff"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg></a>
     </div>
-    <p style="max-width:600px;margin:0 auto;text-align:center;" data-i18n="footer.disclaimer"><img class="mx-flag sm" src="assets/img/mx-flag.jpg" alt="Bandera de México"> Laboratorio HV México — laboratorio independiente de coleccionismo, con sede física en Ciudad de México. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
-    <p style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;color:rgba(255,247,238,.55);" data-i18n="footer.ai-note">Algunas imágenes y elementos gráficos de este sitio (como los sellos oficiales del laboratorio y ciertas fotografías ilustrativas) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
+    <p class="foot-disclaimer" style="max-width:600px;margin:0 auto;text-align:center;" data-i18n="footer.disclaimer"><img class="mx-flag sm" src="assets/img/mx-flag.jpg" alt="Bandera de México"> Laboratorio HV México — laboratorio independiente de coleccionismo, con sede física en Ciudad de México. No afiliado a Mattel, Inc. ni a Hot Wheels®. Los dictámenes emitidos son opinión experta, no avalúo comercial.</p>
+    <p class="foot-ai-note" style="max-width:600px;margin:8px auto 0;text-align:center;font-size:11.5px;" data-i18n="footer.ai-note">Algunas imágenes y elementos gráficos de este sitio (como los sellos oficiales del laboratorio y ciertas fotografías ilustrativas) fueron creados y diseñados con apoyo de inteligencia artificial.</p>
     <p class="footer-legal-links" style="margin:14px 0 0;font-size:12px;">
       <button type="button" onclick="go('terminos')" class="footer-legal-link" data-i18n="footer.terminos">Términos y condiciones</button>
       <span aria-hidden="true">·</span>
       <button type="button" onclick="go('privacidad')" class="footer-legal-link" data-i18n="footer.privacidad">Aviso de privacidad</button>
     </p>
-    <button data-v="admin" onclick="go('admin')" style="background:none;border:none;cursor:pointer;color:rgba(255,247,238,.85);opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
+    <button data-v="admin" onclick="go('admin')" class="foot-admin-btn" style="background:none;border:none;cursor:pointer;opacity:.35;font-size:10px;margin-top:14px;padding:4px;letter-spacing:.04em;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.35">· acceso interno ·</button>
   </div>
 </footer>
 
@@ -4845,6 +4888,8 @@ const I18N_EN = {
   'inicio.cert.h2': 'What your certificate looks like',
   'inicio.cert.p': 'Hover over it (or tap it on your phone) to see both sides, as if you had the encapsulated piece in your hands.',
   'inicio.cert.flipAria': 'View both sides of the sample certificate',
+  'inicio.cert.step1': 'Your digital certificate',
+  'inicio.cert.step2': 'Encapsulation, seal and label',
   'inicio.cert.tier': 'Outstanding example',
   'inicio.cert.modelName': 'Classic sedan — 1978',
   'inicio.cert.folioLine': 'Folio HV-MX-2026-000 · CIPSA · 1:64 scale',
@@ -10086,14 +10131,29 @@ if(fbAuth){
 
 // El fondo del "inicio" ya no es una sola foto fija subida a mano: se arma
 // una rotación (fondo del admin, si hay uno, + las fotos de portada —
-// fotos[0] — de las piezas ya publicadas en la biblioteca pública) y se va
-// haciendo un "splash"/crossfade entre ellas cada pocos segundos, con dos
-// capas apiladas (#hero-bg / #hero-bg-2) para que el cambio se vea suave y
-// nunca haya un parpadeo en blanco entre una foto y la siguiente.
+// fotos[0] — de las piezas ya publicadas en la biblioteca pública) y se
+// muestra como un cubo 3D real (perspectiva + 4 caras) que GIRA 90° para
+// revelar la siguiente foto, en vez del crossfade plano de antes. Solo se
+// mantienen 4 caras en el DOM (front/right/back/left) sin importar cuántas
+// fotos haya: la cara que queda mirando hacia atrás tras cada giro (por lo
+// tanto oculta) se recicla en silencio con la siguiente foto pendiente de
+// la lista, así que funciona igual con 2 fotos que con 6.
 let HERO_SLIDES = [];
-let HERO_SLIDE_IDX = 0;
-let HERO_ACTIVE_LAYER = 1;
+let HERO_CUBE_STEP = 0;
+let HERO_CUBE_SLIDE_PTR = 0;
 let HERO_ROTATION_TIMER = null;
+const HERO_CUBE_FACES = ['front','right','back','left'];
+
+function heroCubeFaceEl(name){ return document.getElementById('hero-cube-face-' + name); }
+
+function updateHeroCubeDepth(){
+  const wrap = document.getElementById('hero-cube-wrap');
+  const cube = document.getElementById('hero-cube');
+  if(!wrap || !cube) return;
+  const w = wrap.getBoundingClientRect().width;
+  if(w > 0) cube.style.setProperty('--cube-depth', (w / 2) + 'px');
+}
+window.addEventListener('resize', updateHeroCubeDepth);
 
 async function buildHeroSlides(){
   const slides = [];
@@ -10115,39 +10175,49 @@ async function buildHeroSlides(){
   return slides;
 }
 
+function initHeroCubeFaces(){
+  const n = HERO_SLIDES.length;
+  if(!n) return;
+  HERO_CUBE_FACES.forEach((name, i) => {
+    const el = heroCubeFaceEl(name);
+    if(el) el.style.backgroundImage = `url("${HERO_SLIDES[i % n]}")`;
+  });
+  HERO_CUBE_STEP = 0;
+  HERO_CUBE_SLIDE_PTR = Math.min(4, n) % n;
+  const cube = document.getElementById('hero-cube');
+  if(cube) cube.style.transform = 'rotateY(0deg)';
+  updateHeroCubeDepth();
+}
+
 function advanceHeroSlide(){
   const view = document.getElementById('view-inicio');
   if(view && !view.classList.contains('active')) return;
-  if(!HERO_SLIDES.length) return;
-  HERO_SLIDE_IDX = (HERO_SLIDE_IDX + 1) % HERO_SLIDES.length;
-  const nextUrl = HERO_SLIDES[HERO_SLIDE_IDX];
-  const bg1 = document.getElementById('hero-bg');
-  const bg2 = document.getElementById('hero-bg-2');
-  const showing = HERO_ACTIVE_LAYER === 1 ? bg1 : bg2;
-  const hidden = HERO_ACTIVE_LAYER === 1 ? bg2 : bg1;
-  hidden.style.backgroundImage = `url("${nextUrl}")`;
-  void hidden.offsetWidth; // fuerza reflow para que sí anime la opacidad
-  hidden.style.opacity = '1';
-  showing.style.opacity = '0';
-  HERO_ACTIVE_LAYER = HERO_ACTIVE_LAYER === 1 ? 2 : 1;
+  const n = HERO_SLIDES.length;
+  if(n < 2) return;
+  const cube = document.getElementById('hero-cube');
+  if(!cube) return;
+  HERO_CUBE_STEP++;
+  cube.style.transform = `rotateY(${-90 * HERO_CUBE_STEP}deg)`;
+  if(n > 4){
+    // La cara 2 pasos adelante queda mirando exactamente hacia atrás en
+    // cuanto termina este giro — está 100% oculta, así que es seguro
+    // cambiarle la foto sin que se note ningún parpadeo.
+    const hiddenName = HERO_CUBE_FACES[(HERO_CUBE_STEP + 2) % 4];
+    const el = heroCubeFaceEl(hiddenName);
+    if(el) el.style.backgroundImage = `url("${HERO_SLIDES[HERO_CUBE_SLIDE_PTR % n]}")`;
+    HERO_CUBE_SLIDE_PTR++;
+  }
 }
 
 async function loadHeroImage(){
   const section = document.getElementById('hero-section');
-  const bg1 = document.getElementById('hero-bg');
-  const bg2 = document.getElementById('hero-bg-2');
   const overlay = document.getElementById('hero-overlay');
   if(HERO_ROTATION_TIMER){ clearInterval(HERO_ROTATION_TIMER); HERO_ROTATION_TIMER = null; }
   try{
     HERO_SLIDES = await buildHeroSlides();
   }catch(e){ HERO_SLIDES = []; }
   if(HERO_SLIDES.length){
-    HERO_SLIDE_IDX = 0;
-    HERO_ACTIVE_LAYER = 1;
-    bg1.style.backgroundImage = `url("${HERO_SLIDES[0]}")`;
-    bg1.style.opacity = '1';
-    bg2.style.backgroundImage = '';
-    bg2.style.opacity = '0';
+    initHeroCubeFaces();
     overlay.style.display = 'block';
     section.classList.add('has-image');
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -10155,10 +10225,7 @@ async function loadHeroImage(){
       HERO_ROTATION_TIMER = setInterval(advanceHeroSlide, 6000);
     }
   } else {
-    bg1.style.backgroundImage = '';
-    bg2.style.backgroundImage = '';
-    bg1.style.opacity = '0';
-    bg2.style.opacity = '0';
+    HERO_CUBE_FACES.forEach(name => { const el = heroCubeFaceEl(name); if(el) el.style.backgroundImage = ''; });
     overlay.style.display = 'none';
     section.classList.remove('has-image');
   }
