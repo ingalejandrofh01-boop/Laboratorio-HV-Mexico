@@ -78,24 +78,35 @@ grandes, en orden aproximado en que aparecen:
   Referidos, Reseñas, y configuración del sitio.
 - **Programa de referidos** (`referido:*`) — créditos automáticos por
   recomendar clientes.
+- **Seguridad del admin** (`seguridad:*`, pestaña "Seguridad") — bitácora de
+  los últimos 300 intentos de login al admin (`logAdminAccessAttempt()`,
+  llamada desde `onAuthStateChanged` en ambos casos: permitido y
+  rechazado) y detección simple de patrones sospechosos
+  (`detectSuspiciousAccess()`: mismo correo insistiendo o muchos correos
+  distintos probando). Es visibilidad, no una barrera nueva — la barrera
+  real sigue siendo Firebase Auth + `ADMIN_ALLOWED_EMAILS` del lado del
+  cliente y las Reglas de Seguridad de Firestore del lado del servidor.
 - **Salón Privado HV** (`salon:*`) — membresía de socios preferentes,
-  reposicionada como una vitrina curada de colección: los niveles (5/10/20+
-  piezas certificadas) siguen existiendo como **reconocimiento** dentro del
-  salón, pero el ingreso ya no depende de acumular piezas ni de un plan de
-  abonos — es una **membresía anual fija de $1,000 MXN** (`SALON_ANNUAL_FEE`),
-  pensada como un espacio exclusivo donde solo se publican las piezas más
-  raras/extraordinarias de la colección de socios, vistas y reconocidas por
-  otros coleccionistas. El admin (vía `ADMIN_ALLOWED_EMAILS`) siempre tiene
-  acceso ilimitado sin pagar (`salonAdminPreviewMember()`/
-  `goToSalonLobbyAdmin()`, sin cambios respecto a antes). El alta de un socio
-  nuevo la hace el admin desde el panel — ya sea presencial (cuando trae sus
-  piezas) o registrando el pago de un cliente de confianza por el método que
-  el admin decida (transferencia, efectivo, etc. — el sitio no cobra en
-  línea, es un registro manual del admin, igual que el resto de los cobros
-  del sitio). `computeMembershipStatus()` ahora deriva también un estado
-  **"vencida"** cuando pasó la fecha de renovación (`fechaRenovacion`) sin
-  registrar el siguiente pago. Galería exclusiva y calendario VIP propios,
-  sin cambios en su mecánica.
+  reposicionada como una vitrina curada de colección. **La única forma de
+  volverse socio es certificar 5 piezas o más con el laboratorio** — no se
+  vende ni se activa por ningún otro medio (se quitó a propósito un camino
+  de "compra directa" que existía antes; ver el changelog de esta ronda).
+  Al cruzar el umbral de `SALON_TIER_THRESHOLDS[1]` (5 piezas), el cliente
+  queda `estado:'elegible'` — asignado únicamente por `bumpSalonProgress()`
+  dentro de `createFolio()`, nunca desde la UI — y el admin activa la
+  membresía desde el panel, registrando el pago (solo transferencia
+  bancaria o efectivo, `spf-metodo`; el sitio no cobra en línea). Es una
+  **membresía anual fija de $1,000 MXN** (`SALON_ANNUAL_FEE`), igual para
+  todos los socios; los niveles (5/10/20+ piezas certificadas) determinan
+  **reconocimiento y beneficios**, no el costo. `confirmSalonPlan()` vuelve
+  a verificar del lado de JavaScript que el cliente esté realmente
+  `elegible` antes de activar, como defensa adicional. El admin (vía
+  `ADMIN_ALLOWED_EMAILS`) siempre tiene acceso ilimitado sin pagar
+  (`salonAdminPreviewMember()`/`goToSalonLobbyAdmin()`).
+  `computeMembershipStatus()` deriva también un estado **"vencida"** cuando
+  pasó la fecha de renovación (`fechaRenovacion`) sin registrar el
+  siguiente pago. Galería exclusiva y calendario VIP propios, sin cambios
+  en su mecánica.
   - **Vitrina pública (`renderSalonTiersTeaser`)**: se corrigió que los 3
     niveles (Plata/Oro/Platino) se veían como si fueran 3 membresías con
     precio propio (los 3 repetían "$1,000 MXN al año"). Cada tarjeta de
@@ -595,6 +606,109 @@ grandes, en orden aproximado en que aparecen:
   suelta, y la tarjeta para escribir una reseña tiene una franja de color
   y una insignia "Verificado con Google" a tono con el resto de tarjetas
   del sitio.
+
+- **Checkbox obligatorio de Términos/Privacidad al enviar una solicitud, y
+  ambos documentos actualizados para reflejar el sitio real**:
+  - En el último paso del wizard ("Revisa tu solicitud") ahora hay un
+    checkbox obligatorio: "He leído y acepto los Términos y condiciones y
+    el Aviso de privacidad". El botón de enviar se queda deshabilitado
+    hasta marcarlo (mismo mecanismo que ya existía para el reCAPTCHA), y
+    `submitSolicitud()` lo vuelve a validar del lado de JavaScript por si
+    acaso, mostrando un aviso claro si alguien intenta forzar el envío.
+  - Los enlaces "Términos y condiciones" / "Aviso de privacidad" del
+    checkbox abren el texto completo en una ventana flotante encima del
+    mismo formulario (`openLegalModal()`), en vez de navegar fuera —así
+    nadie pierde lo que ya llenó en el wizard solo por leer el documento.
+    La ventana reutiliza tal cual el contenido de las páginas
+    Términos/Privacidad, así que siempre queda sincronizada con ellas y
+    respeta el idioma activo (español/inglés).
+  - Se revisó todo el sitio (programa de referidos, membresía del Salón
+    Privado HV con sus niveles, cuota anual y calendario VIP, etc.) para
+    que ambos documentos legales reflejen lo que el sitio realmente hace
+    hoy, no solo el servicio de certificación:
+    - Términos y condiciones ganó dos secciones nuevas: "Programa de
+      referidos" (cómo se gana y se aplica el 10% de descuento) y "Salón
+      Privado HV — membresía de socios" (elegibilidad a 5 piezas, cuota
+      anual igual para todos, niveles Plata/Oro/Platino por piezas
+      certificadas, el Platino como reconocimiento vitalicio, y la
+      responsabilidad del socio de cuidar su código de acceso).
+    - Aviso de privacidad ganó una sección nueva sobre el código de
+      acceso al Salón/referidos (qué hacer si se pierde o lo ve alguien
+      más), y se ampliaron las secciones de "Datos que recabamos" y
+      "Finalidades" para incluir el código de socio/referido, el conteo
+      de piezas para el nivel, los pagos de membresía y las reservas del
+      Calendario VIP — además de una nota sobre cómo funciona
+      "Compartir" (la imagen se genera en el propio dispositivo del
+      socio, el laboratorio no la publica en su nombre).
+    - De paso se corrigió un error que ya traían ambos documentos: dos
+      párrafos del Aviso de privacidad decían "escribe al punto 8" para
+      referirse a Contacto, cuando Contacto nunca fue el punto 8 (era
+      Menores de edad) — ahora apuntan al número correcto.
+    - Ambos documentos conservan su nota de "pendiente de revisión legal"
+      — siguen siendo una plantilla de referencia, no textos ya
+      validados por un abogado.
+
+- **Salón Privado HV — certificar 5 piezas queda como la única vía de
+  membresía, pago restringido a transferencia/efectivo, y nueva pestaña
+  de Seguridad en el admin**:
+  - Se quitó "Comprar directamente" (el botón y la función
+    `submitSalonCompraDirecta()`), un camino para volverse socio sin
+    certificar piezas que contradecía la regla real del programa. Ahora
+    la tarjeta pública, la franja de la portada y ambos idiomas dicen
+    explícitamente que certificar 5 piezas o más es la única forma de
+    ser socio — no hay compra directa ni ningún otro atajo. La activación
+    real ya solo la puede disparar `bumpSalonProgress()` al cruzar el
+    umbral, así que esto era una limpieza de mensaje/UI, no un hueco de
+    seguridad en el propio flujo de activación.
+  - Se quitó el valor de ejemplo ("HVS-ABC123") del campo de código de
+    socio en la puerta de acceso del Salón — ahora nace vacío.
+  - El formulario de activación/renovación del admin (`spf-metodo`) ya
+    solo ofrece **Efectivo** o **Transferencia bancaria** — se quitó la
+    opción de tarjeta y "Otro". Términos y condiciones (sección 9, ES/EN)
+    ahora dice explícitamente que el pago de la membresía únicamente se
+    acepta por esos dos medios.
+  - `confirmSalonPlan()` ahora vuelve a verificar, del lado de
+    JavaScript, que el cliente esté realmente `elegible` (5+ piezas
+    certificadas) antes de activar una membresía — una defensa adicional
+    por si esta función llegara a dispararse fuera del botón normal de
+    la interfaz (que ya estaba correctamente condicionado).
+  - Nueva pestaña **Seguridad** en el panel admin (sidebar y selector
+    móvil): guarda una bitácora de los últimos 300 intentos de inicio de
+    sesión al admin (permitidos y rechazados, con correo y fecha/hora) en
+    `seguridad:accesos-admin`, y calcula dos alertas automáticas —
+    "el mismo correo insistió 3+ veces en 30 minutos" y "5+ correos
+    distintos no autorizados probaron en 24 horas" — con un banner verde
+    ("sin actividad sospechosa") o rojo (con el detalle) según el caso,
+    una fila de estadísticas, la tabla de intentos y la lista de correos
+    actualmente permitidos. Esto es visibilidad, no una barrera nueva: la
+    verificación en dos pasos real depende de los ajustes propios de cada
+    cuenta de Google, y la barrera de acceso real siguen siendo las
+    Reglas de Seguridad de Firestore — ver la nota de despliegue abajo.
+
+- **"Así luce tu certificado" ahora se parece a la pieza real encapsulada,
+  y nueva foto de las instalaciones físicas**:
+  - La tarjeta de ejemplo de la portada (sección "Así luce tu
+    certificado") dejó de reutilizar el diseño del certificado digital de
+    página completa (pensado para imprimirse) y ahora imita la etiqueta
+    física real que va pegada al estuche acrílico de cada pieza: cabecera
+    oscura con el sello, insignia "Certificado", nombre del modelo en
+    serif, y una fila de calificación tipo "GRADE 9.4 · Ejemplar
+    sobresaliente" — mucho más parecido a como se ve una pieza certificada
+    de verdad. Junto a la tarjeta se agregó una ilustración de un estuche
+    acrílico (con una silueta de auto) para reforzar la idea de
+    encapsulado, ya que antes la sección no mostraba ningún elemento que
+    evocara el objeto físico. El mecanismo de voltear la tarjeta para ver
+    el reverso (QR + dictamen) sigue igual.
+  - Se agregó una foto real de la vitrina de exhibición del laboratorio a
+    "Quiénes somos" ("Nuestras instalaciones"), explicando que ahí se
+    resguardan las piezas mientras están en proceso de certificación y
+    listas para encapsular — para reforzar que el espacio físico existe
+    de verdad, no solo el sitio. La foto original mostraba la vitrina
+    apoyada sobre una mesa de trabajo con el taller alrededor; se corrigió
+    la perspectiva de la fotografía (enderezando el ángulo con el que se
+    tomó) para recortarla exactamente al contorno de la vitrina, sin nada
+    del entorno — se ve como una foto de producto, no como una foto de
+    taller.
 
 ## Cómo desplegar una actualización
 
