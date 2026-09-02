@@ -345,25 +345,31 @@
     .lang-toggle{position:static;margin-left:8px;}
   }
 
-  /* ---- Notificaciones flotantes ---- */
+  /* ---- Notificaciones flotantes (las que "llegan" en vivo) ---- */
   .notif-stack{position:fixed;top:168px;right:18px;z-index:400;display:flex;flex-direction:column;gap:10px;width:min(360px, calc(100vw - 36px));pointer-events:none;}
-  .notif{position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:10px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--sage);border-radius:10px;padding:13px 32px 15px 14px;box-shadow:0 10px 28px rgba(20,12,9,.18);pointer-events:auto;opacity:0;transform:translateX(24px) scale(.97);transition:opacity .28s ease, transform .28s cubic-bezier(.34,1.56,.64,1), background-color .25s ease, border-color .25s ease;}
+  .notif{position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:11px;background:linear-gradient(160deg, rgba(255,253,248,.95), rgba(255,247,236,.88));border:1px solid rgba(36,21,18,.1);border-left:4px solid var(--sage);border-radius:12px;padding:13px 34px 15px 14px;box-shadow:0 14px 32px rgba(36,21,18,.16), inset 0 1px 0 rgba(255,255,255,.55);pointer-events:auto;opacity:0;transform:translateX(24px) scale(.97);transition:opacity .28s ease, transform .28s cubic-bezier(.34,1.56,.64,1), background-color .25s ease, border-color .25s ease;}
+  html[data-theme="dark"] .notif{background:linear-gradient(160deg, rgba(38,31,26,.94), rgba(24,19,16,.9));border-color:rgba(255,255,255,.12);box-shadow:0 14px 32px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.06);}
   .notif.show{opacity:1;transform:translateX(0) scale(1);}
   .notif.hide{opacity:0;transform:translateX(16px) scale(.97);}
   .notif.clickable{cursor:pointer;}
-  .notif-icon{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--panel-2);color:var(--sage);}
+  .notif.clickable:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(36,21,18,.22);}
+  html[data-theme="dark"] .notif.clickable:hover{box-shadow:0 18px 38px rgba(0,0,0,.5);}
+  .notif-icon{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--panel-2);color:var(--sage);box-shadow:inset 0 0 0 1px rgba(36,21,18,.06);}
   .notif-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
   .notif-body{flex:1;min-width:0;}
-  .notif-title{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+  .notif-title{display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:2px;}
   .notif-msg{margin:0;font-size:13px;color:var(--sage);line-height:1.4;}
-  .notif-close{position:absolute;top:8px;right:8px;width:20px;height:20px;background:none;border:none;color:var(--sage-dim);font-size:11px;cursor:pointer;padding:0;line-height:1;border-radius:50%;}
-  .notif-close:hover{color:var(--ink);}
+  .notif-close{position:absolute;top:8px;right:8px;width:22px;height:22px;background:rgba(36,21,18,.07);border:none;color:var(--sage-dim);font-size:11px;cursor:pointer;padding:0;line-height:1;border-radius:50%;transition:background-color .15s ease,color .15s ease;}
+  .notif-close:hover{background:rgba(36,21,18,.14);color:var(--ink);}
+  html[data-theme="dark"] .notif-close{background:rgba(255,255,255,.08);}
+  html[data-theme="dark"] .notif-close:hover{background:rgba(255,255,255,.16);}
   .notif-bar{position:absolute;left:0;bottom:0;height:2.5px;background:var(--sage);width:100%;transform-origin:left;animation:notifBarShrink linear forwards;animation-duration:5000ms;}
   @keyframes notifBarShrink{from{transform:scaleX(1);}to{transform:scaleX(0);}}
-  .notif-success{border-left-color:var(--ok);} .notif-success .notif-icon{background:rgba(47,122,79,0.14);color:var(--ok);}
-  .notif-warning{border-left-color:var(--warn);} .notif-warning .notif-icon{background:rgba(184,134,47,0.16);color:var(--warn);}
-  .notif-error{border-left-color:var(--bad);} .notif-error .notif-icon{background:rgba(163,38,56,0.14);color:var(--bad);}
-  .notif-solicitud{border-left-color:var(--red);} .notif-solicitud .notif-icon{background:rgba(210,4,45,0.1);color:var(--red);}
+  .notif-success{border-left-color:var(--ok);} .notif-success .notif-icon{background:rgba(47,122,79,0.16);color:var(--ok);}
+  .notif-warning{border-left-color:var(--warn);} .notif-warning .notif-icon{background:rgba(184,134,47,0.18);color:var(--warn);}
+  .notif-error{border-left-color:var(--bad);} .notif-error .notif-icon{background:rgba(163,38,56,0.16);color:var(--bad);}
+  .notif-solicitud{border-left-color:var(--red);} .notif-solicitud .notif-icon{background:rgba(210,4,45,0.12);color:var(--red);}
+  .notif-cita{border-left-color:var(--ok);} .notif-cita .notif-icon{background:rgba(47,122,79,0.16);color:var(--ok);}
   .notif-info{border-left-color:var(--sage);}
   @media(max-width:760px){
     .notif-stack{top:110px;right:12px;left:12px;width:auto;}
@@ -371,22 +377,75 @@
   }
   body.book-open .notif-stack{opacity:0;pointer-events:none;transition:opacity .2s ease;}
 
-  /* ---- Campanita de notificaciones (admin) ---- */
+  /* ---- Campanita y centro de notificaciones (admin) — remasterizado con
+     el mismo vidrio esmerilado que el resto de botones del sitio. OJO: el
+     panel y su encabezado usan fondos con opacidad FIJA (rgba directo, no
+     var(--panel)) a propósito — dentro de .admin-scope, --panel es
+     semitransparente (pensado para tarjetas grandes sobre el fondo del
+     panel), pero este menú flota encima de una lista que hace scroll
+     justo debajo del encabezado: con --panel se veía "encimado"/ilegible
+     en cuanto la lista se desplazaba. Sin backdrop-filter en los botones
+     pequeños (campanita, acciones, borrar), mismo criterio que .btn: son
+     muchos y repetidos, y Chromium tiene bugs de compositing con blur en
+     elementos así — el gradiente translúcido ya da el look de vidrio. */
   .notif-bell-wrap{position:relative;}
-  .notif-bell{position:relative;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--ink);padding:0;}
+  .notif-bell{position:relative;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg, rgba(255,255,255,.75), rgba(255,255,255,.4));border:1px solid rgba(36,21,18,.12);border-radius:10px;cursor:pointer;color:var(--ink);padding:0;box-shadow:0 4px 12px rgba(36,21,18,.08), inset 0 1px 0 rgba(255,255,255,.6);transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, border-color .2s ease, color .2s ease;}
+  .notif-bell:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(36,21,18,.14), inset 0 1px 0 rgba(255,255,255,.6);}
   .notif-bell svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-  .notif-bell-badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:10px;font-family:'IBM Plex Mono',monospace;min-width:16px;height:16px;padding:0 4px;border-radius:20px;display:none;align-items:center;justify-content:center;line-height:1;}
-  .notif-panel{display:none;position:absolute;top:calc(100% + 8px);right:0;width:320px;max-height:400px;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 32px rgba(20,12,9,.22);z-index:60;}
-  .notif-panel.open{display:block;}
-  .notif-panel-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);}
-  .notif-panel-head strong{font-size:13.5px;}
-  .notif-panel-item{display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);padding:11px 14px;cursor:pointer;font-family:inherit;}
-  .notif-panel-item:hover{background:var(--panel-2);}
-  .notif-panel-item.unread{background:rgba(210,4,45,0.05);}
-  .notif-panel-item .npi-title{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-  .notif-panel-item .npi-meta{display:block;font-size:11.5px;color:var(--sage-dim);}
+  html[data-theme="dark"] .notif-bell{background:linear-gradient(160deg, rgba(255,255,255,.1), rgba(255,255,255,.03));border-color:rgba(255,255,255,.16);box-shadow:0 4px 12px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08);}
+  html[data-theme="dark"] .notif-bell:hover{box-shadow:0 8px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);}
+  .notif-bell.has-unread{border-color:rgba(210,4,45,.4);color:var(--red);box-shadow:0 4px 14px rgba(210,4,45,.22), inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 3px rgba(210,4,45,.1);animation:notifBellRing 2.6s ease-in-out infinite;}
+  html[data-theme="dark"] .notif-bell.has-unread{box-shadow:0 4px 14px rgba(255,59,87,.32), inset 0 1px 0 rgba(255,255,255,.1), 0 0 0 3px rgba(255,59,87,.18);}
+  @keyframes notifBellRing{0%,80%,100%{transform:rotate(0);}82%{transform:rotate(-10deg);}86%{transform:rotate(9deg);}90%{transform:rotate(-6deg);}94%{transform:rotate(4deg);}97%{transform:rotate(0);}}
+  .notif-bell-badge{position:absolute;top:-5px;right:-5px;background:linear-gradient(135deg, var(--red), #ff3d63 60%, var(--red-dim));color:#fff;font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;min-width:17px;height:17px;padding:0 4px;border-radius:20px;display:none;align-items:center;justify-content:center;line-height:1;box-shadow:0 2px 6px rgba(210,4,45,.4), 0 0 0 2px var(--bg);animation:notifBadgePop .3s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes notifBadgePop{from{transform:scale(0);}to{transform:scale(1);}}
+  .notif-panel{position:absolute;top:calc(100% + 10px);right:0;width:350px;max-height:min(480px, 70vh);display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(165deg, rgba(255,253,248,.98), rgba(255,247,236,.95));border:1px solid rgba(36,21,18,.1);border-radius:16px;box-shadow:0 20px 44px rgba(36,21,18,.24), inset 0 1px 0 rgba(255,255,255,.6);z-index:60;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px) scale(.97);transform-origin:top right;transition:opacity .18s ease, transform .18s cubic-bezier(.34,1.56,.64,1), visibility 0s linear .18s;}
+  .notif-panel.open{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0) scale(1);transition:opacity .18s ease, transform .18s cubic-bezier(.34,1.56,.64,1);}
+  html[data-theme="dark"] .notif-panel{background:linear-gradient(165deg, rgba(34,28,23,.98), rgba(24,19,16,.96));border-color:rgba(255,255,255,.14);box-shadow:0 20px 44px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);}
+  .notif-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid rgba(36,21,18,.08);flex:none;background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.4));}
+  html[data-theme="dark"] .notif-panel-head{border-bottom-color:rgba(255,255,255,.1);background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));}
+  .notif-panel-head-title{display:flex;align-items:baseline;gap:7px;min-width:0;}
+  .notif-panel-head strong{font-size:13.5px;color:var(--ink);}
+  .notif-panel-count{font-size:11px;font-weight:700;color:var(--red);background:rgba(210,4,45,.1);padding:1px 7px;border-radius:20px;flex:none;}
+  html[data-theme="dark"] .notif-panel-count{background:rgba(255,59,87,.16);}
+  .notif-panel-actions{display:flex;align-items:center;gap:6px;flex:none;}
+  .notif-action-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(36,21,18,.05);border:1px solid rgba(36,21,18,.08);border-radius:8px;color:var(--sage);cursor:pointer;padding:0;transition:background-color .15s ease,color .15s ease,transform .15s ease;}
+  .notif-action-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .notif-action-btn:hover{background:rgba(47,122,79,.14);color:var(--ok);transform:translateY(-1px);}
+  .notif-action-btn.notif-action-danger:hover{background:rgba(163,38,56,.14);color:var(--bad);}
+  html[data-theme="dark"] .notif-action-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);}
+  .notif-panel-list{overflow-y:auto;padding:8px;flex:1;}
+  .notif-panel-item{position:relative;width:100%;text-align:left;background:rgba(36,21,18,.02);border:1px solid transparent;border-left:3px solid var(--line);border-radius:10px;padding:10px 34px 10px 12px;margin-bottom:6px;cursor:pointer;font-family:inherit;display:flex;gap:10px;align-items:flex-start;transition:background-color .15s ease,border-color .15s ease,transform .15s ease;}
+  .notif-panel-item:last-child{margin-bottom:0;}
+  .notif-panel-item:hover{background:rgba(210,4,45,.06);transform:translateX(2px);}
+  .notif-panel-item.unread{border-left-color:var(--red);background:rgba(210,4,45,.05);}
+  .notif-panel-item.type-cita{border-left-color:var(--ok);}
+  .notif-panel-item.type-cita.unread{background:rgba(47,122,79,.06);}
+  html[data-theme="dark"] .notif-panel-item{background:rgba(255,255,255,.03);}
+  html[data-theme="dark"] .notif-panel-item:hover{background:rgba(255,59,87,.1);}
+  html[data-theme="dark"] .notif-panel-item.unread{background:rgba(255,59,87,.09);}
+  html[data-theme="dark"] .notif-panel-item.type-cita.unread{background:rgba(72,179,117,.1);}
+  .notif-panel-item .npi-icon{flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(210,4,45,.1);color:var(--red);margin-top:1px;}
+  .notif-panel-item.type-cita .npi-icon{background:rgba(47,122,79,.12);color:var(--ok);}
+  .notif-panel-item .npi-icon svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .notif-panel-item .npi-body{flex:1;min-width:0;}
+  .notif-panel-item .npi-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+  .notif-panel-item .npi-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--red);}
+  .notif-panel-item.type-cita .npi-dot{background:var(--ok);}
+  .notif-panel-item .npi-meta{display:block;font-size:11.5px;color:var(--sage-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .notif-item-del{position:absolute;top:9px;right:9px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:rgba(36,21,18,.06);border:none;border-radius:50%;color:var(--sage-dim);cursor:pointer;padding:0;opacity:.5;transition:opacity .15s ease,background-color .15s ease,color .15s ease;font-size:11px;line-height:1;}
+  .notif-panel-item:hover .notif-item-del{opacity:1;}
+  .notif-item-del:hover{background:rgba(163,38,56,.16);color:var(--bad);}
+  html[data-theme="dark"] .notif-item-del{background:rgba(255,255,255,.08);}
+  .notif-panel-empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:36px 16px;text-align:center;color:var(--sage-dim);}
+  .notif-panel-empty svg{width:32px;height:32px;stroke:currentColor;fill:none;stroke-width:1.5;opacity:.5;}
+  .notif-panel-empty span{font-size:13px;}
   @media(max-width:520px){
-    .notif-panel{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-height:70vh;border-radius:16px 16px 0 0;}
+    .notif-panel{position:fixed;top:auto;bottom:0;left:0;right:0;width:auto;max-height:75vh;border-radius:18px 18px 0 0;transform:translateY(100%);}
+    .notif-panel.open{transform:translateY(0);}
+    .notif-panel::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:36px;height:4px;border-radius:4px;background:rgba(36,21,18,.15);}
+    html[data-theme="dark"] .notif-panel::before{background:rgba(255,255,255,.2);}
+    .notif-panel-head{padding-top:18px;}
   }
 
   /* ---- Modo de carga "skeleton" — placeholders animados mientras Firebase
@@ -1034,7 +1093,6 @@
   .admin-scope .zz-zone,
   .admin-scope .zz-form,
   .admin-scope .review-card,
-  .admin-scope .notif-panel,
   .admin-scope .ags-results,
   .admin-scope .seg-allowed-list li,
   .admin-scope .step-check,
@@ -1054,7 +1112,6 @@
   html[data-theme="dark"] .admin-scope .zz-zone,
   html[data-theme="dark"] .admin-scope .zz-form,
   html[data-theme="dark"] .admin-scope .review-card,
-  html[data-theme="dark"] .admin-scope .notif-panel,
   html[data-theme="dark"] .admin-scope .ags-results,
   html[data-theme="dark"] .admin-scope .seg-allowed-list li,
   html[data-theme="dark"] .admin-scope .step-check,
@@ -1063,7 +1120,6 @@
     box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 10px 28px rgba(0,0,0,.32);
   }
   .admin-scope .admin-sidebar button,
-  .admin-scope .notif-bell,
   .admin-scope .ags-input-wrap,
   .admin-scope input, .admin-scope select, .admin-scope textarea,
   .admin-scope .admin-tab-select,
@@ -1073,7 +1129,6 @@
     border-color:rgba(36,21,18,.1);
   }
   html[data-theme="dark"] .admin-scope .admin-sidebar button,
-  html[data-theme="dark"] .admin-scope .notif-bell,
   html[data-theme="dark"] .admin-scope .ags-input-wrap,
   html[data-theme="dark"] .admin-scope input, html[data-theme="dark"] .admin-scope select, html[data-theme="dark"] .admin-scope textarea,
   html[data-theme="dark"] .admin-scope .admin-tab-select,
@@ -2160,27 +2215,41 @@
   }
 
   /* ============================================================
-     SALÓN PRIVADO HV — tema premium fijo (obsidiana + dorado), SIEMPRE
-     oscuro sin importar el toggle claro/oscuro del sitio, igual principio
-     que .qh-hero/.pres-showcase: variables propias con alcance en
-     .salon-scope (nunca en :root) para que nada de esto se filtre ni se
-     invierta con el tema general del sitio.
+     SALÓN PRIVADO HV — premium con dorado como firma, en AMBOS tonos del
+     sitio (igual que el admin): claro por defecto aquí, oscuro (obsidiana)
+     bajo html[data-theme="dark"]. Variables propias con alcance en
+     .salon-scope (nunca en :root) para que nada de esto se filtre al resto
+     del sitio, pero sí sigue el mismo toggle claro/oscuro que todo lo demás
+     — antes era oscuro fijo sin importar el tema y se veía "fuera de lugar"
+     cuando el sitio estaba en claro.
      ============================================================ */
   .salon-scope{
+    --salon-obsidian:#FBF3E3; --salon-obsidian-2:#F3E6CB; --salon-panel:rgba(255,253,246,.6);
+    --salon-gold:#B8862F; --salon-gold-dim:#8C6524;
+    --salon-gold-glow:rgba(184,134,47,.18); --salon-gold-glow-soft:rgba(184,134,47,.09);
+    --salon-silver:#4A3D33; --salon-silver-dim:#8C7B68;
+    --salon-platinum:#3E2E1C; --salon-platinum-dim:#7A6650;
+    --salon-ink:#241512; --salon-sage:#7A6659; --salon-line:rgba(36,21,18,.16);
+    --salon-lift:rgba(36,21,18,.035); --salon-lift-2:rgba(36,21,18,.07);
+  }
+  html[data-theme="dark"] .salon-scope{
     --salon-obsidian:#0B0906; --salon-obsidian-2:#17120D; --salon-panel:#1D1712;
-    --salon-gold:#E8C468; --salon-gold-dim:#A67C2E; --salon-gold-glow:rgba(232,196,104,.38);
+    --salon-gold:#E8C468; --salon-gold-dim:#A67C2E;
+    --salon-gold-glow:rgba(232,196,104,.38); --salon-gold-glow-soft:rgba(232,196,104,.18);
     --salon-silver:#B9B4AC; --salon-silver-dim:#7C766C;
     --salon-platinum:#E9E3D6; --salon-platinum-dim:#A79C86;
     --salon-ink:#F3ECDF; --salon-sage:#C9B9A8; --salon-line:rgba(232,196,104,.22);
+    --salon-lift:rgba(255,255,255,.04); --salon-lift-2:rgba(255,255,255,.08);
   }
-  /* El Salón es oscuro fijo de punta a punta, no solo dentro de sus
-     tarjetas — evita que el header (siempre oscuro en esta vista, ver
-     updateHeaderDarkMode) se vea "sucio" contra un fondo claro justo detrás,
-     y le da a los textos sueltos entre tarjetas (kickers dorado/plata) el
-     fondo oscuro para el que fueron diseñados. Se pinta en <body> (no en
-     .salon-scope) porque .wrap centra el contenido con márgenes propios —
-     así el obsidiana cubre todo el ancho, incluidos esos márgenes. */
-  body.salon-page-dark{background:linear-gradient(180deg,#0B0906,#17120D 45%,#0B0906);}
+  /* El fondo del Salón cubre toda la página (no solo sus tarjetas) mientras
+     esta vista esté activa — evita que el header se vea "sucio" contra el
+     fondo normal del sitio justo detrás, y le da a los textos sueltos entre
+     tarjetas el fondo para el que fueron diseñados. Se pinta en <body> (no
+     en .salon-scope) porque .wrap centra el contenido con márgenes propios
+     — así cubre todo el ancho, incluidos esos márgenes. Claro por defecto,
+     oscuro bajo html[data-theme="dark"] — sigue el tema del sitio. */
+  body.salon-page-dark{background:linear-gradient(180deg,#FBF3E3,#F3E6CB 45%,#FBF3E3);}
+  html[data-theme="dark"] body.salon-page-dark{background:linear-gradient(180deg,#0B0906,#17120D 45%,#0B0906);}
   .nav-salon{position:relative;color:var(--brass-dim)!important;font-weight:600!important;}
   .nav-salon:hover{background:rgba(184,134,47,.12)!important;color:var(--brass)!important;}
   .nav-salon.active{background:linear-gradient(120deg,#8C6524,#DDAE5C 55%,#8C6524)!important;color:#241512!important;}
@@ -2200,9 +2269,9 @@
   .nav-piezasfalsas:hover{background:#17131e!important;color:#fff!important;border-color:rgba(139,92,193,.55)!important;}
   .nav-piezasfalsas.active{background:#000!important;color:#fff!important;border-color:#e0455a!important;}
 
-  .salon-hero{position:relative;background:linear-gradient(160deg,var(--salon-obsidian),var(--salon-obsidian-2) 60%,#211A12);border-radius:18px;padding:44px 36px;overflow:hidden;isolation:isolate;margin-bottom:26px;}
+  .salon-hero{position:relative;background:linear-gradient(160deg,var(--salon-obsidian),var(--salon-obsidian-2) 100%);border-radius:18px;padding:44px 36px;overflow:hidden;isolation:isolate;margin-bottom:26px;}
   .salon-hero::before{content:"";position:absolute;top:-50%;left:-10%;width:420px;height:420px;background:radial-gradient(circle,var(--salon-gold-glow),transparent 70%);pointer-events:none;z-index:-1;animation:salonAuraDrift 14s ease-in-out infinite alternate;}
-  .salon-hero::after{content:"";position:absolute;bottom:-55%;right:-8%;width:380px;height:380px;background:radial-gradient(circle,rgba(232,196,104,.18),transparent 72%);pointer-events:none;z-index:-1;animation:salonAuraDrift 17s ease-in-out infinite alternate-reverse;}
+  .salon-hero::after{content:"";position:absolute;bottom:-55%;right:-8%;width:380px;height:380px;background:radial-gradient(circle,var(--salon-gold-glow-soft),transparent 72%);pointer-events:none;z-index:-1;animation:salonAuraDrift 17s ease-in-out infinite alternate-reverse;}
   @keyframes salonAuraDrift{from{transform:translate(0,0) scale(1);}to{transform:translate(30px,-20px) scale(1.12);}}
   /* Contorno dinámico: un segmento de luz dorada que recorre el perímetro
      de la tarjeta del Salón sin parar (nunca un anillo fijo completo),
@@ -2253,7 +2322,7 @@
   .salon-tiers-subkicker{text-align:center;font-size:13.5px;color:var(--salon-silver-dim,var(--salon-silver));max-width:640px;margin:0 auto 20px;line-height:1.6;opacity:.85;}
   .salon-tiers-teaser{margin-bottom:26px;}
 
-  .salon-ladder-node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--salon-silver);background:rgba(255,255,255,.04);border:1px solid var(--salon-line);border-radius:20px;padding:6px 14px;}
+  .salon-ladder-node{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--salon-silver);background:var(--salon-lift);border:1px solid var(--salon-line);border-radius:20px;padding:6px 14px;}
   .salon-ladder-node.mini{font-size:9.5px;padding:4px 9px;letter-spacing:.03em;}
   .salon-ladder-node.salon-tier-n2{color:var(--salon-gold);border-color:rgba(232,196,104,.35);}
   .salon-ladder-node.salon-tier-n3{color:var(--salon-platinum);border-color:rgba(232,196,104,.5);box-shadow:0 0 14px rgba(232,196,104,.18);}
@@ -2293,11 +2362,15 @@
   .salon-card{background:linear-gradient(165deg,var(--salon-obsidian-2),var(--salon-panel));border:1px solid var(--salon-line);color:var(--salon-ink);border-radius:14px;}
   .salon-card h3{color:var(--salon-ink);}
   .salon-foot-note{border:none!important;color:var(--salon-sage)!important;padding-top:0!important;margin-top:4px!important;}
-  .salon-card input{background:rgba(255,255,255,.04);border:1px solid var(--salon-line);color:var(--salon-ink);border-radius:8px;padding:10px 12px;font-size:14px;width:100%;}
+  .salon-card input{background:var(--salon-lift);border:1px solid var(--salon-line);color:var(--salon-ink);border-radius:8px;padding:10px 12px;font-size:14px;width:100%;}
   .salon-card input::placeholder{color:var(--salon-silver-dim);}
   .salon-card .empty{border-color:var(--salon-line);color:var(--salon-sage);}
-  .salon-btn-gold{background:linear-gradient(120deg, rgba(200,163,74,.85), rgba(240,210,140,.65) 55%, rgba(170,135,50,.88));border:1px solid rgba(255,241,199,.55);color:#241512!important;font-weight:700;box-shadow:0 10px 24px rgba(232,196,104,.35), inset 0 1px 0 rgba(255,255,255,.5);}
-  .salon-btn-gold:hover{box-shadow:0 14px 30px rgba(232,196,104,.45), inset 0 1px 0 rgba(255,255,255,.55);}
+  /* !important en background/border/box-shadow: .btn ya trae su propio par
+     claro/oscuro con selectores html[data-theme="dark"] .btn más
+     específicos que .salon-btn-gold sola — sin esto, el botón se veía rojo
+     (el de .btn) en vez de dorado en cuanto el sitio pasaba a modo oscuro. */
+  .salon-btn-gold{background:linear-gradient(120deg, rgba(200,163,74,.85), rgba(240,210,140,.65) 55%, rgba(170,135,50,.88))!important;border:1px solid rgba(255,241,199,.55)!important;color:#241512!important;font-weight:700;box-shadow:0 10px 24px rgba(232,196,104,.35), inset 0 1px 0 rgba(255,255,255,.5)!important;}
+  .salon-btn-gold:hover{box-shadow:0 14px 30px rgba(232,196,104,.45), inset 0 1px 0 rgba(255,255,255,.55)!important;}
   .salon-btn-ghost{background:rgba(255,255,255,.06)!important;border:1.5px solid var(--salon-gold-dim)!important;color:var(--salon-gold)!important;box-shadow:none!important;}
   .salon-btn-ghost:hover{background:rgba(232,196,104,.12)!important;}
 
@@ -2322,7 +2395,7 @@
   .smc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
   .smc-code{font-size:13px;color:var(--salon-platinum);letter-spacing:.03em;}
   .smc-piezas{font-size:11.5px;color:var(--salon-sage);}
-  .smc-progress{height:5px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;}
+  .smc-progress{height:5px;border-radius:4px;background:var(--salon-lift-2);overflow:hidden;}
   .smc-progress-fill{height:100%;background:linear-gradient(90deg,var(--salon-gold-dim),var(--salon-gold));border-radius:4px;transition:width .6s cubic-bezier(.2,.8,.2,1);}
   .smc-progress-txt{font-size:11px;color:var(--salon-sage);margin:8px 0 0;}
   .salon-member-card.salon-tier-n2{border-color:rgba(232,196,104,.45);}
@@ -2376,11 +2449,11 @@
   #salon-book-spread.detail-mode .hv-book-page-right{grid-column:1/-1;}
 
   /* ---- Calendario VIP dentro de una .salon-card — mismas piezas cal-*, reskin oscuro/dorado ---- */
-  .salon-card .cal-widget{background:rgba(255,255,255,.03);border-color:var(--salon-line);}
+  .salon-card .cal-widget{background:var(--salon-lift);border-color:var(--salon-line);}
   .salon-card .cal-month-label{color:var(--salon-ink);}
   .salon-card .cal-nav{background:var(--salon-panel);border-color:var(--salon-line);color:var(--salon-gold);}
   .salon-card .cal-weekdays span{color:var(--salon-sage);}
-  .salon-card .cal-day{background:rgba(255,255,255,.03);color:var(--salon-ink);}
+  .salon-card .cal-day{background:var(--salon-lift);color:var(--salon-ink);}
   .salon-card .cal-day.cal-day-today{border-color:var(--salon-gold-dim);}
   .salon-card .cal-day.cal-day-selected{background:linear-gradient(120deg,var(--salon-gold-dim),var(--salon-gold));border-color:transparent;color:#241512;}
   .salon-card .cal-slot{background:var(--salon-panel);border-color:var(--salon-line);color:var(--salon-ink);}
@@ -2431,7 +2504,7 @@
   .salon-book-teaser{margin-bottom:16px;}
   .salon-book-teaser-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;}
   .salon-book-teaser-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;margin-bottom:14px;}
-  .salon-book-teaser-thumb{aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--salon-line);background:rgba(255,255,255,.03);}
+  .salon-book-teaser-thumb{aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--salon-line);background:var(--salon-lift);}
   .salon-book-teaser-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .salon-book-teaser-empty{font-size:13px;color:var(--salon-sage);margin:0 0 14px;}
 
@@ -4153,11 +4226,24 @@
             </button>
             <div class="notif-panel" id="notif-panel">
               <div class="notif-panel-head">
-                <strong>Notificaciones</strong>
-                <button type="button" class="btn ghost small" onclick="markAllNotifsRead()">Marcar leídas</button>
+                <div class="notif-panel-head-title">
+                  <strong>Notificaciones</strong>
+                  <span class="notif-panel-count" id="notif-panel-count" hidden></span>
+                </div>
+                <div class="notif-panel-actions">
+                  <button type="button" class="notif-action-btn" onclick="markAllNotifsRead()" aria-label="Marcar todas como leídas" title="Marcar todas como leídas">
+                    <svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>
+                  </button>
+                  <button type="button" class="notif-action-btn notif-action-danger" onclick="clearAllAdminNotifs()" aria-label="Borrar todas" title="Borrar todas">
+                    <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m-8 0v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V7M10 11v6M14 11v6"/></svg>
+                  </button>
+                </div>
               </div>
               <div class="notif-panel-list" id="notif-panel-list">
-                <p style="color:var(--sage);font-size:13px;padding:16px;text-align:center;">Sin notificaciones todavía.</p>
+                <div class="notif-panel-empty">
+                  <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  <span>Sin notificaciones todavía.</span>
+                </div>
               </div>
             </div>
           </div>
@@ -5088,9 +5174,10 @@ function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');
   if(typeof refreshDashChartsTheme === 'function') setTimeout(refreshDashChartsTheme, 30);
-  // El admin ahora sigue el claro/oscuro del sitio (a diferencia del
-  // Salón, que es oscuro fijo) — si el header está sobre el admin cuando
-  // se cambia de tema, su propio contraste debe actualizarse al instante.
+  // El admin y el Salón ahora siguen el claro/oscuro del sitio — si el
+  // header está sobre cualquiera de los dos cuando se cambia de tema, su
+  // propio contraste y el fondo de página del Salón deben actualizarse al
+  // instante.
   if(typeof updateHeaderDarkMode === 'function') updateHeaderDarkMode();
 }
 
@@ -5809,7 +5896,8 @@ const NOTIF_ICONS = {
   success: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9"/></svg>',
   warning: '<svg viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5H2.5z"/><path d="M12 10v4M12 17h.01"/></svg>',
   error: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
-  solicitud: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>'
+  solicitud: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  cita: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8.5 14.5l2 2 4.5-4.5"/></svg>'
 };
 let NOTIF_COUNTER = 0;
 function notify(opts){
@@ -5879,15 +5967,40 @@ function playNotifChime(){
 // CENTRO DE NOTIFICACIONES DEL ADMIN — historial + campanita
 // ============================================================
 let ADMIN_NOTIFS = [];
+// Las notificaciones se guardan cuando mucho 30 días — pasado ese tiempo se
+// eliminan solas (al cargar, al agregar una nueva y al abrir la campanita),
+// además de poder borrarse a mano (una por una o todas de un jalón).
+const NOTIF_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
+function pruneOldAdminNotifs(){
+  const before = ADMIN_NOTIFS.length;
+  const cutoff = Date.now() - NOTIF_MAX_AGE_MS;
+  ADMIN_NOTIFS = ADMIN_NOTIFS.filter(n => (n.ts || 0) >= cutoff);
+  if(ADMIN_NOTIFS.length !== before) saveAdminNotifs();
+}
 function loadAdminNotifs(){
   try{ ADMIN_NOTIFS = JSON.parse(localStorage.getItem('hv-admin-notifs') || '[]'); }catch(e){ ADMIN_NOTIFS = []; }
+  pruneOldAdminNotifs();
 }
 function saveAdminNotifs(){
   try{ localStorage.setItem('hv-admin-notifs', JSON.stringify(ADMIN_NOTIFS.slice(0,30))); }catch(e){}
 }
 function addAdminNotif(item){
-  ADMIN_NOTIFS.unshift(Object.assign({read:false, ts: Date.now()}, item));
+  ADMIN_NOTIFS.unshift(Object.assign({read:false, ts: Date.now(), type:'solicitud'}, item));
   ADMIN_NOTIFS = ADMIN_NOTIFS.slice(0,30);
+  pruneOldAdminNotifs();
+  saveAdminNotifs();
+  renderNotifPanel();
+}
+function deleteAdminNotif(i, e){
+  if(e) e.stopPropagation();
+  ADMIN_NOTIFS.splice(i,1);
+  saveAdminNotifs();
+  renderNotifPanel();
+}
+function clearAllAdminNotifs(){
+  if(ADMIN_NOTIFS.length===0) return;
+  if(!confirm('¿Borrar todas las notificaciones? Esta acción no se puede deshacer.')) return;
+  ADMIN_NOTIFS = [];
   saveAdminNotifs();
   renderNotifPanel();
 }
@@ -5901,19 +6014,35 @@ function timeAgo(ts){
 function renderNotifPanel(){
   const list = document.getElementById('notif-panel-list');
   const badge = document.getElementById('notif-bell-badge');
+  const bell = document.getElementById('notif-bell-btn');
+  const count = document.getElementById('notif-panel-count');
   if(!list) return;
   const unread = ADMIN_NOTIFS.filter(n=>!n.read).length;
   if(badge){ badge.style.display = unread>0 ? 'flex' : 'none'; badge.textContent = unread>9?'9+':unread; }
+  if(bell) bell.classList.toggle('has-unread', unread>0);
+  if(count){
+    count.hidden = unread===0;
+    count.textContent = unread>0 ? (unread===1?'1 nueva':unread+' nuevas') : '';
+  }
   if(ADMIN_NOTIFS.length===0){
-    list.innerHTML = '<p style="color:var(--sage);font-size:13px;padding:16px;text-align:center;">Sin notificaciones todavía.</p>';
+    list.innerHTML = `<div class="notif-panel-empty">
+      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Sin notificaciones todavía.</span>
+    </div>`;
     return;
   }
-  list.innerHTML = ADMIN_NOTIFS.map((n,i) => `
-    <button type="button" class="notif-panel-item ${n.read?'':'unread'}" onclick="openAdminNotif(${i})">
-      <span class="npi-title">${escapeHtml(n.title)}</span>
-      <span class="npi-meta">${escapeHtml(n.message)} · ${timeAgo(n.ts)}</span>
+  list.innerHTML = ADMIN_NOTIFS.map((n,i) => {
+    const type = n.type === 'cita' ? 'cita' : 'solicitud';
+    return `
+    <button type="button" class="notif-panel-item type-${type} ${n.read?'':'unread'}" onclick="openAdminNotif(${i})">
+      <span class="npi-icon">${NOTIF_ICONS[type] || NOTIF_ICONS.info}</span>
+      <span class="npi-body">
+        <span class="npi-title">${!n.read?'<span class="npi-dot"></span>':''}${escapeHtml(n.title)}</span>
+        <span class="npi-meta">${escapeHtml(n.message)} · ${timeAgo(n.ts)}</span>
+      </span>
+      <button type="button" class="notif-item-del" onclick="deleteAdminNotif(${i}, event)" aria-label="Borrar notificación" title="Borrar">✕</button>
     </button>
-  `).join('');
+  `; }).join('');
 }
 function openAdminNotif(i){
   const n = ADMIN_NOTIFS[i];
@@ -5933,6 +6062,7 @@ function toggleNotifPanel(force){
   const panel = document.getElementById('notif-panel');
   if(!panel) return;
   const open = typeof force === 'boolean' ? force : !panel.classList.contains('open');
+  if(open){ pruneOldAdminNotifs(); renderNotifPanel(); }
   panel.classList.toggle('open', open);
 }
 document.addEventListener('click', (e) => {
@@ -5970,8 +6100,9 @@ function startSolicitudesListener(){
       try{ d = JSON.parse(change.doc.data().value || '{}'); }catch(e){}
       const citaTxt = (d.paquete && d.paquete !== 'digital' && d.fechaEntrega) ? formatCitaLarga(d.fechaEntrega, d.citaHora) : '';
       const title = citaTxt ? 'Nueva cita agendada' : 'Nueva solicitud de certificación';
+      const notifType = citaTxt ? 'cita' : 'solicitud';
       notify({
-        type:'solicitud',
+        type:notifType,
         title,
         message: citaTxt
           ? `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'} · ${citaTxt}`
@@ -5982,7 +6113,8 @@ function startSolicitudesListener(){
       addAdminNotif({
         title,
         message: citaTxt ? `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'} · ${citaTxt}` : `${d.modelo || 'Pieza'} — ${d.nombre || 'Cliente'}`,
-        tab:'solicitudes'
+        tab:'solicitudes',
+        type:notifType
       });
       playNotifChime();
       updateAdminStats();
@@ -6057,35 +6189,33 @@ function go(view){
 }
 
 // El header y el menú principal son un panel de vidrio translúcido pensado
-// para verse bien sobre el fondo claro/oscuro normal del sitio — pero el
-// Salón Privado HV (y la ficha pública de una pieza que pertenece a él) usa
-// un tema oscuro/obsidiana FIJO, independiente del claro/oscuro del sitio.
-// Al hacer scroll ahí, el header dejaba pasar ese fondo oscuro por debajo
-// del vidrio y el texto (pensado para fondo claro) perdía casi todo el
-// contraste. Esta función prende una clase en <body> cuando la vista activa
-// es de ese tipo, y el CSS de abajo le da al header/menú el mismo
-// tratamiento oscuro que ya usa el modo oscuro del sitio, sin depender de
-// data-theme.
+// para verse bien sobre el fondo claro/oscuro normal del sitio. El Salón
+// Privado HV (y la ficha pública de una pieza que pertenece a él) y el admin
+// ahora siguen el claro/oscuro del sitio como todo lo demás (antes el Salón
+// era oscuro fijo sin importar el tema — se veía "fuera de lugar" con el
+// sitio en claro) — solo se tratan como fondo oscuro (para oscurecer el
+// header también) cuando el sitio de verdad está en modo oscuro. Esta
+// función prende una clase en <body> cuando corresponde, y el CSS de abajo
+// le da al header/menú el mismo tratamiento oscuro que ya usa el modo
+// oscuro del sitio, sin depender directamente de data-theme ahí (para
+// también cubrir el caso de Inicio con foto de portada oscura, ver abajo).
 function updateHeaderDarkMode(){
-  // El Salón (y una pieza suya) son oscuros FIJOS sin importar el tema del
-  // sitio. El admin, en cambio, ahora sigue el claro/oscuro del sitio —
-  // solo se trata como fondo oscuro (para oscurecer el header también)
-  // cuando el sitio de verdad está en modo oscuro.
-  let dark = (window.HV_CURRENT_VIEW === 'salon');
-  // El Salón es oscuro fijo de punta a punta (no solo dentro de sus
-  // tarjetas): antes solo las tarjetas (.salon-hero/.salon-card) tenían
-  // fondo oscuro y el resto de la página quedaba con el fondo claro/oscuro
-  // normal del sitio detrás — el header (forzado oscuro) se veía "sucio" al
-  // mezclarse con ese fondo claro justo debajo, y el texto suelto entre
-  // tarjetas (kickers en dorado/plata) perdía contraste. body.salon-page-dark
-  // pinta todo el viewport de obsidiana mientras esta vista esté activa.
-  let salonFullDark = dark;
+  const siteIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  let dark = (window.HV_CURRENT_VIEW === 'salon') && siteIsDark;
+  // El fondo de página del Salón (body.salon-page-dark) cubre TODO el
+  // viewport mientras esa vista esté activa, no solo sus tarjetas — así el
+  // header nunca queda "sucio" contra el fondo normal del sitio justo
+  // detrás, y el texto suelto entre tarjetas (kickers dorado/plata) tiene
+  // el fondo para el que fue diseñado. La clase se prende siempre que
+  // estemos en el Salón (claro u oscuro) — el color correcto lo resuelve el
+  // propio CSS de .salon-scope/body.salon-page-dark según el tema.
+  let salonFullDark = (window.HV_CURRENT_VIEW === 'salon');
   if(!dark && window.HV_CURRENT_VIEW === 'admin'){
-    dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    dark = siteIsDark;
   }
   if(window.HV_CURRENT_VIEW === 'pieza'){
     const el = document.getElementById('pieza-publica-content');
-    if(el && el.classList.contains('salon-scope')){ dark = true; salonFullDark = true; }
+    if(el && el.classList.contains('salon-scope')){ dark = siteIsDark; salonFullDark = true; }
   }
   // Inicio: la portada rota fotos subidas desde el admin (foto principal +
   // piezas publicadas) detrás de un overlay oscuro — no es un color fijo
