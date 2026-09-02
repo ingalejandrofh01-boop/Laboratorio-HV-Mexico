@@ -2156,6 +2156,14 @@
     --salon-platinum:#E9E3D6; --salon-platinum-dim:#A79C86;
     --salon-ink:#F3ECDF; --salon-sage:#C9B9A8; --salon-line:rgba(232,196,104,.22);
   }
+  /* El Salón es oscuro fijo de punta a punta, no solo dentro de sus
+     tarjetas — evita que el header (siempre oscuro en esta vista, ver
+     updateHeaderDarkMode) se vea "sucio" contra un fondo claro justo detrás,
+     y le da a los textos sueltos entre tarjetas (kickers dorado/plata) el
+     fondo oscuro para el que fueron diseñados. Se pinta en <body> (no en
+     .salon-scope) porque .wrap centra el contenido con márgenes propios —
+     así el obsidiana cubre todo el ancho, incluidos esos márgenes. */
+  body.salon-page-dark{background:linear-gradient(180deg,#0B0906,#17120D 45%,#0B0906);}
   .nav-salon{position:relative;color:var(--brass-dim)!important;font-weight:600!important;}
   .nav-salon:hover{background:rgba(184,134,47,.12)!important;color:var(--brass)!important;}
   .nav-salon.active{background:linear-gradient(120deg,#8C6524,#DDAE5C 55%,#8C6524)!important;color:#241512!important;}
@@ -6041,14 +6049,23 @@ function updateHeaderDarkMode(){
   // solo se trata como fondo oscuro (para oscurecer el header también)
   // cuando el sitio de verdad está en modo oscuro.
   let dark = (window.HV_CURRENT_VIEW === 'salon');
+  // El Salón es oscuro fijo de punta a punta (no solo dentro de sus
+  // tarjetas): antes solo las tarjetas (.salon-hero/.salon-card) tenían
+  // fondo oscuro y el resto de la página quedaba con el fondo claro/oscuro
+  // normal del sitio detrás — el header (forzado oscuro) se veía "sucio" al
+  // mezclarse con ese fondo claro justo debajo, y el texto suelto entre
+  // tarjetas (kickers en dorado/plata) perdía contraste. body.salon-page-dark
+  // pinta todo el viewport de obsidiana mientras esta vista esté activa.
+  let salonFullDark = dark;
   if(!dark && window.HV_CURRENT_VIEW === 'admin'){
     dark = document.documentElement.getAttribute('data-theme') === 'dark';
   }
-  if(!dark && window.HV_CURRENT_VIEW === 'pieza'){
+  if(window.HV_CURRENT_VIEW === 'pieza'){
     const el = document.getElementById('pieza-publica-content');
-    if(el && el.classList.contains('salon-scope')) dark = true;
+    if(el && el.classList.contains('salon-scope')){ dark = true; salonFullDark = true; }
   }
   document.body.classList.toggle('header-on-dark', dark);
+  document.body.classList.toggle('salon-page-dark', salonFullDark);
 }
 
 // Modal de lectura de Términos/Privacidad — clona el contenido ya escrito
