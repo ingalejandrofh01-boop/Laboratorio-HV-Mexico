@@ -2241,6 +2241,24 @@
     --salon-ink:#F3ECDF; --salon-sage:#C9B9A8; --salon-line:rgba(232,196,104,.22);
     --salon-lift:rgba(255,255,255,.04); --salon-lift-2:rgba(255,255,255,.08);
   }
+  /* La tarjeta de bienvenida (con la "luz que circula") y la tarjeta de
+     socio son la pieza más espectacular de todo el Salón — el usuario pidió
+     que, aunque el resto de la página siga el tema claro/oscuro del sitio,
+     estas dos SIEMPRE se vean obsidiana con dorado muy brillante (si no, el
+     brillo del contorno y el resplandor de fondo casi desaparecen sobre
+     crema). Como sus variables --salon-* se heredan de .salon-scope, basta
+     con redeclararlas aquí directo en el propio elemento: una declaración
+     en el elemento siempre gana sobre lo heredado del padre, sin importar
+     el tema activo ni el orden en el CSS. */
+  .salon-hero, .salon-member-card{
+    --salon-obsidian:#0B0906; --salon-obsidian-2:#17120D; --salon-panel:#1D1712;
+    --salon-gold:#E8C468; --salon-gold-dim:#A67C2E;
+    --salon-gold-glow:rgba(232,196,104,.5); --salon-gold-glow-soft:rgba(232,196,104,.26);
+    --salon-silver:#B9B4AC; --salon-silver-dim:#7C766C;
+    --salon-platinum:#E9E3D6; --salon-platinum-dim:#A79C86;
+    --salon-ink:#F3ECDF; --salon-sage:#C9B9A8; --salon-line:rgba(232,196,104,.24);
+    --salon-lift:rgba(255,255,255,.04); --salon-lift-2:rgba(255,255,255,.08);
+  }
   /* El fondo del Salón cubre toda la página (no solo sus tarjetas) mientras
      esta vista esté activa — evita que el header se vea "sucio" contra el
      fondo normal del sitio justo detrás, y le da a los textos sueltos entre
