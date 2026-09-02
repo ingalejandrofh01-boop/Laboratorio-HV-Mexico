@@ -2215,42 +2215,15 @@
   }
 
   /* ============================================================
-     SALÓN PRIVADO HV — premium con dorado como firma, en AMBOS tonos del
-     sitio (igual que el admin): claro por defecto aquí, oscuro (obsidiana)
-     bajo html[data-theme="dark"]. Variables propias con alcance en
-     .salon-scope (nunca en :root) para que nada de esto se filtre al resto
-     del sitio, pero sí sigue el mismo toggle claro/oscuro que todo lo demás
-     — antes era oscuro fijo sin importar el tema y se veía "fuera de lugar"
-     cuando el sitio estaba en claro.
-     ============================================================ */
+     SALÓN PRIVADO HV — obsidiana con dorado como firma, SIEMPRE (sin
+     importar si el sitio está en claro u oscuro). Se probó siguiendo el
+     toggle claro/oscuro del sitio (como el admin), pero el usuario pidió
+     volver a un look fijo: es el as espectacular/premium de toda la app y
+     debe sentirse "de otro mundo" en todo momento — el dorado y el brillo
+     del contorno se apagan mucho sobre un fondo crema. Variables propias
+     con alcance en .salon-scope (nunca en :root) para que nada de esto se
+     filtre al resto del sitio. */
   .salon-scope{
-    --salon-obsidian:#FBF3E3; --salon-obsidian-2:#F3E6CB; --salon-panel:rgba(255,253,246,.6);
-    --salon-gold:#B8862F; --salon-gold-dim:#8C6524;
-    --salon-gold-glow:rgba(184,134,47,.18); --salon-gold-glow-soft:rgba(184,134,47,.09);
-    --salon-silver:#4A3D33; --salon-silver-dim:#8C7B68;
-    --salon-platinum:#3E2E1C; --salon-platinum-dim:#7A6650;
-    --salon-ink:#241512; --salon-sage:#7A6659; --salon-line:rgba(36,21,18,.16);
-    --salon-lift:rgba(36,21,18,.035); --salon-lift-2:rgba(36,21,18,.07);
-  }
-  html[data-theme="dark"] .salon-scope{
-    --salon-obsidian:#0B0906; --salon-obsidian-2:#17120D; --salon-panel:#1D1712;
-    --salon-gold:#E8C468; --salon-gold-dim:#A67C2E;
-    --salon-gold-glow:rgba(232,196,104,.38); --salon-gold-glow-soft:rgba(232,196,104,.18);
-    --salon-silver:#B9B4AC; --salon-silver-dim:#7C766C;
-    --salon-platinum:#E9E3D6; --salon-platinum-dim:#A79C86;
-    --salon-ink:#F3ECDF; --salon-sage:#C9B9A8; --salon-line:rgba(232,196,104,.22);
-    --salon-lift:rgba(255,255,255,.04); --salon-lift-2:rgba(255,255,255,.08);
-  }
-  /* La tarjeta de bienvenida (con la "luz que circula") y la tarjeta de
-     socio son la pieza más espectacular de todo el Salón — el usuario pidió
-     que, aunque el resto de la página siga el tema claro/oscuro del sitio,
-     estas dos SIEMPRE se vean obsidiana con dorado muy brillante (si no, el
-     brillo del contorno y el resplandor de fondo casi desaparecen sobre
-     crema). Como sus variables --salon-* se heredan de .salon-scope, basta
-     con redeclararlas aquí directo en el propio elemento: una declaración
-     en el elemento siempre gana sobre lo heredado del padre, sin importar
-     el tema activo ni el orden en el CSS. */
-  .salon-hero, .salon-member-card{
     --salon-obsidian:#0B0906; --salon-obsidian-2:#17120D; --salon-panel:#1D1712;
     --salon-gold:#E8C468; --salon-gold-dim:#A67C2E;
     --salon-gold-glow:rgba(232,196,104,.5); --salon-gold-glow-soft:rgba(232,196,104,.26);
@@ -2264,10 +2237,9 @@
      fondo normal del sitio justo detrás, y le da a los textos sueltos entre
      tarjetas el fondo para el que fueron diseñados. Se pinta en <body> (no
      en .salon-scope) porque .wrap centra el contenido con márgenes propios
-     — así cubre todo el ancho, incluidos esos márgenes. Claro por defecto,
-     oscuro bajo html[data-theme="dark"] — sigue el tema del sitio. */
-  body.salon-page-dark{background:linear-gradient(180deg,#FBF3E3,#F3E6CB 45%,#FBF3E3);}
-  html[data-theme="dark"] body.salon-page-dark{background:linear-gradient(180deg,#0B0906,#17120D 45%,#0B0906);}
+     — así cubre todo el ancho, incluidos esos márgenes. Siempre oscuro,
+     como el resto del Salón. */
+  body.salon-page-dark{background:linear-gradient(180deg,#0B0906,#17120D 45%,#0B0906);}
   .nav-salon{position:relative;color:var(--brass-dim)!important;font-weight:600!important;}
   .nav-salon:hover{background:rgba(184,134,47,.12)!important;color:var(--brass)!important;}
   .nav-salon.active{background:linear-gradient(120deg,#8C6524,#DDAE5C 55%,#8C6524)!important;color:#241512!important;}
@@ -5192,10 +5164,9 @@ function toggleTheme(){
   const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');
   if(typeof refreshDashChartsTheme === 'function') setTimeout(refreshDashChartsTheme, 30);
-  // El admin y el Salón ahora siguen el claro/oscuro del sitio — si el
-  // header está sobre cualquiera de los dos cuando se cambia de tema, su
-  // propio contraste y el fondo de página del Salón deben actualizarse al
-  // instante.
+  // El admin sigue el claro/oscuro del sitio (el Salón es obsidiana fija,
+  // siempre) — si el header está sobre cualquiera de los dos cuando se
+  // cambia de tema, su propio contraste debe actualizarse al instante.
   if(typeof updateHeaderDarkMode === 'function') updateHeaderDarkMode();
 }
 
@@ -6219,21 +6190,18 @@ function go(view){
 // también cubrir el caso de Inicio con foto de portada oscura, ver abajo).
 function updateHeaderDarkMode(){
   const siteIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  let dark = (window.HV_CURRENT_VIEW === 'salon') && siteIsDark;
-  // El fondo de página del Salón (body.salon-page-dark) cubre TODO el
-  // viewport mientras esa vista esté activa, no solo sus tarjetas — así el
-  // header nunca queda "sucio" contra el fondo normal del sitio justo
-  // detrás, y el texto suelto entre tarjetas (kickers dorado/plata) tiene
-  // el fondo para el que fue diseñado. La clase se prende siempre que
-  // estemos en el Salón (claro u oscuro) — el color correcto lo resuelve el
-  // propio CSS de .salon-scope/body.salon-page-dark según el tema.
+  // El Salón es obsidiana con dorado SIEMPRE, sin importar el tema del
+  // sitio (ver el comentario junto a .salon-scope) — así que el header
+  // sobre esa vista también debe ir oscuro siempre; si no, se ve "sucio"
+  // contra el fondo obsidiana justo detrás cuando el sitio está en claro.
+  let dark = (window.HV_CURRENT_VIEW === 'salon');
   let salonFullDark = (window.HV_CURRENT_VIEW === 'salon');
   if(!dark && window.HV_CURRENT_VIEW === 'admin'){
     dark = siteIsDark;
   }
   if(window.HV_CURRENT_VIEW === 'pieza'){
     const el = document.getElementById('pieza-publica-content');
-    if(el && el.classList.contains('salon-scope')){ dark = siteIsDark; salonFullDark = true; }
+    if(el && el.classList.contains('salon-scope')){ dark = true; salonFullDark = true; }
   }
   // Inicio: la portada rota fotos subidas desde el admin (foto principal +
   // piezas publicadas) detrás de un overlay oscuro — no es un color fijo
