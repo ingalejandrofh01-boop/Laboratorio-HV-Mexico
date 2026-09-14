@@ -6531,7 +6531,7 @@ function renderCert(f, isAdmin, wrapIdOverride){
     <div class="grid grid-3" style="margin-top:18px;">${fotoHtml}</div>
     <div class="divider"></div>
     <div class="row" style="align-items:center;gap:18px;">
-      <img src="${qrDataUrl(f,160)}" alt="${ctt(lang,'QR de verificación','Verification QR code')}" class="qr-embed" data-size="160" style="border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
+      <img src="${qrDataUrl(f,320)}" alt="${ctt(lang,'QR de verificación','Verification QR code')}" class="qr-embed" data-size="320" style="width:160px;height:160px;border:1px solid rgba(36,21,18,0.15);border-radius:4px;">
       <div>
         <p style="margin:0;font-size:13px;color:var(--sage);">${ctt(lang,'Escanea para verificar en línea. Este código es único de esta pieza.','Scan to verify online. This code is unique to this piece.')}</p>
         <p class="mono" style="margin:2px 0 0;font-size:12px;color:var(--brass-dim);">${SITE_DOMAIN}/?folio=${escapeHtml(f.folio)}</p>
@@ -6813,7 +6813,7 @@ function renderCertLabel(f, wrapIdOverride){
           <tr><td>ESCALA</td><td>${escapeHtml(f.escala||'—')}</td></tr>
         </table>
         <div class="cl-qr-row">
-          <img src="${qrDataUrl(f,150)}" alt="QR" class="qr-embed" data-size="150" crossorigin="anonymous">
+          <img src="${qrDataUrl(f,320)}" alt="QR" class="qr-embed" data-size="320" style="width:150px;height:150px;" crossorigin="anonymous">
           <div class="cl-sign">
             <p class="cl-sign-role" style="font-weight:600;color:#111;">Técnico Certificador</p>
             <p class="cl-sign-role">Laboratorio HV México</p>
@@ -6836,7 +6836,7 @@ function renderSealLabel(f, wrapIdOverride){
   <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Sello', f.folio, f.modelo]))}">
     <div class="seal-label">
       <img class="sl-logo" src="assets/img/logo.png" alt="HV">
-      <img class="sl-qr" src="${qrDataUrl(f,100)}" alt="QR" crossorigin="anonymous">
+      <img class="sl-qr qr-embed" src="${qrDataUrl(f,500)}" alt="QR" data-size="500" crossorigin="anonymous">
     </div>
   </div>
   <p class="foot-note no-print">Tamaño real: 1.5 × 1 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. El folio ya no cabe como texto en este tamaño, así que el QR lleva codificados el folio y las características de la pieza (modelo, año, origen, color, grado, dictamen) — se escanea igual que el de la etiqueta y el certificado. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
@@ -12264,6 +12264,26 @@ function setPublicPiezaPhoto(i){
   document.querySelectorAll('#pieza-publica-content .piece-detail-thumbs .pdt').forEach((el,idx)=>el.classList.toggle('active', idx===i));
 }
 
+// Los 3 <option> del selector "Nivel de servicio" del folio (#a-nivel)
+// usan el nombre CORTO y fijo del paquete — sin precio ni la variante en
+// línea/presencial — porque así coinciden con las claves de PKG_PRICE y con
+// el texto que se imprime en el certificado. El campo `nivel` de la
+// solicitud/proceso, en cambio, SIEMPRE ha guardado la etiqueta larga de
+// venta con precio (ej. "Peritaje + dictamen — $400", o "Validación (en
+// línea) — $150") — esa cadena nunca coincide con ningún <option>, así que
+// asignarla directo a `select.value` fallaba en silencio y el selector se
+// quedaba en su primera opción por defecto ("Validación digital") sin
+// importar cuál paquete había elegido realmente el cliente, obligando al
+// admin a corregirlo a mano en cada folio. Se deriva aquí del paquete (un
+// enum limpio: 'digital'/'fisico'/'premium'), que sí es confiable.
+const PAQUETE_TO_NIVEL_SELECT = {
+  digital: 'Validación digital',
+  fisico: 'Peritaje + dictamen',
+  premium: 'Premium + certificación + encapsulado'
+};
+function nivelSelectValueFor(paquete, nivelFallback){
+  return PAQUETE_TO_NIVEL_SELECT[paquete] || nivelFallback || '';
+}
 function prefillFolioFromSolicitud(dJson){
   const d = JSON.parse(dJson);
   document.getElementById('a-modelo').value = d.modelo || '';
@@ -12271,7 +12291,7 @@ function prefillFolioFromSolicitud(dJson){
   if(d.origen) document.getElementById('a-origen').value = d.origen;
   document.getElementById('a-color').value = d.color || '';
   document.getElementById('a-telefono').value = d.telefono || '';
-  if(d.nivel) document.getElementById('a-nivel').value = d.nivel;
+  document.getElementById('a-nivel').value = nivelSelectValueFor(d.paquete, d.nivel);
   document.getElementById('a-obs').value = d.desc || '';
   document.getElementById('a-linked-solicitud').value = d.id || '';
   checkReferralRewardNote(d.telefono);
@@ -13812,17 +13832,37 @@ function ensureZigzag(step){
   return step.zigzag;
 }
 
-// Una zona queda "completa" (no bloquea confirmar la calificación) cuando
-// tiene una calificación válida, o — para zonas marcadas `opcionalAplica`
-// como Volante — cuando el perito respondió explícitamente que no aplica en
-// esta pieza. Mientras no se responda esa pregunta, la zona sigue pendiente.
+// Una zona queda "completa" (no bloquea "Listo, continuar" de esa zona ni
+// "Confirmar calificación y continuar" del paso completo) cuando TODOS sus
+// campos de calificación tienen un valor — no solo alguno de ellos. Antes
+// esto delegaba en zzZoneScore(zona)!=null, pero zzZoneScore devuelve un
+// valor en cuanto CUALQUIERA de los criterios tiene dato (para poder
+// mostrar un promedio parcial mientras se captura) — eso hacía que la zona
+// se marcara "lista" con solo llenar uno de los dos criterios (o una sola
+// de varias sub-partes en zonas como Llantas), cortando al perito a la
+// mitad. Esta función es deliberadamente más estricta que zzZoneScore.
 function zzZoneIsComplete(zona){
   const def = zzZonaDef(zona.key);
   if(def && def.opcionalAplica){
     if(zona.aplica === 'no') return true;
     if(zona.aplica !== 'si') return false;
   }
-  return zzZoneScore(zona) != null;
+  const partes = ZZ_MULTI_PART[zona.key];
+  if(partes){
+    // Completa solo cuando TODAS las sub-partes (ej. las 4 llantas) tienen
+    // calificación — no basta con que el promedio ya tenga algún valor.
+    const cp = (zona.critPC && typeof zona.critPC === 'object') ? zona.critPC : {};
+    return partes.every(([sub]) => cp[sub]!=null && cp[sub]!=='');
+  }
+  const pcSet = zona.critPC!=null && zona.critPC!=='';
+  if(zona.tampoAplica){
+    if(zona.tampo == null) return false; // falta responder sí/no de tampo
+    if(zona.tampo === 'no') return pcSet; // tampo no original: no aplica calificar Zigzag C-Z
+    // tampo === 'si': hacen falta AMBOS criterios, no solo uno.
+    const zgSet = zona.critZigzag!=null && zona.critZigzag!=='';
+    return zgSet && pcSet;
+  }
+  return pcSet;
 }
 function zzMissingZonas(zz){
   return zz.zonas.filter(z => !zzZoneIsComplete(z));
@@ -14733,7 +14773,7 @@ function renderCondicionStepBody(p, step){
           <li><strong>Escala 10–6</strong>: 10 = Perfecto, 9 = Excelente, 8 = Muy bueno, 7 = Bueno con detalles, 6 = Regular.</li>
         </ul>
       </details>
-      <p class="zz-zones-hint">Cada zona se colapsa sola en cuanto queda calificada y se abre la siguiente pendiente — toca cualquier encabezado para revisarla o corregirla.</p>
+      <p class="zz-zones-hint">Llena todos los campos de una zona y toca "Listo, continuar" para pasar a la siguiente — toca cualquier encabezado para abrir, cerrar o corregir una zona.</p>
       <div class="zz-zones" id="zz-zones">${zzZonesListHtml(p.id, step.key, zz)}</div>
 
       <div class="zz-dictamen-grid" style="margin-top:16px;">
@@ -14750,7 +14790,7 @@ function renderCondicionStepBody(p, step){
         ${!step.done ? `<button class="btn small" id="zz-confirm-btn" ${!allComplete?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Confirmar calificación y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Condición calificada.</span>`}
       </div>
       <p class="foot-note" id="zz-missing-warn" style="border:none;padding-top:6px;color:var(--bad);${allComplete?'display:none;':''}">${zzMissingWarnHtml(zz)}</p>
-      ${!step.done ? `<div class="zz-progress-float" id="zz-progress-float">${zzProgressFloatInnerHtml(p.id, step.key, zz)}</div>` : ''}
+      <div class="zz-progress-float" id="zz-progress-float" style="${(!step.done && !allComplete)?'':'display:none;'}">${zzProgressFloatInnerHtml(p.id, step.key, zz)}</div>
     </div>`;
 }
 
@@ -14790,6 +14830,10 @@ function zzZonesListHtml(pid, stepKey, zz){
               <label>Nota rápida (opcional)</label>
               <input type="text" value="${escapeHtml(zona.nota||'')}" placeholder="Hallazgo breve de esta zona…" onclick="event.stopPropagation();" onchange="zzSetNota('${escapeHtml(pid)}','${stepKey}','${zona.key}',this.value)">
             </div>` : ''}
+          <div class="row" style="margin-top:4px;">
+            <button type="button" class="btn small" ${!complete?'disabled style="opacity:.5;cursor:not-allowed;"':''} onclick="event.stopPropagation();zzZoneAdvance('${escapeHtml(pid)}','${stepKey}','${zona.key}')">Listo, continuar →</button>
+          </div>
+          ${!complete ? `<p class="zz-na" style="margin:0;">Termina de calificar esta zona para poder continuar.</p>` : ''}
         </div>`;
     return `
       <div class="zz-zone ${complete?'zz-zone-complete':''} ${isOpen?'open':''}" id="zz-zone-${zona.key}">
@@ -14880,9 +14924,16 @@ function zzUpdateProgressFloat(pid, stepKey){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
   const zz = step.zigzag;
-  const floatEl = document.getElementById('zz-progress-float');
-  if(floatEl) floatEl.innerHTML = zzProgressFloatInnerHtml(pid, stepKey, zz);
   const missing = zzMissingZonas(zz);
+  const floatEl = document.getElementById('zz-progress-float');
+  if(floatEl){
+    // Una vez que ya no falta ninguna zona, el pill flotante deja de tener
+    // utilidad (ya no hay "siguiente pendiente" a dónde saltar) y solo se
+    // encimaba visualmente sobre "Confirmar calificación y continuar" —
+    // se oculta por completo en vez de seguir flotando sobre ese botón.
+    floatEl.style.display = missing.length ? '' : 'none';
+    floatEl.innerHTML = zzProgressFloatInnerHtml(pid, stepKey, zz);
+  }
   const btn = document.getElementById('zz-confirm-btn');
   if(btn){
     btn.disabled = missing.length>0;
@@ -14896,22 +14947,34 @@ function zzUpdateProgressFloat(pid, stepKey){
   }
 }
 
-// Después de cualquier cambio de calificación en una zona: si la zona
-// acaba de pasar de incompleta a completa, se colapsa sola y se abre (con
-// scroll suave) la siguiente zona pendiente — así el admin nunca tiene que
-// buscarla manualmente entre las 16.
+// Después de cualquier cambio de calificación en una zona: antes esto
+// colapsaba la zona sola y saltaba a la siguiente en cuanto quedaba
+// completa — pero eso disparaba con solo llenar UN campo (ej. un solo
+// criterio), antes de terminar instrumentos/nota, cortando al admin a la
+// mitad. Ahora solo se redibuja la zona en su lugar (sin cerrarla ni saltar
+// a ninguna otra) — el avance a la siguiente zona pendiente es siempre una
+// acción manual del admin, ver zzZoneAdvance() y el botón "Listo, continuar"
+// dentro de cada zona.
 function zzOnZoneChanged(pid, stepKey, zona, wasComplete){
   const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
   const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
+  zzRerenderZones(pid, stepKey);
+}
+
+// Avanza manualmente de una zona ya completa a la siguiente pendiente —
+// disparado únicamente por el botón "Listo, continuar a la siguiente zona"
+// dentro de la propia zona (deshabilitado mientras no esté completa, igual
+// que "Confirmar calificación y continuar" al final de las 16 zonas). Si ya
+// no queda ninguna zona pendiente, simplemente colapsa la actual.
+function zzZoneAdvance(pid, stepKey, zonaKey){
+  const p = CURRENT_PROCESO; if(!p || p.id!==pid) return;
+  const step = p.pasos.find(s=>s.key===stepKey); if(!step) return;
   const zz = step.zigzag;
-  const nowComplete = zzZoneIsComplete(zona);
-  let scrollTo = null;
-  if(nowComplete && !wasComplete){
-    const missing = zzMissingZonas(zz).filter(z=>z.key!==zona.key);
-    ZZ_OPEN_ZONE = missing.length ? missing[0].key : null;
-    scrollTo = ZZ_OPEN_ZONE;
-  }
-  zzRerenderZones(pid, stepKey, scrollTo ? {scrollTo} : null);
+  const zona = zz.zonas.find(z=>z.key===zonaKey);
+  if(!zona || !zzZoneIsComplete(zona)) return;
+  const missing = zzMissingZonas(zz).filter(z=>z.key!==zonaKey);
+  ZZ_OPEN_ZONE = missing.length ? missing[0].key : null;
+  zzRerenderZones(pid, stepKey, ZZ_OPEN_ZONE ? {scrollTo: ZZ_OPEN_ZONE} : null);
 }
 
 // ===== Paso 8 — "Registro digital, certificación web y entrega" (fase
@@ -15334,7 +15397,7 @@ async function finalizeProceso(id){
   if(p.origen) document.getElementById('a-origen').value = p.origen;
   document.getElementById('a-color').value = p.color || '';
   document.getElementById('a-telefono').value = p.telefono || '';
-  if(p.nivel) document.getElementById('a-nivel').value = p.nivel;
+  document.getElementById('a-nivel').value = nivelSelectValueFor(p.paquete, p.nivel);
   // Solo llega aquí una pieza que ya pasó las compuertas (procesoListoParaFinalizar
   // exige procesoAprueba === true), así que precioFinal ya es el del paquete
   // completo — lo pasamos al folio para que el historial y los ingresos lo reflejen.
