@@ -1537,6 +1537,20 @@
   .subgrade-grid input{padding:8px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;}
   .sg-label{font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--brass-dim);margin-bottom:3px;display:block;}
   @media(max-width:900px){.cert-editor-preview{position:static;}}
+  /* Botón para ver el certificado a tamaño completo — la vista previa de la
+     barra lateral va escalada para caber en un espacio angosto, lo que
+     encoge también sus botones de descarga/impresión hasta volverlos poco
+     usables. Este modal muestra el certificado EXACTAMENTE como se ve en la
+     Biblioteca/verificación pública: sin escalar, a su ancho real, con sus
+     propios botones a tamaño normal. Se monta fuera de .admin-scope a
+     propósito para heredar las mismas variables de "papel" que usa la
+     página pública, no el tema oscuro/vidrio del admin. */
+  .admin-cert-modal-btn{margin:0 0 16px;}
+  .admin-cert-modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,14,11,0.72);z-index:9000;overflow-y:auto;padding:32px 16px;}
+  .admin-cert-modal-overlay.open{display:block;}
+  .admin-cert-modal-box{position:relative;max-width:720px;margin:0 auto;background:var(--paper,#FFFDF8);border-radius:12px;padding:8px;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+  .admin-cert-modal-close{position:absolute;top:-14px;right:-14px;width:34px;height:34px;border-radius:50%;border:none;background:var(--red,#D2042D);color:#fff;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);z-index:1;}
+  .admin-cert-modal-close:hover{filter:brightness(1.1);}
   /* Campo del formulario de certificación marcado como faltante al intentar
      guardar con datos incompletos — se quita solo en cuanto se corrige. */
   .field-missing{outline:2px solid var(--red)!important;outline-offset:1px;border-radius:6px;}
@@ -2129,10 +2143,9 @@
   .cl-qr-row img{width:.8cm;height:.8cm;flex:none;}
   .cl-sign{font-size:4.4pt;color:#333;line-height:1.1;}
   .cl-disclaimer{font-size:3pt;color:#777;margin:auto 0 0;line-height:1;border-top:.5pt solid #ddd;padding-top:.25pt;}
-  .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;gap:.06cm;padding:0 .07cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
-  .sl-logo{flex:none;height:.6cm;width:.6cm;object-fit:contain;filter:grayscale(1) brightness(0);}
-  .sl-divider{flex:none;width:.5pt;height:.6cm;background:#111;opacity:.35;}
-  .sl-folio{flex:1;min-width:0;font-family:'IBM Plex Mono',monospace;font-size:5.6pt;font-weight:700;color:#111;letter-spacing:0;text-align:left;line-height:1.1;word-break:break-all;}
+  .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;justify-content:center;gap:.09cm;padding:0 .08cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
+  .sl-logo{flex:none;height:.62cm;width:.62cm;object-fit:contain;filter:grayscale(1) brightness(0);}
+  .sl-qr{flex:none;height:.76cm;width:.76cm;object-fit:contain;}
   .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:4.6pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
   .cl-certified::before{content:'\2713';font-size:5pt;font-weight:900;line-height:1;}
   .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:8.5pt;line-height:1.05;color:#111;}
@@ -4375,34 +4388,38 @@
                 <p class="dash-chart-empty" id="chart-aprobacion-empty" style="display:none;"></p>
               </div>
             </div>
-            <div class="card">
-              <h3 style="font-size:16px;">Programa de referidos</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Cada cliente recibe un código para compartir. Si un amigo certifica su pieza usando ese código, quien lo compartió gana 10% de descuento en su próxima certificación — el sistema lo aplica solo cuando ya hay saldo disponible.</p>
-              <div class="kpi-grid" style="margin-bottom:0;">
-                <div class="kpi"><p class="num" id="stat-ref-codigos">—</p><p class="lbl">Códigos generados</p></div>
-                <div class="kpi"><p class="num" id="stat-ref-exitosos">—</p><p class="lbl">Referidos exitosos</p></div>
-                <div class="kpi"><p class="num" id="stat-ref-saldo">—</p><p class="lbl">Descuentos por usar</p></div>
+            <div class="grid grid-2" style="align-items:start;margin-bottom:16px;">
+              <div class="card" style="margin-bottom:0;">
+                <h3 style="font-size:16px;">Programa de referidos</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Cada cliente recibe un código para compartir. Si un amigo certifica su pieza usando ese código, quien lo compartió gana 10% de descuento en su próxima certificación — el sistema lo aplica solo cuando ya hay saldo disponible.</p>
+                <div class="kpi-grid" style="margin-bottom:0;">
+                  <div class="kpi"><p class="num" id="stat-ref-codigos">—</p><p class="lbl">Códigos generados</p></div>
+                  <div class="kpi"><p class="num" id="stat-ref-exitosos">—</p><p class="lbl">Referidos exitosos</p></div>
+                  <div class="kpi"><p class="num" id="stat-ref-saldo">—</p><p class="lbl">Descuentos por usar</p></div>
+                </div>
+              </div>
+              <div class="card" style="margin-bottom:0;">
+                <h3 style="font-size:16px;">Salón Privado HV</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Programa de membresía por piezas certificadas. Al llegar a 5 piezas el cliente queda elegible; tú activas la membresía y defines su plan de pagos desde la pestaña "Salón Privado".</p>
+                <div class="kpi-grid" style="margin-bottom:0;">
+                  <div class="kpi"><p class="num" id="stat-salon-elegibles">—</p><p class="lbl">Elegibles sin activar</p></div>
+                  <div class="kpi"><p class="num" id="stat-salon-activos">—</p><p class="lbl">Socios activos</p></div>
+                  <div class="kpi"><p class="num" id="stat-salon-vencidas">—</p><p class="lbl">Con pago pendiente</p></div>
+                  <div class="kpi"><p class="num" id="stat-salon-ingresos">—</p><p class="lbl">Ingresos por membresías</p></div>
+                </div>
               </div>
             </div>
-            <div class="card">
-              <h3 style="font-size:16px;">Salón Privado HV</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Programa de membresía por piezas certificadas. Al llegar a 5 piezas el cliente queda elegible; tú activas la membresía y defines su plan de pagos desde la pestaña "Salón Privado".</p>
-              <div class="kpi-grid" style="margin-bottom:0;">
-                <div class="kpi"><p class="num" id="stat-salon-elegibles">—</p><p class="lbl">Elegibles sin activar</p></div>
-                <div class="kpi"><p class="num" id="stat-salon-activos">—</p><p class="lbl">Socios activos</p></div>
-                <div class="kpi"><p class="num" id="stat-salon-vencidas">—</p><p class="lbl">Con pago pendiente</p></div>
-                <div class="kpi"><p class="num" id="stat-salon-ingresos">—</p><p class="lbl">Ingresos por membresías</p></div>
+            <div class="grid grid-2" style="align-items:start;">
+              <div class="card" style="margin-bottom:0;">
+                <h3 style="font-size:16px;">Próximas citas</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas presenciales agendadas — así sabes a quién esperar y cuándo.</p>
+                <div id="dash-citas"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
               </div>
-            </div>
-            <div class="card">
-              <h3 style="font-size:16px;">Próximas citas</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas presenciales agendadas — así sabes a quién esperar y cuándo.</p>
-              <div id="dash-citas"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
-            </div>
-            <div class="card">
-              <h3 style="font-size:16px;">Actividad reciente</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Últimas solicitudes y folios registrados en el sistema.</p>
-              <div id="dash-actividad"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
+              <div class="card" style="margin-bottom:0;">
+                <h3 style="font-size:16px;">Actividad reciente</h3>
+                <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Últimas solicitudes y folios registrados en el sistema.</p>
+                <div id="dash-actividad"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
+              </div>
             </div>
           </div>
 
@@ -4438,9 +4455,10 @@
               <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 1.5×1 (D110)</button>
               <span class="cert-tab-hint">Vista previa en tiempo real — va cambiando mientras editas →</span>
             </div>
+            <div class="admin-cert-modal-btn"><button type="button" class="btn ghost small" onclick="verCertificadoDraft()">👁️ Ver certificado completo (tamaño real, como lo ve el cliente)</button></div>
             <div id="cert-confirm-mount"></div>
             <div class="grid grid-2" style="align-items:start;">
-              <div class="card">
+              <div class="card" id="admin-cert-form-card">
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
                 <input type="hidden" id="a-precio-final" value="">
@@ -4607,8 +4625,20 @@
 
           <!-- ===== INGRESOS ===== -->
           <div class="admin-tab" id="admin-tab-ingresos">
-            <div class="card">
+            <div class="kpi-grid" id="ingresos-kpi-grid">
+              <div class="kpi"><div class="kpi-ic kpi-ic-gold"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><rect x="5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="16" y="4" width="3" height="16"/></svg></div><p class="num" id="ing-stat-total">—</p><p class="lbl">Ingresos totales</p></div>
+              <div class="kpi"><div class="kpi-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 3v3M16 3v3"/></svg></div><p class="num" id="ing-stat-mes-actual">—</p><p class="lbl">Este mes</p></div>
+              <div class="kpi"><div class="kpi-ic kpi-ic-ok"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"/></svg></div><p class="num" id="ing-stat-promedio">—</p><p class="lbl">Promedio mensual</p></div>
+              <div class="kpi"><div class="kpi-ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><p class="num" id="ing-stat-folios">—</p><p class="lbl">Folios facturados</p></div>
+            </div>
+            <div class="card dash-chart-card" style="margin-bottom:16px;">
               <h3 style="font-size:16px;margin-top:0;">Ingresos por mes</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Histórico completo — calculado a partir del nivel de servicio de cada folio emitido.</p>
+              <div class="dash-chart-wrap" style="height:260px;"><canvas id="chart-ingresos-full"></canvas></div>
+              <p class="dash-chart-empty" id="chart-ingresos-full-empty" style="display:none;"></p>
+            </div>
+            <div class="card">
+              <h3 style="font-size:16px;margin-top:0;">Detalle por mes</h3>
               <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Calculado a partir del nivel de servicio de cada folio emitido.</p>
               <div id="income-table-wrap"><p style="color:var(--sage);font-size:14px;">Cargando…</p></div>
             </div>
@@ -6484,6 +6514,64 @@ function renderCert(f, isAdmin, wrapIdOverride){
   <p class="no-print foot-note" style="border:none;padding-top:0;">${ctt(uiLang,'En el cuadro que se abre, elige "Guardar como PDF" para descargarlo en tu teléfono o computadora.','In the dialog that opens, choose "Save as PDF" to download it to your phone or computer.')}${!isAdmin ? ctt(uiLang,' El certificado es el único documento descargable para el cliente — la etiqueta y el sello de acrílico son de uso interno del laboratorio.',' The certificate is the only document downloadable by the client — the label and the acrylic seal are for the lab\'s internal use only.') : ''}</p>`;
 }
 
+// ============================================================
+// MODAL "VER CERTIFICADO COMPLETO" (admin) — antes, en el panel de
+// certificados del admin solo se podía ver una versión encogida (transform:
+// scale) del certificado dentro de la columna de vista previa, con sus
+// botones de descarga/impresión también encogidos y, además, propensa a
+// cortarse a la mitad (ver applyLivePreviewScale). Este modal muestra el
+// certificado exactamente como se ve en la Biblioteca/verificación pública:
+// a su ancho real, sin recortes, con sus botones a tamaño normal — se monta
+// como hijo directo de <body>, FUERA de .admin-scope, para heredar las
+// mismas variables "de papel" que usa la página pública en vez del tema
+// oscuro/vidrio del admin.
+// ============================================================
+function ensureAdminCertModal(){
+  let overlay = document.getElementById('admin-cert-modal');
+  if(overlay) return overlay;
+  overlay = document.createElement('div');
+  overlay.id = 'admin-cert-modal';
+  overlay.className = 'admin-cert-modal-overlay';
+  overlay.innerHTML = `<div class="admin-cert-modal-box"><button type="button" class="admin-cert-modal-close" onclick="closeAdminCertModal()" aria-label="Cerrar">✕</button><div id="admin-cert-modal-mount"></div></div>`;
+  overlay.addEventListener('click', (e) => { if(e.target === overlay) closeAdminCertModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeAdminCertModal(); });
+  document.body.appendChild(overlay);
+  return overlay;
+}
+function showAdminCertModal(f){
+  const overlay = ensureAdminCertModal();
+  const mount = document.getElementById('admin-cert-modal-mount');
+  mount.innerHTML = renderCert(f, true);
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  applyLogos();
+  embedAllQrLogos();
+  overlay.scrollTop = 0;
+}
+function closeAdminCertModal(){
+  const overlay = document.getElementById('admin-cert-modal');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Llamado desde botones "Ver certificado" ya existentes en el panel admin,
+// con el folio guardado (mismo patrón de doble JSON.stringify que
+// openEtiquetaFor, para poder pasar el objeto completo dentro de un atributo
+// onclick).
+function verCertificadoAdmin(fJson){
+  showAdminCertModal(JSON.parse(fJson));
+}
+// Llamado desde el botón "Ver certificado completo" del formulario de
+// creación/edición — usa los datos del borrador actual, con los mismos
+// valores de relleno que updateLivePreview() mientras el folio/modelo aún
+// no se han llenado.
+function verCertificadoDraft(){
+  const f = collectLiveFormData();
+  if(!f.folio) f.folio = 'HV-MX-2026-000';
+  if(!f.modelo) f.modelo = 'Nombre del modelo';
+  if(!f.fecha) f.fecha = new Date().toLocaleDateString('es-MX');
+  showAdminCertModal(f);
+}
+
 function tierForGrade(grado, estado){
   const e = (estado||'').toLowerCase();
   if(e.includes('restaur') || e.includes('repl')) return 'red';
@@ -6538,17 +6626,40 @@ function printOnly(which, targetIdOverride){
   // Chrome/Edge usan document.title como nombre sugerido en el cuadro
   // "Guardar como PDF" — sin esto, cada certificado/etiqueta/sello se
   // guardaba con el mismo nombre genérico y había que renombrarlo a mano.
-  const target = document.getElementById(targetIdOverride || ('print-target-'+which));
+  const canonicalId = 'print-target-'+which;
+  const target = document.getElementById(targetIdOverride || canonicalId);
   const suggested = target ? target.dataset.filename : '';
   if(suggested){
     window.__printPrevTitle = document.title;
     document.title = suggested;
+  }
+  // El CSS de impresión (@media print) solo reconoce el id CANÓNICO
+  // (#print-target-<which>) para decidir qué mostrar en la hoja. Pero puede
+  // haber más de una copia del mismo documento montada a la vez en el DOM
+  // (la vista previa del editor, el panel de confirmación, el modal "Ver
+  // certificado completo"…), cada una con su propio id para no pisarse.
+  // Si el elemento que de verdad queremos imprimir no tiene el id canónico,
+  // se lo damos aquí mismo (quitándoselo antes a cualquier otra copia que
+  // lo tuviera, para que no compita) y restauramos todo al terminar.
+  window.__printIdRestore = [];
+  if(target && target.id !== canonicalId){
+    document.querySelectorAll('#'+canonicalId).forEach(el => {
+      if(el === target) return;
+      window.__printIdRestore.push({el, id: el.id});
+      el.removeAttribute('id');
+    });
+    window.__printIdRestore.push({el: target, id: target.id});
+    target.id = canonicalId;
   }
   document.body.setAttribute('data-print-mode', which);
   window.print();
 }
 window.addEventListener('afterprint', ()=>{
   document.body.removeAttribute('data-print-mode');
+  if(window.__printIdRestore && window.__printIdRestore.length){
+    window.__printIdRestore.forEach(({el, id}) => { el.id = id; });
+  }
+  window.__printIdRestore = null;
   if(window.__printPrevTitle !== undefined){
     document.title = window.__printPrevTitle;
     window.__printPrevTitle = undefined;
@@ -6692,11 +6803,10 @@ function renderSealLabel(f, wrapIdOverride){
   <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Sello', f.folio, f.modelo]))}">
     <div class="seal-label">
       <img class="sl-logo" src="assets/img/logo.png" alt="HV">
-      <span class="sl-divider"></span>
-      <span class="sl-folio">${escapeHtml(f.folio)}</span>
+      <img class="sl-qr" src="${qrDataUrl(f,100)}" alt="QR" crossorigin="anonymous">
     </div>
   </div>
-  <p class="foot-note no-print">Tamaño real: 1.5 × 1 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
+  <p class="foot-note no-print">Tamaño real: 1.5 × 1 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. El folio ya no cabe como texto en este tamaño, así que el QR lleva codificados el folio y las características de la pieza (modelo, año, origen, color, grado, dictamen) — se escanea igual que el de la etiqueta y el certificado. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
   <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
     <button class="btn ghost small" onclick="printOnly('seal','${wrapId}')">Imprimir desde el navegador</button>
     <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
@@ -11972,6 +12082,102 @@ function resetAllPhotoUploads(){
   for(let n=1; n<=7; n++){ clearPhotoUpload(n, null); }
 }
 
+// ============================================================
+// BORRADOR DEL FORMULARIO DE CERTIFICACIÓN — antes, si el admin llenaba el
+// formulario de "Nuevo folio de certificación" (folio, modelo, fotos…) y por
+// cualquier motivo recargaba la página o volvía más tarde sin haber
+// guardado el folio, todo ese trabajo se perdía sin aviso. Ahora se guarda
+// solo (en este navegador, con el mismo patrón que el borrador de
+// solicitudes del cliente) y se ofrece recuperarlo la próxima vez que se
+// entra a "Certificados y folios".
+// ============================================================
+const ADMIN_CERT_DRAFT_KEY = 'hv_admin_cert_draft_v1';
+const ADMIN_CERT_DRAFT_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000; // 14 días
+let adminCertDraftRestoring = false;
+let adminCertDraftRestoreAttempted = false;
+let adminCertDraftSaveTimer = null;
+
+function adminCertDraftFieldIds(){
+  const wrap = document.getElementById('admin-cert-form-card');
+  if(!wrap) return [];
+  return Array.from(wrap.querySelectorAll('input[id], select[id], textarea[id]')).map(el => el.id);
+}
+
+function saveAdminCertDraftNow(){
+  if(adminCertDraftRestoring) return;
+  try{
+    const fields = {};
+    adminCertDraftFieldIds().forEach(id => { const el = document.getElementById(id); if(el) fields[id] = el.value; });
+    const meaningful = ['a-folio','a-modelo','a-anio','a-color','a-obs','a-telefono'].some(id => (fields[id]||'').trim());
+    if(!meaningful){ clearAdminCertDraft(); return; }
+    localStorage.setItem(ADMIN_CERT_DRAFT_KEY, JSON.stringify({ fields, ts: Date.now() }));
+  }catch(e){ /* localStorage puede fallar (modo privado, cuota llena) — no es crítico */ }
+}
+// Con las fotos incluidas, guardar en cada tecla sería costoso — se espera
+// un respiro breve (debounce) antes de escribir a localStorage.
+function saveAdminCertDraft(){
+  clearTimeout(adminCertDraftSaveTimer);
+  adminCertDraftSaveTimer = setTimeout(saveAdminCertDraftNow, 500);
+}
+function clearAdminCertDraft(){
+  try{ localStorage.removeItem(ADMIN_CERT_DRAFT_KEY); }catch(e){}
+}
+function getAdminCertDraft(){
+  try{
+    const raw = localStorage.getItem(ADMIN_CERT_DRAFT_KEY);
+    if(!raw) return null;
+    const draft = JSON.parse(raw);
+    if(!draft || !draft.ts || (Date.now() - draft.ts) > ADMIN_CERT_DRAFT_MAX_AGE_MS){ clearAdminCertDraft(); return null; }
+    return draft;
+  }catch(e){ return null; }
+}
+function adminCertDraftDateLabel(ts){
+  try{ return new Date(ts).toLocaleDateString('es-MX', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}); }
+  catch(e){ return ''; }
+}
+// Solo se intenta restaurar UNA vez por carga de página — si el admin ya
+// entró a "Certificados" en esta sesión y sigue escribiendo, volver a pasar
+// por esta pestaña (o llamar a adminGo de nuevo) no debe pisar lo que ya
+// tiene escrito con el borrador guardado antes.
+function restoreAdminCertDraftIfAny(){
+  if(adminCertDraftRestoreAttempted) return;
+  adminCertDraftRestoreAttempted = true;
+  const draft = getAdminCertDraft();
+  const wrap = document.getElementById('admin-cert-form-card');
+  if(!draft || !wrap) return;
+  adminCertDraftRestoring = true;
+  try{
+    Object.keys(draft.fields||{}).forEach(id => {
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.value = draft.fields[id];
+      const fotoMatch = id.match(/^a-foto(\d)$/);
+      if(fotoMatch && el.value){
+        const n = fotoMatch[1];
+        const preview = document.getElementById('a-foto'+n+'-preview');
+        const label = document.getElementById('a-foto'+n+'-label');
+        const clearBtn = document.getElementById('a-foto'+n+'-clear');
+        const drop = document.getElementById('a-foto'+n+'-drop');
+        if(preview){ preview.src = el.value; preview.style.display = 'block'; }
+        if(label) label.style.display = 'none';
+        if(clearBtn) clearBtn.style.display = 'flex';
+        if(drop) drop.classList.add('has-image');
+      }
+    });
+    toast('Recuperamos tu borrador sin guardar del ' + adminCertDraftDateLabel(draft.ts) + '.');
+  }finally{
+    adminCertDraftRestoring = false;
+  }
+}
+// Delegación de eventos: un solo listener para todo el formulario, en vez de
+// tener que tocar el atributo oninput de cada campo uno por uno.
+(function initAdminCertDraftAutosave(){
+  const wrap = document.getElementById('admin-cert-form-card');
+  if(!wrap) return;
+  wrap.addEventListener('input', saveAdminCertDraft);
+  wrap.addEventListener('change', saveAdminCertDraft);
+})();
+
 function collectLiveFormData(){
   const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
   return {
@@ -12007,7 +12213,7 @@ function updateLivePreview(){
   if(!f.folio) f.folio = 'HV-MX-2026-000';
   if(!f.modelo) f.modelo = 'Nombre del modelo';
   if(!f.fecha) f.fecha = new Date().toLocaleDateString('es-MX');
-  if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = renderCert(f, true);
+  if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = certPreviewPromptHtml();
   else if(CERT_PREVIEW_MODE === 'label') mount.innerHTML = renderCertLabel(f);
   else mount.innerHTML = renderSealLabel(f);
   applyLogos();
@@ -12015,30 +12221,35 @@ function updateLivePreview(){
   applyLivePreviewScale();
 }
 
-// El certificado completo necesita bastante ancho para verse bien (fotos en
-// 3 columnas, tablas lado a lado); la columna de vista previa del panel casi
-// nunca es tan ancha. Por eso lo dibujamos a un ancho de diseño fijo y lo
-// encogemos con transform:scale para que quepa sin deformarse. La etiqueta y
-// el sello ya son pequeños de por sí, así que se muestran a su tamaño real.
+// El certificado completo, a su ancho real de diseño, no cabía en la columna
+// angosta de vista previa — antes se encogía con transform:scale calculando
+// la altura ANTES de que las fotos, el QR y los sellos (todos async, sin
+// medidas fijas) terminaran de cargar, así que el recuadro (con
+// overflow:hidden) se quedaba más chico de lo necesario y el certificado se
+// veía cortado a la mitad. Además, sus propios botones de descarga/
+// impresión quedaban encogidos y poco usables ahí dentro. Ahora esta pestaña
+// solo invita a abrir el certificado con "verCertificadoDraft()", que lo
+// muestra en un modal a tamaño real — exactamente como lo ve el cliente en
+// la Biblioteca/verificación pública.
+function certPreviewPromptHtml(){
+  return `
+  <div style="text-align:center;padding:30px 16px;max-width:360px;">
+    <p style="font-size:40px;margin:0 0 10px;line-height:1;">📄</p>
+    <p style="margin:0 0 16px;color:var(--ink);font-size:14px;line-height:1.5;">El certificado completo se revisa mejor a tamaño real. Ábrelo para verlo, imprimirlo o descargarlo exactamente como lo ve el cliente.</p>
+    <button type="button" class="btn small" onclick="verCertificadoDraft()">👁️ Ver certificado completo</button>
+  </div>`;
+}
+
+// La etiqueta y el sello sí se muestran a su tamaño real (son pequeños de
+// por sí), simplemente centrados en la columna de vista previa.
 function applyLivePreviewScale(){
   const mount = document.getElementById('live-preview-mount');
   const wrap = document.getElementById('live-preview-scale');
   if(!mount || !wrap) return;
-  wrap.classList.toggle('centered', CERT_PREVIEW_MODE !== 'cert');
-  if(CERT_PREVIEW_MODE !== 'cert'){
-    mount.style.width = '';
-    mount.style.transform = '';
-    wrap.style.height = '';
-    return;
-  }
-  const DESIGN_WIDTH = 640;
-  mount.style.transform = 'none';
-  mount.style.width = DESIGN_WIDTH + 'px';
-  const naturalH = mount.scrollHeight;
-  const available = wrap.clientWidth || DESIGN_WIDTH;
-  const scale = Math.min(1, available / DESIGN_WIDTH);
-  mount.style.transform = `scale(${scale})`;
-  wrap.style.height = Math.round(naturalH * scale) + 'px';
+  wrap.classList.add('centered');
+  mount.style.width = '';
+  mount.style.transform = '';
+  wrap.style.height = '';
 }
 window.addEventListener('resize', ()=>{ if(document.getElementById('live-preview-mount')) applyLivePreviewScale(); });
 
@@ -12213,13 +12424,12 @@ function renderPostCertifyConfirmPanel(f, extraTxt){
       <strong style="font-size:13px;">Biblioteca pública:</strong> <span class="pill neutral">Revisando…</span>
     </div>
     <div class="row" style="gap:8px;flex-wrap:wrap;margin:6px 0 18px;">
-      <button class="btn small" onclick="printOnly('full','confirm-print-target-full')">📄 Descargar certificado</button>
+      <button class="btn small" onclick='verCertificadoAdmin(${JSON.stringify(JSON.stringify(f))})'>👁️ Ver certificado completo</button>
       <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event,'confirm-print-target-cert')">🏷️ Descargar etiqueta (PNG)</button>
       <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'confirm-print-target-seal')">🔖 Descargar sello (PNG)</button>
     </div>
-    <p class="foot-note" style="border:none;padding-top:0;margin-top:0;">Vista final de lo que se generó — revisa que todo esté correcto antes de entregar o imprimir.</p>
+    <p class="foot-note" style="border:none;padding-top:0;margin-top:0;">El certificado completo se ve, imprime y descarga igual que en la Biblioteca pública — la vista de abajo es solo para revisar la etiqueta y el sello antes de imprimirlos.</p>
     <div class="cert-confirm-previews">
-      <div class="live-preview-scale" id="cert-confirm-scale-full"><div id="cert-confirm-mount-full"></div></div>
       <div class="cert-confirm-preview-small">
         <div id="cert-confirm-mount-label"></div>
         <div id="cert-confirm-mount-seal" style="margin-top:14px;"></div>
@@ -12232,12 +12442,10 @@ function showPostCertifyConfirm(f, extraTxt){
   const mount = document.getElementById('cert-confirm-mount');
   if(!mount) return;
   mount.innerHTML = renderPostCertifyConfirmPanel(f, extraTxt);
-  document.getElementById('cert-confirm-mount-full').innerHTML = renderCert(f, true, 'confirm-print-target-full');
   document.getElementById('cert-confirm-mount-label').innerHTML = renderCertLabel(f, 'confirm-print-target-cert');
   document.getElementById('cert-confirm-mount-seal').innerHTML = renderSealLabel(f, 'confirm-print-target-seal');
   applyLogos();
   embedAllQrLogos();
-  scaleMountToFit(document.getElementById('cert-confirm-mount-full'), document.getElementById('cert-confirm-scale-full'), 640);
   refreshCertConfirmPublishStatus(f.folio);
   mount.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -12328,6 +12536,7 @@ async function createFolio(){
     const refNote = document.getElementById('a-ref-reward-note');
     if(refNote) refNote.style.display = 'none';
     resetAllPhotoUploads();
+    clearAdminCertDraft();
     updateLivePreview();
     document.getElementById('a-linked-solicitud').value = '';
     refreshAdminLists();
@@ -12506,6 +12715,25 @@ function dashChartColor(varName){
   return getComputedStyle(scope).getPropertyValue(varName).trim();
 }
 const DASH_PALETTE = ['#D2042D', '#DDAE5C', '#2F7A4F', '#3B6EA5', '#8B5CF6', '#B45309'];
+// Tooltip de marca compartido por las 4 gráficas del panel — antes cada una
+// usaba el tooltip gris genérico de Chart.js (o ninguno propio), lo que se
+// sentía deslavado junto al resto de la interfaz. Con esto todas comparten
+// el mismo look (fondo "tinta", acento dorado, tipografía de la marca).
+function dashChartTooltip(extra){
+  return Object.assign({
+    backgroundColor: dashChartColor('--ink'),
+    titleColor: dashChartColor('--panel'),
+    bodyColor: dashChartColor('--panel'),
+    borderColor: dashChartColor('--brass'),
+    borderWidth: 1,
+    padding: 10,
+    cornerRadius: 8,
+    displayColors: false,
+    titleFont: { family: "'IBM Plex Sans', sans-serif", weight: '700', size: 12.5 },
+    bodyFont: { family: "'IBM Plex Mono', monospace", size: 12.5 }
+  }, extra||{});
+}
+const DASH_CHART_ANIMATION = { duration: 500, easing: 'easeOutQuart' };
 
 function showDashChartEmpty(chartKey, msg){
   destroyDashChart(chartKey);
@@ -12552,10 +12780,10 @@ function renderIngresosChart(folItems){
   const ctx = document.getElementById('chart-ingresos').getContext('2d');
   DASH_CHARTS.ingresos = new Chart(ctx, {
     type: 'bar',
-    data: { labels, datasets: [{ label: 'Ingresos', data, backgroundColor: dashChartColor('--brass'), borderRadius: 5, maxBarThickness: 46 }] },
+    data: { labels, datasets: [{ label: 'Ingresos', data, backgroundColor: dashChartColor('--brass'), hoverBackgroundColor: dashChartColor('--red'), borderRadius: 5, maxBarThickness: 46 }] },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => '$' + c.parsed.y.toLocaleString('es-MX') + ' MXN' } } },
+      responsive: true, maintainAspectRatio: false, animation: DASH_CHART_ANIMATION,
+      plugins: { legend: { display: false }, tooltip: dashChartTooltip({ callbacks: { label: (c) => '$' + c.parsed.y.toLocaleString('es-MX') + ' MXN' } }) },
       scales: {
         x: { grid: { display: false }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 } } },
         y: { beginAtZero: true, grid: { color: dashChartColor('--line') }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 }, callback: (v) => '$' + v.toLocaleString('es-MX') } }
@@ -12575,10 +12803,13 @@ function renderCategoriasChart(folItems){
   const ctx = document.getElementById('chart-categorias').getContext('2d');
   DASH_CHARTS.categorias = new Chart(ctx, {
     type: 'doughnut',
-    data: { labels, datasets: [{ data, backgroundColor: labels.map((_,i) => DASH_PALETTE[i % DASH_PALETTE.length]), borderColor: dashChartColor('--panel'), borderWidth: 2 }] },
+    data: { labels, datasets: [{ data, backgroundColor: labels.map((_,i) => DASH_PALETTE[i % DASH_PALETTE.length]), borderColor: dashChartColor('--panel'), borderWidth: 2, hoverOffset: 6 }] },
     options: {
-      responsive: true, maintainAspectRatio: false, cutout: '62%',
-      plugins: { legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } } }
+      responsive: true, maintainAspectRatio: false, cutout: '62%', animation: DASH_CHART_ANIMATION,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } },
+        tooltip: dashChartTooltip({ displayColors: true, callbacks: { label: (c) => ` ${c.label}: ${c.parsed}` } })
+      }
     }
   });
 }
@@ -12602,10 +12833,13 @@ async function renderAprobacionChart(folItems){
   const ctx = document.getElementById('chart-aprobacion').getContext('2d');
   DASH_CHARTS.aprobacion = new Chart(ctx, {
     type: 'doughnut',
-    data: { labels: ['Certificadas', 'No aprobadas'], datasets: [{ data: [aprobadas, rechazadas], backgroundColor: [dashChartColor('--ok'), dashChartColor('--red')], borderColor: dashChartColor('--panel'), borderWidth: 2 }] },
+    data: { labels: ['Certificadas', 'No aprobadas'], datasets: [{ data: [aprobadas, rechazadas], backgroundColor: [dashChartColor('--ok'), dashChartColor('--red')], borderColor: dashChartColor('--panel'), borderWidth: 2, hoverOffset: 6 }] },
     options: {
-      responsive: true, maintainAspectRatio: false, cutout: '68%',
-      plugins: { legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } } }
+      responsive: true, maintainAspectRatio: false, cutout: '68%', animation: DASH_CHART_ANIMATION,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: dashChartColor('--sage-dim'), font: { size: 11.5 }, boxWidth: 12, padding: 12 } },
+        tooltip: dashChartTooltip({ displayColors: true, callbacks: { label: (c) => ` ${c.label}: ${c.parsed}` } })
+      }
     }
   });
   if(label) label.innerHTML = `<span class="pct">${pct}%</span><span class="txt">Aprobación</span>`;
@@ -12615,9 +12849,56 @@ async function renderAprobacionChart(folItems){
 // dibujadas se quedarían con los colores del tema anterior — las
 // volvemos a pintar con los colores correctos.
 function refreshDashChartsTheme(){
-  if(!document.getElementById('admin-tab-dashboard') || !document.getElementById('admin-tab-dashboard').classList.contains('active')) return;
-  if(!DASH_CHARTS.ingresos && !DASH_CHARTS.categorias && !DASH_CHARTS.aprobacion) return;
-  if(Array.isArray(CURRENT_FOLIOS)) loadDashboardCharts(CURRENT_FOLIOS);
+  const dashTab = document.getElementById('admin-tab-dashboard');
+  if(dashTab && dashTab.classList.contains('active') && (DASH_CHARTS.ingresos || DASH_CHARTS.categorias || DASH_CHARTS.aprobacion) && Array.isArray(CURRENT_FOLIOS)){
+    loadDashboardCharts(CURRENT_FOLIOS);
+  }
+  const ingresosTab = document.getElementById('admin-tab-ingresos');
+  if(ingresosTab && ingresosTab.classList.contains('active') && DASH_CHARTS['ingresos-full']){
+    refreshIncomeTable();
+  }
+}
+
+function setIngresosKpis(rows, items){
+  const g = id => document.getElementById(id);
+  if(!rows.length){
+    ['ing-stat-total','ing-stat-mes-actual','ing-stat-promedio','ing-stat-folios'].forEach(id => { if(g(id)) g(id).textContent = '—'; });
+    return;
+  }
+  const grandTotal = rows.reduce((s,r)=>s+r.total, 0);
+  const now = new Date();
+  const currentRow = rows.find(r => r.yyyy === now.getFullYear() && r.mm === now.getMonth()+1);
+  const promedio = Math.round(grandTotal / rows.length);
+  if(g('ing-stat-total')) g('ing-stat-total').textContent = '$' + grandTotal.toLocaleString('es-MX');
+  if(g('ing-stat-mes-actual')) g('ing-stat-mes-actual').textContent = '$' + (currentRow ? currentRow.total : 0).toLocaleString('es-MX');
+  if(g('ing-stat-promedio')) g('ing-stat-promedio').textContent = '$' + promedio.toLocaleString('es-MX');
+  if(g('ing-stat-folios')) g('ing-stat-folios').textContent = items.length;
+}
+
+function renderIngresosFullChart(rows){
+  if(!rows.length){ showDashChartEmpty('ingresos-full', 'Todavía no hay folios emitidos para graficar ingresos.'); return; }
+  if(typeof Chart === 'undefined'){ showDashChartEmpty('ingresos-full', 'No se pudo cargar la librería de gráficas — revisa tu conexión.'); return; }
+  // La tabla de abajo va del mes más reciente al más antiguo (para leerse
+  // como un reporte), pero una gráfica de tendencia se lee de izquierda a
+  // derecha en orden cronológico — por eso se invierte solo para el chart.
+  const asc = [...rows].sort((a,b)=> (a.yyyy-b.yyyy) || (a.mm-b.mm));
+  const labels = asc.map(r => `${MESES_ES[r.mm-1].slice(0,3)} ${String(r.yyyy).slice(2)}`);
+  const data = asc.map(r => r.total);
+  showDashChartCanvas('ingresos-full');
+  destroyDashChart('ingresos-full');
+  const ctx = document.getElementById('chart-ingresos-full').getContext('2d');
+  DASH_CHARTS['ingresos-full'] = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Ingresos', data, backgroundColor: dashChartColor('--brass'), hoverBackgroundColor: dashChartColor('--red'), borderRadius: 5, maxBarThickness: 46 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: DASH_CHART_ANIMATION,
+      plugins: { legend: { display: false }, tooltip: dashChartTooltip({ callbacks: { label: (c) => '$' + c.parsed.y.toLocaleString('es-MX') + ' MXN' } }) },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: dashChartColor('--line') }, ticks: { color: dashChartColor('--sage-dim'), font: { size: 11 }, callback: (v) => '$' + v.toLocaleString('es-MX') } }
+      }
+    }
+  });
 }
 
 async function refreshIncomeTable(){
@@ -12639,6 +12920,8 @@ async function refreshIncomeTable(){
       byMonth[key].total += (f.precioFinal ? Number(f.precioFinal) : 0) || PKG_PRICE[f.nivel] || 0;
     }
     const rows = Object.values(byMonth).sort((a,b)=> (b.yyyy-a.yyyy) || (b.mm-a.mm));
+    setIngresosKpis(rows, items);
+    renderIngresosFullChart(rows);
     if(!rows.length){
       wrap.innerHTML = '<p style="color:var(--sage);font-size:14px;">Todavía no hay folios emitidos para calcular ingresos.</p>';
       return;
@@ -12664,7 +12947,7 @@ function adminGo(tab){
   if(tab==='solicitudes') refreshAdminLists();
   if(tab==='validacion') refreshValidacionList();
   if(tab==='dashboard') refreshAdminLists();
-  if(tab==='certificados') updateLivePreview();
+  if(tab==='certificados'){ restoreAdminCertDraftIfAny(); updateLivePreview(); }
   if(tab==='historial') refreshHistorial();
   if(tab==='ingresos') refreshIncomeTable();
   if(tab==='salon') salonAdminGo('miembros');
@@ -15161,6 +15444,7 @@ function folioCardHtml(d){
         </div>
         <p style="font-size:13px;color:var(--sage);margin:4px 0;">${escapeHtml(d.modelo)} · grado ${escapeHtml(d.grado)}</p>
         <div class="row">
+          <button class="btn ghost small" onclick='verCertificadoAdmin(${JSON.stringify(JSON.stringify(d))})'>Ver certificado</button>
           <button class="btn ghost small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(d))})'>Etiqueta y sello</button>
           ${Number(d.grado) >= 6 ? `<button class="btn ghost small" onclick="publishPiezaFromFolio('${escapeHtml(d.folio)}')">Publicar en Biblioteca</button>` : ''}
           <button class="btn ghost small" style="border-color:var(--red);color:var(--red);" onclick="deleteFolio('${escapeHtml(d.folio)}')">Eliminar</button>
