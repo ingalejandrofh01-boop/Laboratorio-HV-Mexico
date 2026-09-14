@@ -912,6 +912,33 @@
   .step-accordion.step-locked .step-row-head{opacity:.55;cursor:not-allowed;}
   .step-accordion.open .step-row-head{background:rgba(184,134,47,0.08);}
   .step-desc{font-size:12.5px;color:var(--sage);margin:0 0 12px;line-height:1.55;padding-left:36px;}
+  /* Checklist de cada paso — desglosa la descripción del paso en puntos
+     verificables independientes, sin necesidad de leer el párrafo de
+     arriba para saber qué falta revisar. */
+  .step-checklist{background:var(--panel-2);border-radius:8px;padding:10px 14px 12px;margin-bottom:12px;}
+  .step-checklist-title{margin:0 0 6px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--brass-dim);display:flex;justify-content:space-between;align-items:center;}
+  .step-checklist-count{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--sage);letter-spacing:0;text-transform:none;}
+  .step-checklist-item{display:flex;align-items:flex-start;gap:8px;padding:4px 0;margin:0;font-size:13px;text-transform:none;letter-spacing:normal;color:var(--ink);cursor:pointer;}
+  .step-checklist-item input[type="checkbox"]{width:16px;height:16px;min-width:16px;flex:none;margin:2px 0 0;padding:0;background:none;border:1px solid var(--line);border-radius:3px;cursor:pointer;}
+  .step-checklist-item.checked span{color:var(--sage);text-decoration:line-through;text-decoration-color:rgba(163,38,56,0.35);}
+  /* Checklist completo de la metodología, listo para imprimir — se arma
+     bajo demanda (ver printProcesoChecklist) y se mantiene fuera de vista
+     hasta que @media print lo active mediante data-print-mode. */
+  #print-target-checklist{display:none;}
+  #print-target-checklist .cl-print-page{max-width:720px;margin:0 auto;padding:24px;background:#fff;color:#241512;font-family:'IBM Plex Sans',sans-serif;}
+  #print-target-checklist .cl-print-head{display:flex;align-items:center;gap:14px;border-bottom:2px solid #241512;padding-bottom:12px;margin-bottom:14px;}
+  #print-target-checklist .cl-print-head img{height:38px;}
+  #print-target-checklist .cl-print-head h2{margin:0;font-family:'Fraunces',serif;font-size:19px;}
+  #print-target-checklist .cl-print-head p{margin:2px 0 0;font-size:12px;color:#7A6659;}
+  #print-target-checklist .cl-print-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 16px;font-size:12.5px;margin-bottom:18px;padding:10px 14px;background:#F3E9DC;border-radius:8px;}
+  #print-target-checklist .cl-print-meta strong{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#8C6524;}
+  #print-target-checklist .cl-print-fase{font-family:'Fraunces',serif;font-size:14px;margin:18px 0 4px;border-bottom:1px solid #ddd;padding-bottom:4px;}
+  #print-target-checklist .cl-print-step{margin:10px 0 12px;}
+  #print-target-checklist .cl-print-step h4{margin:0 0 5px;font-size:13.5px;}
+  #print-target-checklist .cl-print-item{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;padding:2.5px 0;}
+  #print-target-checklist .cl-print-box{flex:none;width:11px;height:11px;border:1.3px solid #241512;border-radius:2px;margin-top:1.5px;text-align:center;line-height:9px;font-size:9px;font-weight:700;}
+  #print-target-checklist .cl-print-notas{margin-top:4px;font-size:11.5px;color:#555;border-top:.5px dashed #ccc;padding-top:3px;}
+  #print-target-checklist .cl-print-foot{margin-top:20px;font-size:10.5px;color:#8C6524;border-top:1px solid #ddd;padding-top:8px;}
 
   /* ===== Agrupación por fase en el detalle de validación — refleja las 4
      fases de la metodología pública (#metodo-8-pasos) dentro del admin ===== */
@@ -2020,7 +2047,7 @@
     body{background:#fff;color:#000;}
     .view{display:none!important;}
     .view.active{display:block!important;}
-    #print-target-cert,#print-target-seal,#print-target-full,#print-target-papel{display:none;}
+    #print-target-cert,#print-target-seal,#print-target-full,#print-target-papel,#print-target-checklist{display:none;}
     /* Aislamos lo que se imprime: el print-target puede estar anidado varios
        niveles adentro (p.ej. dentro del panel de administrador), así que
        escondemos todo lo demás en la vista activa — excepto los ancestros
@@ -2038,6 +2065,11 @@
     body[data-print-mode="papel"] .view.active *:not(:has(#print-target-papel)):not(#print-target-papel):not(#print-target-papel *){display:none!important;}
     body[data-print-mode="papel"] .view.active :has(#print-target-papel),
     body[data-print-mode="papel"] #print-target-papel{display:block!important;}
+    body[data-print-mode="checklist"] .view.active *:not(:has(#print-target-checklist)):not(#print-target-checklist):not(#print-target-checklist *){display:none!important;}
+    body[data-print-mode="checklist"] .view.active :has(#print-target-checklist),
+    body[data-print-mode="checklist"] #print-target-checklist{display:block!important;}
+    #print-target-checklist .cl-print-fase{break-after:avoid;}
+    #print-target-checklist .cl-print-step{break-inside:avoid;}
 
     /* Paginación del certificado: lo compactamos y evitamos que
        bloques (tablas, firmas, fotos, QR) se corten a la mitad entre
@@ -4414,20 +4446,20 @@
                 <input type="hidden" id="a-precio-final" value="">
                 <div id="a-ref-reward-note" style="display:none;border:none;background:rgba(221,174,92,0.12);border-left:3px solid var(--brass);padding:8px 10px;border-radius:6px;margin:0 0 12px;color:var(--ink);font-size:12.5px;"></div>
                 <label>Folio</label>
-                <input id="a-folio" class="mono" placeholder="HV-MX-2026-002" oninput="updateLivePreview()">
+                <input id="a-folio" class="mono" placeholder="HV-MX-2026-CIPSA-G95-002" oninput="updateLivePreview();markFolioManuallyEdited()">
                 <button type="button" class="btn ghost small" style="margin-top:8px;" onclick="suggestNextFolio()">Sugerir siguiente</button>
                 <label>Modelo</label>
                 <input id="a-modelo" oninput="updateLivePreview()">
                 <label>Año</label>
                 <input id="a-anio" oninput="updateLivePreview()">
                 <div class="row">
-                  <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview()"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select></div>
+                  <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview();refreshAutoSuggestedFolioIfActive()"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select></div>
                   <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64" oninput="updateLivePreview()"></div>
                 </div>
                 <label>Peso (g)</label>
                 <input id="a-peso" oninput="updateLivePreview()">
                 <div class="row">
-                  <div style="flex:1;"><label>Grado general (0–10)</label><input id="a-grado" placeholder="8.5" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Grado general (0–10)</label><input id="a-grado" placeholder="8.5" oninput="updateLivePreview();refreshAutoSuggestedFolioIfActive()"></div>
                   <div style="flex:1;"><label>Estado</label><select id="a-estado" onchange="updateLivePreview()"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
                 </div>
                 <label style="margin-top:8px;">Desglose de calificación (opcional, 0–10 cada uno)</label>
@@ -12013,17 +12045,62 @@ window.addEventListener('resize', ()=>{ if(document.getElementById('live-preview
 // ============================================================
 // NUMERACIÓN AUTOMÁTICA DE FOLIOS
 // ============================================================
+// El folio incluye el origen y el grado de la pieza (además del año y el
+// consecutivo) para que quede más largo, siempre distinto entre piezas
+// distintas, y con información propia de la pieza a simple vista — no solo
+// un número corrido. Ej: HV-MX-2026-CIPSA-G95-014.
+function origenFolioCode(origen){
+  const map = { 'CIPSA':'CIPSA', 'Bólidos':'BOL', 'Aurimat':'AUR', 'Otro':'OTR' };
+  return map[(origen||'').trim()] || 'OTR';
+}
+function gradoFolioCode(grado){
+  const g = parseFloat(grado);
+  // 9.5 → G95 · 10 → G100 · 6 → G60 — sin punto decimal para que el folio
+  // sirva tal cual en URLs/QR sin caracteres especiales. Sin grado todavía
+  // (antes de calificar la pieza) se deja un marcador que se completa solo
+  // en cuanto se llena el campo — ver refreshAutoSuggestedFolioIfActive().
+  if(isNaN(g)) return 'GNA';
+  return 'G' + Math.round(g*10);
+}
 function folioPrefixAndYear(){
   const year = new Date().getFullYear();
-  return `HV-MX-${year}-`;
+  const origen = document.getElementById('a-origen') ? document.getElementById('a-origen').value : '';
+  const grado = document.getElementById('a-grado') ? document.getElementById('a-grado').value : '';
+  return `HV-MX-${year}-${origenFolioCode(origen)}-${gradoFolioCode(grado)}-`;
+}
+
+// Mientras el folio siga siendo exactamente el que se sugirió (el admin no
+// lo ha tocado a mano todavía), se recalcula solo en cuanto cambian el
+// origen o el grado — así casi nunca queda pegado el marcador "GNA".
+// En cuanto el admin edita el campo Folio directamente, se apaga este
+// seguimiento (markFolioManuallyEdited) y el folio pasa a ser 100% suyo.
+let FOLIO_AUTOSUGGEST_VALUE = null;
+let FOLIO_AUTOSUGGEST_NUM = null;
+function markFolioManuallyEdited(){
+  const folioEl = document.getElementById('a-folio');
+  if(folioEl && folioEl.value !== FOLIO_AUTOSUGGEST_VALUE) FOLIO_AUTOSUGGEST_VALUE = null;
+}
+function refreshAutoSuggestedFolioIfActive(){
+  if(FOLIO_AUTOSUGGEST_VALUE == null || FOLIO_AUTOSUGGEST_NUM == null) return;
+  const folioEl = document.getElementById('a-folio');
+  if(!folioEl || folioEl.value !== FOLIO_AUTOSUGGEST_VALUE) { FOLIO_AUTOSUGGEST_VALUE = null; return; }
+  const nuevo = folioPrefixAndYear() + String(FOLIO_AUTOSUGGEST_NUM).padStart(3,'0');
+  folioEl.value = nuevo;
+  FOLIO_AUTOSUGGEST_VALUE = nuevo;
+  updateLivePreview();
 }
 
 async function suggestNextFolio(){
   try{
     const res = await HVStorage.get('site:folio-counter', true).catch(()=>null);
     const next = res && res.value ? JSON.parse(res.value).next : 1;
-    const prefix = folioPrefixAndYear();
-    document.getElementById('a-folio').value = prefix + String(next).padStart(3,'0');
+    const folioVal = folioPrefixAndYear() + String(next).padStart(3,'0');
+    document.getElementById('a-folio').value = folioVal;
+    FOLIO_AUTOSUGGEST_VALUE = folioVal;
+    FOLIO_AUTOSUGGEST_NUM = next;
+    if(!document.getElementById('a-grado').value.trim()){
+      toast('Folio sugerido — se completa solo con el grado en cuanto califiques la pieza.');
+    }
     updateLivePreview();
   }catch(e){ toast('No se pudo calcular el siguiente folio.'); }
 }
@@ -12963,28 +13040,36 @@ const METODO_FASES = [
 const METODO_PASOS = [
   {key:'recepcion', fase:'ingreso', type:'recepcion',
     label:'Recepción, registro y cadena de custodia',
-    desc:'Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.'},
+    desc:'Recepción física de la pieza. Se genera Folio Único de Ingreso, registro fotográfico de entrada y acta de cadena de custodia. Desde este momento la pieza queda bajo resguardo del laboratorio.',
+    checklist:['Folio Único de Ingreso generado','Registro fotográfico de entrada realizado','Acta de cadena de custodia firmada']},
   {key:'identificacion', fase:'ingreso', type:'simple',
     label:'Identificación y clasificación preliminar',
-    desc:'Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica.'},
+    desc:'Identificación de marca, línea, año, país de fabricación, variante y serie. Se consulta base de datos interna y catálogos oficiales para establecer los parámetros originales de fábrica.',
+    checklist:['Marca identificada','Línea identificada','Año identificado','País de fabricación identificado','Variante identificada','Serie identificada','Consultada base de datos interna','Consultados catálogos oficiales']},
   {key:'visual', fase:'pericial', type:'simple',
     label:'Inspección visual y análisis morfológico',
-    desc:'Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.'},
+    desc:'Análisis detallado de todos los componentes: carrocería, base, interiores, cristales, llantas y remaches. Se evalúa simetría, ensamble y desgaste congruente con la edad de la pieza.',
+    checklist:['Carrocería revisada','Base revisada','Interiores revisados','Cristales revisados','Llantas revisadas','Remaches revisados','Simetría evaluada','Ensamble evaluado','Desgaste congruente con la edad evaluado']},
   {key:'instrumental', fase:'pericial', type:'simple',
     label:'Análisis técnico instrumental, comparativa y cotejo',
-    desc:'Lupa estereoscópica para pintura y tampografía, luz ultravioleta (UV) para detectar repintados y retoques, y comparativa/cotejo contra base de datos, catálogos oficiales y piezas testigo originales.'},
+    desc:'Lupa estereoscópica para pintura y tampografía, luz ultravioleta (UV) para detectar repintados y retoques, y comparativa/cotejo contra base de datos, catálogos oficiales y piezas testigo originales.',
+    checklist:['Revisión con lupa estereoscópica (pintura y tampografía)','Prueba de luz ultravioleta (UV)','Comparativa contra base de datos interna','Cotejo contra catálogos oficiales','Cotejo contra piezas testigo originales']},
   {key:'dictamen', fase:'dictamen', type:'dictamen',
     label:'Confronta y dictamen pericial de autenticidad',
-    desc:'Doble filtro: el Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica el estado de la pieza.'},
+    desc:'Doble filtro: el Técnico Certificador Especializado emite el dictamen de originalidad y la Dirección General valida. Se determina de forma categórica el estado de la pieza.',
+    checklist:['Dictamen emitido por el Técnico Certificador Especializado','Validado por la Dirección General']},
   {key:'condicion', fase:'dictamen', type:'condicion',
     label:'Evaluación y calificación de condición',
-    desc:'Una vez autenticada como original, se califica su condición bajo la escala normalizada de 1.0 a 10.0 — pintura, cromo, llantas, base y conservación general. Calificación técnica, no sentimental.'},
+    desc:'Una vez autenticada como original, se califica su condición bajo la escala normalizada de 1.0 a 10.0 — pintura, cromo, llantas, base y conservación general. Calificación técnica, no sentimental.',
+    checklist:['Pintura calificada','Cromo calificado','Llantas calificadas','Base calificada','Conservación general calificada']},
   {key:'encapsulado', fase:'sello', type:'simple',
     label:'Encapsulado de seguridad y etiquetado',
-    desc:'La pieza aprobada es encapsulada en acrílico sellado y etiquetada con datos de certificación, calificación y folio.'},
+    desc:'La pieza aprobada es encapsulada en acrílico sellado y etiquetada con datos de certificación, calificación y folio.',
+    checklist:['Pieza encapsulada en acrílico sellado','Etiqueta con datos de certificación colocada','Calificación incluida en la etiqueta','Folio incluido en la etiqueta']},
   {key:'registro', fase:'sello', type:'registro',
     label:'Registro digital, certificación web y entrega',
-    desc:'Alta en base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite el certificado digital y se prepara la entrega o envío certificado al cliente.'}
+    desc:'Alta en base de datos con fotografías en alta resolución, folio y código QR verificable en web. Se emite el certificado digital y se prepara la entrega o envío certificado al cliente.',
+    checklist:['Alta en base de datos realizada','Fotografías en alta resolución cargadas','Folio asignado','Código QR verificable generado','Certificado digital emitido','Entrega o envío preparado']}
 ];
 function ensureDictamen(step){
   if(!step.dictamen){
@@ -13654,7 +13739,7 @@ function renderProcesoDetail(p){
           else if(def.type==='dictamen') bodyHtml += renderDictamenStepBody(p, s);
           else if(def.type==='condicion') bodyHtml += renderCondicionStepBody(p, s);
           else if(def.type==='registro') bodyHtml += renderRegistroStepBody(p, s);
-          else bodyHtml += renderSimpleStepBody(p, s);
+          else bodyHtml += renderSimpleStepBody(p, s, def);
           if(def.type!=='registro'){
             bodyHtml += `<div class="row" style="margin-top:10px;"><button class="btn ghost small" onclick="notifyProcesoStep('${escapeHtml(p.id)}','${s.key}')">Notificar avance por WhatsApp</button></div>`;
           }
@@ -13685,7 +13770,10 @@ function renderProcesoDetail(p){
   detail.innerHTML = `
     <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px;">
       <button class="btn ghost small" onclick="refreshValidacionList()">← Volver a la lista</button>
-      <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+      <div class="row" style="gap:10px;align-items:center;">
+        <button class="btn ghost small" onclick="printProcesoChecklist('${escapeHtml(p.id)}')">🖨️ Checklist para imprimir</button>
+        <span class="mono" style="font-size:12px;color:var(--brass-dim);">${escapeHtml(p.id)}</span>
+      </div>
     </div>
     <div class="card">
       <div class="row" style="justify-content:space-between;align-items:flex-start;">
@@ -13708,8 +13796,91 @@ function renderProcesoDetail(p){
 
       ${fasesHtml}
       ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado en el paso 8. Recuerda: solo se certifica si el dictamen no es "Falso / Réplica" y la condición califica 6.0 o más — si no, el proceso se detiene solo y únicamente se cobra la validación base de $150.</p>' : ''}
+      <div id="proceso-checklist-print-mount"></div>
     </div>`;
   scrollToOpenStep();
+}
+
+// ============================================================
+// CHECKLIST COMPLETO PARA IMPRIMIR — junta las 4 fases / 8 pasos de la
+// metodología (con el estado real de cada checklist, dictamen y
+// calificación) en un solo documento de trabajo en papel, para llevarlo en
+// mano mientras se revisa físicamente la pieza. No es un certificado.
+// ============================================================
+function renderProcesoChecklistPrintable(p){
+  const fechaHoy = new Date().toLocaleDateString('es-MX', {day:'numeric', month:'long', year:'numeric'});
+  const DICTAMEN_LABELS = {original:'Original', restaurado:'Restaurado', reparado:'Reparado', repintado:'Repintado', falso:'Falso / Réplica'};
+  const fasesHtml = METODO_FASES.map(fase=>{
+    const pasosFase = p.pasos.filter(s=>s.fase===fase.key);
+    if(!pasosFase.length) return '';
+    const stepsHtml = pasosFase.map(s=>{
+      const def = METODO_PASOS.find(d=>d.key===s.key);
+      const globalIdx = p.pasos.findIndex(x=>x.key===s.key);
+      const checklist = (def && def.checklist) || [];
+      const checkedArr = Array.isArray(s.checklist) ? s.checklist : [];
+      const itemsHtml = checklist.map((label,i)=>`<div class="cl-print-item"><span class="cl-print-box">${checkedArr[i]?'✓':''}</span><span>${escapeHtml(label)}</span></div>`).join('');
+      let extra = '';
+      if(def && def.type==='dictamen' && s.dictamen && s.dictamen.resultado){
+        extra = `<p class="cl-print-notas">Dictamen: <strong>${escapeHtml(DICTAMEN_LABELS[s.dictamen.resultado]||s.dictamen.resultado)}</strong>${s.dictamen.verificador?' · Verificador: '+escapeHtml(s.dictamen.verificador):''}${s.dictamen.fecha?' · '+escapeHtml(s.dictamen.fecha):''}</p>`;
+      }
+      if(def && def.type==='condicion' && s.zigzag){
+        const overall = zzOverallAvg(s.zigzag);
+        const escalaFinal = s.zigzag.escalaFinal || (overall!=null?overall.toFixed(1):'');
+        if(escalaFinal) extra = `<p class="cl-print-notas">Calificación final: <strong>${escapeHtml(String(escalaFinal))}/10</strong></p>`;
+      }
+      const notaHtml = s.nota ? `<p class="cl-print-notas">Notas: ${escapeHtml(s.nota)}</p>` : '';
+      return `<div class="cl-print-step">
+        <h4><span class="cl-print-box">${s.done?'✓':''}</span> ${globalIdx+1}. ${escapeHtml(s.label)}</h4>
+        ${itemsHtml}
+        ${extra}
+        ${notaHtml}
+      </div>`;
+    }).join('');
+    return `<p class="cl-print-fase">${fase.icon} ${escapeHtml(PROCESO_FASE_LABEL[fase.key]||fase.label)}</p>${stepsHtml}`;
+  }).join('');
+
+  return `
+  <div class="print-target" id="print-target-checklist" data-filename="${escapeHtml(filenameSlug(['Checklist', p.id, p.modelo]))}">
+    <div class="cl-print-page">
+      <div class="cl-print-head">
+        <img class="hv-logo" src="assets/img/logo.png" alt="HV">
+        <div>
+          <h2>Checklist de metodología — Laboratorio HV México</h2>
+          <p>4 fases · 8 pasos · Protocolo Zigzag C-Z</p>
+        </div>
+      </div>
+      <div class="cl-print-meta">
+        <div><strong>Pieza</strong>${escapeHtml(p.modelo||'—')}</div>
+        <div><strong>Cliente</strong>${escapeHtml(p.nombre||'—')} · ${escapeHtml(p.telefono||'—')}</div>
+        <div><strong>Código</strong>${escapeHtml(p.id)}</div>
+        <div><strong>Impreso</strong>${escapeHtml(fechaHoy)}</div>
+        <div><strong>Avance</strong>${p.pasos.filter(s=>s.done).length}/${p.pasos.length} pasos</div>
+        <div><strong>Nivel</strong>${escapeHtml(p.nivel||'—')}</div>
+      </div>
+      ${fasesHtml}
+      <p class="cl-print-foot">Laboratorio HV México — documento interno de trabajo, no es un certificado. Marca ✓ conforme avanza la revisión física de la pieza.</p>
+    </div>
+  </div>
+  <div class="no-print row" style="margin-top:14px;">
+    <button class="btn ghost small" onclick="closeProcesoChecklistPrint()">✕ Cerrar</button>
+    <button class="btn small" onclick="printOnly('checklist')">Imprimir / guardar como PDF</button>
+  </div>`;
+}
+function closeProcesoChecklistPrint(){
+  const mount = document.getElementById('proceso-checklist-print-mount');
+  if(mount) mount.innerHTML = '';
+}
+async function printProcesoChecklist(pid){
+  try{
+    const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+    const mount = document.getElementById('proceso-checklist-print-mount');
+    if(!mount) return;
+    mount.innerHTML = renderProcesoChecklistPrintable(p);
+    const target = document.getElementById('print-target-checklist');
+    if(target) target.style.display = 'block';
+    applyLogos();
+    mount.scrollIntoView({behavior:'smooth', block:'start'});
+  }catch(e){ toast('No se pudo generar el checklist.'); }
 }
 
 // Al abrir un paso (manualmente o porque el anterior se acaba de completar
@@ -13785,7 +13956,7 @@ function renderProcesoDetailDigital(p){
         bodyHtml = `<div class="step-locked-note">🔒 Se habilita cuando completes el paso ${i} ("${escapeHtml(prevStep.label)}").</div>`;
       } else {
         if(def && def.desc) bodyHtml += `<p class="step-desc">${escapeHtml(def.desc)}</p>`;
-        bodyHtml += def.type==='dictamen_digital' ? renderDictamenDigitalStepBody(p, s) : renderSimpleStepBody(p, s);
+        bodyHtml += def.type==='dictamen_digital' ? renderDictamenDigitalStepBody(p, s) : renderSimpleStepBody(p, s, def);
       }
     }
     return `
@@ -13848,11 +14019,46 @@ function renderRecepcionStepBody(p, step){
     </div>`;
 }
 
+// ============================================================
+// CHECKLIST DE CADA PASO — desglosa la metodología de METODO_PASOS en
+// puntos verificables independientes (antes solo había notas libres, sin
+// forma de ver a simple vista qué ya se revisó de la descripción del
+// paso). El estado se guarda por índice en step.checklist (array paralelo
+// a def.checklist) y se conserva aunque el paso ya esté marcado completo.
+// ============================================================
+function renderStepChecklist(p, step, def){
+  if(!def || !def.checklist || !def.checklist.length) return '';
+  const checked = Array.isArray(step.checklist) ? step.checklist : [];
+  const doneCount = checked.filter(Boolean).length;
+  const itemsHtml = def.checklist.map((label, i) => {
+    const isChecked = !!checked[i];
+    return `<label class="step-checklist-item ${isChecked?'checked':''}">
+      <input type="checkbox" ${isChecked?'checked':''} onchange="toggleStepChecklistItem('${escapeHtml(p.id)}','${step.key}',${i},this.checked)">
+      <span>${escapeHtml(label)}</span>
+    </label>`;
+  }).join('');
+  return `<div class="step-checklist">
+    <p class="step-checklist-title">Checklist de este paso <span class="step-checklist-count">${doneCount}/${def.checklist.length}</span></p>
+    ${itemsHtml}
+  </div>`;
+}
+async function toggleStepChecklistItem(pid, stepKey, itemIndex, checked){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===pid) ? CURRENT_PROCESO : await getProceso(pid);
+  const step = p.pasos.find(s=>s.key===stepKey);
+  if(!step) return;
+  if(!Array.isArray(step.checklist)) step.checklist = [];
+  step.checklist[itemIndex] = checked;
+  CURRENT_PROCESO = p;
+  await setProceso(p);
+  if(p.paquete === 'digital') renderProcesoDetailDigital(p); else renderProcesoDetail(p);
+}
+
 // ===== Pasos "simples" (2, 3, 4, 7): identificación, inspección visual,
-// análisis instrumental, encapsulado — notas libres + acción explícita del
-// admin para avanzar. Nada se marca solo. =====
-function renderSimpleStepBody(p, step){
+// análisis instrumental, encapsulado — checklist del paso + notas libres +
+// acción explícita del admin para avanzar. Nada se marca solo. =====
+function renderSimpleStepBody(p, step, def){
   return `
+    ${renderStepChecklist(p, step, def)}
     <textarea rows="3" placeholder="Notas de este paso (opcional)…" onchange="saveProcesoNota('${escapeHtml(p.id)}','${step.key}',this.value)">${escapeHtml(step.nota||'')}</textarea>
     <div class="row" style="margin-top:10px;">
       ${!step.done ? `<button class="btn small" onclick="completeStep('${escapeHtml(p.id)}','${step.key}')">Marcar como completado y continuar</button>` : `<span class="foot-note" style="border:none;padding:0;">✓ Paso completado.</span>`}
