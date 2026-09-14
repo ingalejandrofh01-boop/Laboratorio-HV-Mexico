@@ -1016,7 +1016,7 @@
   .activity-row span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .activity-row:last-child{border-bottom:none;}
   .activity-row .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex:none;margin-top:5px;}
-  .photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:6px;}
+  .photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px;margin-top:6px;}
   .photo-drop{position:relative;aspect-ratio:1/1;border:2px dashed var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;cursor:pointer;background:var(--panel-2);transition:border-color .15s ease,background .15s ease;overflow:hidden;}
   .photo-drop:hover{border-color:var(--red);background:rgba(210,4,45,0.04);}
   .photo-drop.has-image{border-style:solid;padding:0;}
@@ -1084,6 +1084,17 @@
     --sage:#7A6659; --sage-dim:#9C8C7E; --line:rgba(36,21,18,0.14);
     --red:#D2042D; --red-dim:#9E0322; --brass:#B8862F; --brass-dim:#8C6524;
   }
+  /* .salon-timeline (inicio/vence/cuenta regresiva) se reutiliza tal cual
+     dentro de la ficha de socio del admin — pero sus variables --salon-*
+     viven solo en .salon-scope (tema dorado del sitio público), así que
+     aquí se remapea a las variables propias del admin para que se vea
+     consistente con el resto del panel en vez de quedar sin estilo. */
+  .admin-scope .salon-timeline{background:var(--line);border-color:var(--line);}
+  .admin-scope .salon-timeline-cell{background:var(--panel-2);}
+  .admin-scope .salon-timeline-cell .stl-lbl{color:var(--sage-dim);}
+  .admin-scope .salon-timeline-cell .stl-val{color:var(--ink);}
+  .admin-scope .salon-timeline.salon-timeline-warn .stl-val-countdown{color:var(--warn);}
+  .admin-scope .salon-timeline.salon-timeline-danger .stl-val-countdown{color:var(--red);}
   /* La "sala de control": manchas de luz roja/dorada muy tenues detrás
      de todo el vidrio — sin esto, el blur no tiene nada que desenfocar
      y se ve plano en vez de esmerilado. En claro son manchas suaves
@@ -1492,6 +1503,11 @@
   .pieza-admin-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
   .pieza-admin-item img{width:44px;height:44px;border-radius:6px;object-fit:cover;flex:none;background:var(--panel-2);}
   .pieza-admin-item .cap{flex:1;font-size:13px;}
+  /* Barra de progreso genérica del admin (piezas hacia el siguiente nivel
+     del Salón Privado, etc.) — usa las variables del propio admin, a
+     diferencia de .smc-progress que es exclusiva del tema dorado público. */
+  .admin-progress{height:5px;border-radius:4px;background:var(--line);overflow:hidden;}
+  .admin-progress-fill{height:100%;background:var(--brass);border-radius:4px;transition:width .5s cubic-bezier(.2,.8,.2,1);}
   .carousel-track{display:flex;transition:transform .5s ease;}
   .carousel-slide{flex:0 0 100%;position:relative;min-width:0;}
   .carousel-slide img{width:100%;height:380px;object-fit:cover;display:block;}
@@ -4457,7 +4473,7 @@
             </div>
             <div class="admin-cert-modal-btn"><button type="button" class="btn ghost small" onclick="verCertificadoDraft()">👁️ Ver certificado completo (tamaño real, como lo ve el cliente)</button></div>
             <div id="cert-confirm-mount"></div>
-            <div class="grid grid-2" style="align-items:start;">
+            <div class="grid grid-2" style="align-items:start;grid-template-columns:1.7fr 1fr;">
               <div class="card" id="admin-cert-form-card">
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
                 <input type="hidden" id="a-linked-solicitud" value="">
@@ -4466,16 +4482,15 @@
                 <label>Folio</label>
                 <input id="a-folio" class="mono" placeholder="HV-MX-2026-CIPSA-G95-002" oninput="updateLivePreview();markFolioManuallyEdited()">
                 <button type="button" class="btn ghost small" style="margin-top:8px;" onclick="suggestNextFolio()">Sugerir siguiente</button>
-                <label>Modelo</label>
-                <input id="a-modelo" oninput="updateLivePreview()">
-                <label>Año</label>
-                <input id="a-anio" oninput="updateLivePreview()">
+                <div class="row">
+                  <div style="flex:2;"><label>Modelo</label><input id="a-modelo" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Año</label><input id="a-anio" oninput="updateLivePreview()"></div>
+                </div>
                 <div class="row">
                   <div style="flex:1;"><label>Origen</label><select id="a-origen" onchange="updateLivePreview();refreshAutoSuggestedFolioIfActive()"><option>CIPSA</option><option>Bólidos</option><option>Aurimat</option><option>Otro</option></select></div>
                   <div style="flex:1;"><label>Escala</label><input id="a-escala" value="1:64" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Peso (g)</label><input id="a-peso" oninput="updateLivePreview()"></div>
                 </div>
-                <label>Peso (g)</label>
-                <input id="a-peso" oninput="updateLivePreview()">
                 <div class="row">
                   <div style="flex:1;"><label>Grado general (0–10)</label><input id="a-grado" placeholder="8.5" oninput="updateLivePreview();refreshAutoSuggestedFolioIfActive()"></div>
                   <div style="flex:1;"><label>Estado</label><select id="a-estado" onchange="updateLivePreview()"><option>Original</option><option>Repintado</option><option>Restaurado</option><option>Reparado</option><option>Réplica</option></select></div>
@@ -4487,23 +4502,29 @@
                   <div><label class="sg-label">Ensamble</label><input id="a-sg-ensamble" placeholder="9.0" oninput="updateLivePreview()"></div>
                   <div><label class="sg-label">Autenticidad</label><input id="a-sg-autenticidad" placeholder="9.0" oninput="updateLivePreview()"></div>
                 </div>
-                <label>Prueba UV</label>
-                <input id="a-uv" placeholder="Negativo (no repintado)" oninput="updateLivePreview()">
-                <label>Prueba de microscopio</label>
-                <input id="a-micro" placeholder="Desgaste en filos, sin masilla" oninput="updateLivePreview()">
-                <label>Remaches</label>
-                <input id="a-remaches" placeholder="Originales de fábrica" oninput="updateLivePreview()">
-                <label>Color</label>
-                <input id="a-color" placeholder="Ej. verde bandera" oninput="updateLivePreview()">
+                <div class="row">
+                  <div style="flex:1;"><label>Prueba UV</label><input id="a-uv" placeholder="Negativo (no repintado)" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Prueba de microscopio</label><input id="a-micro" placeholder="Desgaste en filos, sin masilla" oninput="updateLivePreview()"></div>
+                </div>
+                <div class="row">
+                  <div style="flex:1;"><label>Remaches</label><input id="a-remaches" placeholder="Originales de fábrica" oninput="updateLivePreview()"></div>
+                  <div style="flex:1;"><label>Color</label><input id="a-color" placeholder="Ej. verde bandera" oninput="updateLivePreview()"></div>
+                </div>
                 <label>Observaciones</label>
                 <textarea id="a-obs" rows="2" oninput="updateLivePreview()"></textarea>
-                <label>Nivel de servicio</label>
-                <select id="a-nivel" onchange="updateLivePreview()"><option>Validación digital</option><option>Peritaje + dictamen</option><option>Premium + certificación + encapsulado</option></select>
-                <label>Idioma del certificado</label>
-                <select id="a-cert-lang" onchange="updateLivePreview()">
-                  <option value="es" selected>Español (predeterminado)</option>
-                  <option value="en">English</option>
-                </select>
+                <div class="row">
+                  <div style="flex:1;">
+                    <label>Nivel de servicio</label>
+                    <select id="a-nivel" onchange="updateLivePreview()"><option>Validación digital</option><option>Peritaje + dictamen</option><option>Premium + certificación + encapsulado</option></select>
+                  </div>
+                  <div style="flex:1;">
+                    <label>Idioma del certificado</label>
+                    <select id="a-cert-lang" onchange="updateLivePreview()">
+                      <option value="es" selected>Español (predeterminado)</option>
+                      <option value="en">English</option>
+                    </select>
+                  </div>
+                </div>
                 <p class="foot-note" style="border:none;padding:2px 0 10px;margin:0;font-size:12px;">El certificado se genera siempre en español salvo que el cliente pida que sea en inglés.</p>
                 <label>Teléfono del dueño (uso interno, no se publica)</label>
                 <div class="tel-with-lada">
@@ -4654,11 +4675,23 @@
                 </div>
                 <button class="btn small" onclick="goToSalonLobbyAdmin()" title="Acceso sin restricción para admins — no depende de ningún socio en particular">🛋️ Ir al lobby de socios</button>
               </div>
-              <div class="row" style="margin-top:12px;">
+              <div class="kpi-grid" id="salon-overview-kpis" style="margin-top:14px;">
+                <div class="kpi"><p class="num">—</p><p class="lbl">Socios totales</p></div>
+                <div class="kpi"><p class="num">—</p><p class="lbl">Activos</p></div>
+                <div class="kpi"><p class="num">—</p><p class="lbl">Por vencer pronto</p></div>
+                <div class="kpi"><p class="num">—</p><p class="lbl">Vencidas / pago pendiente</p></div>
+                <div class="kpi"><p class="num">—</p><p class="lbl">Elegibles sin activar</p></div>
+                <div class="kpi"><p class="num">—</p><p class="lbl">Ingresos por membresías</p></div>
+              </div>
+              <div class="row" style="margin-top:14px;">
                 <button class="btn ghost small filter-btn active" data-ssub="miembros" onclick="salonAdminGo('miembros')">Miembros</button>
                 <button class="btn ghost small filter-btn" data-ssub="niveles" onclick="salonAdminGo('niveles')">Niveles</button>
                 <button class="btn ghost small filter-btn" data-ssub="galeria" onclick="salonAdminGo('galeria')">Galería VIP</button>
               </div>
+            </div>
+
+            <div class="card" style="margin-bottom:16px;border-left:3px solid var(--brass);" id="salon-admin-self-card">
+              <p style="color:var(--sage);font-size:14px;">Cargando…</p>
             </div>
 
             <div class="salon-subview" id="salon-sub-miembros">
@@ -8397,10 +8430,36 @@ async function bumpSalonProgress(telefonoRaw, nombreOpt, detalle){
   return { member: m, becameEligible, leveledUp, esNuevo };
 }
 
+// Contraparte de bumpSalonProgress: se llama al eliminar un folio (uno por
+// uno o en la limpieza masiva) para no dejar un conteo fantasma en el socio
+// — si esa pieza ya había sumado a su progreso, se descuenta de
+// piezasCertificadas y se quita de piezasFolios. Nunca debe poder tumbar el
+// borrado del folio: quien la llama la envuelve en su propio try/catch.
+// No se toca el nivel/estado de un socio YA activo (pagó y se le reconoció
+// ese nivel) ni su vitalicio — eso es un logro ya otorgado, no algo que una
+// pieza borrada después deba revertir. Solo se revierte la elegibilidad
+// ("elegible" sin activar todavía) si, al descontar, ya no llega al mínimo.
+async function syncSalonMemberOnFolioDelete(folioId, telefonoRaw){
+  if(!folioId || !telefonoRaw) return;
+  const telNorm = normalizeTelSalon(telefonoRaw);
+  if(!telNorm) return;
+  const m = await getSalonMember(telNorm);
+  if(!m || !(m.piezasFolios||[]).includes(folioId)) return; // esta pieza nunca sumó al progreso del socio
+  m.piezasFolios = (m.piezasFolios||[]).filter(id => id !== folioId);
+  m.piezasCertificadas = Math.max(0, (m.piezasCertificadas||0) - 1);
+  if(m.estado === 'elegible' && m.piezasCertificadas < SALON_TIER_THRESHOLDS[1]){
+    m.estado = 'prospecto';
+    m.fechaElegibilidadTs = null;
+  }
+  await setSalonMember(telNorm, m);
+}
+
 // ============================================================
 // SALÓN PRIVADO — ADMINISTRACIÓN
 // Pestaña admin con 3 subvistas: Miembros (lista + detalle + ledger de
-// pagos), Niveles (costos/beneficios editables) y Galería VIP.
+// pagos), Niveles (costos/beneficios editables) y Galería VIP. Además, un
+// resumen general (KPIs) y la tarjeta de acceso propio del admin, ambos
+// visibles sin importar en qué subvista se esté.
 // ============================================================
 function salonAdminGo(sub){
   document.querySelectorAll('#admin-tab-salon .filter-btn[data-ssub]').forEach(b=>b.classList.toggle('active', b.dataset.ssub===sub));
@@ -8408,6 +8467,162 @@ function salonAdminGo(sub){
   if(sub==='miembros') renderSalonMembersAdmin();
   if(sub==='niveles') renderSalonTiersAdmin();
   if(sub==='galeria') renderSalonPiezasAdmin();
+  renderSalonOverviewKpis();
+  renderAdminSalonSelfCard();
+}
+
+// ---- Resumen general (KPIs arriba de la pestaña) ----
+// Ignora el socio sintético del propio administrador (esAdmin:true) para no
+// inflar las métricas de negocio con su membresía de cortesía.
+function computeSalonOverviewStats(miembros){
+  const real = (miembros||[]).filter(m => !m.esAdmin);
+  const out = { total: real.length, prospecto:0, elegible:0, activo:0, porVencer:0, vencidaOPendiente:0, ingresos:0 };
+  real.forEach(m => {
+    const status = computeMembershipStatus(m);
+    if(status === 'prospecto') out.prospecto++;
+    else if(status === 'elegible') out.elegible++;
+    else if(status === 'por_vencer') out.porVencer++;
+    else if(status === 'vencida' || status === 'pendiente_pago') out.vencidaOPendiente++;
+    else if(status === 'activo' || status === 'liquidado') out.activo++;
+    ((m.planPago && m.planPago.cuotas) || []).forEach(c => { if(c.estado === 'pagado') out.ingresos += Number(c.monto)||0; });
+  });
+  return out;
+}
+async function renderSalonOverviewKpis(){
+  const box = document.getElementById('salon-overview-kpis');
+  if(!box) return;
+  const miembros = await getAllSalonMembers();
+  const s = computeSalonOverviewStats(miembros);
+  box.innerHTML = `
+    <div class="kpi"><p class="num">${s.total}</p><p class="lbl">Socios totales</p></div>
+    <div class="kpi"><p class="num">${s.activo}</p><p class="lbl">Activos</p></div>
+    <div class="kpi"><p class="num">${s.porVencer}</p><p class="lbl">Por vencer pronto</p></div>
+    <div class="kpi"><p class="num">${s.vencidaOPendiente}</p><p class="lbl">Vencidas / pago pendiente</p></div>
+    <div class="kpi"><p class="num">${s.elegible}</p><p class="lbl">Elegibles sin activar</p></div>
+    <div class="kpi"><p class="num">$${s.ingresos.toLocaleString('es-MX')}</p><p class="lbl">Ingresos por membresías</p></div>
+  `;
+}
+
+// ---- Acceso propio del admin: membresía real y vitalicia, con un código
+// secreto visible SOLO aquí adentro (nunca en el sitio público). A
+// diferencia de goToSalonLobbyAdmin() (una vista temporal que no guarda
+// nada), esto crea un socio de verdad en salon:member:<telNorm> para que el
+// admin pueda entrar por la puerta pública normal (teléfono + código) igual
+// que cualquier otro socio, y aparecer en la lista de Miembros si se desea.
+// El teléfono elegido se recuerda en un documento aparte (salon:adminphone)
+// para poder mostrar la tarjeta de inmediato en cada visita a esta pestaña.
+async function getAdminSalonPhone(){
+  try{
+    const r = await HVStorage.get('salon:adminphone', true).catch(()=>null);
+    return (r && r.value) ? r.value : null;
+  }catch(e){ return null; }
+}
+async function setAdminSalonPhone(telNorm){
+  try{ await HVStorage.set('salon:adminphone', telNorm, true); }catch(e){}
+}
+async function renderAdminSalonSelfCard(){
+  const box = document.getElementById('salon-admin-self-card');
+  if(!box) return;
+  const telNorm = await getAdminSalonPhone();
+  const m = telNorm ? await getSalonMember(telNorm) : null;
+  if(!m){
+    box.innerHTML = `
+      <h4 style="margin:0 0 4px;font-size:14.5px;">🔐 Mi acceso personal al Salón Privado</h4>
+      <p class="foot-note" style="border:none;padding:0;">Como administrador ya tienes acceso ilimitado desde "🛋️ Ir al lobby de socios" arriba — eso es solo una vista temporal. Si además quieres poder entrar por la puerta pública normal (teléfono + código, igual que cualquier socio) y aparecer en tu propia lista de Miembros, activa aquí tu membresía vitalicia real.</p>
+      <div class="tel-with-lada" style="max-width:320px;margin-top:10px;">
+        <select id="salon-admin-self-lada" class="lada-select" aria-label="Código de país">
+          <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
+          <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
+          <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
+        </select>
+        <input id="salon-admin-self-tel" placeholder="Tu teléfono">
+      </div>
+      <button class="btn small" style="margin-top:10px;" onclick="activateAdminSalonSelf()">Activar mi membresía vitalicia</button>
+    `;
+    return;
+  }
+  box.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h4 style="margin:0 0 4px;font-size:14.5px;">🔐 Mi acceso personal al Salón Privado</h4>
+        <p class="foot-note" style="border:none;padding:0;">Tel. ${escapeHtml(m.telefono)} · membresía vitalicia de administrador. Este código es privado — solo tú lo ves aquí, nunca se muestra en el sitio público. Úsalo con tu teléfono en la puerta del Salón para entrar como socio real.</p>
+      </div>
+      <span class="pill completado">Activo · vitalicio</span>
+    </div>
+    <div class="row" style="align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;">
+      <span class="mono" id="salon-admin-self-code" data-code="${escapeHtml(m.code||'')}" data-visible="false" style="font-size:16px;letter-spacing:1px;">HVS-●●●●●●</span>
+      <button class="btn ghost small" id="salon-admin-self-toggle" onclick="toggleAdminSalonCodeVisible()">👁 Mostrar</button>
+      <button class="btn ghost small" onclick="copyAdminSalonCode()">Copiar</button>
+      <button class="btn ghost small" onclick="regenerateAdminSalonCode('${escapeHtml(telNorm)}')">Generar nuevo código</button>
+      <button class="btn ghost small" onclick="previewSalonMemberAsSocio('${escapeHtml(telNorm)}')">👁 Ver como socio</button>
+    </div>
+  `;
+}
+async function activateAdminSalonSelf(){
+  const ladaSel = document.getElementById('salon-admin-self-lada');
+  const telInput = document.getElementById('salon-admin-self-tel');
+  const raw = telInput ? telInput.value.trim() : '';
+  if(!raw){ toast('Escribe tu teléfono primero.'); return; }
+  const telNorm = normalizeTelSalon((ladaSel?ladaSel.value:'52') + raw);
+  if(!telNorm){ toast('Ese teléfono no parece válido.'); return; }
+  try{
+    const existing = await getSalonMember(telNorm);
+    const m = existing || {
+      telefono: telNorm, nombre: 'Administrador', code: '',
+      piezasFolios: [], piezasCertificadas: 0,
+      estado: 'prospecto', nivelActual: 0, vitalicio: false, nivelMaximoAlcanzado: 0,
+      fechaElegibilidadTs: null, activadoTs: null, activadoPor: '',
+      upgradePendientePago: false, fechaRenovacion: null,
+      planPago: { costoTotal: 0, moneda: 'MXN', cuotas: [] },
+      historialNiveles: [], creado: new Date().toISOString()
+    };
+    m.esAdmin = true;
+    m.estado = 'activo';
+    m.nivelActual = 3;
+    m.vitalicio = true;
+    m.nivelMaximoAlcanzado = 3;
+    m.piezasCertificadas = Math.max(m.piezasCertificadas||0, SALON_TIER_THRESHOLDS[3]);
+    m.fechaRenovacion = null; // vitalicio de administrador: nunca vence, no paga cuota
+    m.activadoTs = m.activadoTs || Date.now();
+    m.activadoPor = 'administrador (acceso propio)';
+    if(!m.code) m.code = genCodigoSalon();
+    await setSalonMember(telNorm, m);
+    await setAdminSalonPhone(telNorm);
+    toast('Tu membresía vitalicia de administrador quedó activa.');
+    renderAdminSalonSelfCard();
+    renderSalonOverviewKpis();
+    if(document.getElementById('salon-sub-miembros').style.display !== 'none') renderSalonMembersAdmin();
+  }catch(e){ toast('No se pudo activar tu acceso. Intenta de nuevo.'); }
+}
+function toggleAdminSalonCodeVisible(){
+  const el = document.getElementById('salon-admin-self-code');
+  const btn = document.getElementById('salon-admin-self-toggle');
+  if(!el) return;
+  const visible = el.dataset.visible === 'true';
+  el.dataset.visible = (!visible).toString();
+  el.textContent = !visible ? ('HVS-' + (el.dataset.code||'—')) : 'HVS-●●●●●●';
+  if(btn) btn.textContent = !visible ? '🙈 Ocultar' : '👁 Mostrar';
+}
+function copyAdminSalonCode(){
+  const el = document.getElementById('salon-admin-self-code');
+  if(!el) return;
+  const code = 'HVS-' + (el.dataset.code||'—');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>toast('Código copiado.')).catch(()=>toast('No se pudo copiar — cópialo a mano.'));
+  } else {
+    toast('No se pudo copiar — cópialo a mano: '+code);
+  }
+}
+async function regenerateAdminSalonCode(telNorm){
+  if(!confirm('¿Generar un nuevo código? El código anterior dejará de funcionar para entrar al Salón.')) return;
+  try{
+    const m = await getSalonMember(telNorm);
+    if(!m) return;
+    m.code = genCodigoSalon();
+    await setSalonMember(telNorm, m);
+    toast('Nuevo código generado.');
+    renderAdminSalonSelfCard();
+  }catch(e){ toast('No se pudo generar el nuevo código.'); }
 }
 
 // ---- Niveles (costos y beneficios editables) ----
@@ -8481,14 +8696,31 @@ function filterSalonMembers(filter){
   if(filter !== 'todos') items = items.filter(it => it.status === filter);
   if(q) items = items.filter(it => normalizeSearchTxt(it.m.nombre).includes(q) || normalizeSearchTxt(it.m.telefono).includes(q));
   items.sort((a,b) => (b.m.actualizado||'').localeCompare(a.m.actualizado||''));
-  box.innerHTML = items.length ? items.map(({m,status}) => `
-    <div class="pieza-admin-item" style="cursor:pointer;" onclick="openSalonMemberDetail('${escapeHtml(m.telefono)}')">
-      <div class="cap">
-        <strong>${escapeHtml(m.nombre||'(sin nombre)')}</strong> <span class="pill ${SALON_STATUS_PILL_CLASS[status]||'neutral'}" style="margin-left:6px;">${SALON_STATUS_LABEL[status]||status}</span><br>
-        <span class="mono" style="font-size:11px;color:var(--sage-dim);">${escapeHtml(m.telefono)} · ${m.piezasCertificadas||0} pieza(s) · Nivel ${m.nivelActual||0}${m.vitalicio?' (vitalicio)':''}</span>
+  const tierNames = {0:'', 1:'Plata', 2:'Oro', 3:'Platino'};
+  box.innerHTML = items.length ? items.map(({m,status}) => {
+    const nextT = nextSalonThreshold(m.piezasCertificadas||0);
+    const pct = nextT ? Math.max(4, Math.min(100, Math.round(((m.piezasCertificadas||0) / nextT) * 100))) : 100;
+    const tierBadge = m.nivelActual ? `<span class="pill neutral" style="margin-left:6px;">${tierNames[m.nivelActual]||('Nivel '+m.nivelActual)}${m.vitalicio?' · vitalicio':''}</span>` : '';
+    const daysLeft = salonRenewalDaysLeft(m);
+    let renewalNote = '';
+    if(m.estado === 'activo' && m.fechaRenovacion && daysLeft != null){
+      if(daysLeft < 0) renewalNote = ` · <span style="color:var(--bad);">venció hace ${Math.abs(daysLeft)} día(s)</span>`;
+      else if(daysLeft <= 30) renewalNote = ` · <span style="color:var(--warn);">vence en ${daysLeft} día(s)</span>`;
+      else renewalNote = ` · vence ${escapeHtml(m.fechaRenovacion)}`;
+    }
+    return `
+    <div class="pieza-admin-item" style="cursor:pointer;align-items:flex-start;" onclick="openSalonMemberDetail('${escapeHtml(m.telefono)}')">
+      <div class="cap" style="flex:1;">
+        <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px;">
+          <strong>${escapeHtml(m.nombre||'(sin nombre)')}${m.esAdmin?' 👑':''}</strong>
+          <span><span class="pill ${SALON_STATUS_PILL_CLASS[status]||'neutral'}">${SALON_STATUS_LABEL[status]||status}</span>${tierBadge}</span>
+        </div>
+        <span class="mono" style="font-size:11px;color:var(--sage-dim);display:block;margin-top:2px;">${escapeHtml(m.telefono)} · ${m.piezasCertificadas||0} pieza(s)${renewalNote}</span>
+        ${nextT ? `<div class="admin-progress" style="margin-top:6px;max-width:240px;"><div class="admin-progress-fill" style="width:${pct}%;"></div></div>` : ''}
       </div>
       <button class="btn ghost small" onclick="event.stopPropagation();openSalonMemberDetail('${escapeHtml(m.telefono)}')">Ver</button>
-    </div>`).join('') : '<p style="color:var(--sage);font-size:13px;">No hay socios en esta categoría todavía.</p>';
+    </div>`;
+  }).join('') : '<p style="color:var(--sage);font-size:13px;">No hay socios en esta categoría todavía.</p>';
 }
 function nextSalonThreshold(piezas){
   if(piezas < SALON_TIER_THRESHOLDS[1]) return SALON_TIER_THRESHOLDS[1];
@@ -8505,13 +8737,27 @@ async function openSalonMemberDetail(telNorm){
   if(!m){ wrap.innerHTML = '<p>No se encontró ese socio.</p>'; return; }
   const status = computeMembershipStatus(m);
   const nextT = nextSalonThreshold(m.piezasCertificadas||0);
+  const pct = nextT ? Math.max(4, Math.min(100, Math.round(((m.piezasCertificadas||0) / nextT) * 100))) : 100;
+  const tierNames = {0:'Sin nivel todavía', 1:'Nivel Plata', 2:'Nivel Oro', 3:'Nivel Platino'};
   let html = `<div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <button class="btn ghost small" onclick="document.getElementById('salon-member-detail-wrap').style.display='none';">✕ Cerrar</button>
       ${m.code ? `<button class="btn small" onclick="previewSalonMemberAsSocio('${escapeHtml(telNorm)}')">👁 Ver como socio</button>` : ''}
     </div>
-    <h3 style="font-size:16px;">${escapeHtml(m.nombre||'(sin nombre)')} <span class="pill ${SALON_STATUS_PILL_CLASS[status]||'neutral'}">${SALON_STATUS_LABEL[status]||status}</span></h3>
-    <p class="foot-note" style="border:none;padding-top:0;">Tel. ${escapeHtml(m.telefono)} · Código HVS-${escapeHtml(m.code||'—')} · Nivel actual: ${m.nivelActual||0}${m.vitalicio?' (vitalicio)':''}</p>
-    <p style="font-size:13.5px;">Piezas certificadas: <strong>${m.piezasCertificadas||0}</strong>${nextT ? ` — faltan ${nextT - m.piezasCertificadas} para el siguiente nivel (${nextT} piezas)` : ' — nivel máximo alcanzado'}</p>`;
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-top:10px;">
+      <div>
+        <h3 style="font-size:17px;margin:0 0 2px;">${escapeHtml(m.nombre||'(sin nombre)')}${m.esAdmin?' 👑':''}</h3>
+        <p class="foot-note" style="border:none;padding:0;margin:0;">Tel. ${escapeHtml(m.telefono)} · Código HVS-${escapeHtml(m.code||'—')}</p>
+      </div>
+      <span class="pill ${SALON_STATUS_PILL_CLASS[status]||'neutral'}">${SALON_STATUS_LABEL[status]||status}</span>
+    </div>
+    <div class="card" style="background:var(--panel-2);margin:14px 0;">
+      <h4 style="margin:0 0 6px;font-size:13.5px;">${tierNames[m.nivelActual||0]}${m.vitalicio?' · vitalicio':''}</h4>
+      <p style="font-size:13.5px;margin:0;">Piezas certificadas: <strong>${m.piezasCertificadas||0}</strong>${nextT ? ` — faltan ${nextT - m.piezasCertificadas} para el siguiente nivel (${nextT} piezas)` : ' — nivel máximo alcanzado'}</p>
+      ${nextT ? `<div class="admin-progress" style="margin-top:8px;"><div class="admin-progress-fill" style="width:${pct}%;"></div></div>` : ''}
+    </div>`;
+  if(m.activadoTs || m.fechaRenovacion){
+    html += `<div style="margin-bottom:14px;">${salonTimelineHtml(m)}</div>`;
+  }
   if(m.upgradePendientePago){
     // Campo heredado de antes de pasar a cuota fija anual — ya no bloquea
     // nada, pero si algún socio viejo lo trae marcado, se resuelve con un
@@ -8563,6 +8809,7 @@ async function marcarCuotaPagada(telNorm, idx){
   await setSalonMember(telNorm, m);
   openSalonMemberDetail(telNorm);
   updateAdminStats();
+  renderSalonOverviewKpis();
 }
 async function marcarCuotaPendiente(telNorm, idx){
   const m = await getSalonMember(telNorm);
@@ -8572,6 +8819,7 @@ async function marcarCuotaPendiente(telNorm, idx){
   await setSalonMember(telNorm, m);
   openSalonMemberDetail(telNorm);
   updateAdminStats();
+  renderSalonOverviewKpis();
 }
 async function deactivateSalonMembership(telNorm){
   if(!confirm('¿Desactivar la membresía de este socio? Conserva todo su historial y piezas certificadas — solo deja de estar activo.')) return;
@@ -8582,6 +8830,7 @@ async function deactivateSalonMembership(telNorm){
   bumpSalonStats({ miembrosActivos: -1 });
   openSalonMemberDetail(telNorm);
   renderSalonMembersAdmin();
+  renderSalonOverviewKpis();
 }
 async function reactivateSalonMembership(telNorm){
   const m = await getSalonMember(telNorm);
@@ -8591,6 +8840,7 @@ async function reactivateSalonMembership(telNorm){
   bumpSalonStats({ miembrosActivos: 1 });
   openSalonMemberDetail(telNorm);
   renderSalonMembersAdmin();
+  renderSalonOverviewKpis();
 }
 
 // Formulario de activación/renovación: la cuota es fija ($SALON_ANNUAL_FEE
@@ -8686,6 +8936,7 @@ async function confirmSalonPlan(){
     openSalonMemberDetail(telNorm);
     renderSalonMembersAdmin();
     updateAdminStats();
+    renderSalonOverviewKpis();
   }catch(e){ toast('No se pudo guardar.'); }
 }
 
@@ -15403,7 +15654,7 @@ async function cleanupOldData(){
           const r = await HVStorage.get(k, true);
           const f = JSON.parse(r.value);
           const parsed = parseFechaFolio(f.fecha);
-          return (parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) ? f.folio : null;
+          return (parsed && (parsed.yyyy*100+parsed.mm) < cutoffKey) ? {folio: f.folio, telefono: f.telefono} : null;
         }catch(e){ return null; }
       }))
     ]);
@@ -15422,8 +15673,9 @@ async function cleanupOldData(){
       await HVStorage.delete('solicitud:'+id, true).catch(()=>{});
       await HVStorage.delete('proceso:'+id, true).catch(()=>{});
     }
-    for(const folio of folToDelete){
-      await HVStorage.delete('folio:'+folio, true).catch(()=>{});
+    for(const item of folToDelete){
+      await HVStorage.delete('folio:'+item.folio, true).catch(()=>{});
+      await syncSalonMemberOnFolioDelete(item.folio, item.telefono).catch(()=>{});
     }
     if(statusBox) statusBox.textContent = `Listo — se eliminaron ${total} registro(s) anteriores a ${MESES_ES[cm-1]} ${cy}.`;
     toast('Limpieza completa.');
@@ -15455,7 +15707,16 @@ function folioCardHtml(d){
 async function deleteFolio(folio){
   if(!confirm(`¿Seguro que quieres eliminar el folio ${folio}? Ya no se podrá verificar en línea. Esta acción no se puede deshacer.`)) return;
   try{
+    // Ubica el teléfono del dueño ANTES de borrar, para poder descontar esta
+    // pieza del progreso de su Salón Privado si ya la había sumado (ver
+    // syncSalonMemberOnFolioDelete) — si no, el socio queda con un conteo
+    // de piezas certificadas más alto del que en realidad tiene.
+    let telefono = (CURRENT_FOLIOS||[]).find(f => f.folio === folio) && (CURRENT_FOLIOS||[]).find(f => f.folio === folio).telefono;
+    if(!telefono){
+      try{ const r = await HVStorage.get('folio:'+folio, true); if(r && r.value) telefono = JSON.parse(r.value).telefono; }catch(e){}
+    }
     await HVStorage.delete('folio:'+folio, true);
+    await syncSalonMemberOnFolioDelete(folio, telefono).catch(()=>{});
     toast('Folio eliminado: '+folio);
     refreshAdminLists();
     refreshIncomeTable();
