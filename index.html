@@ -1510,6 +1510,25 @@
   .subgrade-grid input{padding:8px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;}
   .sg-label{font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--brass-dim);margin-bottom:3px;display:block;}
   @media(max-width:900px){.cert-editor-preview{position:static;}}
+  /* Campo del formulario de certificación marcado como faltante al intentar
+     guardar con datos incompletos — se quita solo en cuanto se corrige. */
+  .field-missing{outline:2px solid var(--red)!important;outline-offset:1px;border-radius:6px;}
+  /* Panel de confirmación que aparece justo después de certificar, con el
+     estado de publicación en Biblioteca y las 3 descargas por separado. */
+  .cert-confirm-panel{border:1px solid var(--red);margin-bottom:22px;}
+  #cert-confirm-mount:empty{margin-bottom:0;}
+  .cert-confirm-previews{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+  .cert-confirm-previews .live-preview-scale{flex:2 1 460px;min-width:280px;background:var(--panel-2);border-radius:10px;padding:18px;overflow:hidden;}
+  #cert-confirm-mount-full{transform-origin:top left;margin:0;}
+  .cert-confirm-preview-small{flex:1 1 180px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--panel-2);border-radius:10px;padding:18px;}
+  @media(max-width:700px){.cert-confirm-previews{flex-direction:column;}}
+  /* Ayuda flotante del admin (tooltips del menú lateral) — solo visible
+     dentro del panel admin, nunca en el sitio público. */
+  .admin-sidebar button{position:relative;}
+  .admin-nav-help{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(255,255,255,.18);color:inherit;font-size:9.5px;font-weight:700;margin-left:auto;flex:none;cursor:help;}
+  .admin-nav-help:hover,.admin-nav-help:focus{background:rgba(255,255,255,.32);}
+  .admin-tooltip-float{position:fixed;max-width:230px;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.4;box-shadow:0 10px 28px rgba(0,0,0,.35);z-index:9999;pointer-events:none;opacity:0;transition:opacity .12s ease;}
+  .admin-tooltip-float.show{opacity:1;}
 
   .holo{width:2cm;height:2cm;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg,#cfd6da,#f3e9d2,#d8c9e8,#cde7dc,#f1cdd8,#cfd6da);}
   .holo .ring{position:absolute;inset:2pt;border-radius:50%;border:1px dashed rgba(20,20,20,.35);}
@@ -2061,40 +2080,40 @@
     #print-target-full .cert .qr-embed{width:85px!important;height:85px!important;}
   }
   .cert-label{width:4cm;height:7cm;background:#fff;color:#111;border:.75pt solid #111;border-radius:2px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 16px rgba(0,0,0,.25);font-family:'IBM Plex Sans',sans-serif;box-sizing:border-box;}
-  .cert-label-head{background:#111;padding:.13cm .16cm .11cm;display:flex;flex-direction:column;align-items:center;gap:.04cm;}
-  .cl-seal-badge{width:.6cm;height:.6cm;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1pt rgba(255,255,255,.4);}
-  .cl-seal-badge img{width:.42cm;height:.42cm;object-fit:contain;filter:grayscale(1) brightness(0);}
-  .cl-brand{margin:.03cm 0 0;color:#fff;font-family:'Fraunces',serif;font-size:7pt;line-height:1.1;letter-spacing:.01em;}
-  .cl-sub{margin:0;color:#D8D8D8;font-family:'IBM Plex Mono',monospace;font-size:4pt;letter-spacing:.08em;text-transform:uppercase;}
-  .cert-label-body{padding:.13cm .18cm;flex:1;display:flex;flex-direction:column;gap:.045cm;min-height:0;}
+  .cert-label-head{background:#111;padding:.1cm .15cm .085cm;display:flex;flex-direction:column;align-items:center;gap:.03cm;}
+  .cl-seal-badge{width:.56cm;height:.56cm;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1pt rgba(255,255,255,.4);}
+  .cl-seal-badge img{width:.4cm;height:.4cm;object-fit:contain;filter:grayscale(1) brightness(0);}
+  .cl-brand{margin:.02cm 0 0;color:#fff;font-family:'Fraunces',serif;font-size:7.4pt;line-height:1.05;letter-spacing:.01em;}
+  .cl-sub{margin:0;color:#D8D8D8;font-family:'IBM Plex Mono',monospace;font-size:4.2pt;letter-spacing:.08em;text-transform:uppercase;}
+  .cert-label-body{padding:.07cm .16cm;flex:1;display:flex;flex-direction:column;gap:.015cm;min-height:0;}
   .cl-folio{margin:0;font-family:'IBM Plex Mono',monospace;font-size:9pt;font-weight:600;color:#111;text-align:center;letter-spacing:.02em;}
-  .cl-table{width:100%;border-collapse:collapse;font-size:5.2pt;}
-  .cl-table td{padding:.9pt 0;border-bottom:.5pt solid #ddd;word-break:break-word;}
+  .cl-table{width:100%;border-collapse:collapse;font-size:5.4pt;}
+  .cl-table td{padding:.5pt 0;border-bottom:.5pt solid #ddd;word-break:break-word;}
   .cl-table td:first-child{color:#666;width:38%;}
   .cl-row{display:flex;justify-content:space-between;align-items:center;margin-top:2pt;}
-  .cl-grade{font-family:'Fraunces',serif;font-size:12pt;color:#111;font-weight:600;}
-  .cl-tests{font-size:5.6pt;color:#555;margin:0;line-height:1.4;}
-  .cl-qr-row{display:flex;align-items:center;gap:.14cm;margin-top:0;}
-  .cl-qr-row img{width:1cm;height:1cm;flex:none;}
-  .cl-sign{font-size:4.2pt;color:#333;line-height:1.4;}
-  .cl-disclaimer{font-size:3.2pt;color:#777;margin:auto 0 0;line-height:1.2;border-top:.5pt solid #ddd;padding-top:.6pt;}
-  .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;gap:.05cm;padding:0 .06cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
-  .sl-logo{flex:none;height:.5cm;width:.5cm;object-fit:contain;filter:grayscale(1) brightness(0);}
-  .sl-divider{flex:none;width:.4pt;height:.5cm;background:#111;opacity:.35;}
-  .sl-folio{flex:1;min-width:0;font-family:'IBM Plex Mono',monospace;font-size:4.6pt;font-weight:700;color:#111;letter-spacing:0;text-align:left;line-height:1.15;word-break:break-all;}
-  .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:4.4pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
-  .cl-certified::before{content:'\2713';font-size:4.8pt;font-weight:900;line-height:1;}
-  .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:8pt;line-height:1.15;color:#111;}
-  .cl-item-sub{margin:1pt 0 2pt;font-size:5pt;color:#666;text-transform:uppercase;letter-spacing:.03em;}
-  .cl-grade-row{display:flex;align-items:baseline;gap:4pt;background:rgba(0,0,0,.05);border-radius:3pt;padding:1.4pt 4pt;margin-bottom:1pt;}
-  .cl-grade-tag{font-size:4.2pt;font-weight:700;color:#666;letter-spacing:.05em;}
-  .cl-grade-word{margin-left:auto;font-size:4.2pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#111;}
-  .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:1.5pt;}
+  .cl-grade{font-family:'Fraunces',serif;font-size:13pt;color:#111;font-weight:600;}
+  .cl-tests{font-size:5.8pt;color:#555;margin:0;line-height:1.3;}
+  .cl-qr-row{display:flex;align-items:center;gap:.12cm;margin-top:0;}
+  .cl-qr-row img{width:.8cm;height:.8cm;flex:none;}
+  .cl-sign{font-size:4.4pt;color:#333;line-height:1.1;}
+  .cl-disclaimer{font-size:3pt;color:#777;margin:auto 0 0;line-height:1;border-top:.5pt solid #ddd;padding-top:.25pt;}
+  .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;gap:.06cm;padding:0 .07cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
+  .sl-logo{flex:none;height:.6cm;width:.6cm;object-fit:contain;filter:grayscale(1) brightness(0);}
+  .sl-divider{flex:none;width:.5pt;height:.6cm;background:#111;opacity:.35;}
+  .sl-folio{flex:1;min-width:0;font-family:'IBM Plex Mono',monospace;font-size:5.6pt;font-weight:700;color:#111;letter-spacing:0;text-align:left;line-height:1.1;word-break:break-all;}
+  .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:4.6pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
+  .cl-certified::before{content:'\2713';font-size:5pt;font-weight:900;line-height:1;}
+  .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:8.5pt;line-height:1.05;color:#111;}
+  .cl-item-sub{margin:.5pt 0 1pt;font-size:5.2pt;color:#666;text-transform:uppercase;letter-spacing:.03em;}
+  .cl-grade-row{display:flex;align-items:baseline;gap:4pt;background:rgba(0,0,0,.05);border-radius:3pt;padding:1pt 4pt;margin-bottom:.5pt;}
+  .cl-grade-tag{font-size:4.4pt;font-weight:700;color:#666;letter-spacing:.05em;}
+  .cl-grade-word{margin-left:auto;font-size:4.4pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#111;}
+  .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:1pt;}
   .cl-subgrades div{text-align:center;background:#f2f2f2;border-radius:2pt;padding:1.3pt 1pt;}
-  .cl-sg-lbl{display:block;font-size:3.8pt;color:#777;text-transform:uppercase;}
-  .cl-sg-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:6pt;color:#111;font-weight:600;}
-  .cl-sign-name{margin:0;font-size:5.6pt;font-weight:600;color:#111;}
-  .cl-sign-role{margin:0;font-size:4.4pt;color:#777;}
+  .cl-sg-lbl{display:block;font-size:3.9pt;color:#777;text-transform:uppercase;}
+  .cl-sg-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:6.4pt;color:#111;font-weight:600;}
+  .cl-sign-name{margin:0;font-size:5.9pt;font-weight:600;color:#111;}
+  .cl-sign-role{margin:0;font-size:4.6pt;color:#777;}
   .cl-barcode{margin:2pt 0;opacity:.85;}
 
   /* ============================================================
@@ -4290,6 +4309,11 @@
           <!-- ===== DASHBOARD ===== -->
           <div class="admin-tab active" id="admin-tab-dashboard">
             <div class="card dash-deadline-alert" id="dash-deadline-alert" style="display:none;margin-bottom:16px;"></div>
+            <div class="card" id="dash-a-medias-card" style="display:none;margin-bottom:16px;">
+              <h3 style="font-size:16px;">Piezas a medias</h3>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Piezas que ya iniciaron su proceso de validación pero todavía no tienen un certificado (folio) emitido — recordatorio para no dejarlas sin terminar.</p>
+              <div id="dash-a-medias-list"></div>
+            </div>
             <div class="kpi-grid">
               <div class="kpi"><div class="kpi-ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><p class="num" id="stat-solicitudes">—</p><p class="lbl">Solicitudes pendientes</p></div>
               <div class="kpi"><div class="kpi-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div><p class="num" id="stat-validacion">—</p><p class="lbl">Validaciones en curso</p></div>
@@ -4382,6 +4406,7 @@
               <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 1.5×1 (D110)</button>
               <span class="cert-tab-hint">Vista previa en tiempo real — va cambiando mientras editas →</span>
             </div>
+            <div id="cert-confirm-mount"></div>
             <div class="grid grid-2" style="align-items:start;">
               <div class="card">
                 <h3 style="font-size:16px;">Nuevo folio de certificación</h3>
@@ -6325,7 +6350,8 @@ function tierLabel(tier, lang){
   return tier === 'gold' ? 'EJEMPLAR SOBRESALIENTE' : tier === 'silver' ? 'BUEN ESTADO' : 'REQUIERE REVISIÓN';
 }
 
-function renderCert(f, isAdmin){
+function renderCert(f, isAdmin, wrapIdOverride){
+  const wrapId = wrapIdOverride || 'print-target-full';
   // `lang` es el idioma FIJO del documento certificado (elegido por el admin
   // al crear el folio, campo certLang) — nunca cambia con el botón ES/EN del
   // visitante. `uiLang` es el idioma de los controles alrededor del
@@ -6343,7 +6369,7 @@ function renderCert(f, isAdmin){
     : [{label:'Pintura', val:f.sgPintura}, {label:'Desgaste', val:f.sgDesgaste}, {label:'Ensamble', val:f.sgEnsamble}, {label:'Autenticidad', val:f.sgAutenticidad}];
   const hasSubgrades = subgrades.some(s => s.val);
   return `
-  <div class="print-target" id="print-target-full" data-filename="${escapeHtml(filenameSlug(['Certificado', f.folio, f.modelo]))}">
+  <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Certificado', f.folio, f.modelo]))}">
   <div class="cert">
     <div class="cert-topband">
       <img class="hv-logo" src="assets/img/logo.png" alt="HV" style="height:30px;">
@@ -6419,7 +6445,7 @@ function renderCert(f, isAdmin){
   </div>
   </div>
   <div class="no-print row" style="margin-top:18px;align-items:center;">
-    <button class="btn ghost small" onclick="printOnly('full')">${ctt(uiLang,'Descargar / imprimir certificado','Download / print certificate')}</button>
+    <button class="btn ghost small" onclick="printOnly('full','${wrapId}')">${ctt(uiLang,'Descargar / imprimir certificado','Download / print certificate')}</button>
     ${isAdmin ? `<button class="btn small" onclick='openEtiquetaFor(${JSON.stringify(JSON.stringify(f))})'>Ir a su etiqueta y sello</button>` : ''}
     <button class="btn ghost small" onclick="shareCert('${escapeHtml(f.folio)}','${escapeHtml(f.modelo||'')}')">${ctt(uiLang,'Compartir certificado','Share certificate')}</button>
   </div>
@@ -6476,11 +6502,11 @@ function renderPapelInformal(data, lang){
   </div>`;
 }
 
-function printOnly(which){
+function printOnly(which, targetIdOverride){
   // Chrome/Edge usan document.title como nombre sugerido en el cuadro
   // "Guardar como PDF" — sin esto, cada certificado/etiqueta/sello se
   // guardaba con el mismo nombre genérico y había que renombrarlo a mano.
-  const target = document.getElementById('print-target-'+which);
+  const target = document.getElementById(targetIdOverride || ('print-target-'+which));
   const suggested = target ? target.dataset.filename : '';
   if(suggested){
     window.__printPrevTitle = document.title;
@@ -6497,20 +6523,26 @@ window.addEventListener('afterprint', ()=>{
   }
 });
 
-async function exportLabelImage(kind, folio, evt){
+async function exportLabelImage(kind, folio, evt, wrapIdOverride){
   const btn = evt ? (evt.currentTarget || evt.target) : null;
   if(typeof html2canvas === 'undefined'){
     toast('La herramienta de exportación sigue cargando, intenta de nuevo en un segundo.');
     return;
   }
-  const wrapId = kind === 'cert' ? 'print-target-cert' : 'print-target-seal';
+  const wrapId = wrapIdOverride || (kind === 'cert' ? 'print-target-cert' : 'print-target-seal');
   const wrap = document.getElementById(wrapId);
   const el = wrap ? wrap.querySelector(kind === 'cert' ? '.cert-label' : '.seal-label') : null;
   if(!el){ toast('No se encontró la etiqueta para exportar.'); return; }
   const originalText = btn ? btn.textContent : '';
   if(btn){ btn.disabled = true; btn.textContent = 'Generando…'; }
   try{
-    const scale = 203/96; // ~203dpi: resolución térmica típica de Niimbot B21/D110
+    // La etiqueta (4×7cm) exporta a la resolución térmica típica de Niimbot
+    // B21 (~203dpi). El sello es mucho más chico (1.5×1cm) — con esa misma
+    // escala el canvas resultante queda de apenas ~120×80px y se ve
+    // pixeleado al imprimir o ampliar. Más píxeles nunca perjudican la
+    // impresión térmica, así que al sello se le da una escala varias veces
+    // mayor para que la imagen exportada salga nítida.
+    const scale = kind === 'cert' ? (203/96) : (203/96) * 4.5;
     const canvas = await html2canvas(el, {scale, backgroundColor:'#ffffff', useCORS:true, logging:false});
     const link = document.createElement('a');
     // Nombre distinto por pieza (folio + modelo) en vez del genérico
@@ -6579,10 +6611,11 @@ function embedAllQrLogos(){
   document.querySelectorAll('img.qr-embed').forEach(img => embedLogoInQr(img));
 }
 
-function renderCertLabel(f){
+function renderCertLabel(f, wrapIdOverride){
   const tier = tierForGrade(f.grado, f.estado);
+  const wrapId = wrapIdOverride || 'print-target-cert';
   return `
-  <div class="print-target" id="print-target-cert" data-filename="${escapeHtml(filenameSlug(['Etiqueta', f.folio, f.modelo]))}">
+  <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Etiqueta', f.folio, f.modelo]))}">
     <div class="cert-label tier-${tier}">
       <div class="cert-label-head">
         <div class="cl-seal-badge"><img src="assets/img/logo.png" alt="HV"></div>
@@ -6616,14 +6649,15 @@ function renderCertLabel(f){
   </div>
   <p class="foot-note no-print">Tamaño real: 4 × 7 cm — en blanco y negro para impresión térmica limpia en tu Niimbot B21. Usa "Descargar imagen" para importarla directo en la app NIIMBOT, o imprime desde el navegador con escala 100%.</p>
   <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-    <button class="btn ghost small" onclick="printOnly('cert')">Imprimir desde el navegador</button>
-    <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event)">Descargar imagen (PNG)</button>
+    <button class="btn ghost small" onclick="printOnly('cert','${wrapId}')">Imprimir desde el navegador</button>
+    <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
   </div>`;
 }
 
-function renderSealLabel(f){
+function renderSealLabel(f, wrapIdOverride){
+  const wrapId = wrapIdOverride || 'print-target-seal';
   return `
-  <div class="print-target" id="print-target-seal" data-filename="${escapeHtml(filenameSlug(['Sello', f.folio, f.modelo]))}">
+  <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Sello', f.folio, f.modelo]))}">
     <div class="seal-label">
       <img class="sl-logo" src="assets/img/logo.png" alt="HV">
       <span class="sl-divider"></span>
@@ -6632,8 +6666,8 @@ function renderSealLabel(f){
   </div>
   <p class="foot-note no-print">Tamaño real: 1.5 × 1 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
   <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-    <button class="btn ghost small" onclick="printOnly('seal')">Imprimir desde el navegador</button>
-    <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event)">Descargar imagen (PNG)</button>
+    <button class="btn ghost small" onclick="printOnly('seal','${wrapId}')">Imprimir desde el navegador</button>
+    <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
   </div>`;
 }
 
@@ -12016,10 +12050,142 @@ async function resetFolioCounter(){
   }catch(e){ toast('No se pudo reiniciar el contador.'); }
 }
 
+// ============================================================
+// VALIDACIÓN VISUAL DE CAMPOS FALTANTES — resalta en rojo cualquier campo
+// del formulario de certificación que haga falta llenar, y quita el
+// resaltado en cuanto el admin empieza a corregirlo.
+// ============================================================
+function flagMissingField(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.add('field-missing');
+  const clear = () => { el.classList.remove('field-missing'); el.removeEventListener('input', clear); el.removeEventListener('change', clear); };
+  el.addEventListener('input', clear);
+  el.addEventListener('change', clear);
+}
+function clearMissingFieldFlags(){
+  document.querySelectorAll('#admin-tab-certificados .field-missing').forEach(el => el.classList.remove('field-missing'));
+}
+
+// ============================================================
+// CONFIRMACIÓN POST-CERTIFICACIÓN — antes, al guardar un folio solo se
+// mostraba un toast y el formulario se borraba por completo, sin forma de
+// saber si la pieza quedó publicada en la Biblioteca ni de descargar de
+// inmediato el certificado/etiqueta/sello. Ahora se deja, justo arriba del
+// formulario (sin cambiar de pestaña), un panel persistente con esa
+// información y 3 botones de descarga separados, más la vista final de
+// cada documento para revisar que todo haya quedado bien.
+// ============================================================
+function scaleMountToFit(mount, wrap, designWidth){
+  if(!mount || !wrap) return;
+  mount.style.transform = 'none';
+  mount.style.width = designWidth + 'px';
+  const naturalH = mount.scrollHeight;
+  const available = wrap.clientWidth || designWidth;
+  const scale = Math.min(1, available / designWidth);
+  mount.style.transform = `scale(${scale})`;
+  wrap.style.height = Math.round(naturalH * scale) + 'px';
+}
+
+function closeCertConfirmPanel(){
+  const mount = document.getElementById('cert-confirm-mount');
+  if(mount) mount.innerHTML = '';
+}
+
+async function certConfirmPublish(folio){
+  await publishPiezaFromFolio(folio);
+  refreshCertConfirmPublishStatus(folio);
+}
+
+async function refreshCertConfirmPublishStatus(folio){
+  const box = document.getElementById('cert-confirm-publish-status');
+  if(!box) return;
+  try{
+    const r = await HVStorage.get('folio:'+folio, true);
+    if(!r || !r.value) return;
+    const f = JSON.parse(r.value);
+    const piezas = await getPiezas().catch(()=>[]);
+    const published = piezas.some(p => p.folio === folio);
+    const canPublish = Number(f.grado) >= CALIFICACION_MINIMA;
+    const fotos = [f.foto1,f.foto2,f.foto3,f.foto4,f.foto5,f.foto6,f.foto7].filter(Boolean);
+    let html;
+    if(published){
+      html = `<span class="pill completado">✓ Publicada en la Biblioteca pública</span> <button class="btn ghost small" onclick="adminGo('galeria')">Ver en Imágenes del sitio →</button>`;
+    } else if(!canPublish){
+      html = `<span class="pill neutral">No califica para la Biblioteca (mínimo ${CALIFICACION_MINIMA}/10)</span>`;
+    } else if(!fotos.length){
+      html = `<span class="pill pendiente">Sin publicar</span> <span style="font-size:12.5px;color:var(--sage);">— sube al menos una foto para poder publicarla en la Biblioteca.</span>`;
+    } else {
+      html = `<span class="pill pendiente">Aún no publicada</span> <button class="btn ghost small" onclick="certConfirmPublish('${escapeHtml(folio)}')">Publicar en Biblioteca ahora</button>`;
+    }
+    box.innerHTML = `<strong style="font-size:13px;">Biblioteca pública:</strong> ${html}`;
+  }catch(e){}
+}
+
+function renderPostCertifyConfirmPanel(f, extraTxt){
+  return `
+  <div class="card cert-confirm-panel" id="cert-confirm-panel">
+    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h3 style="margin:0 0 4px;font-size:16px;">✅ Certificado guardado — <span class="mono">${escapeHtml(f.folio)}</span></h3>
+        <p style="margin:0;color:var(--sage);font-size:13.5px;">${escapeHtml(f.modelo)} · grado ${escapeHtml(f.grado||'—')}${extraTxt ? ' · '+escapeHtml(extraTxt) : ''}</p>
+      </div>
+      <button class="btn ghost small" onclick="closeCertConfirmPanel()">✕ Cerrar</button>
+    </div>
+    <div class="row" id="cert-confirm-publish-status" style="margin:12px 0;gap:8px;flex-wrap:wrap;align-items:center;">
+      <strong style="font-size:13px;">Biblioteca pública:</strong> <span class="pill neutral">Revisando…</span>
+    </div>
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin:6px 0 18px;">
+      <button class="btn small" onclick="printOnly('full','confirm-print-target-full')">📄 Descargar certificado</button>
+      <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event,'confirm-print-target-cert')">🏷️ Descargar etiqueta (PNG)</button>
+      <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'confirm-print-target-seal')">🔖 Descargar sello (PNG)</button>
+    </div>
+    <p class="foot-note" style="border:none;padding-top:0;margin-top:0;">Vista final de lo que se generó — revisa que todo esté correcto antes de entregar o imprimir.</p>
+    <div class="cert-confirm-previews">
+      <div class="live-preview-scale" id="cert-confirm-scale-full"><div id="cert-confirm-mount-full"></div></div>
+      <div class="cert-confirm-preview-small">
+        <div id="cert-confirm-mount-label"></div>
+        <div id="cert-confirm-mount-seal" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function showPostCertifyConfirm(f, extraTxt){
+  const mount = document.getElementById('cert-confirm-mount');
+  if(!mount) return;
+  mount.innerHTML = renderPostCertifyConfirmPanel(f, extraTxt);
+  document.getElementById('cert-confirm-mount-full').innerHTML = renderCert(f, true, 'confirm-print-target-full');
+  document.getElementById('cert-confirm-mount-label').innerHTML = renderCertLabel(f, 'confirm-print-target-cert');
+  document.getElementById('cert-confirm-mount-seal').innerHTML = renderSealLabel(f, 'confirm-print-target-seal');
+  applyLogos();
+  embedAllQrLogos();
+  scaleMountToFit(document.getElementById('cert-confirm-mount-full'), document.getElementById('cert-confirm-scale-full'), 640);
+  refreshCertConfirmPublishStatus(f.folio);
+  mount.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 async function createFolio(){
   const folio = document.getElementById('a-folio').value.trim();
   const modelo = document.getElementById('a-modelo').value.trim();
-  if(!folio || !modelo){ toast('Folio y modelo son obligatorios.'); return; }
+  const gradoChk = document.getElementById('a-grado').value.trim();
+  // Antes solo se checaba folio+modelo y, si faltaba algo, el botón
+  // "Certificar" no hacía nada más que un toast genérico — fácil de pasar
+  // por alto. Ahora se listan por nombre TODOS los campos imprescindibles
+  // que falten, se resalta cada uno en rojo y se enfoca el primero, para
+  // que quede clarísimo qué falta por completar.
+  const faltantes = [];
+  if(!folio) faltantes.push({id:'a-folio', label:'Folio'});
+  if(!modelo) faltantes.push({id:'a-modelo', label:'Modelo'});
+  if(!gradoChk) faltantes.push({id:'a-grado', label:'Grado general'});
+  if(faltantes.length){
+    faltantes.forEach(fCampo => flagMissingField(fCampo.id));
+    toast('Falta completar: ' + faltantes.map(fCampo=>fCampo.label).join(', ') + '.');
+    const first = document.getElementById(faltantes[0].id);
+    if(first){ first.scrollIntoView({behavior:'smooth', block:'center'}); first.focus(); }
+    return;
+  }
+  clearMissingFieldFlags();
   const linkedSolicitud = document.getElementById('a-linked-solicitud').value.trim();
   const data = collectLiveFormData();
   try{
@@ -12088,6 +12254,7 @@ async function createFolio(){
     updateLivePreview();
     document.getElementById('a-linked-solicitud').value = '';
     refreshAdminLists();
+    showPostCertifyConfirm(data, (referidoDescuentoTxt + ' ' + salonTxt).replace(/\s+/g,' ').trim());
   }catch(e){
     toast('No se pudo guardar el folio.');
   }
@@ -12427,6 +12594,67 @@ function adminGo(tab){
   if(tab==='galeria') showCurrentHeroPreview();
   if(tab==='seguridad') renderSeguridadAdmin();
 }
+
+// ============================================================
+// AYUDA DEL MENÚ ADMIN — "ventanitas flotantes" que explican brevemente qué
+// hace cada sección del panel, solo visibles aquí adentro (nunca en el
+// sitio público) porque .admin-sidebar solo existe dentro del panel admin.
+// ============================================================
+const ADMIN_TAB_HELP = {
+  dashboard: 'Resumen general: estadísticas, ingresos, piezas a medias sin certificar y actividad reciente del laboratorio.',
+  solicitudes: 'Solicitudes que los clientes enviaron desde el sitio, antes de empezar su validación física o digital.',
+  validacion: 'Piezas cuyo proceso de validación ya inició pero todavía no se ha emitido su folio ni su certificado.',
+  certificados: 'Aquí se captura toda la información de una pieza y se emite su folio oficial: certificado, etiqueta y sello.',
+  historial: 'Historial completo de piezas: en proceso, certificadas, no aprobadas o validadas en línea.',
+  cliente: 'Busca a un cliente por teléfono y ve de un vistazo todas sus solicitudes, folios y su estatus en el Salón Privado.',
+  ingresos: 'Reportes de ingresos por folio emitido, para llevar tu contabilidad.',
+  salon: 'Administra la membresía del Salón Privado HV: elegibles, socios activos, niveles y pagos.',
+  galeria: 'Controla qué imágenes y piezas se muestran públicamente en la Biblioteca del sitio.',
+  etiquetas: 'Busca cualquier folio ya emitido para volver a generar o descargar su etiqueta y su sello.',
+  seguridad: 'Registro de intentos de acceso al panel admin, para detectar accesos sospechosos.',
+  respaldo: 'Descarga un respaldo de todos tus datos y elimina registros antiguos que ya hayas respaldado.'
+};
+let ADMIN_TOOLTIP_EL = null;
+function showAdminTooltip(anchor, text){
+  if(!ADMIN_TOOLTIP_EL){
+    ADMIN_TOOLTIP_EL = document.createElement('div');
+    ADMIN_TOOLTIP_EL.className = 'admin-tooltip-float';
+    ADMIN_TOOLTIP_EL.setAttribute('role','tooltip');
+    document.body.appendChild(ADMIN_TOOLTIP_EL);
+  }
+  ADMIN_TOOLTIP_EL.textContent = text;
+  ADMIN_TOOLTIP_EL.classList.add('show');
+  const r = anchor.getBoundingClientRect();
+  const elW = ADMIN_TOOLTIP_EL.offsetWidth || 230;
+  let left = r.right + 10;
+  if(left + elW > window.innerWidth - 8) left = Math.max(8, r.left - elW - 10);
+  ADMIN_TOOLTIP_EL.style.left = Math.round(left) + 'px';
+  ADMIN_TOOLTIP_EL.style.top = Math.round(Math.min(r.top, window.innerHeight - 20)) + 'px';
+}
+function hideAdminTooltip(){
+  if(ADMIN_TOOLTIP_EL) ADMIN_TOOLTIP_EL.classList.remove('show');
+}
+function initAdminSidebarHelp(){
+  document.querySelectorAll('.admin-sidebar button[data-tab]').forEach(btn => {
+    const text = ADMIN_TAB_HELP[btn.dataset.tab];
+    if(!text || btn.querySelector('.admin-nav-help')) return;
+    const icon = document.createElement('span');
+    icon.className = 'admin-nav-help';
+    icon.textContent = '?';
+    icon.setAttribute('role','button');
+    icon.setAttribute('tabindex','0');
+    icon.setAttribute('aria-label','Qué hace esta sección');
+    icon.addEventListener('mouseenter', e => showAdminTooltip(e.currentTarget, text));
+    icon.addEventListener('mouseleave', hideAdminTooltip);
+    icon.addEventListener('focus', e => showAdminTooltip(e.currentTarget, text));
+    icon.addEventListener('blur', hideAdminTooltip);
+    icon.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); showAdminTooltip(e.currentTarget, text); });
+    icon.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); showAdminTooltip(e.currentTarget, text); } });
+    btn.appendChild(icon);
+  });
+}
+document.addEventListener('DOMContentLoaded', initAdminSidebarHelp);
+document.addEventListener('click', e => { if(!e.target.closest('.admin-nav-help')) hideAdminTooltip(); });
 
 // ============================================================
 // BUSCADOR GLOBAL DEL ADMIN — un solo cuadro que busca a la vez en
@@ -14488,6 +14716,29 @@ async function updateAdminStats(){
         </div>`;
       } else {
         alertBox.style.display = 'none';
+      }
+    }
+    // "Piezas a medias" — recordatorio persistente (no solo cuando hay
+    // plazos vencidos, a diferencia de la alerta de arriba) de toda pieza
+    // que ya inició su validación pero aún no tiene folio/certificado.
+    const mediasCard = document.getElementById('dash-a-medias-card');
+    const mediasList = document.getElementById('dash-a-medias-list');
+    if(mediasCard && mediasList){
+      if(enProcesoItems.length){
+        mediasCard.style.display = 'block';
+        const MAX_MOSTRADAS = 8;
+        const ordenadas = enProcesoItems.slice().sort((a,b)=>(b.creadoTs||0)-(a.creadoTs||0));
+        mediasList.innerHTML = ordenadas.slice(0, MAX_MOSTRADAS).map(p => `
+          <div class="row" style="justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:8px;">
+            <div>
+              <strong style="font-size:13.5px;">${escapeHtml(p.modelo||'Pieza')}</strong>
+              <p style="margin:2px 0 0;font-size:12.5px;color:var(--sage);">${escapeHtml(p.nombre||'')} · ${escapeHtml(PROCESO_FASE_LABEL[procesoFase(p)]||'')}</p>
+            </div>
+            <button class="btn ghost small" onclick="adminGo('validacion');openProceso('${escapeHtml(p.id)}')">Continuar →</button>
+          </div>`).join('') + (ordenadas.length > MAX_MOSTRADAS ? `<p class="foot-note" style="border:none;">Y ${ordenadas.length - MAX_MOSTRADAS} más — revisa "Validación en curso".</p>` : '');
+      } else {
+        mediasCard.style.display = 'none';
+        mediasList.innerHTML = '';
       }
     }
   }catch(e){}
