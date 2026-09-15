@@ -6702,6 +6702,22 @@ window.addEventListener('afterprint', ()=>{
   }
 });
 
+// Fuerza width/height como atributos HTML explícitos (px reales) en cada
+// <img> dentro de `root`, tomando la medida que el navegador YA calculó
+// correctamente en pantalla (getBoundingClientRect). Ver el comentario en
+// exportLabelImage(): esto existe únicamente para que html2canvas no
+// tenga que adivinar el tamaño (con "object-fit"/flexbox a veces lo hace
+// mal y estira la imagen) — no cambia nada de cómo se ve la página normal.
+function lockImgPixelSizes(root){
+  root.querySelectorAll('img').forEach(img => {
+    const r = img.getBoundingClientRect();
+    if(r.width > 0 && r.height > 0){
+      img.setAttribute('width', Math.round(r.width));
+      img.setAttribute('height', Math.round(r.height));
+    }
+  });
+}
+
 async function exportLabelImage(kind, folio, evt, wrapIdOverride){
   const btn = evt ? (evt.currentTarget || evt.target) : null;
   if(typeof html2canvas === 'undefined'){
@@ -6715,6 +6731,16 @@ async function exportLabelImage(kind, folio, evt, wrapIdOverride){
   const originalText = btn ? btn.textContent : '';
   if(btn){ btn.disabled = true; btn.textContent = 'Generando…'; }
   try{
+    // html2canvas no soporta bien "object-fit" ni el tamaño automático de
+    // <img> dentro de contenedores flex (bug conocido de la librería): sin
+    // esto, el logo (HV) del sello y de la etiqueta salía estirado/aplastado
+    // en la imagen exportada aunque en pantalla se viera perfecto. Fijar
+    // width/height como ATRIBUTOS explícitos (en px reales, tomados de la
+    // medida ya correcta en pantalla) justo antes de capturar le quita toda
+    // ambigüedad a html2canvas: no tiene que interpretar cm, flexbox ni
+    // object-fit, solo dibuja cada imagen exactamente del tamaño que ya sabe
+    // que le corresponde.
+    lockImgPixelSizes(el);
     // La etiqueta (4×7cm) exporta a la resolución térmica típica de Niimbot
     // B21 (~203dpi). El sello es mucho más chico (1.5×1cm) — con esa misma
     // escala el canvas resultante queda de apenas ~120×80px y se ve
