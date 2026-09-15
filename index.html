@@ -2145,36 +2145,31 @@
   .cert-label-head{background:#111;padding:.1cm .15cm .085cm;display:flex;flex-direction:column;align-items:center;gap:.03cm;}
   .cl-seal-badge{width:.56cm;height:.56cm;flex:none;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1pt rgba(255,255,255,.4);}
   .cl-seal-badge img{width:.4cm;height:.4cm;object-fit:contain;filter:grayscale(1) brightness(0);}
-  .cl-brand{margin:.02cm 0 0;color:#fff;font-family:'Fraunces',serif;font-size:7.4pt;line-height:1.05;letter-spacing:.01em;}
-  .cl-sub{margin:0;color:#D8D8D8;font-family:'IBM Plex Mono',monospace;font-size:4.2pt;letter-spacing:.08em;text-transform:uppercase;}
-  .cert-label-body{padding:.07cm .16cm;flex:1;display:flex;flex-direction:column;gap:.015cm;min-height:0;}
+  .cl-brand{margin:.02cm 0 0;color:#fff;font-family:'Fraunces',serif;font-weight:700;font-size:8pt;line-height:1.05;letter-spacing:.01em;}
+  .cl-sub{margin:0;color:#EDEDED;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:4.6pt;letter-spacing:.08em;text-transform:uppercase;}
+  .cert-label-body{padding:.05cm .17cm;flex:1;display:flex;flex-direction:column;gap:.018cm;min-height:0;}
   .cl-folio{margin:0;font-family:'IBM Plex Mono',monospace;font-size:9pt;font-weight:600;color:#111;text-align:center;letter-spacing:.02em;}
-  .cl-table{width:100%;border-collapse:collapse;font-size:5.4pt;}
-  .cl-table td{padding:.5pt 0;border-bottom:.5pt solid #ddd;word-break:break-word;}
-  .cl-table td:first-child{color:#666;width:38%;}
+  .cl-table{width:100%;border-collapse:collapse;font-size:5.6pt;}
+  .cl-table td{padding:.6pt 0;border-bottom:.5pt solid #ccc;word-break:break-word;}
+  .cl-table td:first-child{color:#333;font-weight:600;width:38%;}
   .cl-row{display:flex;justify-content:space-between;align-items:center;margin-top:2pt;}
-  .cl-grade{font-family:'Fraunces',serif;font-size:13pt;color:#111;font-weight:600;}
+  .cl-grade{font-family:'Fraunces',serif;font-size:13pt;color:#111;font-weight:700;}
   .cl-tests{font-size:5.8pt;color:#555;margin:0;line-height:1.3;}
-  .cl-qr-row{display:flex;align-items:center;gap:.12cm;margin-top:0;}
-  .cl-qr-row img{width:.8cm;height:.8cm;flex:none;}
-  .cl-sign{font-size:4.4pt;color:#333;line-height:1.1;}
-  .cl-disclaimer{font-size:3pt;color:#777;margin:auto 0 0;line-height:1;border-top:.5pt solid #ddd;padding-top:.25pt;}
+  .cl-disclaimer{font-size:3.2pt;color:#555;font-weight:500;margin:auto 0 0;line-height:1.15;border-top:.5pt solid #ccc;padding-top:.25pt;}
   .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;justify-content:center;gap:.09cm;padding:0 .08cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
   .sl-logo{flex:none;height:.62cm;width:.62cm;object-fit:contain;filter:grayscale(1) brightness(0);}
   .sl-qr{flex:none;height:.76cm;width:.76cm;object-fit:contain;}
-  .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:4.6pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
-  .cl-certified::before{content:'\2713';font-size:5pt;font-weight:900;line-height:1;}
-  .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:600;font-size:8.5pt;line-height:1.05;color:#111;}
-  .cl-item-sub{margin:.5pt 0 1pt;font-size:5.2pt;color:#666;text-transform:uppercase;letter-spacing:.03em;}
-  .cl-grade-row{display:flex;align-items:baseline;gap:4pt;background:rgba(0,0,0,.05);border-radius:3pt;padding:1pt 4pt;margin-bottom:.5pt;}
-  .cl-grade-tag{font-size:4.4pt;font-weight:700;color:#666;letter-spacing:.05em;}
-  .cl-grade-word{margin-left:auto;font-size:4.4pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#111;}
+  .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:5pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
+  .cl-certified::before{content:'\2713';font-size:5.4pt;font-weight:900;line-height:1;}
+  .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:700;font-size:8.8pt;line-height:1.08;color:#111;}
+  .cl-item-sub{margin:.4pt 0 .8pt;font-size:5.4pt;font-weight:600;color:#444;text-transform:uppercase;letter-spacing:.03em;}
+  .cl-grade-row{display:flex;align-items:baseline;gap:4pt;background:rgba(0,0,0,.06);border-radius:3pt;padding:1pt 4.5pt;margin-bottom:.3pt;}
+  .cl-grade-tag{font-size:5pt;font-weight:700;color:#333;letter-spacing:.05em;}
+  .cl-grade-word{margin-left:auto;font-size:5pt;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#111;}
   .cl-subgrades{display:grid;grid-template-columns:repeat(4,1fr);gap:2pt;margin-bottom:1pt;}
   .cl-subgrades div{text-align:center;background:#f2f2f2;border-radius:2pt;padding:1.3pt 1pt;}
   .cl-sg-lbl{display:block;font-size:3.9pt;color:#777;text-transform:uppercase;}
   .cl-sg-val{display:block;font-family:'IBM Plex Mono',monospace;font-size:6.4pt;color:#111;font-weight:600;}
-  .cl-sign-name{margin:0;font-size:5.9pt;font-weight:600;color:#111;}
-  .cl-sign-role{margin:0;font-size:4.6pt;color:#777;}
   .cl-barcode{margin:2pt 0;opacity:.85;}
 
   /* ============================================================
@@ -2661,7 +2656,7 @@
   <button class="intro-skip" id="intro-skip-btn" type="button">Saltar ✕</button>
   <div class="intro-stage">
     <div class="intro-seal-glow" aria-hidden="true"></div>
-    <div class="intro-seal"><img src="assets/img/logo.png" alt="Laboratorio HV México"></div>
+    <div class="intro-seal"><img src="assets/img/logo-mark.png" alt="Laboratorio HV México"></div>
     <div class="intro-shock s1" aria-hidden="true"></div>
     <div class="intro-shock s2" aria-hidden="true"></div>
     <div class="intro-cats" aria-hidden="true">
@@ -2903,7 +2898,7 @@
             <div class="cert-flip-face cert-flip-front">
               <div class="cert-showcase-label">
                 <div class="csl-head">
-                  <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
+                  <div class="csl-seal"><img src="assets/img/logo-mark.png" alt="HV"></div>
                   <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
                   <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
                 </div>
@@ -2922,7 +2917,7 @@
             <div class="cert-flip-face cert-flip-back">
               <div class="cert-showcase-label">
                 <div class="csl-head">
-                  <div class="csl-seal"><img src="assets/img/logo.png" alt="HV"></div>
+                  <div class="csl-seal"><img src="assets/img/logo-mark.png" alt="HV"></div>
                   <div class="csl-brand"><strong>LABORATORIO HV</strong><span>Certificadora México</span></div>
                   <span class="csl-certified" data-i18n="inicio.cert.certifiedBadge">Certificado</span>
                 </div>
@@ -5169,6 +5164,14 @@ const HVStorage = {
 };
 
 const LOGO_SRC = "assets/img/logo.png";
+// Versión recortada del logo (solo el círculo de la llanta + "HV", sin el
+// arco de texto "LABORATORIO" ni las banderas) para usarse en insignias
+// diminutas (sello, badge de la etiqueta, QR incrustado). Meter el logo
+// completo — mucho más ancho que alto, con texto fino y banderas — dentro
+// de un círculo de unos milímetros lo dejaba irreconocible o, peor, como
+// un bloque sólido negro al aplicarle el filtro de silueta. Este recorte
+// SÍ llena bien ese espacio diminuto.
+const MARK_SRC = "assets/img/logo-mark.png";
 
 function applyLogos(){
   document.querySelectorAll('img.hv-logo').forEach(img => { img.src = LOGO_SRC; });
@@ -6771,7 +6774,7 @@ async function embedLogoInQr(imgEl){
     ctx.drawImage(qrImg, 0, 0, size, size);
     const logo = new Image();
     const logoLoaded = new Promise((res, rej) => { logo.onload = res; logo.onerror = rej; });
-    logo.src = LOGO_SRC;
+    logo.src = MARK_SRC;
     await logoLoaded;
     const logoSize = size * 0.22;
     const pad = logoSize * 0.22;
@@ -6794,7 +6797,7 @@ function renderCertLabel(f, wrapIdOverride){
   <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Etiqueta', f.folio, f.modelo]))}">
     <div class="cert-label tier-${tier}">
       <div class="cert-label-head">
-        <div class="cl-seal-badge"><img src="assets/img/logo.png" alt="HV"></div>
+        <div class="cl-seal-badge"><img src="assets/img/logo-mark.png" alt="HV"></div>
         <p class="cl-brand">LABORATORIO HV</p>
         <p class="cl-sub">Certificadora México</p>
         <span class="cl-certified">CERTIFIED</span>
@@ -6812,18 +6815,11 @@ function renderCertLabel(f, wrapIdOverride){
           <tr><td>FECHA</td><td>${escapeHtml(f.fecha||'—')}</td></tr>
           <tr><td>ESCALA</td><td>${escapeHtml(f.escala||'—')}</td></tr>
         </table>
-        <div class="cl-qr-row">
-          <img src="${qrDataUrl(f,320)}" alt="QR" class="qr-embed" data-size="320" style="width:150px;height:150px;" crossorigin="anonymous">
-          <div class="cl-sign">
-            <p class="cl-sign-role" style="font-weight:600;color:#111;">Técnico Certificador</p>
-            <p class="cl-sign-role">Laboratorio HV México</p>
-          </div>
-        </div>
         <p class="cl-disclaimer">Laboratorio independiente. No afiliado a Mattel, Inc. ni a Hot Wheels®. Opinión experta, no avalúo comercial.</p>
       </div>
     </div>
   </div>
-  <p class="foot-note no-print">Tamaño real: 4 × 7 cm — en blanco y negro para impresión térmica limpia en tu Niimbot B21. Usa "Descargar imagen" para importarla directo en la app NIIMBOT, o imprime desde el navegador con escala 100%.</p>
+  <p class="foot-note no-print">Tamaño real: 4 × 7 cm — en blanco y negro para impresión térmica limpia en tu Niimbot B21. El código QR de verificación va solo en el sello (para no repetirlo), así que esta etiqueta se enfoca en que el texto se lea perfecto. Usa "Descargar imagen" para importarla directo en la app NIIMBOT, o imprime desde el navegador con escala 100%.</p>
   <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
     <button class="btn ghost small" onclick="printOnly('cert','${wrapId}')">Imprimir desde el navegador</button>
     <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
@@ -6835,7 +6831,7 @@ function renderSealLabel(f, wrapIdOverride){
   return `
   <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Sello', f.folio, f.modelo]))}">
     <div class="seal-label">
-      <img class="sl-logo" src="assets/img/logo.png" alt="HV">
+      <img class="sl-logo" src="assets/img/logo-mark.png" alt="HV">
       <img class="sl-qr qr-embed" src="${qrDataUrl(f,500)}" alt="QR" data-size="500" crossorigin="anonymous">
     </div>
   </div>
