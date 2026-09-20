@@ -13830,11 +13830,25 @@ function migrateProcesoShape(p){
   if(p.paquete === 'digital'){
     const defs = digitalPasoDefs(p.modoValidacion || 'en_linea');
     const hasDigitalShape = defs.every(def => p.pasos.some(s=>s.key===def.key));
-    if(hasDigitalShape) return p;
-    // Mejor esfuerzo: conserva cualquier nota ya escrita, reinicia el resto.
-    const notaPrevia = p.pasos.map(s=>s.nota).filter(Boolean).join(' · ');
-    p.pasos = defs.map((def,i)=>({key:def.key, label:def.label, done:false, nota: i===0?notaPrevia:''}));
-    p._migrated = true;
+    if(!hasDigitalShape){
+      // Mejor esfuerzo: conserva cualquier nota ya escrita, reinicia el resto.
+      const notaPrevia = p.pasos.map(s=>s.nota).filter(Boolean).join(' · ');
+      p.pasos = defs.map((def,i)=>({key:def.key, label:def.label, done:false, nota: i===0?notaPrevia:''}));
+      p._migrated = true;
+    }
+    // Autocorrección de un caso legado: antes de que existiera "Finalizar y
+    // notificar al cliente" (finalizeDigitalProceso), algunas validaciones
+    // digitales se cerraron marcando la casilla del paso final directamente,
+    // dejando p.estado atorado en 'en_proceso' aunque el paso ya esté al
+    // 100%. Sin esto, esa pieza queda para siempre en "Validación en curso"
+    // aunque su tarjeta ya diga "Completado". Se corrige al vuelo la
+    // primera vez que se vuelve a leer el registro.
+    const cierreDigital = p.pasos.find(s=>s.key==='dictamen_digital');
+    if(cierreDigital && cierreDigital.done && p.estado === 'en_proceso'){
+      p.estado = 'completado';
+      if(!p.precioFinal) p.precioFinal = 150;
+      p._migrated = true;
+    }
     return p;
   }
 
@@ -14278,7 +14292,19 @@ async function refreshValidacionList(){
   try{
     const list = await HVStorage.list('proceso:', true).catch(()=>({keys:[]}));
     const fetched = await Promise.all((list.keys||[]).map(async k => {
-      try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); return (p.estado==='en_proceso') ? p : null; }catch(e){ return null; }
+      try{
+        const r = await HVStorage.get(k, true);
+        const p = JSON.parse(r.value);
+        migrateProcesoShape(p);
+        if(p._migrated){ delete p._migrated; await setProceso(p).catch(()=>{}); }
+        // "allDone" manda sobre p.estado: una pieza con todos sus pasos
+        // completados ya no pertenece a este tablero de "en curso", así el
+        // registro se haya quedado con estado='en_proceso' por algún caso
+        // legado (ver migrateProcesoShape) — evita que quede escondida ahí
+        // para siempre aunque su tarjeta ya diga "Completado".
+        const allDone = p.pasos.length > 0 && p.pasos.every(s=>s.done);
+        return (p.estado==='en_proceso' && !allDone) ? p : null;
+      }catch(e){ return null; }
     }));
     const items = fetched.filter(Boolean);
     if(!items.length){
@@ -15694,7 +15720,18 @@ async function updateAdminStats(){
         try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); return (d.estado!=='completado' && d.estado!=='en_validacion'); }catch(e){ return false; }
       })),
       Promise.all((proc.keys||[]).map(async k => {
-        try{ const r = await HVStorage.get(k, true); const p = JSON.parse(r.value); migrateProcesoShape(p); return (p.estado==='en_proceso') ? p : null; }catch(e){ return null; }
+        try{
+          const r = await HVStorage.get(k, true);
+          const p = JSON.parse(r.value);
+          migrateProcesoShape(p);
+          if(p._migrated){ delete p._migrated; await setProceso(p).catch(()=>{}); }
+          // Igual que en el tablero de "Validación en curso": una pieza con
+          // todos sus pasos completados no cuenta como activa ni puede
+          // aparecer como "atrasada" en el badge del menú, sin importar si
+          // p.estado se quedó en 'en_proceso' por algún caso legado.
+          const allDone = p.pasos.length > 0 && p.pasos.every(s=>s.done);
+          return (p.estado==='en_proceso' && !allDone) ? p : null;
+        }catch(e){ return null; }
       })),
       Promise.all((fol.keys||[]).map(async k => {
         try{ const r = await HVStorage.get(k, true); const d = JSON.parse(r.value); return (d.precioFinal ? Number(d.precioFinal) : 0) || PKG_PRICE[d.nivel] || 0; }catch(e){ return 0; }
