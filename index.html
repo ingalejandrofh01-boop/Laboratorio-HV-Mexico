@@ -2770,13 +2770,13 @@
       <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
       <svg class="icon-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
     </button>
-    <button class="nav-toggle" id="nav-toggle-btn" type="button" onclick="toggleMobileNav()" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav">
+    <button class="nav-toggle" id="nav-toggle-btn" type="button" onclick="toggleMobileNav()" aria-label="Abrir menú" data-i18n-aria="nav.openAria" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 <nav id="main-nav">
-  <button class="nav-close" type="button" onclick="closeMobileNav()" aria-label="Cerrar menú">✕</button>
+  <button class="nav-close" type="button" onclick="closeMobileNav()" aria-label="Cerrar menú" data-i18n-aria="nav.closeAria">✕</button>
   <button data-v="inicio" onclick="go('inicio')" class="active" data-i18n="nav.inicio">Inicio</button>
   <button data-v="quienes" onclick="go('quienes')" data-i18n="nav.quienes">Quiénes somos</button>
   <button data-v="metodologia" onclick="go('metodologia')" data-i18n="nav.metodologia">Metodología</button>
@@ -2816,11 +2816,11 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M12 10l-5 5M12 10l5 5"/><path d="M4 20h16"/></svg>
   <span data-i18n="sticky-cta">Solicitar validación</span>
 </button>
-<button class="pwa-install-float" id="pwa-install-btn" type="button" aria-label="Instalar aplicación" style="display:none;">
+<button class="pwa-install-float" id="pwa-install-btn" type="button" aria-label="Instalar aplicación" data-i18n-aria="pwaInstallAria" style="display:none;">
   <img class="hv-logo" src="assets/img/logo.png" alt="">
   <span data-i18n="pwa-install">Instalar app</span>
 </button>
-<a class="whatsapp-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+<a class="whatsapp-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" data-i18n-aria="whatsappFloatAria">
   <svg viewBox="0 0 32 32" fill="#fff" aria-hidden="true"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.5 6.3 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 22c-2 0-3.9-.5-5.5-1.5l-.4-.2-4.6 1.2 1.2-4.5-.3-.4C5.3 18 4.7 16.6 4.7 15c0-6.2 5.1-11.3 11.3-11.3S27.3 8.8 27.3 15 22.2 25 16 25zm6.2-8.4c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.3-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.7-1.7-1-.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.2-.2.3-.4.5-.6.2-.2.2-.3.3-.5.1-.2.1-.4 0-.6-.1-.2-.8-1.9-1.1-2.6-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.3 3.3 1.4 3.6c.2.3 2.6 4 6.3 5.5.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2-.8 2.3-1.6.3-.8.3-1.4.2-1.6-.1-.1-.3-.2-.6-.4z"/></svg>
 </a>
 
@@ -3926,7 +3926,7 @@
           <p class="wiz-field-note" data-i18n="wiz.contacto.nombreNote">Así identificamos tu solicitud. Este nombre aparecerá en tu certificado si tu pieza resulta original.</p>
           <label for="s-telefono" data-i18n="wiz.contacto.telLabel">Teléfono (lo usarás para consultar tu historial)</label>
           <div class="tel-with-lada">
-            <select id="s-telefono-lada" class="lada-select" aria-label="Código de país">
+            <select id="s-telefono-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
               <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
               <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
               <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -4139,7 +4139,7 @@
       <summary data-i18n="cliente.sinCodigo">¿No tienes tu código? Consulta por teléfono</summary>
       <div class="row" style="max-width:460px;margin-top:14px;">
         <div class="tel-with-lada" style="flex:1;">
-          <select id="c-telefono-lada" class="lada-select" aria-label="Código de país">
+          <select id="c-telefono-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
             <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
             <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
             <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -4197,7 +4197,7 @@
         <h3 data-i18n="salon.gate.h3">Acceso de socios</h3>
         <p class="foot-note salon-foot-note" data-i18n="salon.gate.p">Ingresa tu teléfono y tu código de socio (te lo damos al volverte elegible) para entrar al Salón.</p>
         <div class="tel-with-lada" style="margin-bottom:8px;">
-          <select id="salon-gate-tel-lada" class="lada-select" aria-label="Código de país">
+          <select id="salon-gate-tel-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
             <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
             <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
             <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -4214,7 +4214,7 @@
         <p class="foot-note salon-foot-note" data-i18n="salon.interes.p">Membresía de $1,000 MXN al año. La única forma de volverte socio es certificando 5 piezas o más con nosotros — no se vende ni se activa por ningún otro medio. En cuanto llegues a esa cantidad, el laboratorio activa tu membresía y te da tu código de acceso; el pago (efectivo en el laboratorio o transferencia bancaria) se confirma en ese momento.</p>
         <input id="salon-interes-nombre" data-i18n-placeholder="salon.interes.nombrePlaceholder" placeholder="Tu nombre" style="margin-bottom:8px;">
         <div class="tel-with-lada" style="margin-bottom:12px;">
-          <select id="salon-interes-tel-lada" class="lada-select" aria-label="Código de país">
+          <select id="salon-interes-tel-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
             <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
             <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
             <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -4484,6 +4484,7 @@
               <button class="cert-tab-btn active" data-mode="cert" onclick="switchCertPreview('cert')">Certificado completo</button>
               <button class="cert-tab-btn" data-mode="label" onclick="switchCertPreview('label')">Etiqueta 4×7 (B21)</button>
               <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 1.5×1 (D110)</button>
+              <button class="cert-tab-btn" data-mode="folio" onclick="switchCertPreview('folio')">Folio 3×1</button>
               <span class="cert-tab-hint">Vista previa en tiempo real — va cambiando mientras editas →</span>
             </div>
             <div class="admin-cert-modal-btn"><button type="button" class="btn ghost small" onclick="verCertificadoDraft()">👁️ Ver certificado completo (tamaño real, como lo ve el cliente)</button></div>
@@ -4543,7 +4544,7 @@
                 <p class="foot-note" style="border:none;padding:2px 0 10px;margin:0;font-size:12px;">El certificado se genera siempre en español salvo que el cliente pida que sea en inglés.</p>
                 <label>Teléfono del dueño (uso interno, no se publica)</label>
                 <div class="tel-with-lada">
-                  <select id="a-telefono-lada" class="lada-select" aria-label="Código de país">
+                  <select id="a-telefono-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
                     <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
                     <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
                     <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -4756,7 +4757,7 @@
                   </div>
                   <input id="a-salonpieza-folio" placeholder="Folio relacionado (opcional)" style="margin-bottom:8px;">
                   <div class="tel-with-lada" style="margin-bottom:8px;">
-                    <select id="a-salonpieza-tel-lada" class="lada-select" aria-label="Código de país">
+                    <select id="a-salonpieza-tel-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
                       <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
                       <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
                       <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -5025,7 +5026,7 @@
 <div class="legal-modal" id="legal-modal" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
   <div class="legal-modal-backdrop" onclick="closeLegalModal()"></div>
   <div class="legal-modal-inner">
-    <button type="button" class="legal-modal-close" onclick="closeLegalModal()" aria-label="Cerrar">✕</button>
+    <button type="button" class="legal-modal-close" onclick="closeLegalModal()" aria-label="Cerrar" data-i18n-aria="legalModal.closeAria">✕</button>
     <div class="legal-doc" id="legal-modal-body"></div>
   </div>
 </div>
@@ -5352,11 +5353,18 @@ const I18N_EN = {
   'nav.paquetes': 'Packages',
   'nav.verificar': 'Verify a folio',
   'nav.piezasFalsas': 'Fake pieces',
+  'aria:nav.openAria': 'Open menu',
+  'aria:nav.closeAria': 'Close menu',
+  'aria:phone.ladaAria': 'Country code',
+  'aria:notifCloseAria': 'Close notification',
+  'aria:legalModal.closeAria': 'Close',
+  'aria:pwaInstallAria': 'Install app',
+  'aria:whatsappFloatAria': 'Message us on WhatsApp',
   'piezasfalsas.h2': '⚠️ Fake pieces',
   'piezasfalsas.p': 'Public record of pieces we\'ve identified as fake or altered during our appraisals, to warn the collector community. It doesn\'t replace your own certification — if you have doubts about a specific piece, request your own validation.',
   'piezasfalsas.coverH3': 'Fake pieces<br>registry',
   'piezasfalsas.coverP': 'Tap to open',
-  'piezasfalsas.closeAria': 'Close registry',
+  'aria:piezasfalsas.closeAria': 'Close registry',
   'piezasfalsas.indexHeading': 'Index of the abyss',
   'piezasfalsas.placeholder': 'Choose a piece from the index to see the finding',
   'nav.solicitar': 'Request certification',
@@ -5387,7 +5395,7 @@ const I18N_EN = {
   'inicio.hero.buscar': 'Search',
   'inicio.cert.h2': 'What your certificate looks like',
   'inicio.cert.p': 'Hover over it (or tap it on your phone) to see both sides, as if you had the encapsulated piece in your hands.',
-  'inicio.cert.flipAria': 'View both sides of the sample certificate',
+  'aria:inicio.cert.flipAria': 'View both sides of the sample certificate',
   'inicio.cert.step1': 'Your digital certificate',
   'inicio.cert.step2': 'Encapsulation, seal and label',
   'inicio.cert.tier': 'Outstanding example',
@@ -5396,10 +5404,10 @@ const I18N_EN = {
   'inicio.cert.hintFront': 'Tap to see the back ↻',
   'inicio.cert.certifiedBadge': 'Certified',
   'inicio.cert.caseCaption': 'This is how your piece ends up: encapsulated in a clear acrylic case with its certification card.',
-  'inicio.cert.caseImgAlt': 'Real piece encapsulated in an acrylic case next to its HV certification card',
+  'alt:inicio.cert.caseImgAlt': 'Real piece encapsulated in an acrylic case next to its HV certification card',
   'inicio.cert.dictamenLabel': 'Authenticity assessment',
   'inicio.cert.dictamenText': 'This piece is assessed as corresponding to original CIPSA production, with no evidence of repainting, restoration or repair.',
-  'inicio.cert.qrAlt': 'Sample verification QR code',
+  'alt:inicio.cert.qrAlt': 'Sample verification QR code',
   'inicio.cert.scanNote': 'Scan to verify online.',
   'inicio.cert.exampleNote': 'HV-MX-2026-000 (example)',
   'inicio.cert.hintBack': 'Every real folio is unique and verifiable online',
@@ -5408,7 +5416,7 @@ const I18N_EN = {
   'inicio.quienes.h2': 'Who we are',
   'inicio.quienes.p': 'We are collectors certifying for collectors, with over 25 years of experience in Vintage Hot Wheels. Learn about our mission, vision, values and the team behind every assessment.',
   'inicio.quienes.btn': 'Get to know us',
-  'inicio.showcase.imgAlt': 'Rarest piece certified by the lab',
+  'alt:inicio.showcase.imgAlt': 'Rarest piece certified by the lab',
   'inicio.showcase.h2': 'The first piece certified by Laboratorio HV',
   'inicio.showcase.p': 'A CIPSA car made in Mexico, certified by our HV lab.',
   'inicio.showcase.kModelo': 'Model',
@@ -5418,7 +5426,7 @@ const I18N_EN = {
   'inicio.book.p': 'Open it and discover, sorted by category, the certified wonders the lab keeps — like a collection display case turned into a book.',
   'inicio.book.coverH3': 'Library of<br>certified pieces',
   'inicio.book.coverP': 'Tap to open',
-  'inicio.book.closeAria': 'Close book',
+  'aria:inicio.book.closeAria': 'Close book',
   'inicio.book.indexHeading': 'Collection index',
   'inicio.book.placeholder': 'Choose a category from the index to browse its certified pieces',
   'inicio.reviews.h2': 'What our clients say',
@@ -5430,7 +5438,7 @@ const I18N_EN = {
   'inicio.reviews.googleBtn': 'Write a review with Google',
   'inicio.reviews.ratingLabel': 'Your rating',
   'inicio.reviews.commentLabel': 'Your comment',
-  'inicio.reviews.commentPlaceholder': 'Tell us about your experience...',
+  'placeholder:inicio.reviews.commentPlaceholder': 'Tell us about your experience...',
   'inicio.reviews.publish': 'Post review',
   'inicio.reviews.cancel': 'Cancel',
   'inicio.ubicacion.eyebrow': 'Visit us in person',
@@ -5499,10 +5507,10 @@ const I18N_EN = {
   'quienes.pres.p': 'Methodology, tools, grading scale, pricing and guarantees — all explained in depth across 19 slides. Ideal if you have questions before requesting your certification.',
   'quienes.pres.verBtn': 'View full presentation',
   'quienes.pres.pdfBtn': 'Download PDF',
-  'quienes.pres.closeAria': 'Close presentation',
-  'quienes.pres.imgAlt': 'Laboratorio HV México institutional presentation',
-  'quienes.pres.prevAria': 'Previous slide',
-  'quienes.pres.nextAria': 'Next slide',
+  'aria:quienes.pres.closeAria': 'Close presentation',
+  'alt:quienes.pres.imgAlt': 'Laboratorio HV México institutional presentation',
+  'aria:quienes.pres.prevAria': 'Previous slide',
+  'aria:quienes.pres.nextAria': 'Next slide',
 
   // Metodología (methodology page)
   'metodologia.subnav.resumen': 'Overview',
@@ -5554,39 +5562,39 @@ const I18N_EN = {
   'metodologia.fotos.h2': 'Evaluation protocol — 7 mandatory photographs',
   'metodologia.fotos.p': 'Every piece we evaluate follows the same photographic and lab protocol, so the folio is comparable across pieces and verifiable over time. This is the real file for a yellow Cockney Cab — folio assessed as <strong>Original</strong>, rated <strong>8.0/10 Near Mint‑Mint</strong>.',
   'metodologia.fotos.hint': '👆 Hover or tap each number to see the close-up of that area',
-  'metodologia.fotos.diagramAlt': 'Yellow Cockney Cab, reference piece for the 7-photo protocol',
-  'metodologia.fotos.pin1': 'Full base',
-  'metodologia.fotos.pin2': 'Tires',
-  'metodologia.fotos.pin3': 'Front',
-  'metodologia.fotos.pin4': 'Roof and hood at 45°',
-  'metodologia.fotos.pin5': 'Interior through windows',
-  'metodologia.fotos.pin6': 'Paint edge UV / microscope',
-  'metodologia.fotos.pin7': 'Rear (trunk)',
-  'metodologia.fotos.f1.alt': 'Close-up of the piece\'s bottom panel and paint edges',
+  'alt:metodologia.fotos.diagramAlt': 'Yellow Cockney Cab, reference piece for the 7-photo protocol',
+  'title:metodologia.fotos.pin1': 'Full base',
+  'title:metodologia.fotos.pin2': 'Tires',
+  'title:metodologia.fotos.pin3': 'Front',
+  'title:metodologia.fotos.pin4': 'Roof and hood at 45°',
+  'title:metodologia.fotos.pin5': 'Interior through windows',
+  'title:metodologia.fotos.pin6': 'Paint edge UV / microscope',
+  'title:metodologia.fotos.pin7': 'Rear (trunk)',
+  'alt:metodologia.fotos.f1.alt': 'Close-up of the piece\'s bottom panel and paint edges',
   'metodologia.fotos.f1.title': 'Full base, with legible legend',
   'metodologia.fotos.f1.caption': 'Close-up in this photo: bottom panel and paint edges. <em>The base legend is documented in a separate shot, from underneath the piece.</em>',
   'metodologia.fotos.f1.finding': 'What we found: the base retains the "CIPSA MÉXICO" legend, fully legible, with no corrosion affecting it — matches the original factory mold.',
-  'metodologia.fotos.f2.alt': 'Close-up of the piece\'s front tire and wheel',
+  'alt:metodologia.fotos.f2.alt': 'Close-up of the piece\'s front tire and wheel',
   'metodologia.fotos.f2.title': 'Tires, right and left side',
   'metodologia.fotos.f2.caption': 'Close-up in this photo: front tire and wheel.',
   'metodologia.fotos.f2.finding': 'What we found: original redline tires, with light, even wear on both sides — consistent with moderate handling, not replacement.',
-  'metodologia.fotos.f3.alt': 'Close-up of the chrome grille and supercharged engine',
+  'alt:metodologia.fotos.f3.alt': 'Close-up of the chrome grille and supercharged engine',
   'metodologia.fotos.f3.title': 'Front',
   'metodologia.fotos.f3.caption': 'Close-up in this photo: chrome grille and supercharged engine.',
   'metodologia.fotos.f3.finding': 'What we found: chrome grille and bumpers with no dents or missing parts; the supercharged engine detail remains intact.',
-  'metodologia.fotos.f4.alt': 'Close-up of the roof and hood edge',
+  'alt:metodologia.fotos.f4.alt': 'Close-up of the roof and hood edge',
   'metodologia.fotos.f4.title': 'Roof and hood at 45°',
   'metodologia.fotos.f4.caption': 'Close-up in this photo: roof and hood edge.',
   'metodologia.fotos.f4.finding': 'What we found: original yellow paint with no visible repainting under direct light; the 45° angle shows no sheen difference between panels.',
-  'metodologia.fotos.f5.alt': 'Close-up of the side windows and interior',
+  'alt:metodologia.fotos.f5.alt': 'Close-up of the side windows and interior',
   'metodologia.fotos.f5.title': 'Interior through windows',
   'metodologia.fotos.f5.caption': 'Close-up in this photo: side windows and interior.',
   'metodologia.fotos.f5.finding': 'What we found: original gray interior visible through all 4 windows, with no discoloration or replaced parts.',
-  'metodologia.fotos.f6.alt': 'Close-up of the door seam and paint edge',
+  'alt:metodologia.fotos.f6.alt': 'Close-up of the door seam and paint edge',
   'metodologia.fotos.f6.title': 'Paint edge under UV light and digital microscope',
   'metodologia.fotos.f6.caption': 'Close-up in this photo: door seam and paint edge. <em>The UV light and microscope review is documented separately.</em>',
   'metodologia.fotos.f6.finding': 'What we found: no anomalous fluorescence under UV at the paint edges — rules out touch-ups or partial repainting.',
-  'metodologia.fotos.f7.alt': 'Close-up of the rear, fender and rear wheel of the piece',
+  'alt:metodologia.fotos.f7.alt': 'Close-up of the rear, fender and rear wheel of the piece',
   'metodologia.fotos.f7.title': 'Rear (trunk)',
   'metodologia.fotos.f7.caption': 'Close-up in this photo: rear fender, trunk and rear wheel.',
   'metodologia.fotos.f7.finding': 'What we found: trunk line and rear fender with no dents or deformation; rear tire with even wear, consistent with the rest of the piece.',
@@ -5638,7 +5646,7 @@ const I18N_EN = {
   'paquetes.fisico.det1': 'Physical review at the lab with the Zigzag C-Z Protocol',
   'paquetes.fisico.det2': 'HD photos of origin criteria and wear areas',
   'paquetes.fisico.det3': 'Assessment report with official HV folio + QR — digital and physical delivery',
-  'paquetes.fisico.chipsAria': 'Choose delivery time for physical appraisal',
+  'aria:paquetes.fisico.chipsAria': 'Choose delivery time for physical appraisal',
   'paquetes.premium.badge': 'Maximum protection',
   'paquetes.premium.name': 'Premium + certification + encapsulation',
   'paquetes.premium.li1': 'Everything in the physical appraisal',
@@ -5648,7 +5656,7 @@ const I18N_EN = {
   'paquetes.premium.det1': 'Everything in the previous package',
   'paquetes.premium.det2': 'Full technical sheet: Vintage Hot Wheels, CIPSA, Bólidos Lilí Ledy and Aurimat origin',
   'paquetes.premium.det3': 'Sealed acrylic encapsulation with label and QR',
-  'paquetes.premium.chipsAria': 'Choose delivery time for the premium package',
+  'aria:paquetes.premium.chipsAria': 'Choose delivery time for the premium package',
   'paquetes.verProtocolo': 'View full protocol',
   'paquetes.solicitarBtn': 'Request this package →',
   'paquetes.ctaHint': 'Takes you straight to your registration',
@@ -5691,7 +5699,7 @@ const I18N_EN = {
   'paquetes.faq.q6': 'What do Original, Repainted, Restored, Repaired and Replica mean?',
   'paquetes.faq.a6': 'It\'s the categorical authenticity assessment: Original (no intervention), Repainted/Restored/Repaired (original piece with some detected intervention) or Replica (does not correspond to original factory production).',
   'paquetes.faq.q7': 'What happens if the assessment finds the piece is fake or altered?',
-  'paquetes.faq.a7': 'The piece is recorded in our public ⚠️ "Fake pieces" warning almanac, visible to the whole collector community — we never publish the owner\'s information, only the piece, its photos and the reason for the finding. By requesting certification, the client accepts this condition (see Terms & Conditions).',
+  'paquetes.faq.a7': 'The piece is recorded in our public ⚠️ "Fake pieces" warning registry, visible to the whole collector community — we never publish the owner\'s information, only the piece, its photos and the reason for the finding. By requesting certification, the client accepts this condition (see Terms & Conditions).',
 
   // Términos y condiciones
   'terminos.h2': 'Terms and conditions',
@@ -5773,7 +5781,7 @@ const I18N_EN = {
   'cliente.trust1': '🔒 Only you, with your code',
   'cliente.trust2': '⏱ Status updated in real time',
   'cliente.sinCodigo': 'Don\'t have your code? Look up by phone',
-  'cliente.telPlaceholder': '55 0000 0000',
+  'placeholder:cliente.telPlaceholder': '55 0000 0000',
   'cliente.consultar': 'Look up',
   'cliente.privacyNote': 'This access is by phone number only, no password — don\'t share your number with anyone you don\'t want seeing your history.',
 
@@ -5792,7 +5800,7 @@ const I18N_EN = {
   'wiz.pkg.digital.b1': 'Report + preliminary grade (0–10)',
   'wiz.pkg.digital.b2': 'Informal reference document — not a certificate',
   'wiz.pkg.digital.modeLabel': 'How would you like your validation done?',
-  'wiz.pkg.digital.modeAria': 'Choose validation method',
+  'aria:wiz.pkg.digital.modeAria': 'Choose validation method',
   'wiz.pkg.digital.modeOnline': 'Online · photos',
   'wiz.pkg.digital.modeInPerson': 'In person · more precise',
   'wiz.time.digital.default': '⏱ Delivery in 24–48 h',
@@ -5802,8 +5810,8 @@ const I18N_EN = {
   'wiz.pkg.fisico.b2': 'Folio and digital & physical assessment report',
   'wiz.pkg.fisico.b3': 'Official condition grade',
   'wiz.speed.label': 'Choose your delivery time',
-  'wiz.speed.aria.fisico': 'Choose delivery time for physical appraisal',
-  'wiz.speed.aria.premium': 'Choose delivery time for the premium package',
+  'aria:wiz.speed.aria.fisico': 'Choose delivery time for physical appraisal',
+  'aria:wiz.speed.aria.premium': 'Choose delivery time for the premium package',
   'wiz.speed.estandar': 'Standard · 10 days',
   'wiz.speed.prioritario': 'Priority · 5 days',
   'wiz.speed.express': 'Express · 72h',
@@ -5819,7 +5827,7 @@ const I18N_EN = {
   'wiz.contacto.h3': 'Your contact info',
   'wiz.contacto.help': 'This is how we open your file at the lab and can keep you posted on progress.',
   'wiz.contacto.nombreLabel': 'Full name',
-  'wiz.contacto.nombrePh': 'First and last name',
+  'placeholder:wiz.contacto.nombrePh': 'First and last name',
   'wiz.contacto.nombreNote': 'This is how we identify your request. This name will appear on your certificate if your piece turns out to be authentic.',
   'wiz.contacto.telLabel': 'Phone number (you\'ll use this to check your history)',
   'wiz.contacto.telNote': 'We\'ll contact you here and on WhatsApp. You\'ll also use it in "My history" to check your folio status — write it down carefully.',
@@ -5834,15 +5842,15 @@ const I18N_EN = {
   'wiz.pieza.h3': 'Tell us about your piece',
   'wiz.pieza.help': 'This information helps the appraiser before reviewing your piece in detail.',
   'wiz.pieza.modeloLabel': 'Model',
-  'wiz.pieza.modeloPh': 'VW Sedan - Federal Police',
+  'placeholder:wiz.pieza.modeloPh': 'VW Sedan - Federal Police',
   'wiz.pieza.anioLabel': 'Approximate year',
   'wiz.pieza.anioNote': 'You don\'t need to be certain — an approximate year helps us pinpoint the era and correct mold.',
   'wiz.pieza.origenLabel': 'Origin you believe it has',
   'wiz.pieza.otro': 'Other',
   'wiz.pieza.colorLabel': 'Color',
-  'wiz.pieza.colorPh': 'E.g. flag green',
+  'placeholder:wiz.pieza.colorPh': 'E.g. flag green',
   'wiz.pieza.descLabel': 'Description / visible condition',
-  'wiz.pieza.descPh': 'Color, whether it has its box, visible wear, etc.',
+  'placeholder:wiz.pieza.descPh': 'Color, whether it has its box, visible wear, etc.',
   'wiz.pieza.descNote': 'Mention anything visible at a glance: box, wear, rust, missing parts, repaints. The more detail, the better we can anticipate the appraisal.',
 
   // Wizard — step 4: logistica
@@ -5850,25 +5858,25 @@ const I18N_EN = {
   'wiz.logistica.h3': 'How does your piece get to and from us?',
   'wiz.logistica.help': 'This service requires your piece to be physically at the lab. Tell us how you\'ll get it to us and how you\'d like it back — it can be different each way.',
   'wiz.logistica.idaLabel': 'How will you get your piece to us?',
-  'wiz.logistica.idaAria': 'How your piece arrives at the lab',
+  'aria:wiz.logistica.idaAria': 'How your piece arrives at the lab',
   'wiz.logistica.idaPresencial': '<strong>I\'ll bring it myself</strong><span>You take it to the lab in person — no extra cost</span>',
   'wiz.logistica.idaEnvio': '<strong>I\'ll ship it</strong><span>You send it to the lab — from $300 MXN</span>',
   'wiz.logistica.vueltaLabel': 'How would you like it back?',
-  'wiz.logistica.vueltaAria': 'How your piece is returned',
+  'aria:wiz.logistica.vueltaAria': 'How your piece is returned',
   'wiz.logistica.vueltaPresencial': '<strong>I\'ll pick it up</strong><span>You come by the lab yourself — no extra cost</span>',
   'wiz.logistica.vueltaEnvio': '<strong>Ship it to me</strong><span>We\'ll ship it back to you — from $300 MXN</span>',
   'wiz.logistica.velocidadLabel': 'How fast?',
-  'wiz.logistica.velocidadAria': 'Shipping speed',
+  'aria:wiz.logistica.velocidadAria': 'Shipping speed',
   'wiz.logistica.velocidadTerrestre': '<strong>Ground shipping</strong><span>$300 MXN · arrives in 3 to 5 days</span>',
   'wiz.logistica.velocidadExpress': '<strong>Next-day delivery</strong><span>$450 MXN · arrives the next business day</span>',
   'wiz.logistica.citaLabel': 'Date and time of your appointment',
-  'wiz.cal.prev': 'Previous month',
-  'wiz.cal.next': 'Next month',
+  'aria:wiz.cal.prev': 'Previous month',
+  'aria:wiz.cal.next': 'Next month',
   'wiz.cal.d0': 'S', 'wiz.cal.d1': 'M', 'wiz.cal.d2': 'T', 'wiz.cal.d3': 'W', 'wiz.cal.d4': 'T', 'wiz.cal.d5': 'F', 'wiz.cal.d6': 'S',
   'wiz.cal.horario': 'Available time',
   'wiz.cal.horariosPara': 'Available times for',
   'wiz.logistica.direccionLabel': 'Address for the return shipment',
-  'wiz.logistica.direccionPh': 'Street, number, neighborhood, city, ZIP, landmarks',
+  'placeholder:wiz.logistica.direccionPh': 'Street, number, neighborhood, city, ZIP, landmarks',
   'wiz.logistica.bankNote.pre': 'Since your piece requires shipping, a <strong>bank transfer</strong> is needed before we ship it or return it (',
   'wiz.logistica.bankNote.post': ', depending on the shipping speed you chose). We\'ll share the account details and confirm payment over WhatsApp.',
 
@@ -6046,7 +6054,7 @@ function notify(opts){
       ${cfg.title ? `<strong class="notif-title">${escapeHtml(cfg.title)}</strong>` : ''}
       <p class="notif-msg">${escapeHtml(cfg.message)}</p>
     </div>
-    <button class="notif-close" type="button" aria-label="Cerrar notificación">✕</button>
+    <button class="notif-close" type="button" aria-label="Cerrar notificación" data-i18n-aria="notifCloseAria">✕</button>
     ${cfg.duration > 0 ? '<span class="notif-bar"></span>' : ''}
   `;
   if(cfg.onClick){
@@ -8196,7 +8204,7 @@ const LADA_OPTIONS = [
   {c:'593', f:'🇪🇨', n:'Ecuador'}, {c:'58', f:'🇻🇪', n:'Venezuela'}
 ];
 function ladaSelectHtml(id){
-  return `<select id="${id}" class="lada-select" aria-label="Código de país">${LADA_OPTIONS.map(l=>`<option value="${l.c}">${l.f} +${l.c}</option>`).join('')}</select>`;
+  return `<select id="${id}" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">${LADA_OPTIONS.map(l=>`<option value="${l.c}">${l.f} +${l.c}</option>`).join('')}</select>`;
 }
 // Combina el <select> de lada + el <input> de teléfono en un solo valor
 // canónico de dígitos, listo para guardar/buscar. Ver nota arriba sobre por
@@ -8631,7 +8639,7 @@ async function renderAdminSalonSelfCard(){
       <h4 style="margin:0 0 4px;font-size:14.5px;">🔐 Mi acceso personal al Salón Privado</h4>
       <p class="foot-note" style="border:none;padding:0;">Como administrador ya tienes acceso ilimitado desde "🛋️ Ir al lobby de socios" arriba — eso es solo una vista temporal. Si además quieres poder entrar por la puerta pública normal (teléfono + código, igual que cualquier socio) y aparecer en tu propia lista de Miembros, activa aquí tu membresía vitalicia real.</p>
       <div class="tel-with-lada" style="max-width:320px;margin-top:10px;">
-        <select id="salon-admin-self-lada" class="lada-select" aria-label="Código de país">
+        <select id="salon-admin-self-lada" class="lada-select" aria-label="Código de país" data-i18n-aria="phone.ladaAria">
           <option value="52">🇲🇽 +52</option><option value="1">🇺🇸 +1</option><option value="34">🇪🇸 +34</option>
           <option value="502">🇬🇹 +502</option><option value="57">🇨🇴 +57</option><option value="54">🇦🇷 +54</option>
           <option value="56">🇨🇱 +56</option><option value="51">🇵🇪 +51</option><option value="593">🇪🇨 +593</option><option value="58">🇻🇪 +58</option>
@@ -12587,9 +12595,11 @@ function updateLivePreview(){
   if(!f.fecha) f.fecha = new Date().toLocaleDateString('es-MX');
   if(CERT_PREVIEW_MODE === 'cert') mount.innerHTML = certPreviewPromptHtml();
   else if(CERT_PREVIEW_MODE === 'label') mount.innerHTML = renderCertLabel(f);
-  else mount.innerHTML = renderSealLabel(f);
+  else if(CERT_PREVIEW_MODE === 'seal') mount.innerHTML = renderSealLabel(f);
+  else mount.innerHTML = renderFolioLabel(f);
   applyLogos();
   embedAllQrLogos();
+  if(CERT_PREVIEW_MODE === 'folio') fitFolioLabelText('print-target-folio');
   applyLivePreviewScale();
 }
 
@@ -14091,6 +14101,18 @@ function procesoCalificacion(p){
   const val = raw != null ? Number(raw) : null;
   return (val != null && !isNaN(val)) ? val : null;
 }
+// Notas rápidas capturadas por zona durante la calificación Zigzag C-Z
+// (Paso 6). Son de uso interno del laboratorio — nunca se envían al
+// resumen público que ve el cliente (ver mirrorClientProgress). Esta
+// función las junta para poder mostrarlas en un solo lugar dentro del
+// detalle del proceso, sin tener que reabrir el acordeón de calificación.
+function procesoZonaNotas(p){
+  const condStep = p.pasos && p.pasos.find(s=>s.key==='condicion');
+  if(!condStep || !condStep.zigzag || !Array.isArray(condStep.zigzag.zonas)) return [];
+  return condStep.zigzag.zonas
+    .filter(z => z && z.nota && String(z.nota).trim())
+    .map(z => ({ label: z.label, nota: String(z.nota).trim() }));
+}
 const CALIFICACION_MINIMA = 6;
 function procesoAprueba(p){
   if(p.paquete === 'digital') return null; // no aplica esta compuerta ahí
@@ -14380,6 +14402,7 @@ function renderProcesoDetail(p){
   const pendienteRecepcion = isPendienteRecepcion(p);
   const listoParaFinalizar = procesoListoParaFinalizar(p);
   const registroStep = p.pasos.find(s=>s.key==='registro');
+  const zonaNotas = procesoZonaNotas(p);
 
   // Guía al admin hacia el siguiente paso concreto, del inicio al certificado.
   const pendienteIdx = p.pasos.findIndex(s=>!s.done && s.key!=='registro');
@@ -14478,6 +14501,14 @@ function renderProcesoDetail(p){
 
       ${fasesHtml}
       ${!listoParaFinalizar ? '<p class="foot-note" style="border:none;padding-top:8px;">Completa las fases 1 a 3 para poder generar el certificado en el paso 8. Recuerda: solo se certifica si el dictamen no es "Falso / Réplica" y la condición califica 6.0 o más — si no, el proceso se detiene solo y únicamente se cobra la validación base de $150.</p>' : ''}
+      ${zonaNotas.length ? `
+      <div class="card" style="margin-top:14px;background:var(--panel);">
+        <h4 style="font-size:13px;margin:0 0 10px;display:flex;align-items:center;gap:6px;">
+          🔒 Notas internas de condición
+          <span class="foot-note" style="border:none;padding:0;margin:0;font-weight:400;">— solo visibles aquí, para el laboratorio</span>
+        </h4>
+        ${zonaNotas.map(z => `<p style="font-size:12.5px;color:var(--ink);margin:0 0 8px;line-height:1.4;"><strong>${escapeHtml(z.label)}:</strong> ${escapeHtml(z.nota)}</p>`).join('')}
+      </div>` : ''}
       <div id="proceso-checklist-print-mount"></div>
     </div>`;
   scrollToOpenStep();
@@ -14508,7 +14539,9 @@ function renderProcesoChecklistPrintable(p){
       if(def && def.type==='condicion' && s.zigzag){
         const overall = zzOverallAvg(s.zigzag);
         const escalaFinal = s.zigzag.escalaFinal || (overall!=null?overall.toFixed(1):'');
-        if(escalaFinal) extra = `<p class="cl-print-notas">Calificación final: <strong>${escapeHtml(String(escalaFinal))}/10</strong></p>`;
+        const zonaNotasStep = Array.isArray(s.zigzag.zonas) ? s.zigzag.zonas.filter(z=>z&&z.nota&&String(z.nota).trim()) : [];
+        extra = (escalaFinal ? `<p class="cl-print-notas">Calificación final: <strong>${escapeHtml(String(escalaFinal))}/10</strong></p>` : '')
+          + (zonaNotasStep.length ? `<p class="cl-print-notas">Notas por zona: ${zonaNotasStep.map(z=>`<strong>${escapeHtml(z.label)}:</strong> ${escapeHtml(String(z.nota).trim())}`).join(' · ')}</p>` : '');
       }
       const notaHtml = s.nota ? `<p class="cl-print-notas">Notas: ${escapeHtml(s.nota)}</p>` : '';
       return `<div class="cl-print-step">
