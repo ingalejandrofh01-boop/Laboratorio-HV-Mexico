@@ -208,7 +208,9 @@
   .navbar{flex-wrap:wrap;row-gap:12px;}
   section{padding:56px 0;}
   .view{display:none;}
-  .view.active{display:block;}
+  .view.active{display:block;animation:viewFadeIn .32s ease;}
+  @keyframes viewFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .view.active{animation:none;} }
   .hero{padding-top:20px;}
   .hero h1{font-size:34px;max-width:640px;}
   .hero p.lead{color:var(--sage);max-width:520px;font-size:16px;}
@@ -828,7 +830,8 @@
   .seg-allowed-list li{padding:6px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:var(--panel-2);}
   .admin-main{flex:1;min-width:0;padding:30px 32px;background:var(--panel);}
   .admin-tab{display:none;}
-  .admin-tab.active{display:block;}
+  .admin-tab.active{display:block;animation:viewFadeIn .28s ease;}
+  @media (prefers-reduced-motion: reduce){ .admin-tab.active{animation:none;} }
   .admin-tab h3{font-family:'Fraunces',serif;font-weight:500;}
   .admin-main .card{border-radius:12px;box-shadow:0 2px 12px rgba(36,21,18,0.05);transition:box-shadow .2s ease,border-color .2s ease;}
   .admin-main table{width:100%;border-collapse:collapse;}
@@ -1440,6 +1443,7 @@
   .pres-stage-imgwrap img.show{opacity:1;transform:scale(1);}
   .pres-stage-close{position:absolute;top:-14px;right:-14px;width:38px;height:38px;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.32);z-index:3;display:flex;align-items:center;justify-content:center;padding:0;}
   .pres-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);transition:background .15s ease, transform .15s ease;}
+  .pres-nav-btn svg{width:20px;height:20px;flex:none;}
   .pres-nav-btn:hover{background:rgba(255,255,255,.24);}
   .pres-nav-btn.prev{left:10px;}
   .pres-nav-btn.next{right:10px;}
@@ -2017,6 +2021,7 @@
   .showcase-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr 1fr;gap:0;align-items:center;}
   @media(max-width:760px){.showcase-inner{grid-template-columns:1fr;}}
   .showcase-photo{position:relative;padding:34px;display:flex;align-items:center;justify-content:center;}
+  @media(max-width:760px){.showcase-photo{padding:16px 24px 8px;}}
   .showcase-photo .frame{position:relative;border-radius:6px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);border:3px solid var(--brass);}
   .showcase-photo img{display:block;width:100%;max-width:420px;height:auto;}
   .showcase-photo .spotlight{position:absolute;inset:0;background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);pointer-events:none;}
@@ -2163,9 +2168,9 @@
   .cl-grade{font-family:'Fraunces',serif;font-size:13pt;color:#111;font-weight:700;}
   .cl-tests{font-size:5.8pt;color:#555;margin:0;line-height:1.3;}
   .cl-disclaimer{font-size:3.2pt;color:#555;font-weight:500;margin:auto 0 0;line-height:1.15;border-top:.5pt solid #ccc;padding-top:.25pt;}
-  .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;justify-content:center;gap:.05cm;padding:0 .045cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
-  .sl-hv-text{flex:none;font-family:'Fraunces',serif;font-weight:900;font-size:11.6pt;line-height:1;color:#D2042D;letter-spacing:-.05em;}
-  .sl-qr{flex:none;height:.76cm;width:.76cm;object-fit:contain;}
+  .seal-label{width:4cm;height:2.5cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:3px;display:flex;align-items:center;justify-content:center;gap:.18cm;padding:0 .3cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
+  .sl-hv-text{flex:none;font-family:'Fraunces',serif;font-weight:900;font-size:29pt;line-height:1;color:#D2042D;letter-spacing:-.05em;}
+  .sl-qr{flex:none;height:1.9cm;width:1.9cm;object-fit:contain;}
   /* Etiqueta chica de solo folio (3 × 1cm) — para pegar donde no cabe la
      etiqueta grande ni el sello, nada más el folio en letras gruesas y
      bien legibles, sin QR ni logo. */
@@ -4483,7 +4488,7 @@
             <div class="cert-editor-tabs">
               <button class="cert-tab-btn active" data-mode="cert" onclick="switchCertPreview('cert')">Certificado completo</button>
               <button class="cert-tab-btn" data-mode="label" onclick="switchCertPreview('label')">Etiqueta 4×7 (B21)</button>
-              <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 1.5×1 (D110)</button>
+              <button class="cert-tab-btn" data-mode="seal" onclick="switchCertPreview('seal')">Sello 4×2.5 (D110)</button>
               <button class="cert-tab-btn" data-mode="folio" onclick="switchCertPreview('folio')">Folio 3×1</button>
               <span class="cert-tab-hint">Vista previa en tiempo real — va cambiando mientras editas →</span>
             </div>
@@ -4842,7 +4847,7 @@
           <div class="admin-tab" id="admin-tab-etiquetas">
             <div class="card">
               <h3 style="font-size:16px;">Etiquetas de impresión — B21 y D110</h3>
-              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Escribe un folio ya emitido para generar su certificado adherible de 4×7cm en blanco y negro (para tu Niimbot B21) y su sello de acrílico de 1.5×1cm horizontal, con logo y folio (para tu Niimbot D110) — usan el mismo folio y datos que ya quedaron guardados.</p>
+              <p class="foot-note" style="border:none;margin-top:0;padding-top:0;">Escribe un folio ya emitido para generar su certificado adherible de 4×7cm en blanco y negro (para tu Niimbot B21) y su sello de acrílico de 4×2.5cm horizontal, con logo y QR (para tu Niimbot D110) — usan el mismo folio y datos que ya quedaron guardados.</p>
               <div class="row" style="max-width:460px;">
                 <input id="e-folio" placeholder="HV-MX-2026-001" style="flex:1;">
                 <button class="btn small" onclick="loadEtiquetaByFolio()">Cargar folio</button>
@@ -5037,8 +5042,8 @@
     <button class="pres-stage-close" type="button" onclick="closePresentacion()" data-i18n-aria="quienes.pres.closeAria" aria-label="Cerrar presentación">✕</button>
     <div class="pres-stage-imgwrap">
       <img id="pres-stage-img" src="" data-i18n-alt="quienes.pres.imgAlt" alt="Presentación institucional Laboratorio HV México">
-      <button class="pres-nav-btn prev" type="button" onclick="presPrev()" data-i18n-aria="quienes.pres.prevAria" aria-label="Diapositiva anterior">‹</button>
-      <button class="pres-nav-btn next" type="button" onclick="presNext()" data-i18n-aria="quienes.pres.nextAria" aria-label="Siguiente diapositiva">›</button>
+      <button class="pres-nav-btn prev" type="button" onclick="presPrev()" data-i18n-aria="quienes.pres.prevAria" aria-label="Diapositiva anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="pres-nav-btn next" type="button" onclick="presNext()" data-i18n-aria="quienes.pres.nextAria" aria-label="Siguiente diapositiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     </div>
     <div class="pres-stage-foot">
       <span id="pres-stage-counter">1 / 19</span>
@@ -6754,7 +6759,7 @@ function lockImgPixelSizes(root){
 // cada dato cuando se agrega un tipo nuevo (como "folio").
 const LABEL_EXPORT_CFG = {
   cert: { selector: '.cert-label', wrapId: 'print-target-cert', scale: 203/96, defaultName: 'etiqueta' },
-  seal: { selector: '.seal-label', wrapId: 'print-target-seal', scale: (203/96) * 4.5, defaultName: 'sello' },
+  seal: { selector: '.seal-label', wrapId: 'print-target-seal', scale: (203/96) * 2, defaultName: 'sello' },
   folio: { selector: '.folio-label', wrapId: 'print-target-folio', scale: (203/96) * 2, defaultName: 'folio' }
 };
 
@@ -6908,7 +6913,7 @@ function renderSealLabel(f, wrapIdOverride){
       <img class="sl-qr qr-embed" src="${qrDataUrl(f,500)}" alt="QR" data-size="500" crossorigin="anonymous">
     </div>
   </div>
-  <p class="foot-note no-print">Tamaño real: 1.5 × 1 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. El folio ya no cabe como texto en este tamaño, así que el QR lleva codificados el folio y las características de la pieza (modelo, año, origen, color, grado, dictamen) — se escanea igual que el de la etiqueta y el certificado. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
+  <p class="foot-note no-print">Tamaño real: 4 × 2.5 cm — formato horizontal, en blanco y negro para tu Niimbot D110. Va pegada en el sello del acrílico. El QR lleva codificados el folio y las características de la pieza (modelo, año, origen, color, grado, dictamen) — se escanea igual que el de la etiqueta y el certificado. Usa "Descargar imagen" para importarlo directo en la app NIIMBOT.</p>
   <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
     <button class="btn ghost small" onclick="printOnly('seal','${wrapId}')">Imprimir desde el navegador</button>
     <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
@@ -6916,7 +6921,7 @@ function renderSealLabel(f, wrapIdOverride){
 }
 
 // Etiqueta chica de solo folio: para pegar en piezas u ocasiones donde no
-// cabe ni la etiqueta grande (4×7) ni el sello (1.5×1) — nada más el folio,
+// cabe ni la etiqueta grande (4×7) ni el sello (4×2.5) — nada más el folio,
 // en letras gruesas y bien legibles, sin QR ni logo.
 function renderFolioLabel(f, wrapIdOverride){
   const wrapId = wrapIdOverride || 'print-target-folio';
@@ -12115,8 +12120,35 @@ function initRevealOnScroll(){
         io.unobserve(entry.target);
       }
     });
-  }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+  }, {threshold:0.12, rootMargin:'200px 0px 200px 0px'});
   targets.forEach(t => io.observe(t));
+
+  // Red de seguridad: un scroll muy rápido (rueda del mouse al máximo, "Page
+  // Down", trackpad con inercia fuerte) puede saltarse de un solo golpe el
+  // punto exacto en que el IntersectionObserver detecta la intersección,
+  // dejando esa sección congelada en opacity:0 para siempre — se ve como si
+  // "se perdiera" el contenido al hacer scroll. Este barrido corre en cada
+  // scroll (con rAF para no recargar el hilo principal) y revela de
+  // inmediato cualquier `.reveal` que ya haya quedado cerca o detrás de la
+  // posición actual, sin depender de que el observer alcance a reportarlo.
+  let revealTicking = false;
+  function sweepReveal(){
+    revealTicking = false;
+    const vh = window.innerHeight;
+    document.querySelectorAll('.reveal:not(.in-view)').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if(r.top < vh * 1.5 && r.bottom > -vh * 0.5){
+        el.classList.add('in-view');
+        io.unobserve(el);
+      }
+    });
+  }
+  window.addEventListener('scroll', () => {
+    if(revealTicking) return;
+    revealTicking = true;
+    requestAnimationFrame(sweepReveal);
+  }, {passive:true});
+  sweepReveal();
 }
 
 function initMethodTimeline(){
@@ -13330,6 +13362,11 @@ function adminGo(tab){
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.toggle('active', t.id==='admin-tab-'+tab));
   const sel = document.getElementById('admin-tab-select');
   if(sel && sel.value !== tab) sel.value = tab;
+  // Sin esto, si el admin venía con mucho scroll hacia abajo en una pestaña
+  // larga (p. ej. "Certificados y folios" con muchos folios emitidos), la
+  // pestaña nueva abre ya desplazada — se siente como si su contenido
+  // "empezara escondido" más abajo en vez de arriba del todo.
+  window.scrollTo({top:0, behavior:'auto'});
   if(tab==='solicitudes') refreshAdminLists();
   if(tab==='validacion') refreshValidacionList();
   if(tab==='dashboard') refreshAdminLists();
@@ -13553,6 +13590,11 @@ let SOLICITUDES_FILTER = 'todas';
 // refreshAdminLists() para no golpear Firestore en cada tecla escrita.
 let CURRENT_FOLIOS = [];
 let CURRENT_PIEZAS = [];
+// Cuántos folios se muestran de entrada en "Folios emitidos" (Certificados
+// y folios) antes de pedir "Mostrar más" — sin este límite la lista crece
+// para siempre con cada certificado nuevo y esa tarjeta termina obligando a
+// hacer scroll larguísimo para llegar a cualquier otra cosa de la pestaña.
+let FOLIOS_LIMITE = 10;
 
 function esDigital(paquete){ return paquete === 'digital'; }
 
@@ -14196,7 +14238,15 @@ const VALIDACION_BOARD_COLS = [
 function procCardHtml(p){
   const doneCount = p.pasos.filter(s=>s.done).length;
   const pct = Math.round(doneCount / p.pasos.length * 100);
-  const dl = deadlineInfo(p);
+  // Una pieza con todos sus pasos completados ya no está "atrasada" ni
+  // "pendiente" en ningún sentido útil para el admin, aunque su plazo de
+  // entrega ya haya vencido en el reloj — por eso el estado de completado
+  // manda sobre el cálculo de fecha límite (ver deadlineInfo), y también
+  // cubre el caso legado donde un proceso digital se completó marcando la
+  // casilla directamente en vez de usar "Finalizar y notificar al cliente"
+  // (p.estado se quedó en 'en_proceso' pero los pasos ya están al 100%).
+  const allDone = p.pasos.length > 0 && doneCount === p.pasos.length;
+  const dl = allDone ? null : deadlineInfo(p);
   const pendiente = isPendienteRecepcion(p);
   return `
     <div class="proc-card ${dl&&dl.cls==='deadline-late'?'proc-card-late':''}" onclick="openProceso('${escapeHtml(p.id)}')">
@@ -14210,7 +14260,7 @@ function procCardHtml(p){
       <div class="step-progress"><div class="step-progress-bar" style="width:${pct}%;"></div></div>
       <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px;">
         <p class="foot-note" style="border:none;padding:0;margin:0;">${doneCount} de ${p.pasos.length} pasos completados</p>
-        ${dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando ingreso de la pieza</span>` : '')}
+        ${allDone ? `<span class="pill completado" style="font-size:11px;">✓ Completado</span>` : (dl ? `<span class="deadline-pill ${dl.cls}">${dl.label}</span>` : (pendiente ? `<span class="cita-pill">Esperando ingreso de la pieza</span>` : ''))}
       </div>
     </div>`;
 }
@@ -14664,7 +14714,20 @@ function renderProcesoDetailDigital(p){
     const prevStep = i > 0 ? p.pasos[i-1] : null;
     const stepLocked = !!prevStep && !prevStep.done;
     const isOpen = PROCESO_OPEN_STEP === s.key;
-    const checkClickable = !stepLocked;
+    // El último paso ("dictamen_digital") es el que cierra la validación Y
+    // avisa al cliente por WhatsApp (ver finalizeDigitalProceso) — su
+    // casilla NUNCA debe completarse con el toggle genérico de corrección
+    // manual (toggleProcesoStep), porque eso marcaría "✓ Notificado" sin
+    // haber avisado a nadie ni archivar el proceso (se quedaba mostrando
+    // "Atrasado" en el tablero de validaciones activas aunque ya estuviera
+    // resuelto). Mientras no esté hecho, su casilla dispara el mismo cierre
+    // real que el botón "Finalizar y notificar al cliente"; una vez hecho,
+    // no se puede desmarcar desde aquí — hay que usar "Reabrir validación".
+    const isCierreDigital = def && def.type === 'dictamen_digital';
+    const checkClickable = !stepLocked && !(isCierreDigital && s.done);
+    const checkOnclick = isCierreDigital
+      ? `event.stopPropagation();finalizeDigitalProceso('${escapeHtml(p.id)}')`
+      : `event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')`;
     let bodyHtml = '';
     if(isOpen){
       if(stepLocked){
@@ -14677,7 +14740,7 @@ function renderProcesoDetailDigital(p){
     return `
     <div class="step-row step-accordion ${stepLocked?'step-locked':''} ${isOpen?'open':''}" data-step-key="${escapeHtml(s.key)}">
       <div class="step-row-head" ${stepLocked?'':`onclick="toggleStepOpen('${escapeHtml(p.id)}','${s.key}')"`}>
-        <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="event.stopPropagation();toggleProcesoStep('${escapeHtml(p.id)}','${s.key}')"`:''}>${s.done?'✓':''}</div>
+        <div class="step-check ${s.done?'done':''}" ${checkClickable?`onclick="${checkOnclick}"`:''}>${s.done?'✓':''}</div>
         <h4>${i+1}. ${escapeHtml(s.label)}</h4>
         <span class="step-accordion-chevron">${isOpen?'▲':'▼'}</span>
       </div>
@@ -14708,6 +14771,7 @@ function renderProcesoDetailDigital(p){
         veredicto:p.resultadoDigital, calificacion:p.calificacionDigital,
         notas: dictamenStep ? dictamenStep.nota : ''
       }) : ''}
+      ${completado ? `<div class="row" style="margin-top:14px;"><button class="btn ghost small" onclick="reabrirValidacionDigital('${escapeHtml(p.id)}')">Reabrir validación</button></div>` : ''}
     </div>`;
   scrollToOpenStep();
 }
@@ -15476,6 +15540,24 @@ async function finalizeDigitalProceso(pid){
   toast('Validación cerrada y cliente notificado.');
 }
 
+// Deshace el cierre de una Validación digital (por si se finalizó por
+// error): reabre el paso de dictamen para poder corregirlo y volver a
+// finalizar — a diferencia de reabrirProceso (pensada para reabrir una
+// pieza RECHAZADA), aquí sí hay que destrabar explícitamente la casilla del
+// último paso, o el proceso quedaría "reabierto" pero mostrando todavía
+// "✓ Notificado — validación cerrada." de forma contradictoria.
+async function reabrirValidacionDigital(id){
+  const p = (CURRENT_PROCESO && CURRENT_PROCESO.id===id) ? CURRENT_PROCESO : await getProceso(id);
+  p.estado = 'en_proceso';
+  const step = p.pasos.find(s=>s.key==='dictamen_digital');
+  if(step) step.done = false;
+  CURRENT_PROCESO = p;
+  PROCESO_OPEN_STEP = 'dictamen_digital';
+  await setProceso(p);
+  toast('Validación reabierta — corrige y vuelve a finalizar para renotificar al cliente.');
+  renderProcesoDetail(p);
+}
+
 // Confirma que la pieza ya está físicamente en el laboratorio: desbloquea
 // el resto de la metodología y arranca el reloj del plazo de entrega desde
 // este momento, no desde que se agendó la cita.
@@ -15908,6 +15990,24 @@ function folioCardHtml(d){
       </div>`;
 }
 
+// Pinta "Folios emitidos" (Certificados y folios) limitado a FOLIOS_LIMITE
+// tarjetas, con un botón "Mostrar más" al final si hay más — evita que esta
+// lista, que solo crece con el tiempo, obligue a un scroll cada vez más
+// largo para llegar a cualquier otra sección de la pestaña.
+function renderFoliosBox(){
+  const folBox = document.getElementById('a-folios');
+  if(!folBox) return;
+  const folItems = CURRENT_FOLIOS || [];
+  if(!folItems.length){
+    folBox.innerHTML = '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
+    return;
+  }
+  const visibles = folItems.slice(0, FOLIOS_LIMITE);
+  const restantes = folItems.length - visibles.length;
+  folBox.innerHTML = visibles.map(folioCardHtml).join('')
+    + (restantes > 0 ? `<div class="row" style="justify-content:center;margin-top:10px;"><button class="btn ghost small" onclick="FOLIOS_LIMITE+=10;renderFoliosBox();">Mostrar más (${restantes} más)</button></div>` : '');
+}
+
 async function deleteFolio(folio){
   if(!confirm(`¿Seguro que quieres eliminar el folio ${folio}? Ya no se podrá verificar en línea. Esta acción no se puede deshacer.`)) return;
   try{
@@ -16291,7 +16391,7 @@ async function refreshAdminLists(){
     folItems = fetchedFol.filter(Boolean);
     folItems.sort((a,b)=> (b.folio||'').localeCompare(a.folio||''));
     CURRENT_FOLIOS = folItems;
-    folBox.innerHTML = folItems.length ? folItems.map(folioCardHtml).join('') : '<p style="color:var(--sage);font-size:14px;">Sin folios emitidos todavía.</p>';
+    renderFoliosBox();
     // Sincroniza el contador público en vivo del inicio ("+N piezas
     // certificadas") con el total real — solo el admin, ya autenticado,
     // puede listar todos los folios, así que aprovechamos esta carga para
