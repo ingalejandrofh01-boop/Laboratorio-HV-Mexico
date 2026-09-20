@@ -2089,6 +2089,9 @@
     body[data-print-mode="seal"] .view.active *:not(:has(#print-target-seal)):not(#print-target-seal):not(#print-target-seal *){display:none!important;}
     body[data-print-mode="seal"] .view.active :has(#print-target-seal),
     body[data-print-mode="seal"] #print-target-seal{display:block!important;}
+    body[data-print-mode="folio"] .view.active *:not(:has(#print-target-folio)):not(#print-target-folio):not(#print-target-folio *){display:none!important;}
+    body[data-print-mode="folio"] .view.active :has(#print-target-folio),
+    body[data-print-mode="folio"] #print-target-folio{display:block!important;}
     body[data-print-mode="full"] .view.active *:not(:has(#print-target-full)):not(#print-target-full):not(#print-target-full *){display:none!important;}
     body[data-print-mode="full"] .view.active :has(#print-target-full),
     body[data-print-mode="full"] #print-target-full{display:block!important;}
@@ -2163,6 +2166,11 @@
   .seal-label{width:1.5cm;height:1cm;background:#fff;color:#111;border:.4pt solid #111;border-radius:1.5px;display:flex;align-items:center;justify-content:center;gap:.05cm;padding:0 .045cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
   .sl-hv-text{flex:none;font-family:'Fraunces',serif;font-weight:900;font-size:11.6pt;line-height:1;color:#D2042D;letter-spacing:-.05em;}
   .sl-qr{flex:none;height:.76cm;width:.76cm;object-fit:contain;}
+  /* Etiqueta chica de solo folio (3 × 1cm) — para pegar donde no cabe la
+     etiqueta grande ni el sello, nada más el folio en letras gruesas y
+     bien legibles, sin QR ni logo. */
+  .folio-label{width:3cm;height:1cm;background:#fff;color:#111;border:.5pt solid #111;border-radius:1.5px;display:flex;align-items:center;justify-content:center;padding:0 .12cm;box-shadow:0 4px 16px rgba(0,0,0,.25);box-sizing:border-box;overflow:hidden;}
+  .fl-folio-text{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11pt;line-height:1.15;color:#111;text-align:center;letter-spacing:-.01em;white-space:nowrap;}
   .cl-certified{display:inline-flex;align-items:center;gap:2pt;background:rgba(255,255,255,.14);color:#fff;font-size:5pt;font-weight:700;letter-spacing:.06em;padding:1.6pt 5pt;border-radius:8pt;border:.6pt solid rgba(255,255,255,.55);white-space:nowrap;margin-top:.03cm;}
   .cl-certified::before{content:'\2713';font-size:5.4pt;font-weight:900;line-height:1;}
   .cl-item-title{margin:0;font-family:'Fraunces',serif;font-weight:700;font-size:8.8pt;line-height:1.08;color:#111;}
@@ -6730,19 +6738,36 @@ function lockImgPixelSizes(root){
   });
 }
 
+// Config por tipo de etiqueta exportable — cada una define su selector CSS,
+// el id canónico de su print-target, cuánto hay que escalar el canvas de
+// html2canvas para que salga nítida (mientras más chica es la pieza física,
+// más escala hace falta, ver comentario más abajo) y el nombre de archivo
+// por default. Centralizarlo aquí evita repetir un ternario cert/seal por
+// cada dato cuando se agrega un tipo nuevo (como "folio").
+const LABEL_EXPORT_CFG = {
+  cert: { selector: '.cert-label', wrapId: 'print-target-cert', scale: 203/96, defaultName: 'etiqueta' },
+  seal: { selector: '.seal-label', wrapId: 'print-target-seal', scale: (203/96) * 4.5, defaultName: 'sello' },
+  folio: { selector: '.folio-label', wrapId: 'print-target-folio', scale: (203/96) * 2, defaultName: 'folio' }
+};
+
 async function exportLabelImage(kind, folio, evt, wrapIdOverride){
   const btn = evt ? (evt.currentTarget || evt.target) : null;
   if(typeof html2canvas === 'undefined'){
     toast('La herramienta de exportación sigue cargando, intenta de nuevo en un segundo.');
     return;
   }
-  const wrapId = wrapIdOverride || (kind === 'cert' ? 'print-target-cert' : 'print-target-seal');
+  const cfg = LABEL_EXPORT_CFG[kind] || LABEL_EXPORT_CFG.seal;
+  const wrapId = wrapIdOverride || cfg.wrapId;
   const wrap = document.getElementById(wrapId);
-  const el = wrap ? wrap.querySelector(kind === 'cert' ? '.cert-label' : '.seal-label') : null;
+  const el = wrap ? wrap.querySelector(cfg.selector) : null;
   if(!el){ toast('No se encontró la etiqueta para exportar.'); return; }
   const originalText = btn ? btn.textContent : '';
   if(btn){ btn.disabled = true; btn.textContent = 'Generando…'; }
   try{
+    // Por si el folio cambió de largo desde que se pintó esta etiqueta (o se
+    // exporta justo después de renderizarla), nos aseguramos aquí también de
+    // que el texto del folio quepa en una sola línea antes de capturar.
+    if(kind === 'folio') fitFolioLabelText(wrapId);
     // html2canvas no soporta bien "object-fit" ni el tamaño automático de
     // <img> dentro de contenedores flex (bug conocido de la librería): sin
     // esto, el logo (HV) del sello y de la etiqueta salía estirado/aplastado
@@ -6754,19 +6779,17 @@ async function exportLabelImage(kind, folio, evt, wrapIdOverride){
     // que le corresponde.
     lockImgPixelSizes(el);
     // La etiqueta (4×7cm) exporta a la resolución térmica típica de Niimbot
-    // B21 (~203dpi). El sello es mucho más chico (1.5×1cm) — con esa misma
-    // escala el canvas resultante queda de apenas ~120×80px y se ve
-    // pixeleado al imprimir o ampliar. Más píxeles nunca perjudican la
-    // impresión térmica, así que al sello se le da una escala varias veces
-    // mayor para que la imagen exportada salga nítida.
-    const scale = kind === 'cert' ? (203/96) : (203/96) * 4.5;
+    // B21 (~203dpi). El sello y el folio-solo son mucho más chicos — con esa
+    // misma escala el canvas resultante queda pixeleado, así que a ambos se
+    // les da una escala mayor para que la imagen exportada salga nítida.
+    const scale = cfg.scale;
     const canvas = await html2canvas(el, {scale, backgroundColor:'#ffffff', useCORS:true, logging:false});
     const link = document.createElement('a');
     // Nombre distinto por pieza (folio + modelo) en vez del genérico
     // "etiqueta.png"/"sello.png" de siempre — ver filenameSlug().
     const safeFolio = (folio||'etiqueta').toString().replace(/[^a-zA-Z0-9-_]/g,'') || 'etiqueta';
     const suggested = wrap && wrap.dataset.filename;
-    link.download = `${suggested || (kind === 'cert' ? 'etiqueta' : 'sello') + '-' + safeFolio}.png`;
+    link.download = `${suggested || cfg.defaultName + '-' + safeFolio}.png`;
     link.href = canvas.toDataURL('image/png');
     document.body.appendChild(link);
     link.click();
@@ -6884,6 +6907,45 @@ function renderSealLabel(f, wrapIdOverride){
   </div>`;
 }
 
+// Etiqueta chica de solo folio: para pegar en piezas u ocasiones donde no
+// cabe ni la etiqueta grande (4×7) ni el sello (1.5×1) — nada más el folio,
+// en letras gruesas y bien legibles, sin QR ni logo.
+function renderFolioLabel(f, wrapIdOverride){
+  const wrapId = wrapIdOverride || 'print-target-folio';
+  return `
+  <div class="print-target" id="${wrapId}" data-filename="${escapeHtml(filenameSlug(['Folio', f.folio, f.modelo]))}">
+    <div class="folio-label">
+      <span class="fl-folio-text">${escapeHtml(f.folio)}</span>
+    </div>
+  </div>
+  <p class="foot-note no-print">Tamaño real: 3 × 1 cm — solo el folio, en letras gruesas y bien definidas, sin QR ni logo. Para pegar donde no cabe la etiqueta grande ni el sello. Usa "Descargar imagen" para importarla directo en la app NIIMBOT, o imprime desde el navegador con escala 100%.</p>
+  <div class="no-print" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn ghost small" onclick="printOnly('folio','${wrapId}')">Imprimir desde el navegador</button>
+    <button class="btn small" onclick="exportLabelImage('folio','${escapeHtml(f.folio)}',event,'${wrapId}')">Descargar imagen (PNG)</button>
+  </div>`;
+}
+
+// Los folios varían de largo (más o menos guiones/segmentos), así que un
+// tamaño de letra fijo en CSS no sirve para todos — este ajuste reduce el
+// font-size del texto del folio, en pasos chicos, hasta que quepa en una
+// sola línea dentro de la etiqueta de 3×1cm (nunca se envuelve a 2 líneas,
+// porque eso desbordaría el alto fijo de la etiqueta).
+function fitFolioLabelText(wrapId){
+  const wrap = document.getElementById(wrapId || 'print-target-folio');
+  if(!wrap) return;
+  const box = wrap.querySelector('.folio-label');
+  const txt = wrap.querySelector('.fl-folio-text');
+  if(!box || !txt) return;
+  txt.style.fontSize = '';
+  let size = parseFloat(getComputedStyle(txt).fontSize);
+  let loops = 0;
+  while(txt.scrollWidth > box.clientWidth - 2 && size > 5 && loops < 60){
+    size -= 0.4;
+    txt.style.fontSize = size + 'px';
+    loops++;
+  }
+}
+
 // Solo se llama desde botones que ya viven dentro del panel admin (con la
 // sesión ya iniciada) — el certificado público que ve el cliente NUNCA
 // muestra este botón, así que aquí ya no hace falta el aviso de "inicia
@@ -6894,9 +6956,10 @@ function openEtiquetaFor(fJson){
   go('admin');
   adminGo('etiquetas');
   document.getElementById('e-folio').value = f.folio;
-  document.getElementById('e-result').innerHTML = renderCertLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderSealLabel(f);
+  document.getElementById('e-result').innerHTML = renderCertLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderSealLabel(f) + '<div class="finish-divider" style="margin:26px 0;"></div>' + renderFolioLabel(f);
   applyLogos();
   embedAllQrLogos();
+  fitFolioLabelText('print-target-folio');
 }
 
 async function loadEtiquetaByFolio(){
@@ -12736,12 +12799,14 @@ function renderPostCertifyConfirmPanel(f, extraTxt){
       <button class="btn small" onclick='verCertificadoAdmin(${JSON.stringify(JSON.stringify(f))})'>👁️ Ver certificado completo</button>
       <button class="btn small" onclick="exportLabelImage('cert','${escapeHtml(f.folio)}',event,'confirm-print-target-cert')">🏷️ Descargar etiqueta (PNG)</button>
       <button class="btn small" onclick="exportLabelImage('seal','${escapeHtml(f.folio)}',event,'confirm-print-target-seal')">🔖 Descargar sello (PNG)</button>
+      <button class="btn small" onclick="exportLabelImage('folio','${escapeHtml(f.folio)}',event,'confirm-print-target-folio')">📋 Descargar folio de impresión (PNG)</button>
     </div>
-    <p class="foot-note" style="border:none;padding-top:0;margin-top:0;">El certificado completo se ve, imprime y descarga igual que en la Biblioteca pública — la vista de abajo es solo para revisar la etiqueta y el sello antes de imprimirlos.</p>
+    <p class="foot-note" style="border:none;padding-top:0;margin-top:0;">El certificado completo se ve, imprime y descarga igual que en la Biblioteca pública — la vista de abajo es solo para revisar la etiqueta, el sello y el folio antes de imprimirlos.</p>
     <div class="cert-confirm-previews">
       <div class="cert-confirm-preview-small">
         <div id="cert-confirm-mount-label"></div>
         <div id="cert-confirm-mount-seal" style="margin-top:14px;"></div>
+        <div id="cert-confirm-mount-folio" style="margin-top:14px;"></div>
       </div>
     </div>
   </div>`;
@@ -12753,8 +12818,10 @@ function showPostCertifyConfirm(f, extraTxt){
   mount.innerHTML = renderPostCertifyConfirmPanel(f, extraTxt);
   document.getElementById('cert-confirm-mount-label').innerHTML = renderCertLabel(f, 'confirm-print-target-cert');
   document.getElementById('cert-confirm-mount-seal').innerHTML = renderSealLabel(f, 'confirm-print-target-seal');
+  document.getElementById('cert-confirm-mount-folio').innerHTML = renderFolioLabel(f, 'confirm-print-target-folio');
   applyLogos();
   embedAllQrLogos();
+  fitFolioLabelText('confirm-print-target-folio');
   refreshCertConfirmPublishStatus(f.folio);
   mount.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -13823,7 +13890,10 @@ const ZZ_MULTI_PART = {
   defensas: [ ['frontal','Frontal'], ['trasera','Trasera'] ],
   ejes: [ ['delantero','Delantero'], ['trasero','Trasero'] ],
   salpicadera_del: [ ['izq','Izquierda'], ['der','Derecha'] ],
-  salpicadera_tras: [ ['izq','Izquierda'], ['der','Derecha'] ]
+  salpicadera_tras: [ ['izq','Izquierda'], ['der','Derecha'] ],
+  // Remache se evalúa por separado al frente y atrás de la pieza (antes era
+  // una sola calificación) — se promedian igual que los demás pares.
+  remache: [ ['frontal','Frontal'], ['trasero','Trasero'] ]
 };
 function zzInitialCritPC(zonaKey){
   const partes = ZZ_MULTI_PART[zonaKey];
